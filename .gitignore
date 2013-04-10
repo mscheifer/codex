@@ -28,3 +28,11 @@ _ReSharper*/
 *.vssscc
 $tf*/
 TestingProject.opensdf
+
+TestingProject.sdf
+*.ipch
+*.ipch
+*.sdf
+TestingProject.sdf
+ipch/*.ipch
+*.sdf
