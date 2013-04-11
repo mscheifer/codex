@@ -1,7 +1,9 @@
-#include <SFML/Graphics.hpp>
+#pragma once
 #include <SFML/Network.hpp>
+#include <SFML/Window.hpp>
 #include <iostream>
 #include <string>
+#include "NetworkPacket.h"
 
 class NetworkClient{
 
@@ -19,10 +21,8 @@ public:
     pressedRight = false;
   }
 
-  void doClient();
-
   ~NetworkClient(){
   }
 
-
+  void doClient();
 };

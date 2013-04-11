@@ -30,11 +30,23 @@ void NetworkClient::doClient(){
   while(true){
     std::string message;
 
+
     // Send a message to the connected host{
     if(sf::Keyboard::isKeyPressed(sf::Keyboard::Left) && !pressedLeft){
+
+      struct NetworkPacket::Type1 n;
+      char m1[] = "asdf";
+      char m2[] = "wtf";
+      memcpy(&(n.s1), m1, sizeof(*m1)*(std::strlen(m1)+1));
+      memcpy(&(n.s2), m2, sizeof(*m2)*(std::strlen(m1)+1));
+      NetworkPacket p;
+      p.t1 = n;
+      p.opcode = NetworkPacket::T1;
+
       message = "pressed left";
-      std::cout << "sending: " << message << std::endl;
-      socket.send(message.c_str(), message.size() + 1);
+      //std::cout << "sending: " << message << std::endl;
+      //socket.send(message.c_str(), message.size() + 1);
+      socket.send(&p, sizeof(p));
       pressedLeft = true;
     } else if( !sf::Keyboard::isKeyPressed(sf::Keyboard::Left)) {
       pressedLeft = false;
