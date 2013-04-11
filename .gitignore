@@ -29,3 +29,10 @@ _ReSharper*/
 $tf*/
 TestingProject.opensdf
 SFML-2.0-rc/doc
+TestingProject.sdf
+*.ipch
+*.ipch
+*.sdf
+TestingProject.sdf
+ipch/*.ipch
+*.sdf
