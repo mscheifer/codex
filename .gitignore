@@ -28,3 +28,4 @@ _ReSharper*/
 *.vssscc
 $tf*/
 TestingProject.opensdf
+SFML-2.0-rc/doc
