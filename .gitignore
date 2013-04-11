@@ -36,3 +36,4 @@ TestingProject.sdf
 TestingProject.sdf
 ipch/*.ipch
 *.sdf
+ipch/
