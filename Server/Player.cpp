@@ -43,12 +43,12 @@ int Player::getHealth()
   return health;
 }
 
-void Player::moveUp()
+void Player::moveForward()
 {
 
 }
 
-void Player::moveDown()
+void Player::moveBackward()
 {
 
 }
