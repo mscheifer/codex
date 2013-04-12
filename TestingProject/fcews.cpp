@@ -10,3 +10,7 @@ fcews::fcews(void)
 fcews::~fcews(void)
 {
 }
+
+void main()
+{
+}
