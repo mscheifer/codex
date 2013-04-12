@@ -13,7 +13,7 @@ AsciUI::~AsciUI(void)
 {
 }
 
-int update(Map* map)
+int AsciUI::update(Map* map)
 {
 	system("cls");
 	int layout[25][25];
