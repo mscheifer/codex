@@ -36,8 +36,5 @@ TestingProject.sdf
 TestingProject.sdf
 ipch/*.ipch
 *.sdf
-Client001/Client001.vcxproj
-Server/Server.vcxproj
-Server/Server.vcxproj.filters
+.gitignore
 TestingProject.sdf
-TestingProject/fcews.cpp
