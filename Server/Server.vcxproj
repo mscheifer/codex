@@ -65,16 +65,20 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="AsciUI.cpp" />
     <ClCompile Include="Client.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="Map.cpp" />
     <ClCompile Include="NetworkPacket.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="Server.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="3DCoordinate.h" />
+    <ClInclude Include="AsciUI.h" />
     <ClInclude Include="Client.h" />
     <ClInclude Include="Entity.h" />
+    <ClInclude Include="Map.h" />
     <ClInclude Include="NetworkData.h" />
     <ClInclude Include="NetworkPacket.h" />
     <ClInclude Include="Player.h" />
