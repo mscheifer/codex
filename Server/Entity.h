@@ -3,6 +3,7 @@
 class Entity{
 public:
   virtual ~Entity(){}
+
 protected:
-  Coordinate position;
+	Coordinate position;
 };

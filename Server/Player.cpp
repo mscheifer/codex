@@ -1,6 +1,6 @@
 #include "Player.h"
 
-
+Player::Player(void){}
 Player::Player(int x, int y, int z)
 {
   position.x = x;
@@ -13,8 +13,14 @@ Player::Player(int x, int y, int z)
 }
 
 
+
 Player::~Player(void)
 {
+}
+
+Coordinate const * Player::getPosition(void){
+	temp_coordinate = &position;
+	return  temp_coordinate;
 }
 
 bool Player::attack(Entity *other)

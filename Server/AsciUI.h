@@ -1,5 +1,7 @@
 #pragma once
 #include "Map.h"
+#include "Entity.h"
+#include "Player.h"
 class AsciUI
 {
 public:
