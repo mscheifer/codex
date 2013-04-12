@@ -28,7 +28,7 @@ _ReSharper*/
 *.vssscc
 $tf*/
 TestingProject.opensdf
-
+SFML-2.0-rc/doc
 TestingProject.sdf
 *.ipch
 *.ipch
@@ -36,5 +36,5 @@ TestingProject.sdf
 TestingProject.sdf
 ipch/*.ipch
 *.sdf
-.gitignore
+ipch/
 TestingProject.sdf
