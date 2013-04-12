@@ -18,15 +18,9 @@
     <ClInclude Include="fcews.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\Server\AsciUI.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="fcews.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Server\AsciUI.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

@@ -30,7 +30,7 @@ void NetworkClient::doClient(){
   while(true){
     std::string message;
 
-
+	/*
     // Send a message to the connected host{
     if(sf::Keyboard::isKeyPressed(sf::Keyboard::Left) && !pressedLeft){
 
@@ -69,5 +69,10 @@ void NetworkClient::doClient(){
     if( stat == sf::Socket::Done ){
       std::cout << "The server said: " << buffer << std::endl;
     }
+
+	*/
+	int x;
+	AsciUI::update;
+	std::cin >> x;
   }
 }
