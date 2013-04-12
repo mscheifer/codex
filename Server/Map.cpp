@@ -7,7 +7,7 @@
 Map::Map(void)
 {
 	map_size = 15;
-	entities = (Entity**)malloc(sizeof(Player)*Max_Entities);
+	entities = (Entity**)calloc(Max_Entities,sizeof(Player));
 }
 
 

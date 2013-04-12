@@ -12,7 +12,7 @@ void NetworkClient::doClient(){
   bool pressedLeft = false;
   bool pressedRight = false;
   sf::Socket::Status s;
-  
+  /*
   do{
     //std::getline(std::cin, input);
 
@@ -26,6 +26,7 @@ void NetworkClient::doClient(){
       std::cout << "try again, " << input << " is an invalid ip address" << std::endl;
 
   } while(validIpAddress);
+  /
   
   while(true){
     std::string message;
@@ -70,15 +71,15 @@ void NetworkClient::doClient(){
       std::cout << "The server said: " << buffer << std::endl;
     }
 
-	/*
+	*/
 
 
 	int x;
 	Map* map = new Map();
 	AsciUI* as = new AsciUI();
 	as->update(map);
-	std::string input;
-	std::getline(std::cin, input);
-	*/
-  }
+	std::string xx;
+	std::getline(std::cin, xx);
+	
+  
 }
