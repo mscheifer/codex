@@ -38,3 +38,5 @@ ipch/*.ipch
 *.sdf
 ipch/
 TestingProject.sdf
+ipch/
+TestingProject.sdf
