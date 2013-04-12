@@ -1,17 +1,24 @@
 #pragma once
-#include "3DCoordinate.h"
-class Player
+#include <typeinfo>
+#include <iostream>
+#include "Entity.h"
+
+class Player: public Entity
 {
 public:
-  Player(void);
+  Player(int x, int y, int z);
   ~Player(void);
-  bool attack(Player);
-
+  bool attack(Entity *other);
+  void moveUp();
+  void moveDown();
+  void moveLeft();
+  void moveRight();
+  int getHealth();
 private:
   int health;
   int maxHealth;
+  int strength;
   int defense;
-  Coordinate position;
   Coordinate direction;
+  bool damage(Player *);
 };
-
