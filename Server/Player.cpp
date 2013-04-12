@@ -6,7 +6,7 @@ Player::Player(int x, int y, int z)
   position.x = x;
   position.y = y;
   position.z = z;
-  strength = 110;
+  strength = 10;
   defense = 5;
   health = 100;
   maxHealth = 100;
@@ -42,6 +42,7 @@ int Player::getHealth()
 {
   return health;
 }
+
 void Player::moveUp()
 {
 

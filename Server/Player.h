@@ -9,11 +9,12 @@ public:
   Player(int x, int y, int z);
   ~Player(void);
   bool attack(Entity *other);
-  void moveUp();
-  void moveDown();
+  void moveForward();
+  void moveBackward();
   void moveLeft();
   void moveRight();
   int getHealth();
+  Coordinate const * getPosition();
 private:
   int health;
   int maxHealth;
