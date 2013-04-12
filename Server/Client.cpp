@@ -72,7 +72,9 @@ void NetworkClient::doClient(){
 
 	*/
 	int x;
-	AsciUI::update;
+	Map* map = new Map();
+	AsciUI* as = new AsciUI();
+	as->update(map);
 	std::cin >> x;
   }
 }
