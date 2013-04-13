@@ -23,24 +23,24 @@ Coordinate const * Player::getPosition(void){
 	return  temp_coordinate;
 }
 
-bool Player::attack(Entity *other)
+bool Player::attackBy(Player *other)
 {
-  if(Player *otherPlayer = dynamic_cast<Player *>(other))
+  if(other)
   {
-    return damage(otherPlayer);
+    return damageBy(other);
   }
   else
     return false;
 }
 
-bool Player::damage(Player *otherPlayer)
+bool Player::damageBy(Player *otherPlayer)
 {
   if(otherPlayer->health <= 0)
     return false;
-  int damage = strength-otherPlayer->defense;
+  int damage = otherPlayer->strength - defense;
   damage = ( damage > 0? damage: 0);
-  int newHealth = otherPlayer->health - damage;
-  otherPlayer->health = (newHealth > 0 ? newHealth : 0);
+  int newHealth = health - damage;
+  health = (newHealth > 0 ? newHealth : 0);
   return true;
 }
 

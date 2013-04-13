@@ -9,7 +9,7 @@ public:
   Player(void);
   Player(int x, int y, int z);
   ~Player(void);
-  bool attack(Entity *other);
+  virtual bool attackBy(Player*);
   void moveForward();
   void moveBackward();
   void moveLeft();
@@ -23,5 +23,5 @@ private:
   int defense;
   Coordinate direction;
   const Coordinate* temp_coordinate;
-  bool damage(Player *);
+  bool damageBy(Player *);
 };
