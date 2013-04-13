@@ -202,6 +202,9 @@ void NetworkClient::doClient(){
 				}else if(event.key.code == sf::Keyboard::A) {
 					s.players[0].moveLeft();
 					as.render(s.players);
+        }else if(event.key.code == sf::Keyboard::Space) {
+					s.players[0].jump();
+					as.render(s.players);
 				}
 			
 			}

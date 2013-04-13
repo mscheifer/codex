@@ -109,6 +109,13 @@ void Player::moveLeft()
   position = ThreeDMovement(position, Direction(newX, newY, direction.z), GRAVITY); // TODO: Not sure if this will work
   fixPosition();
 }
+void Player::jump()
+{
+  // CANNOT JUMP IF YOU ARE NOT ON THE GROUND
+  if(getTerrainHeight(position.x, position.y) != position.z)
+    return;
+  position = ThreeDMovement(position, direction, 10000); // TODO: Not sure if this will work
+}
 
 void Player::handleAction(ClientGameTimeAction a) {
 

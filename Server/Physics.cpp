@@ -23,7 +23,7 @@ Coordinate ThreeDMovement(Coordinate location, Direction direction, float accele
   float length = sqrt(direction.x *direction.x + direction.y * direction.y + direction.z * direction.z);
   int newX = calculatePosition(location.x, location.velocityX);
   int newY = calculatePosition(location.y, location.velocityY);
-  int newZ = calculatePosition(location.z, location.velocityZ, direction.z * accelerationZ/length);
+  int newZ = calculatePosition(location.z, location.velocityZ, accelerationZ/length);
   float newVZ = calculateVelocity( location.velocityZ, direction.z * accelerationZ/length);
 
   return Coordinate(newX, newY, newZ, location.velocityX, location.velocityY, newVZ);

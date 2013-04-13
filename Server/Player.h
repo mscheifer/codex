@@ -19,6 +19,7 @@ public:
   void moveBackward();
   void moveLeft();
   void moveRight();
+  void jump();
   int getHealth();
   Coordinate getPosition();
   std::string getString();
