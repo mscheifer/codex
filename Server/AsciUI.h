@@ -8,5 +8,6 @@ public:
 	AsciUI(void);
 	~AsciUI(void);
 	int update(Map*);
+	int render(Player*);
 };
 

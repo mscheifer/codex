@@ -42,7 +42,11 @@
     <ClCompile Include="ServerGameTimeRespond.h">
       <Filter>Header Files</Filter>
     </ClCompile>
+<<<<<<< HEAD
+    <ClCompile Include="test.cpp">
+=======
     <ClCompile Include="Physics.cpp">
+>>>>>>> af8313d1a0a48f94042e4bf63c53e08bc4885485
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -80,7 +84,14 @@
     <ClInclude Include="Weapons.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+<<<<<<< HEAD
+    <ClInclude Include="ClientGameTimeAction.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="test.h">
+=======
     <ClInclude Include="Physics.h">
+>>>>>>> af8313d1a0a48f94042e4bf63c53e08bc4885485
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
