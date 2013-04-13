@@ -17,11 +17,11 @@ int AsciUI::update(Map* map)
 {
 	system("cls");
 	int layout[15][15];
-	Entity** entities = map->getEntities();
-	Player** players = (Player**)entities;
+	Entity* entities = map->getEntities();
+	Player* players = (Player*)entities;
 	for(int i = 0 ; i < 10 ;i++) {
 	
-		if(players[i] != NULL){
+		if(players[i]){
 			layout[(players[i]->getPosition())->x][(players[i]->getPosition())->y] = 1;
 		}
 		
@@ -35,8 +35,9 @@ int AsciUI::update(Map* map)
 	for(int i = 0; i < 15; i++) {
 		out_map.append("|");
 		for(int j = 0; j < 15; j++) {
-			out_map.append("   |");
+			out_map.append("    ");
 		}
+		out_map.append("|");
 		out_map.append("\n+");
 		if(i == 14) {
 			for(int j = 0; j < 15; j++) {

@@ -72,14 +72,14 @@ void NetworkClient::doClient(){
     }
 
 	*/
-
-
-	int x;
 	Map* map = new Map();
-	AsciUI* as = new AsciUI();
-	as->update(map);
-	std::string xx;
-	std::getline(std::cin, xx);
-	
+	while(true){
+		int x;
+		
+		AsciUI* as = new AsciUI();
+		as->update(map);
+		std::string xx;
+		std::getline(std::cin, xx);
+	}
   
 }
