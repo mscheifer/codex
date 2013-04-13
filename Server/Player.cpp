@@ -6,6 +6,9 @@ Player::Player(int x, int y, int z)
   position.x = x;
   position.y = y;
   position.z = z;
+  direction.x = 0.0;
+  direction.y = 1.0;
+  direction.z = 0.0;
   strength = 10;
   defense = 5;
   health = 100;
@@ -18,29 +21,28 @@ Player::~Player(void)
 {
 }
 
-Coordinate const * Player::getPosition(void){
-	temp_coordinate = &position;
-	return  temp_coordinate;
+Coordinate Player::getPosition(void){
+  return position;
 }
 
-bool Player::attack(Entity *other)
+bool Player::attackBy(Player *other)
 {
-  if(Player *otherPlayer = dynamic_cast<Player *>(other))
+  if(other)
   {
-    return damage(otherPlayer);
+    return damageBy(other);
   }
   else
     return false;
 }
 
-bool Player::damage(Player *otherPlayer)
+bool Player::damageBy(Player *otherPlayer)
 {
   if(otherPlayer->health <= 0)
     return false;
-  int damage = strength-otherPlayer->defense;
+  int damage = otherPlayer->strength - defense;
   damage = ( damage > 0? damage: 0);
-  int newHealth = otherPlayer->health - damage;
-  otherPlayer->health = (newHealth > 0 ? newHealth : 0);
+  int newHealth = health - damage;
+  health = (newHealth > 0 ? newHealth : 0);
   return true;
 }
 
@@ -49,13 +51,50 @@ int Player::getHealth()
   return health;
 }
 
+int getTerrainHeight(int x, int y)
+{
+  return 0;
+}
+void Player::fixPosition()
+{
+  position.velocityX = 0;
+  position.velocityY = 0;
+  int terrainHeight = getTerrainHeight( position.x, position.y);
+  if( position.z < terrainHeight )
+  {
+    position.z = terrainHeight;
+    position.velocityZ = 0;
+  }
+}
 void Player::moveForward()
 {
-	position.x++;
+  // Normalizing x and y to be 1
+  float length = sqrt(direction.x *direction.x + direction.y + direction.y);
+  position.velocityX = direction.x/length * MOVESCALE;
+  position.velocityY = direction.y/length * MOVESCALE;
+  position = ThreeDMovement(position, direction, GRAVITY); // TODO: Not sure if this will work
+  fixPosition();
 }
 
 void Player::moveBackward()
 {
+  float length = sqrt(direction.x *direction.x + direction.y + direction.y);
+  position.velocityX = -direction.x/length * MOVESCALE;
+  position.velocityY = -direction.y/length * MOVESCALE;
+  position = ThreeDMovement(position, direction, GRAVITY); // TODO: Not sure if this will work
+  fixPosition();
+}
 
+void Player::moveRight()
+{
+  // x' = xcos@ - ysin@
+  // y' = xsin@ + ycos@
+  float newX = -direction.y;
+  float newY = direction.x;
+  float length = sqrt(direction.x *direction.x + direction.y + direction.y);
+  position.velocityX = -direction.x/length * MOVESCALE;
+  position.velocityY = -direction.y/length * MOVESCALE;
+  position = ThreeDMovement(position, direction, GRAVITY); // TODO: Not sure if this will work
+  fixPosition();
 }
 

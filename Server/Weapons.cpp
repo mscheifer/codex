@@ -1,12 +1,12 @@
 #include "Weapons.h"
 
 
-Weapons::Weapons(void)
+Weapons::Weapons()
 {
 }
 
 
-Weapons::~Weapons(void)
+Weapons::~Weapons()
 {
 }
 
