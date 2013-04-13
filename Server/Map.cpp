@@ -7,7 +7,7 @@
 Map::Map(void)
 {
 	map_size = 15;
-	entities = new Entity[10]; 
+	
 }
 
 
@@ -15,8 +15,12 @@ Map::~Map(void)
 {
 }
 
- Entity* Map::getEntities() {
+std::array<Entity, Map::Max_Entities> Map::getEntities() {
 	 return entities;
 }
+  
+ std::array<Player, Map::Number_Of_Players> Map::getPlayers(){
+	 return players;
+ }
 
 

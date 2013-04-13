@@ -36,17 +36,19 @@
     <ClCompile Include="Map.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Weapons.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="ServerGameTimeRespond.h">
       <Filter>Header Files</Filter>
     </ClCompile>
-<<<<<<< HEAD
-    <ClCompile Include="test.cpp">
-=======
     <ClCompile Include="Physics.cpp">
->>>>>>> af8313d1a0a48f94042e4bf63c53e08bc4885485
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ConfigManager.cpp">
+          <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Game.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Weapon.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -81,17 +83,19 @@
     <ClInclude Include="directionalVector.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Weapons.h">
+    <ClInclude Include="Physics.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-<<<<<<< HEAD
     <ClInclude Include="ClientGameTimeAction.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="test.h">
-=======
-    <ClInclude Include="Physics.h">
->>>>>>> af8313d1a0a48f94042e4bf63c53e08bc4885485
+    <ClInclude Include="ConfigManager.h">
+          <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Game.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Weapon.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

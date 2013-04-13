@@ -67,6 +67,11 @@
   <ItemGroup>
     <ClCompile Include="AsciUI.cpp" />
     <ClCompile Include="Client.cpp" />
+<<<<<<< HEAD
+    <ClCompile Include="ConfigManager.cpp" />
+=======
+    <ClCompile Include="Game.cpp" />
+>>>>>>> c826a40f1247cebd904a5cb239f05106c0eb9351
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Map.cpp" />
     <ClCompile Include="NetworkPacket.cpp" />
@@ -74,27 +79,27 @@
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="Server.cpp" />
     <ClCompile Include="ServerGameTimeRespond.h" />
-    <ClCompile Include="test.cpp" />
-    <ClCompile Include="Weapons.cpp" />
+    <ClCompile Include="Weapon.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="3DCoordinate.h" />
     <ClInclude Include="AsciUI.h" />
     <ClInclude Include="Client.h" />
 <<<<<<< HEAD
-    <ClInclude Include="ClientGameTimeAction.h" />
+    <ClInclude Include="ConfigManager.h" />
 =======
+    <ClInclude Include="ClientGameTimeAction.h" />
+>>>>>>> c826a40f1247cebd904a5cb239f05106c0eb9351
     <ClInclude Include="directionalVector.h" />
->>>>>>> af8313d1a0a48f94042e4bf63c53e08bc4885485
     <ClInclude Include="Entity.h" />
+    <ClInclude Include="Game.h" />
     <ClInclude Include="Map.h" />
     <ClInclude Include="NetworkData.h" />
     <ClInclude Include="NetworkPacket.h" />
     <ClInclude Include="Physics.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="Server.h" />
-    <ClInclude Include="test.h" />
-    <ClInclude Include="Weapons.h" />
+    <ClInclude Include="Weapon.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

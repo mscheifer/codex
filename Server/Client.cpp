@@ -203,6 +203,18 @@ void NetworkClient::doClient(){
 				if(event.key.code == sf::Keyboard::W) {
 					s.players[0].moveForward();
 					as.render(s.players);
+				} else if(event.key.code == sf::Keyboard::S) {
+					s.players[0].moveBackward();
+					as.render(s.players);
+				}else if(event.key.code == sf::Keyboard::D) {
+					s.players[0].moveRight();
+					as.render(s.players);
+				}else if(event.key.code == sf::Keyboard::A) {
+					s.players[0].moveLeft();
+					as.render(s.players);
+        }else if(event.key.code == sf::Keyboard::Space) {
+					s.players[0].jump();
+					as.render(s.players);
 				}
 			
 			}
