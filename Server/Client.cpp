@@ -96,7 +96,7 @@ void NetworkClient::doClient(){
   //input is ipaddress to connect to
   std::cout << "Enter Ip Address to connect to:";
   std::string input = myIpAddress.toString(); //"192.168.1.71";
-
+  /*
   //attempt to get ip address
   do{
     //std::getline(std::cin, input);
@@ -111,7 +111,8 @@ void NetworkClient::doClient(){
       std::cout << "try again, " << input << " is an invalid ip address" << std::endl;
 
   } while(validIpAddress);
-
+  /
+  
   
   sf::RenderWindow window( sf::VideoMode(800, 600), "sf::Text test" ) ;
   sf::CircleShape shape(100.f);
@@ -137,7 +138,7 @@ void NetworkClient::doClient(){
 
     /*
     std::string message;
-
+	
     // Send a message to the connected host{
     if(sf::Keyboard::isKeyPressed(sf::Keyboard::Left) && !pressedLeft){
 
@@ -176,6 +177,16 @@ void NetworkClient::doClient(){
     if( stat == sf::Socket::Done ){
       std::cout << "The server said: " << buffer << std::endl;
     }
-    */
-  }
+
+	*/
+
+
+	int x;
+	Map* map = new Map();
+	AsciUI* as = new AsciUI();
+	as->update(map);
+	std::string xx;
+	std::getline(std::cin, xx);
+	
+  
 }

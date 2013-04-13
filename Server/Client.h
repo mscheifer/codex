@@ -6,6 +6,7 @@
 #include <string>
 #include <list>
 #include "NetworkPacket.h"
+#include "AsciUI.h"
 
 class NetworkClient{
 

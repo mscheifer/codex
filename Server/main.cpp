@@ -1,9 +1,12 @@
 
 #include "Server.h"
 #include "Client.h"
+#include "Player.h"
 #include <cctype> //this is for toupper method
 
 int main(){
+  
+  
   std::cout << "Run (s)erver or (c)lient?" << std::endl;
   std::string input = ""; 
   std::getline(std::cin, input);
@@ -15,6 +18,6 @@ int main(){
     NetworkClient client;
     client.doClient();
   }
-
+  
   return 0;
 }
