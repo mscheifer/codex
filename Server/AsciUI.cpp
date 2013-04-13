@@ -20,7 +20,7 @@ int AsciUI::render(Player* players)
 	int layout[15][15];
 
 	for(int i = 0 ; i < 4 ;i++) {
-		layout[(players[i].getPosition())->x][(players[i].getPosition())->y] = i;
+		layout[(players[i].getPosition()).x][(players[i].getPosition()).y] = i;
 		
 	}
 

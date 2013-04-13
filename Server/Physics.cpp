@@ -3,22 +3,22 @@
 int calculatePosition(int x, float v, float a)
 {
   //x = x0 + v0t + ½at2
-  return x + v * SERVERCLOCK + .5*a*SERVERCLOCK*SERVERCLOCK;
+  return (int)(x + v * SERVERCLOCK + .5*a*SERVERCLOCK*SERVERCLOCK);
 }
 
 int calculatePosition(int x, float v)
 {
   //x = x0 + v0t
-  return x + v * SERVERCLOCK;
+  return (int)(x + v * SERVERCLOCK);
 }
 
-int calculateVelocity(float v, float a)
+float calculateVelocity(float v, float a)
 {
   //v = v0 + at
   return v + a * SERVERCLOCK;
 }
 
-static Coordinate ThreeDMovement(Coordinate location, Direction direction, float accelerationZ)
+Coordinate ThreeDMovement(Coordinate location, Direction direction, float accelerationZ)
 {
   float length = sqrt(direction.x *direction.x + direction.y + direction.y + direction.z * direction.z);
   int newX = calculatePosition(location.x, location.velocityX);

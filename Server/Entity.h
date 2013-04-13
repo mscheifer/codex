@@ -3,9 +3,10 @@
 #include "directionalVector.h"
 class Entity{
 public:
-  virtual ~Entity(){}
+  Entity() {}
+  ~Entity() {}
 
 protected:
-	Coordinate position;
+  Coordinate position;
   Direction direction;
 };
