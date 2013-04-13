@@ -82,7 +82,7 @@ void NetworkClient::processInput(sf::Window& window){
       }
 
       if (event.type == sf::Event::TextEntered){
-        if( event.text.unicode >= 32 && event.text.unicode <= 125 && typing && chatText.getString().getSize() < 99)
+        if( event.text.unicode >= 32 && event.text.unicode <= 125 && typing && chatBuffer.size() < 99)
           chatBuffer += (char) event.text.unicode;
       }
     }
@@ -90,23 +90,33 @@ void NetworkClient::processInput(sf::Window& window){
 }
 
 void NetworkClient::doClient(){
+
   sf::IpAddress myIpAddress = sf::IpAddress::getLocalAddress();
   std::cout << "Client Ip Address: " << myIpAddress.toString() << std::endl;
 
   //input is ipaddress to connect to
   std::cout << "Enter Ip Address to connect to:";
   std::string input = myIpAddress.toString(); //"192.168.1.71";
+  s = sf::Socket::Error;
 
   //attempt to get ip address
   do{
-    //std::getline(std::cin, input);
+    std::getline(std::cin, input);
 
     // Create a socket and connect it to <input ip address> on port 55001
-    socket.setBlocking(false); //TODO remove this
-    s = socket.connect(input, 55001);
+    //socket.setBlocking(false); //TODO remove this
+    s = socket.connect(input, 55001, sf::seconds(3.0));
 
-    if(s != sf::Socket::Error)
+    std::cout << s << std::endl;
+    std::cout << "done " << sf::Socket::Done << std::endl;
+    std::cout << "not ready " << sf::Socket::NotReady << std::endl;
+    std::cout << "dc " << sf::Socket::Disconnected << std::endl;
+    std::cout << "err " << sf::Socket::Error << std::endl;
+
+    if(s == sf::Socket::Done ){
       validIpAddress = false;
+      socket.setBlocking(false);
+    }
     else
       std::cout << "try again, " << input << " is an invalid ip address" << std::endl;
 
