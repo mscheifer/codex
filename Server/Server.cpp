@@ -25,12 +25,12 @@ void NetworkServer::doServer(){
       sf::TcpSocket::Status stat = clients[i]->receive(&buffer, NetworkPacket::maxPacketSize, received);
 
       if( stat == sf::Socket::Done ){
-        std::string message = clients[i]->getRemoteAddress().toString() + ": " + buffer.getType2Data();
-        std::cout << message << std::endl;
+        //std::string message = clients[i]->getRemoteAddress().toString() + ": " + buffer.getType2Data();
+        std::cout << clients[i]->getRemoteAddress().toString() << std::endl;
 
         //Send an answer to all clients
         for( unsigned int j = 0; j < clients.size(); j++){
-            clients[j]->send(message.c_str(), message.size() + 1);
+            clients[j]->send(&buffer, sizeof(buffer));
         }
       }
     }
