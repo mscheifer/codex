@@ -72,6 +72,8 @@
     <ClCompile Include="NetworkPacket.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="Server.cpp" />
+    <ClCompile Include="ServerGameTimeRespond.cpp" />
+    <ClCompile Include="Weapons.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="3DCoordinate.h" />
@@ -83,6 +85,7 @@
     <ClInclude Include="NetworkPacket.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="Server.h" />
+    <ClInclude Include="Weapons.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

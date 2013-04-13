@@ -20,10 +20,11 @@ int AsciUI::update(Map* map)
 	Entity* entities = map->getEntities();
 	Player* players = (Player*)entities;
 	for(int i = 0 ; i < 10 ;i++) {
-	
+	/*
 		if(players[i]){
 			layout[(players[i]->getPosition())->x][(players[i]->getPosition())->y] = 1;
 		}
+		*/
 		
 	}
 
