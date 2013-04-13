@@ -12,13 +12,12 @@ public:
   static int const Number_Of_Players = 4;
   int map_size;
   
-  Player players[Number_Of_Players];
-
-  Entity* getEntities(void);
+  std::array<Entity, Max_Entities > getEntities(void);
   std::array<Player, Number_Of_Players> getPlayers(void);
 
 private:
-	Entity* entities;
-
+	std::array<Player, Map::Number_Of_Players> players;
+	std::array<Entity, Map::Max_Entities> entities;
+	
 
 };

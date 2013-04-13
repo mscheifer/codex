@@ -5,6 +5,7 @@
 #include "Entity.h"
 #include "Physics.h"
 #include <string>
+#include "ClientGameTimeAction.h"
 #define MOVESCALE 100
 class Player: public Entity
 {
@@ -21,6 +22,7 @@ public:
   int getHealth();
   Coordinate getPosition();
   std::string getString();
+  void handleAction(ClientGameTimeAction a);
 private:
   int health;
   int maxHealth;

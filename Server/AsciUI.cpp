@@ -88,8 +88,8 @@ int AsciUI::update(Map* map)
 {
 	system("cls");
 	int layout[15][15];
-	Entity* entities = map->getEntities();
-	Player* players = (Player*)entities;
+//	Entity* entities = map->getEntities();
+//	Player* players = (Player*)entities;
 	for(int i = 0 ; i < 10 ;i++) {
 	/*
 		if(players[i]){

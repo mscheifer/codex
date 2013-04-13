@@ -110,6 +110,9 @@ void Player::moveLeft()
   fixPosition();
 }
 
+void Player::handleAction(ClientGameTimeAction a) {
+
+}
 std::string Player::getString()
 {
   std::stringstream returnString;
