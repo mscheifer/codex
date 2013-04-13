@@ -7,7 +7,7 @@ Player::Player(int x, int y, int z)
   position.y = y;
   position.z = z;
   direction.x = 0.0;
-  direction.y = 1.0;
+  direction.y = -1.0;
   direction.z = 0.0;
   strength = 10;
   defense = 5;
@@ -69,7 +69,7 @@ void Player::fixPosition()
 void Player::moveForward()
 {
   // Normalizing x and y to be 1
-  float length = sqrt(direction.x *direction.x + direction.y + direction.y);
+  float length = sqrt(direction.x *direction.x + direction.y * direction.y);
   position.velocityX = direction.x/length * MOVESCALE;
   position.velocityY = direction.y/length * MOVESCALE;
   position = ThreeDMovement(position, direction, GRAVITY); // TODO: Not sure if this will work
@@ -78,7 +78,7 @@ void Player::moveForward()
 
 void Player::moveBackward()
 {
-  float length = sqrt(direction.x *direction.x + direction.y + direction.y);
+  float length = sqrt(direction.x *direction.x + direction.y * direction.y);
   position.velocityX = -direction.x/length * MOVESCALE;
   position.velocityY = -direction.y/length * MOVESCALE;
   position = ThreeDMovement(position, direction, GRAVITY); // TODO: Not sure if this will work
@@ -88,13 +88,32 @@ void Player::moveBackward()
 void Player::moveRight()
 {
   // x' = xcos@ - ysin@
-  // y' = xsin@ + ycos@
+  // y' = xsin@ + ycos@ 
   float newX = -direction.y;
   float newY = direction.x;
-  float length = sqrt(direction.x *direction.x + direction.y + direction.y);
-  position.velocityX = -direction.x/length * MOVESCALE;
-  position.velocityY = -direction.y/length * MOVESCALE;
-  position = ThreeDMovement(position, direction, GRAVITY); // TODO: Not sure if this will work
+  float length = sqrt(newX *newX + newY * newY);
+  position.velocityX = newX/length * MOVESCALE;
+  position.velocityY = newY/length * MOVESCALE;
+  position = ThreeDMovement(position, Direction(newX, newY, direction.z), GRAVITY); // TODO: Not sure if this will work
+  fixPosition();
+}
+void Player::moveLeft()
+{
+  // x' = xcos@ - ysin@
+  // y' = xsin@ + ycos@ 
+  float newX = direction.y;
+  float newY = -direction.x;
+  float length = sqrt(newX *newX + newY * newY);
+  position.velocityX = newX/length * MOVESCALE;
+  position.velocityY = newY/length * MOVESCALE;
+  position = ThreeDMovement(position, Direction(newX, newY, direction.z), GRAVITY); // TODO: Not sure if this will work
   fixPosition();
 }
 
+std::string Player::getString()
+{
+  std::stringstream returnString;
+  returnString<< " x="<<position.x<< " y="<<position.y<< " z="<<position.z<<std::endl;
+  returnString<< " x="<<position.velocityX<< " y="<<position.velocityY<< " z="<<position.velocityZ<<std::endl;
+  return returnString.str();
+}

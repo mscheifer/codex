@@ -1,8 +1,10 @@
 #pragma once
 #include <typeinfo>
 #include <iostream>
+#include <sstream>
 #include "Entity.h"
 #include "Physics.h"
+#include <string>
 #define MOVESCALE 100
 class Player: public Entity
 {
@@ -18,6 +20,7 @@ public:
   void moveRight();
   int getHealth();
   Coordinate getPosition();
+  std::string getString();
 private:
   int health;
   int maxHealth;

@@ -20,7 +20,7 @@ int AsciUI::render(Player* players)
 	int layout[15][15];
 
 	for(int i = 0 ; i < 4 ;i++) {
-		layout[(players[i].getPosition()).x][(players[i].getPosition()).y] = i;
+		layout[(players[i].getPosition()).y][(players[i].getPosition()).x] = i;
 		
 	}
 
@@ -76,7 +76,7 @@ int AsciUI::render(Player* players)
 		out_map.append("Player2 health: "  + std::to_string( long long(players[1].getHealth() ) ) + "\n" );
 		out_map.append("Player3 health: " + std::to_string( long long(players[2].getHealth() ) ) + "\n");
 		out_map.append("Player4 health: " + std::to_string( long long(players[3].getHealth() ) ) + "\n");
-
+    out_map.append(players[0].getString());
 	cout << out_map << endl;
 
 		
