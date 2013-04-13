@@ -2,7 +2,8 @@
 #include <typeinfo>
 #include <iostream>
 #include "Entity.h"
-
+#include "Physics.h"
+#define MOVESCALE 100
 class Player: public Entity
 {
 public:
@@ -15,13 +16,12 @@ public:
   void moveLeft();
   void moveRight();
   int getHealth();
-  Coordinate const * getPosition(void);
+  Coordinate getPosition();
 private:
   int health;
   int maxHealth;
   int strength;
   int defense;
-  Coordinate direction;
-  const Coordinate* temp_coordinate;
   bool damageBy(Player *);
+  void fixPosition();
 };
