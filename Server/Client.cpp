@@ -96,7 +96,7 @@ void NetworkClient::doClient(){
   //input is ipaddress to connect to
   std::cout << "Enter Ip Address to connect to:";
   std::string input = myIpAddress.toString(); //"192.168.1.71";
-
+  /*
   //attempt to get ip address
   do{
     //std::getline(std::cin, input);
@@ -135,7 +135,7 @@ void NetworkClient::doClient(){
     }
   }
 
-    /*
+    
     std::string message;
 	
     // Send a message to the connected host{
@@ -178,14 +178,26 @@ void NetworkClient::doClient(){
     }
 
 	*/
-	Map* map = new Map();
-	while(true){
-		int x;
-		
-		AsciUI* as = new AsciUI();
-		as->update(map);
-		std::string xx;
-		std::getline(std::cin, xx);
+	struct ServerGameTimeRespond s;
+	s.players[0] =  Player(0,0,1);
+	s.players[1] = Player(2,3,1);
+	s.players[2] =  Player(7,2,1);
+	s.players[3] = Player(4,6,1);
+
+	sf::Event event;
+	sf::RenderWindow window( sf::VideoMode(800, 600), "sf::Text test");
+	AsciUI as;
+	while(window.isOpen()){
+		while(window.pollEvent(event)){
+			if(event.type == sf::Event::KeyPressed){
+				if(event.key.code == sf::Keyboard::W) {
+					s.players[0].moveForward();
+					as.render(s.players);
+				}
+			
+			}
+
+		}
 	}
   
 }

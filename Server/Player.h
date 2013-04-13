@@ -3,9 +3,11 @@
 #include <iostream>
 #include "Entity.h"
 
+
 class Player: public Entity
 {
 public:
+  char name[20];
   Player(void);
   Player(int x, int y, int z);
   ~Player(void);

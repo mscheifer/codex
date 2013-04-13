@@ -51,7 +51,7 @@ int Player::getHealth()
 
 void Player::moveForward()
 {
-
+	position.x++;
 }
 
 void Player::moveBackward()

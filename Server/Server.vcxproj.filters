@@ -39,7 +39,7 @@
     <ClCompile Include="Weapons.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="ServerGameTimeRespond.cpp">
+    <ClCompile Include="ServerGameTimeRespond.h">
       <Filter>Header Files</Filter>
     </ClCompile>
   </ItemGroup>

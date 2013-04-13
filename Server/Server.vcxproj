@@ -72,7 +72,7 @@
     <ClCompile Include="NetworkPacket.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="Server.cpp" />
-    <ClCompile Include="ServerGameTimeRespond.cpp" />
+    <ClCompile Include="ServerGameTimeRespond.h" />
     <ClCompile Include="Weapons.cpp" />
   </ItemGroup>
   <ItemGroup>
