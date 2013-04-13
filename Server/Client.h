@@ -7,6 +7,7 @@
 #include <list>
 #include "NetworkPacket.h"
 #include "AsciUI.h"
+#include "ServerGameTimeRespond.h"
 
 class NetworkClient{
 

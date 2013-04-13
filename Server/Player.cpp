@@ -65,7 +65,6 @@ void Player::fixPosition()
     position.velocityZ = 0;
   }
 }
-
 void Player::moveForward()
 {
   // Normalizing x and y to be 1
