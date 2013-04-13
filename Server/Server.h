@@ -4,6 +4,8 @@
 #include <string>
 #include <vector>
 #include "NetworkPacket.h"
+#include <time.h>
+#include "ConfigManager.h"
 
 class NetworkServer{
 

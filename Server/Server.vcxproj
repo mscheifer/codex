@@ -67,6 +67,7 @@
   <ItemGroup>
     <ClCompile Include="AsciUI.cpp" />
     <ClCompile Include="Client.cpp" />
+    <ClCompile Include="ConfigManager.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Map.cpp" />
     <ClCompile Include="NetworkPacket.cpp" />
@@ -80,6 +81,7 @@
     <ClInclude Include="3DCoordinate.h" />
     <ClInclude Include="AsciUI.h" />
     <ClInclude Include="Client.h" />
+    <ClInclude Include="ConfigManager.h" />
     <ClInclude Include="directionalVector.h" />
     <ClInclude Include="Entity.h" />
     <ClInclude Include="Map.h" />

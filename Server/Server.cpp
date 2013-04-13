@@ -5,8 +5,12 @@ void NetworkServer::doServer(){
 
   sf::IpAddress myIpAddress = sf::IpAddress::getLocalAddress();
   std::cout << "Server Ip Address: " << myIpAddress.toString() << std::endl;
+  int tickspersecond = 30;
+  ConfigManager::readConfig();
 
   while(true){
+  double startTime = std::clock();
+
   // Wait for a connection
     if ( listener.accept(*client) == sf::Socket::Done ){
       std::cout << "New client connected: " << client->getRemoteAddress() << std::endl;
@@ -35,6 +39,10 @@ void NetworkServer::doServer(){
       }
     }
 
+    double runTime = std::clock() - startTime;
+    //std::printf("%lf", runTime);
+    //std::cout << "start " << startTime << "run " << runTime << std::endl;
+    sf::sleep( sf::seconds( (float)1.0/(float)tickspersecond - (float)runTime) );
   }
   delete client;
 }
