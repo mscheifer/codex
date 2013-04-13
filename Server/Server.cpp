@@ -42,7 +42,7 @@ void NetworkServer::doServer(){
     double runTime = std::clock() - startTime;
     //std::printf("%lf", runTime);
     //std::cout << "start " << startTime << "run " << runTime << std::endl;
-    sf::sleep( sf::seconds( (float)1.0/(float)tickspersecond - (float)runTime) );
+    sf::sleep( sf::seconds( (float)1.0/(float)tickspersecond - (float)runTime/CLOCKS_PER_SEC) );
   }
   delete client;
 }
