@@ -73,18 +73,21 @@
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="Server.cpp" />
     <ClCompile Include="ServerGameTimeRespond.h" />
+    <ClCompile Include="test.cpp" />
     <ClCompile Include="Weapons.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="3DCoordinate.h" />
     <ClInclude Include="AsciUI.h" />
     <ClInclude Include="Client.h" />
+    <ClInclude Include="ClientGameTimeAction.h" />
     <ClInclude Include="Entity.h" />
     <ClInclude Include="Map.h" />
     <ClInclude Include="NetworkData.h" />
     <ClInclude Include="NetworkPacket.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="Server.h" />
+    <ClInclude Include="test.h" />
     <ClInclude Include="Weapons.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
