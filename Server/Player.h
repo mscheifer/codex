@@ -3,6 +3,7 @@
 #include <iostream>
 #include "Entity.h"
 #include "Physics.h"
+#include "ClientGameTimeAction.h"
 #define MOVESCALE 100
 class Player: public Entity
 {
@@ -18,6 +19,7 @@ public:
   void moveRight();
   int getHealth();
   Coordinate getPosition();
+  void handleAction(ClientGameTimeAction a);
 private:
   int health;
   int maxHealth;

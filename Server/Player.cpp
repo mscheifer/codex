@@ -98,3 +98,6 @@ void Player::moveRight()
   fixPosition();
 }
 
+void Player::handleAction(ClientGameTimeAction a) {
+
+}
