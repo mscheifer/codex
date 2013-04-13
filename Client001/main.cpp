@@ -3,6 +3,7 @@
 #include <iostream>
 #include <string>
 
+
 sf::Text chatText;
 sf::Font chatFont;
 bool typing;
@@ -13,7 +14,7 @@ void chatInit(){
   chatText.setFont(chatFont);
   chatText.setColor(sf::Color::Green);
   chatText.setCharacterSize(16);
-  chatText.setString("asdf");
+  chatText.setString("asdf\nasdf");
   chatText.setPosition(200,200);
 }
 
@@ -84,7 +85,7 @@ int main(){
               }
 
               if (event.type == sf::Event::TextEntered){
-                if( event.text.unicode >= 32 && event.text.unicode <= 125 && typing)
+                if( event.text.unicode >= 32 && event.text.unicode <= 125 && typing && chatText.getString().getSize() < 99)
                   chatText.setString( chatText.getString() + (char) event.text.unicode);
               }
           }

@@ -1,6 +1,7 @@
 #pragma once
 #include <SFML/Network.hpp>
 #include "NetworkData.h"
+#include <array>
 
 class NetworkPacket{
 
@@ -8,7 +9,11 @@ private:
 
 public:
   static const int maxPacketSize = 1024*4;
-  enum Opcode {T1, T2};
+  enum Opcode {CHAT, T1, T2};
+
+  struct Chat{
+    std::array<char,100> message;
+  };
 
   struct Type1{
     char s1[100];
@@ -23,6 +28,7 @@ public:
   Opcode opcode;
 
   union {
+    Chat chat;
     Type1 t1;
     Type2 t2;
   };
