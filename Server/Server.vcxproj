@@ -71,6 +71,7 @@
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Map.cpp" />
+    <ClCompile Include="NetReceiver.cpp" />
     <ClCompile Include="NetworkPacket.cpp" />
     <ClCompile Include="Physics.cpp" />
     <ClCompile Include="Player.cpp" />
@@ -88,6 +89,7 @@
     <ClInclude Include="Entity.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="Map.h" />
+    <ClInclude Include="NetReceiver.h" />
     <ClInclude Include="NetworkData.h" />
     <ClInclude Include="NetworkPacket.h" />
     <ClInclude Include="Physics.h" />
