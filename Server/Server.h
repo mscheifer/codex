@@ -6,6 +6,7 @@
 #include "NetworkPacket.h"
 #include <time.h>
 #include "ConfigManager.h"
+#include "NetReceiver.h"
 
 class NetworkServer{
 
