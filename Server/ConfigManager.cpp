@@ -1,12 +1,40 @@
 #include "ConfigManager.h"
 
 ConfigManager::configMap_t ConfigManager::configMap;
+std::ofstream ConfigManager::logfile;
+
+void ConfigManager::log(std::string str, ConfigManager::LogLevels level){
+  time_t timer;
+  timer = time(NULL);
+  struct tm * currTime = localtime(&timer);
+  
+  if( ConfigManager::level <= level ){
+    ConfigManager::logfile << "[" << ConfigManager::levelToString(level) << ":" <<
+      currTime->tm_hour << ":" << currTime->tm_min << ":" << currTime->tm_sec <<
+      "]" << str << std::endl;
+  }
+}
+
+void ConfigManager::setupLog(){
+  time_t timer;
+  timer = time(NULL);
+  struct tm * currTime = localtime(&timer);
+  
+  std::stringstream fname;
+  fname << "LOG" << currTime->tm_mon+1 << "_" << currTime->tm_mday << "_" <<
+    currTime->tm_hour << "_" << currTime->tm_min << "_" << currTime->tm_sec << ".txt";
+  
+  ConfigManager::logfile.open(fname.str());
+
+  //std::string fname = "" + currTime.tm_mon + "_" + currTime.tm_mday + currTime.tm_hour + currTime.tm_min + currTime.tm_sec;
+}
 
 void ConfigManager::readConfig(){
   std::ifstream configFile;
   configFile.open("config.txt");
   std::string line;
 
+  //no config file exists
   if(!configFile){
     std::ofstream newConfigFile("config.txt");
     configFile.open("masterConfig.txt");
