@@ -14,6 +14,7 @@ void reshape(gx::displaySet& display, unsigned int w, unsigned int h) {
   const elem_t farPlane  = 30.0f;
   // adjust the viewport when the window is resized
   glViewport(0, 0, w, h);
+  gx::debugout << "glViewport(0, 0, w, h);" << gx::endl;
   display.setProjection(fov,ratio,nearPlane,farPlane);
 }
 
@@ -49,40 +50,58 @@ int main() {
 
   gx::displaySet display(newUniformBindPoint++);
 
-  display.setView({10.0, 2.0, 10.0},{0.0, -2.0, -5.0},{0.0, 1.0, 0.0});
+  display.setView(gx::vector3(10.0,  2.0, 10.0),
+	              gx::vector3( 0.0, -2.0, -5.0),
+				  gx::vector3( 0.0,  1.0,  0.0));
   reshape(display,defaultWindowWidth, defaultWindowHeight);
 
+  /*const std::vector<std::pair<const std::string,GLuint>> uniforms = 
+    { std::make_pair("display", display.bindPoint()) }; */
 
-  const std::vector<std::pair<const std::string,GLuint>> uniforms = 
-    { std::make_pair("display", display.bindPoint()) };
+  //yet another visual c++ hack
+  std::vector<std::pair<const std::string,GLuint>> uniforms;
+  uniforms.push_back(std::make_pair("display", display.bindPoint()));
 
   const GLuint posAttribLoc = 0;
   const GLuint colorAttribLoc = 1;
 
-  const std::vector<std::pair<const std::string,GLuint>> attribs = 
+  /*const std::vector<std::pair<const std::string,GLuint>> attribs = 
     { std::make_pair("position", posAttribLoc),
-      std::make_pair("color"   , colorAttribLoc) };
-
+      std::make_pair("color"   , colorAttribLoc) };*/
+  std::vector<std::pair<const std::string,GLuint>> attrib_info;
+  attrib_info.push_back(std::make_pair("position", posAttribLoc));
+  attrib_info.push_back(std::make_pair("color"   , colorAttribLoc));
+  
   gx::shaderProgram prog =
-    gx::shaderFromFiles("default.vert","default.frag",uniforms,attribs);
+    gx::shaderFromFiles("default.vert","default.frag",uniforms,attrib_info);
+
+  prog.use();
 
   glEnable(GL_DEPTH_TEST); //enable depth buffer
   glClearColor(1.0,1.0,1.0,1.0); //start with a white screen
   glClearDepth(1.f);
   glDepthFunc(GL_LEQUAL);
 
-  std::vector<GLfloat> positions = { 0.0f, 1.0f,-5.0f, 1.0f,
-                                     1.0f, 0.0f,-5.0f, 1.0f,
-                                    -1.0f,-1.0f,-5.0f, 1.0f};
-  std::vector<GLfloat> colors    = { 0.0f, 0.0f, 1.0f, 1.0f,
-                                     0.0f, 0.0f, 1.0f, 1.0f,
-                                     0.0f, 0.0f, 1.0f, 1.0f};
-  std::vector<GLuint>  indices   = { 0, 1, 2 };
+  std::array<GLfloat,12> posArray    = { 0.0f, 1.0f,-5.0f, 1.0f,
+                                         1.0f, 0.0f,-5.0f, 1.0f,
+                                        -1.0f,-1.0f,-5.0f, 1.0f};
+  std::array<GLfloat,12> colorsArray = { 0.0f, 0.0f, 1.0f, 1.0f,
+                                         0.0f, 0.0f, 1.0f, 1.0f,
+                                         0.0f, 0.0f, 1.0f, 1.0f};
+  std::array<GLuint,3>  indicesArray = { 0, 1, 2 };
+
+  std::vector<GLfloat> positions(posArray.begin(),   posArray.end());
+  std::vector<GLfloat> colors(colorsArray.begin(),   colorsArray.end());
+  std::vector<GLuint>  indices(indicesArray.begin(), indicesArray.end());
 
   gx::vertexAttrib positionsAttrib(posAttribLoc  ,4,0,positions);
   gx::vertexAttrib colorsAttrib   (colorAttribLoc,4,0,colors);
 
-  gx::vao testTri(indices,{ positionsAttrib, colorsAttrib });
+  std::vector<gx::vertexAttrib> attribs;
+  attribs.push_back(positionsAttrib);
+  attribs.push_back(colorsAttrib);
+
+  gx::vao testTri(indices,attribs);
 
   //fps setup
   sf::Clock fpsClock;
@@ -90,7 +109,8 @@ int main() {
 
   // run the main loop
   bool running = true;
-  while (running)
+  for(int asdf = 0; asdf < 3; ++asdf)
+  //while (running)
   {
     // handle events
     sf::Event event;
@@ -108,7 +128,8 @@ int main() {
     }
 
     // clear the buffers
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
+    gx::debugout << "glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);" << gx::endl;
 
     // draw...
     prog.use();
@@ -124,12 +145,8 @@ int main() {
       fpsFrames = 0;
       fpsClock.restart();
     }
-
-    GLenum err;
-    while(gx::debugOn && (err = glGetError())) {
-      std::cout << "OpenGL error: " << err << std::endl;
-    }
   }
+  while(true) {}
 
   // release resources...
 

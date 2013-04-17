@@ -19,7 +19,7 @@ gx::displaySet::displaySet(GLuint bindingPoint)
 
 void gx::displaySet::setProjection(elem_t fov, elem_t ratio, elem_t nearP,
                                elem_t farP) {
-  elem_t f = 1.0f / tan (fov * (M_PI / 360.0));
+  elem_t f = 1.0f / elem_t(tan (fov * (M_PI / 360.0)));
 
   this->projection = matrix(); //0 init
 

@@ -1,4 +1,6 @@
 #include <GL/glew.h>
+#define _USE_MATH_DEFINES
+#include <math.h>
 #include "oglUtil.h"
 #include "matrix.h"
 

@@ -2,18 +2,25 @@
 #define OGLUTIL_H
 #include <GL/glew.h>
 #include <iostream>
+#include <string>
+#include "windowsHacks.h"
 
 namespace gx {
 
 const std::string shaderHeader = 
-  "#version 130\n#extension GL_ARB_uniform_buffer_object : require\n";
+  "#version 130\n\
+   #extension GL_ARB_uniform_buffer_object : require\n";
 
-constexpr bool debugOn = false;
+constexpr bool debugOn = true;
 
 struct debugStream {
   template<typename T>
   const debugStream& operator<<(const T& a) const {
     if(debugOn) std::cout << a;
+	GLenum err;
+    while(gx::debugOn && (err = glGetError())) {
+      std::cout << "OpenGL error: " << err << std::endl;
+    }
     return *this;
   }
 };
@@ -28,14 +35,10 @@ constexpr GLenum typeVal() {
 }
 
 template <>
-constexpr GLenum typeVal<GLuint>() {
-  return GL_UNSIGNED_INT;
-}
+constexpr GLenum gx::typeVal<GLuint>();
 
 template <>
-constexpr GLenum typeVal<GLfloat>() {
-  return GL_FLOAT;
-}
+constexpr GLenum gx::typeVal<GLfloat>();
 
 } //end namespace gx
 #endif

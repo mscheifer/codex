@@ -2,23 +2,53 @@
 #include <cmath>
 #include "matrix.h"
 
-gx::matrix::matrix(): elems{{ {{ 0, 0, 0, 0 }},
-                              {{ 0, 0, 0, 0 }},
-                              {{ 0, 0, 0, 0 }},
-                              {{ 0, 0, 0, 0 }} }} {}
+gx::matrix::matrix(): elems() {
+	/*elems({{ {{ 1, 0, 0, 0 }},
+               {{ 0, 1, 0, 0 }},
+               {{ 0, 0, 1, 0 }},
+               {{ 0, 0, 0, 1 }} }})*/
+	for(size_t i = 0; i < elems.size(); i++) {
+		for(size_t j = 0; j < elems[i].size(); j++) {
+			elems[i][j] = 0;
+		}
+	}
+}
 
 gx::matrix::matrix(std::array<std::array<elem_t,4>,4> a): elems(std::move(a)) {}
 
 gx::matrix::matrix(elem_t a, elem_t b, elem_t c, elem_t d, elem_t e, elem_t f,
          elem_t g, elem_t h, elem_t i, elem_t j, elem_t k, elem_t l, elem_t m,
-         elem_t n, elem_t o, elem_t p): elems{{ {{ a, b, c, d }},
+         elem_t n, elem_t o, elem_t p) 
+                                     /*: elems{{ {{ a, b, c, d }},
                                                 {{ e, f, g, h }},
                                                 {{ i, j, k, l }},
-                                                {{ m, n, o, p }} }} {}
+                                                {{ m, n, o, p }} }}*/ {
+  //visual c++ crap
+  elems[0][0] = a;
+  elems[0][1] = b;
+  elems[0][2] = c;
+  elems[0][3] = d;
+  elems[1][0] = e;
+  elems[1][1] = f;
+  elems[1][2] = g;
+  elems[1][3] = h;
+  elems[2][0] = i;
+  elems[2][1] = j;
+  elems[2][2] = k;
+  elems[2][3] = l;
+  elems[3][0] = m;
+  elems[3][1] = n;
+  elems[3][2] = o;
+  elems[3][3] = p;
+}
 
 void gx::matrix::print(std::ostream& o) const {
-  for(const auto& row : elems) {
-    for(const auto& e : row) {
+  //cant use range based for here because of visual c++
+  for(auto rowp = elems.begin(); rowp != elems.end(); ++rowp) {
+    const auto& row = *rowp;
+	//cant use range based for here because of visual c++
+    for(auto ep = row.begin(); ep != row.end(); ++ep) {
+      const auto& e = *ep;
       o << e << " ";
     }
     o << std::endl;
@@ -38,10 +68,19 @@ const std::array<gx::matrix::elem_t,4>& gx::matrix::operator[](int i) const {
 }
 
 void gx::matrix::identify() {
-  elems = {{ {{ 1, 0, 0, 0 }},
-             {{ 0, 1, 0, 0 }},
-             {{ 0, 0, 1, 0 }},
-             {{ 0, 0, 0, 1 }} }};
+  /*elems = {{ {{ 1, 0, 0, 0 }},
+               {{ 0, 1, 0, 0 }},
+               {{ 0, 0, 1, 0 }},
+               {{ 0, 0, 0, 1 }} }};*/
+  //have to use this crap becuase of visual c++
+	for(size_t i = 0; i < elems.size(); i++) {
+		for(size_t j = 0; j < elems[i].size(); j++) {
+			elems[i][j] = 0;
+		}
+	}
+	for(size_t i = 0; i < elems.size(); i++) {
+		elems[i][i] = 1;
+	}
 }
 
 void gx::matrix::oglmatrix(elem_t a[16]) const {
@@ -127,45 +166,49 @@ gx::vector3 gx::operator*(const matrix& left,const vector3& right) {
 }
 
 gx::matrix gx::rotateX(double angle) {
+  typedef gx::matrix::elem_t elem_t;
   return matrix(
-                1,0,0,0,
-                0,cos(angle),-sin(angle),0,
-                0,sin(angle),cos(angle),0, 
-                0,0,0,1);
+                1,                 0,                  0,0,
+                0,elem_t(cos(angle)),elem_t(-sin(angle)),0,
+                0,elem_t(sin(angle)),elem_t( cos(angle)),0, 
+                0,                 0,                  0,1);
 }
 
 gx::matrix gx::rotateY(double angle) {
+  typedef gx::matrix::elem_t elem_t;
   return matrix(
-                cos(angle),0,sin(angle),0,
-                0,1,0,0,
-                -sin(angle),0,cos(angle),0, 
-                0,0,0,1);
+                elem_t( cos(angle)),0,elem_t(sin(angle)),0,
+                                  0,1,                 0,0,
+                elem_t(-sin(angle)),0,elem_t(cos(angle)),0, 
+                                  0,0,                 0,1);
 }
 
 gx::matrix gx::rotateZ(double angle) {
+  typedef gx::matrix::elem_t elem_t;
   return matrix(
-                cos(angle),-sin(angle),0,0,
-                sin(angle),cos(angle),0,0, 
-                0,0,1,0,
-                0,0,0,1);
+                elem_t(cos(angle)),elem_t(-sin(angle)),0,0,
+                elem_t(sin(angle)),elem_t( cos(angle)),0,0, 
+                0,0,                                   1,0,
+                0,0,                                   0,1);
 }
 
 gx::matrix gx::rotateArbitrary(vector3 axis, double angle) {
+  typedef gx::matrix::elem_t elem_t;
   axis.normalize();
   return matrix(
-                1 + (1-cos(angle))*(axis[0]*axis[0] - 1),
-                -axis[2] * sin(angle) + (1 - cos(angle)) * axis[0] * axis[1],
-                axis[1] * sin(angle) + (1 - cos(angle)) * axis[0] * axis[2],
+                1 + (1 - elem_t(cos(angle))) * (axis[0]*axis[0] - 1),
+                -axis[2] * elem_t(sin(angle)) + (1 - elem_t(cos(angle))) * axis[0] * axis[1],
+                 axis[1] * elem_t(sin(angle)) + (1 - elem_t(cos(angle))) * axis[0] * axis[2],
                 0,
 
-                axis[2] * sin(angle) + (1 - cos(angle)) * axis[1] * axis[0],
-                1 + (1 - cos(angle)) * (axis[1] * axis[1] - 1),
-                -axis[0] * sin(angle) + (1 - cos(angle)) * axis[1] * axis[2],
+                 axis[2] * elem_t(sin(angle)) + (1 - elem_t(cos(angle))) * axis[1] * axis[0],
+                1 + (1 - elem_t(cos(angle))) * (axis[1] * axis[1] - 1),
+                -axis[0] * elem_t(sin(angle)) + (1 - elem_t(cos(angle))) * axis[1] * axis[2],
                 0, 
 
-                -axis[1] * sin(angle) + (1 - cos(angle)) * axis[2] * axis[0],
-                axis[0] * sin(angle) + (1 - cos(angle)) * axis[2] * axis[1],
-                1 + (1 - cos(angle)) * (axis[2] * axis[2] - 1),
+                -axis[1] * elem_t(sin(angle)) + (1 - elem_t(cos(angle))) * axis[2] * axis[0],
+                 axis[0] * elem_t(sin(angle)) + (1 - elem_t(cos(angle))) * axis[2] * axis[1],
+                1 + (1 - elem_t(cos(angle))) * (axis[2] * axis[2] - 1),
                 0,
 
                 0,0,0,1);

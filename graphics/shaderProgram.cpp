@@ -88,7 +88,9 @@ gx::shaderProgram::shaderProgram(std::string vsSource,std::string fsSource,
   //we have to do this here because we're stuck on GLSL 1.3
   glBindFragDataLocation(prog, 0, shader_output_name.c_str());
 
-  for(const auto& attrib : attribs) {
+  //cant use range based for here because of visual c++
+  for(auto attribp = attribs.begin() ; attribp != attribs.end() ; ++attribp) {
+	const auto& attrib = *attribp;
     debugout << "glBindAttribLocation(" << this->prog << ", " << attrib.second;
     debugout << ", " << attrib.first.c_str() << ");" << endl;
     glBindAttribLocation(this->prog,attrib.second,attrib.first.c_str());
@@ -109,7 +111,9 @@ gx::shaderProgram::shaderProgram(std::string vsSource,std::string fsSource,
   glDeleteShader(vertShader);
   glDeleteShader(fragShader);
 
-  for(const auto& uniform : uniforms) {
+   //cant use range based for here because of visual c++
+  for(auto uniformp = uniforms.begin() ; uniformp != uniforms.end() ; ++uniformp) {
+    const auto& uniform = *uniformp;
     //uniform.first is the block name, second is the block binding id
     GLuint localIndex= glGetUniformBlockIndex(this->prog,uniform.first.c_str());
     if(localIndex == GL_INVALID_INDEX) {
@@ -128,14 +132,19 @@ gx::shaderProgram::shaderProgram(std::string vsSource,std::string fsSource,
   }
 }
 
+gx::shaderProgram::shaderProgram(gx::shaderProgram&& other) {
+	this->prog = other.prog;
+	other.prog = 0; //glDeleteProgram wont do anything
+}
+
 gx::shaderProgram::~shaderProgram() {
-  debugout << "glDeleteProgram(" << this->prog << ");" << endl;
   glDeleteProgram(this->prog);
+  debugout << "glDeleteProgram(" << this->prog << ");" << endl;
 }
 
 void gx::shaderProgram::use() {
-  debugout << "glUseProgram(" << this->prog << ");" << endl;
   glUseProgram(this->prog);
+  debugout << "glUseProgram(" << this->prog << ");" << endl;
 }
 
 gx::shaderProgram gx::shaderFromFiles(const std::string vsFile,

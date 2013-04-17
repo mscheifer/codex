@@ -13,6 +13,7 @@ class shaderProgram {
     shaderProgram(std::string,std::string,
             const std::vector<std::pair<const std::string,GLuint>>,
             const std::vector<std::pair<const std::string,GLuint>>);
+	shaderProgram(shaderProgram&&);
     ~shaderProgram(); //not virtual because there's no inheiritance
     void use();
 };

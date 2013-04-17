@@ -8,8 +8,6 @@
 
 namespace gx {
 
-class matrix;
-
 struct matrix {
   typedef GLfloat elem_t;
 private:

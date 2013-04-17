@@ -2,6 +2,7 @@
 #define VECTOR4_H
 #include <iostream>
 #include "vector3.h"
+#include "oglUtil.h"
 
 namespace gx {
 

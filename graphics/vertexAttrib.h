@@ -15,13 +15,13 @@ class vertexAttrib {
     template<typename T>
     vertexAttrib(GLuint loc, GLint vs, GLsizei st, std::vector<T> d)
     : shaderLocation(loc), vectorSize(vs), glType(typeVal<T>()), byteOffset(st){
-      debugout << "glGenBuffers(1, &buffer);" << endl;
       glGenBuffers(1, &buffer);
+      debugout << "glGenBuffers(1, &buffer);" << endl;
       this->bindBuffer();
-      debugout << "glBufferData(GL_ARRAY_BUFFER, " << d.size() * sizeof(T);
-      debugout << ", d.data(), GL_STATIC_DRAW);" << endl;
       glBufferData(GL_ARRAY_BUFFER, d.size() * sizeof(T),
                                     d.data(), GL_STATIC_DRAW);
+      debugout << "glBufferData(GL_ARRAY_BUFFER, " << d.size() * sizeof(T);
+      debugout << ", d.data(), GL_STATIC_DRAW);" << endl;
     }
     void bindBuffer() const;
     GLuint  loc()     const;

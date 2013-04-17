@@ -1,8 +1,8 @@
 #include "vertexAttrib.h"
 
 void gx::vertexAttrib::bindBuffer() const {
-  debugout << "glBindBuffer(GL_ARRAY_BUFFER, " << this->buffer << ");" << endl;
   glBindBuffer(GL_ARRAY_BUFFER, this->buffer);
+  debugout << "glBindBuffer(GL_ARRAY_BUFFER, " << this->buffer << ");" << endl;
 }
 
 GLuint gx::vertexAttrib::loc() const {
