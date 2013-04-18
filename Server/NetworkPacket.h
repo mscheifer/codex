@@ -13,6 +13,7 @@ public:
 
   struct Chat{
     std::array<char,100> message;
+    char msg[100];
   };
 
   struct Type1{

@@ -104,10 +104,10 @@
     <ClInclude Include="Weapon.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="NetReceiver.h">
+    <ClInclude Include="AudioManager.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="AudioManager.h">
+    <ClInclude Include="NetworkServices.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

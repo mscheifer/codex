@@ -90,7 +90,7 @@
     <ClInclude Include="Entity.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="Map.h" />
-    <ClInclude Include="NetReceiver.h" />
+    <ClInclude Include="NetworkServices.h" />
     <ClInclude Include="NetworkData.h" />
     <ClInclude Include="NetworkPacket.h" />
     <ClInclude Include="Physics.h" />
