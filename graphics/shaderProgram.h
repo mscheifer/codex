@@ -13,8 +13,9 @@ class shaderProgram {
     shaderProgram(std::string,std::string,
                   std::vector<std::pair<const std::string,GLuint>>,
                   std::vector<const vertexAttrib*>);
-    shaderProgram(const shaderProgram&) = delete; //don't copy
-    shaderProgram& operator=(const shaderProgram&) = delete; //don't assign
+	//vc++ is dumb
+    //shaderProgram(const shaderProgram&) = delete; //don't copy
+    //shaderProgram& operator=(const shaderProgram&) = delete; //don't assign
     shaderProgram(shaderProgram&&);
     shaderProgram& operator=(shaderProgram&&);
     ~shaderProgram(); //not virtual because there's no inheiritance

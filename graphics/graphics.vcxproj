@@ -74,7 +74,6 @@
     <ClCompile Include="displaySet.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="matrix.cpp" />
-    <ClCompile Include="oglUtil.cpp" />
     <ClCompile Include="shaderProgram.cpp" />
     <ClCompile Include="vao.cpp" />
     <ClCompile Include="vector3.cpp" />
