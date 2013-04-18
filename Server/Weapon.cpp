@@ -12,13 +12,14 @@ Weapon::~Weapon()
 {
 }
 
-Weapon::Weapon(float damage, float ran, Coordinate d)
+Weapon::Weapon(float damage, float ran, Coordinate d, float mpcost)
 {
 	Cool_Down_Counter = sf::Clock();
 	Cool_Down_Time = 2000;
 	strength = damage;
 	range = ran;
 	position = d;
+  mpCost = mpcost;
 }
 
 

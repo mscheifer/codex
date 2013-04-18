@@ -43,6 +43,7 @@ bool Player::damageBy(DeadlyEntity *deadly)
 
 Position getTerrainHeight(Position x, Position y)
 {
+  // TODO: Will need to ask map for this information
   return 0;
 }
 void Player::fixPosition()
