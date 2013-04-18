@@ -1,13 +1,16 @@
 #include "userInput.h"
 
 namespace {
-gx::vector3 startPlayerDirection = gx::vector3(-4.0, -2.0, -1.0);
+//player needs to start looking forward because mouse movement needs to rotate
+//around the axis that are 90 degrees away from the starting direction and its
+//easier if these are the x and y axis
+gx::vector3 startPlayerDirection = gx::vector3( 0.0,  0.0, -1.0);
 
-gx::vector3 playerPosition  = gx::vector3( 5.0,  2.0,  5.0);
+gx::vector3 playerPosition  = gx::vector3( 0.0,  3.0,  5.0);
 gx::vector3 playerDirection = startPlayerDirection;
 gx::vector3 upDirection     = gx::vector3( 0.0,  1.0,  0.0);
 
-const double mouseSensitivity = 0.01;
+const double mouseSensitivity = 0.001;
 
 sf::Vector2i startMousePosition;
 sf::Vector2i prevMousePosition;
@@ -33,8 +36,10 @@ void gx::setUpMouse() {
 }
 
 void gx::setCamera(displaySet& display) {
+  //add the direction vector to the player's position to get the position to
+  //look at
   display.setView(playerPosition,
-                  playerDirection,
+                  playerDirection + playerPosition,
                   upDirection);
 }
 
@@ -84,8 +89,8 @@ void gx::turnPlayer(displaySet& display) {
   if(curPosition != prevMousePosition) {
     prevMousePosition == curPosition;
     sf::Vector2i diff = curPosition - startMousePosition;
-    vector3 newDirection = rotateY(diff.x * mouseSensitivity) * 
-      rotateX(diff.y * mouseSensitivity) * startPlayerDirection;
+    vector3 newDirection = rotateY(-diff.x * mouseSensitivity) * 
+      rotateX(-diff.y * mouseSensitivity) * startPlayerDirection;
     playerDirection = newDirection;
 
     setCamera(display);
