@@ -11,7 +11,7 @@ const std::string shaderHeader =
   "#version 130\n\
    #extension GL_ARB_uniform_buffer_object : require\n";
 
-constexpr bool debugOn = true;
+constexpr bool debugOn = false;
 
 struct debugStream {
   template<typename T>
@@ -30,7 +30,7 @@ constexpr debugStream debugout;
 const std::string endl = "\n";
 
 template<typename T>
-constexpr GLenum typeVal() {
+inline constexpr GLenum typeVal() {
   return GL_INVALID_ENUM;
 }
 

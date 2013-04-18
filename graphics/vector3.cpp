@@ -124,6 +124,13 @@ gx::vector3 gx::vector3::operator*(elem_t f) const {
   return r;
 }
 
+gx::vector3& gx::vector3::operator+=(const vector3& o) {
+  this->x = this->x + o.x;
+  this->y = this->y + o.y;
+  this->z = this->z + o.z;
+  return *this;
+}
+
 void gx::vector3::print(std::ostream& o) const {
   o << this->x << " " << this->y << " " << this->z;
 }

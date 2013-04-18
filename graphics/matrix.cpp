@@ -196,22 +196,22 @@ gx::matrix gx::rotateArbitrary(vector3 axis, double angle) {
   typedef gx::matrix::elem_t elem_t;
   axis.normalize();
   return matrix(
-                1 + (1 - elem_t(cos(angle))) * (axis[0]*axis[0] - 1),
-                -axis[2] * elem_t(sin(angle)) + (1 - elem_t(cos(angle))) * axis[0] * axis[1],
-                 axis[1] * elem_t(sin(angle)) + (1 - elem_t(cos(angle))) * axis[0] * axis[2],
-                0,
+   1 + (1 - elem_t(cos(angle))) * (axis[0] * axis[0] - 1),
+   -axis[2] * elem_t(sin(angle)) + (1 - elem_t(cos(angle))) * axis[0] * axis[1],
+    axis[1] * elem_t(sin(angle)) + (1 - elem_t(cos(angle))) * axis[0] * axis[2],
+   0,
 
-                 axis[2] * elem_t(sin(angle)) + (1 - elem_t(cos(angle))) * axis[1] * axis[0],
-                1 + (1 - elem_t(cos(angle))) * (axis[1] * axis[1] - 1),
-                -axis[0] * elem_t(sin(angle)) + (1 - elem_t(cos(angle))) * axis[1] * axis[2],
-                0, 
+    axis[2] * elem_t(sin(angle)) + (1 - elem_t(cos(angle))) * axis[1] * axis[0],
+   1 + (1 - elem_t(cos(angle))) * (axis[1] * axis[1] - 1),
+   -axis[0] * elem_t(sin(angle)) + (1 - elem_t(cos(angle))) * axis[1] * axis[2],
+   0, 
 
-                -axis[1] * elem_t(sin(angle)) + (1 - elem_t(cos(angle))) * axis[2] * axis[0],
-                 axis[0] * elem_t(sin(angle)) + (1 - elem_t(cos(angle))) * axis[2] * axis[1],
-                1 + (1 - elem_t(cos(angle))) * (axis[2] * axis[2] - 1),
-                0,
+   -axis[1] * elem_t(sin(angle)) + (1 - elem_t(cos(angle))) * axis[2] * axis[0],
+    axis[0] * elem_t(sin(angle)) + (1 - elem_t(cos(angle))) * axis[2] * axis[1],
+   1 + (1 - elem_t(cos(angle))) * (axis[2] * axis[2] - 1),
+   0,
 
-                0,0,0,1);
+   0,0,0,1);
 }
 
 gx::matrix gx::scaling(matrix::elem_t x, matrix::elem_t y, matrix::elem_t z) {

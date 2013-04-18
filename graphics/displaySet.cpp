@@ -93,12 +93,12 @@ void gx::displaySet::setView(const vector3& e, const vector3& d,
 
   auto oglM = this->view.oglmatrix();
 
+  glBindBuffer(GL_UNIFORM_BUFFER, this->bufferName);
   debugout << "glBindBuffer(GL_UNIFORM_BUFFER, " << this->bufferName << ");";
   debugout << endl;
-  glBindBuffer(GL_UNIFORM_BUFFER, this->bufferName);
+  glBufferSubData(GL_UNIFORM_BUFFER, 0, sizeof(oglM), oglM.data());
   debugout << "glBufferSubData(GL_UNIFORM_BUFFER, 0, " << sizeof(oglM);
   debugout << ", oglM.data());" << endl;
-  glBufferSubData(GL_UNIFORM_BUFFER, 0, sizeof(oglM), oglM.data());
 }
 
 GLuint gx::displaySet::bindPoint() {

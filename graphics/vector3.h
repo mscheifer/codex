@@ -30,11 +30,12 @@ public:
   const elem_t& get(int) const;
   elem_t& operator[](int);
   const elem_t& operator[](int) const;
-  vector3 operator-() const;
-  vector3 operator+(const vector3&) const;
-  vector3 operator-(const vector3&) const;
-  vector3 operator*(const vector3 &a) const;
-  vector3 operator*(elem_t f) const;
+  vector3  operator-() const;
+  vector3  operator+(const vector3&) const;
+  vector3  operator-(const vector3&) const;
+  vector3  operator*(const vector3&) const;
+  vector3  operator*(elem_t f) const;
+  vector3& operator+=(const vector3&);
   void print(std::ostream& o) const;
   void print() const;
   bool operator==(const vector3& o) const;

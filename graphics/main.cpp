@@ -2,6 +2,7 @@
 #include <SFML/Window.hpp>
 #include <SFML/OpenGL.hpp>
 #include <iostream>
+#include "userInput.h"
 #include "displaySet.h"
 #include "shaderProgram.h"
 #include "vao.h"
@@ -48,9 +49,8 @@ int main() {
 
   gx::displaySet display;
 
-  display.setView(gx::vector3( 5.0,  2.0,  5.0),
-                  gx::vector3(-4.0, -2.0, -5.0),
-                  gx::vector3( 0.0,  1.0,  0.0));
+  gx::setCamera(display);
+  gx::setUpMouse();
   reshape(display,defaultWindowWidth, defaultWindowHeight);
 
   glEnable(GL_DEPTH_TEST); //enable depth buffer
@@ -94,7 +94,6 @@ int main() {
 
   gx::vao testTri(indices,attribs);
 
-
   /*const std::vector<std::pair<const std::string,GLuint>> uniforms = 
     { std::make_pair("display", display.bindPoint()) }; */
 
@@ -114,18 +113,15 @@ int main() {
   while (running) {
     // handle events
     sf::Event event;
-    while (window.pollEvent(event))
-    {
-      if (event.type == sf::Event::Closed)
-      {
+    while (window.pollEvent(event)) {
+      if (event.type == sf::Event::Closed) {
         // end the program
         running = false;
-      }
-      else if (event.type == sf::Event::Resized)
-      {
+      } else if (event.type == sf::Event::Resized) {
         reshape(display,event.size.width, event.size.height);
       }
     }
+    gx::handleUserInput(display);
 
     // clear the buffers
 	  glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
