@@ -12,15 +12,13 @@ Weapon::~Weapon()
 {
 }
 
-Weapon::Weapon(int dam, int ran, Coordinate d)
+Weapon::Weapon(float damage, float ran, Coordinate d)
 {
 	Cool_Down_Counter = sf::Clock();
 	Cool_Down_Time = 2000;
-	damage = dam;
+	strength = damage;
 	range = ran;
 	position = d;
-	
-
 }
 
 

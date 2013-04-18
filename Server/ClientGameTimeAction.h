@@ -11,5 +11,5 @@ struct ClientGameTimeAction
 	bool jump;
 	Direction facingDirection;
 
-	ClientGameTimeAction() : player_id(-1), attack(false), jump(false), facingDirection(), movement(User_Movement::NONE ){};
+	ClientGameTimeAction() : player_id(-1), attack(false), jump(false), facingDirection(), movement(NONE){};
 };
