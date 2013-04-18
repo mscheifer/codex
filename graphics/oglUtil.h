@@ -29,18 +29,11 @@ constexpr debugStream debugout;
 
 const std::string endl = "\n";
 
-template<typename T>
-inline constexpr GLenum typeVal() {
-  return GL_INVALID_ENUM;
-}
-
-template <>
-constexpr GLenum typeVal<GLuint>() {
+inline constexpr GLenum typeVal(GLuint) {
   return GL_UNSIGNED_INT;
 }
 
-template <>
-constexpr GLenum typeVal<GLfloat>() {
+inline constexpr GLenum typeVal(GLfloat) {
   return GL_FLOAT;
 }
 

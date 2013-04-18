@@ -18,7 +18,7 @@ class vertexAttrib {
     template<typename T>
     vertexAttrib(std::string n, GLint vs, GLsizei st, std::vector<T> d)
           : varName(n), shaderLocation(freshAttribLocation()), vectorSize(vs), 
-            glType(typeVal<T>())                             , byteOffset(st) {
+            glType(typeVal(d[0]))                            , byteOffset(st) {
       glGenBuffers(1, &buffer);
       debugout << "glGenBuffers(1, &buffer@" << &buffer << ");" << endl;
       this->bindBuffer();
@@ -27,10 +27,11 @@ class vertexAttrib {
       debugout << "glBufferData(GL_ARRAY_BUFFER, " << d.size() * sizeof(T);
       debugout << ", d.data(), GL_STATIC_DRAW);" << endl;
     }
-    vertexAttrib(const vertexAttrib&) = delete; //don't copy
-    vertexAttrib& operator=(const vertexAttrib&) = delete; //don't assign
-    vertexAttrib(vertexAttrib&&) = delete; //define later
-    vertexAttrib& operator=(vertexAttrib&&) = delete; //define later
+	//vc++ is dumb
+    //vertexAttrib(const vertexAttrib&) = delete; //don't copy
+    //vertexAttrib& operator=(const vertexAttrib&) = delete; //don't assign
+    //vertexAttrib(vertexAttrib&&) = delete; //define later
+    //vertexAttrib& operator=(vertexAttrib&&) = delete; //define later
     ~vertexAttrib();
     void bindBuffer()     const;
     std::string name()    const;

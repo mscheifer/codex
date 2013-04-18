@@ -45,9 +45,6 @@
     <ClCompile Include="vertexAttrib.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="oglUtil.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="displaySet.h">
