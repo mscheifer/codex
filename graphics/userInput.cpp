@@ -77,7 +77,7 @@ void gx::movePlayer(displaySet& display) {
     matrix rotation = rotateY(movementAngles[movement]);
     vector3 diff = rotation * vector3(playerDirection[0],0,playerDirection[2]);
     diff.normalize();
-    diff.scale(0.1);
+    diff.scale(0.1f);
     playerPosition += diff;
 
     setCamera(display);
