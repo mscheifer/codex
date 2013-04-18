@@ -2,6 +2,7 @@
 #include <SFML/Network.hpp>
 #include <SFML/Window.hpp>
 #include <SFML/Graphics.hpp>
+#include "Weapon.h"
 #include <iostream>
 #include <string>
 #include <list>

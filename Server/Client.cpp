@@ -188,34 +188,47 @@ void NetworkClient::doClient(){
     }
 
 	*/
-	struct ServerGameTimeRespond s;
-	s.players[0] =  Player(0,0,1);
-	s.players[1] = Player(2,3,1);
-	s.players[2] =  Player(7,2,1);
-	s.players[3] = Player(4,6,1);
 
+	//temp code to simular server respond
+	struct ServerGameTimeRespond s;
+	s.players[0] =  Player(0,0,1,42);
+	s.players[1] = Player(2,3,1,43);
+	s.players[2] =  Player(7,2,1,44);
+	s.players[3] = Player(4,6,1,45);
+	//end of temp code
+
+	ClientGameTimeAction c ;
+	Direction d; 
 	sf::Event event;
 	sf::RenderWindow window( sf::VideoMode(800, 600), "sf::Text test");
 	AsciUI as;
 	while(window.isOpen()){
+
 		while(window.pollEvent(event)){
+	
+			c.facingDirection = d; //this should somehow change too;
+		
+
 			if(event.type == sf::Event::KeyPressed){
 				if(event.key.code == sf::Keyboard::W) {
-					s.players[0].moveForward();
-					as.render(s.players);
-				} else if(event.key.code == sf::Keyboard::S) {
-					s.players[0].moveBackward();
-					as.render(s.players);
-				}else if(event.key.code == sf::Keyboard::D) {
-					s.players[0].moveRight();
-					as.render(s.players);
-				}else if(event.key.code == sf::Keyboard::A) {
-					s.players[0].moveLeft();
-					as.render(s.players);
-        }else if(event.key.code == sf::Keyboard::Space) {
-					s.players[0].jump();
-					as.render(s.players);
+					s.players[0].moveForward();//simulating server pending remove
+				//	c.forward = true;		
+				} if(event.key.code == sf::Keyboard::S) {
+					s.players[0].moveBackward(); //simulating server pending remove
+				//	c.back = true;
+				}if(event.key.code == sf::Keyboard::D) {
+					s.players[0].moveRight(); //simulating server pending remove
+			//		c.right = true;
+				}if(event.key.code == sf::Keyboard::A) {
+					s.players[0].moveLeft(); //simulating server pending remove
+			//		c.left = true;
+				}if(event.key.code == sf::Keyboard::Space) {
+					s.players[0].jump(); //simulating server pending remove
+					c.jump = true;
 				}
+				//send client run time c
+				//render s
+				as.render(s.players);
 			
 			}
 
