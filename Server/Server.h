@@ -7,6 +7,7 @@
 #include <time.h>
 #include <SFML/System/Clock.hpp>
 #include "ConfigManager.h"
+#include "NetReceiver.h"
 
 class NetworkServer{
 

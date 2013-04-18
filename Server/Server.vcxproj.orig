@@ -66,14 +66,13 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="AsciUI.cpp" />
+    <ClCompile Include="AudioManager.cpp" />
     <ClCompile Include="Client.cpp" />
-<<<<<<< HEAD
     <ClCompile Include="ConfigManager.cpp" />
-=======
     <ClCompile Include="Game.cpp" />
->>>>>>> c826a40f1247cebd904a5cb239f05106c0eb9351
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Map.cpp" />
+    <ClCompile Include="NetReceiver.cpp" />
     <ClCompile Include="NetworkPacket.cpp" />
     <ClCompile Include="Physics.cpp" />
     <ClCompile Include="Player.cpp" />
@@ -85,20 +84,23 @@
     <ClInclude Include="3DCoordinate.h" />
     <ClInclude Include="AsciUI.h" />
     <ClInclude Include="Client.h" />
-<<<<<<< HEAD
     <ClInclude Include="ConfigManager.h" />
-=======
     <ClInclude Include="ClientGameTimeAction.h" />
->>>>>>> c826a40f1247cebd904a5cb239f05106c0eb9351
     <ClInclude Include="directionalVector.h" />
     <ClInclude Include="Entity.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="Map.h" />
+    <ClInclude Include="NetReceiver.h" />
     <ClInclude Include="NetworkData.h" />
     <ClInclude Include="NetworkPacket.h" />
     <ClInclude Include="Physics.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="Server.h" />
+<<<<<<< HEAD
+    <ClInclude Include="StaticEnums.h" />
+=======
+    <ClInclude Include="AudioManager.h" />
+>>>>>>> 7b13bba27aa579f0ba65cae32636ab0878e5cacf
     <ClInclude Include="Weapon.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

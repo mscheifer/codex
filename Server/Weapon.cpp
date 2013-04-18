@@ -36,7 +36,7 @@ bool Weapon::useWeapon() {
 }
 
 bool Weapon::canUseWeapon() {
-	if( Cool_Down_Counter.getElapsedTime().asMilliseconds() < Cool_Down_Time /* && some other attributes*/) {
+	if( Cool_Down_Counter.getElapsedTime().asMilliseconds() < Cool_Down_Time /* && some other attributes*/ ) {
 		return true;
 	}
 	return false;
