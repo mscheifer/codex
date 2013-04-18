@@ -4,4 +4,4 @@
 #include "directionalVector.h"
 #define SERVERCLOCK .0333333333f
 #define GRAVITY -9.8f
-Coordinate ThreeDMovement(Coordinate location, Direction direction, float accelerationZ);
+Coordinate ThreeDMovement(Coordinate location, Direction direction, Velocity accelerationZ);

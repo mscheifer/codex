@@ -211,16 +211,16 @@ void NetworkClient::doClient(){
 
 			if(event.type == sf::Event::KeyPressed){
 				if(event.key.code == sf::Keyboard::W) {
-					s.players[0].moveForward();//simulating server pending remove
+					s.players[0].moveTowardDirection(FORWARD);//simulating server pending remove
 				//	c.forward = true;		
 				} if(event.key.code == sf::Keyboard::S) {
-					s.players[0].moveBackward(); //simulating server pending remove
+					s.players[0].moveTowardDirection(BACKWARD); //simulating server pending remove
 				//	c.back = true;
 				}if(event.key.code == sf::Keyboard::D) {
-					s.players[0].moveRight(); //simulating server pending remove
+					s.players[0].moveTowardDirection(RIGHT); //simulating server pending remove
 			//		c.right = true;
 				}if(event.key.code == sf::Keyboard::A) {
-					s.players[0].moveLeft(); //simulating server pending remove
+					s.players[0].moveTowardDirection(LEFT); //simulating server pending remove
 			//		c.left = true;
 				}if(event.key.code == sf::Keyboard::Space) {
 					s.players[0].jump(); //simulating server pending remove
