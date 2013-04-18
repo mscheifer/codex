@@ -9,8 +9,10 @@ namespace gx {
 class vao {
     GLuint  id;
     GLsizei numIndices;
+    GLuint ibo;
   public:
-    vao(std::vector<GLuint>,std::vector<vertexAttrib>);
+    vao(std::vector<GLuint>,std::vector<const vertexAttrib*>);
+    ~vao();
     void draw();
 };
 

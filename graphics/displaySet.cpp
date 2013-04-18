@@ -1,7 +1,19 @@
 #include "displaySet.h"
 
-gx::displaySet::displaySet(GLuint bindingPoint)
-  : view(), projection(), bindingIndex(bindingPoint), bufferName() {
+//stores the next available uniform bind point
+//should be incremented every time it is used
+GLuint gx::displaySet::nextUniformBindPoint = 0;
+
+GLuint gx::displaySet::freshBindPoint() {
+  if(nextUniformBindPoint >= GL_MAX_UNIFORM_BUFFER_BINDINGS) {
+    std::cout << "Error, too many uniform objects" << std::endl;
+    exit(1);
+  }
+  return nextUniformBindPoint++;
+}
+
+gx::displaySet::displaySet()
+  : view(), projection(), bindingIndex(freshBindPoint()), bufferName() {
   debugout << "glGenBuffers(1, &(this->bufferName));" << endl;
   glGenBuffers(1, &(this->bufferName));
   debugout << "glBindBuffer(GL_UNIFORM_BUFFER, " << this->bufferName << ");";
@@ -15,6 +27,11 @@ gx::displaySet::displaySet(GLuint bindingPoint)
   debugout << "glBindBufferBase(GL_UNIFORM_BUFFER, " << this->bindingIndex;
   debugout << ", " << this->bufferName << ");" << endl;
   glBindBufferBase(GL_UNIFORM_BUFFER, this->bindingIndex, this->bufferName);
+}
+
+gx::displaySet::~displaySet() {
+  debugout << "glDeleteBuffers(1, &(this->bufferName));" << endl;
+  glDeleteBuffers(1, &(this->bufferName));
 }
 
 void gx::displaySet::setProjection(elem_t fov, elem_t ratio, elem_t nearP,

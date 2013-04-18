@@ -4,10 +4,11 @@ CC       = @g++
 WARNINGS = -Wall -Wextra -Wstrict-overflow=5 #-Wconversion
 CPPFLAGS = -O3 $(WARNINGS) -ISFML/include -std=c++11
 LDFLAGS  = -LSFML/lib -lsfml-window -lsfml-system -lGL -lGLEW
+OBJDIR   = obj/
 SOURCES  = $(wildcard *.cpp)
-OBJS     = $(patsubst %.cpp, objs/%.o, $(SOURCES))
+OBJS     = $(patsubst %.cpp, $(OBJDIR)%.o, $(SOURCES))
 
-objs/%.o: %.cpp *.h
+$(OBJDIR)%.o: %.cpp *.h
 	$(ECHO) "Compiling $<"
 	$(ECHO) $(CC) $(CPPFLAGS) -c -o $@ $<
 	$(CC) $(CPPFLAGS) -c -o $@ $<

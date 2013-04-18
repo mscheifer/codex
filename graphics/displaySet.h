@@ -7,14 +7,16 @@
 namespace gx {
 
 class displaySet {
-  public:
+    static GLuint nextUniformBindPoint;
+    static GLuint freshBindPoint();
     matrix view;
     matrix projection;
     GLuint bindingIndex;
     GLuint bufferName;
   public:
     typedef matrix::elem_t elem_t;
-    displaySet(GLuint);
+    displaySet();
+    ~displaySet();
     void setProjection(elem_t fov, elem_t ratio, elem_t nearP, elem_t farP);
     //camera position, camera look at, up vector
     void setView(const vector3&, const vector3&, const vector3&);

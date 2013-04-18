@@ -33,6 +33,8 @@ int main() {
   oglContext.minorVersion = 1;
 */
   // create the window
+  //make sure this is above all other calls so that the desctructor is called
+  //last so we have an opengl context for destructors
   sf::Window window(sf::VideoMode(defaultWindowWidth, defaultWindowHeight),
     "DrChao", sf::Style::Default);//, oglContext);
   window.setVerticalSyncEnabled(false);
@@ -44,16 +46,54 @@ int main() {
     exit(1);
   }
 
-  //stores the next available uniform bind point
-  //should be incremented every time it is used
-  GLuint newUniformBindPoint = 0;
+  gx::displaySet display;
 
-  gx::displaySet display(newUniformBindPoint++);
-
-  display.setView(gx::vector3(10.0,  2.0, 10.0),
-	              gx::vector3( 0.0, -2.0, -5.0),
-				  gx::vector3( 0.0,  1.0,  0.0));
+  display.setView(gx::vector3( 5.0,  2.0,  5.0),
+                  gx::vector3(-4.0, -2.0, -5.0),
+                  gx::vector3( 0.0,  1.0,  0.0));
   reshape(display,defaultWindowWidth, defaultWindowHeight);
+
+  glEnable(GL_DEPTH_TEST); //enable depth buffer
+  glClearColor(1.0,1.0,1.0,1.0); //start with a white screen
+  glClearDepth(1.f);
+  glDepthFunc(GL_LEQUAL);
+
+  std::array<GLfloat,8*4> posArray    = {{ 0.0f, 0.0f, 0.0f, 1.0f,
+                                           1.0f, 0.0f, 0.0f, 1.0f,
+                                           0.0f, 1.0f, 0.0f, 1.0f,
+                                           1.0f, 1.0f, 0.0f, 1.0f,
+                                           0.0f, 0.0f, 1.0f, 1.0f,
+                                           1.0f, 0.0f, 1.0f, 1.0f,
+                                           0.0f, 1.0f, 1.0f, 1.0f,
+                                           1.0f, 1.0f, 1.0f, 1.0f }};
+  std::array<GLfloat,8*4> colorsArray = {{ 0.0f, 0.0f, 1.0f, 1.0f,
+                                           0.0f, 0.0f, 1.0f, 1.0f,
+                                           0.0f, 0.0f, 1.0f, 1.0f,
+                                           0.0f, 0.0f, 1.0f, 1.0f,
+                                           0.0f, 0.0f, 1.0f, 1.0f,
+                                           0.0f, 0.0f, 1.0f, 1.0f,
+                                           0.0f, 0.0f, 1.0f, 1.0f,
+                                           1.0f, 0.0f, 1.0f, 1.0f }};
+  std::array<GLuint,6*6>  indicesArray = {{ 0, 1, 2, 1, 3, 2,
+                                            2, 3, 6, 3, 7, 6,
+                                            4, 0, 6, 0, 2, 4,
+                                            1, 5, 3, 5, 7, 3,
+                                            4, 5, 0, 5, 1, 0,
+                                            5, 4, 7, 4, 6, 7 }};
+
+  std::vector<GLfloat> positions(posArray.begin(),   posArray.end());
+  std::vector<GLfloat> colors(colorsArray.begin(),   colorsArray.end());
+  std::vector<GLuint>  indices(indicesArray.begin(), indicesArray.end());
+
+  gx::vertexAttrib positionsAttrib("position",4,0,positions);
+  gx::vertexAttrib colorsAttrib   ("color"   ,4,0,colors);
+
+  std::vector<const gx::vertexAttrib*> attribs;
+  attribs.push_back(&positionsAttrib);
+  attribs.push_back(&colorsAttrib);
+
+  gx::vao testTri(indices,attribs);
+
 
   /*const std::vector<std::pair<const std::string,GLuint>> uniforms = 
     { std::make_pair("display", display.bindPoint()) }; */
@@ -62,46 +102,8 @@ int main() {
   std::vector<std::pair<const std::string,GLuint>> uniforms;
   uniforms.push_back(std::make_pair("display", display.bindPoint()));
 
-  const GLuint posAttribLoc = 0;
-  const GLuint colorAttribLoc = 1;
-
-  /*const std::vector<std::pair<const std::string,GLuint>> attribs = 
-    { std::make_pair("position", posAttribLoc),
-      std::make_pair("color"   , colorAttribLoc) };*/
-  std::vector<std::pair<const std::string,GLuint>> attrib_info;
-  attrib_info.push_back(std::make_pair("position", posAttribLoc));
-  attrib_info.push_back(std::make_pair("color"   , colorAttribLoc));
-  
   gx::shaderProgram prog =
-    gx::shaderFromFiles("default.vert","default.frag",uniforms,attrib_info);
-
-  prog.use();
-
-  glEnable(GL_DEPTH_TEST); //enable depth buffer
-  glClearColor(1.0,1.0,1.0,1.0); //start with a white screen
-  glClearDepth(1.f);
-  glDepthFunc(GL_LEQUAL);
-
-  std::array<GLfloat,12> posArray    = { 0.0f, 1.0f,-5.0f, 1.0f,
-                                         1.0f, 0.0f,-5.0f, 1.0f,
-                                        -1.0f,-1.0f,-5.0f, 1.0f};
-  std::array<GLfloat,12> colorsArray = { 0.0f, 0.0f, 1.0f, 1.0f,
-                                         0.0f, 0.0f, 1.0f, 1.0f,
-                                         0.0f, 0.0f, 1.0f, 1.0f};
-  std::array<GLuint,3>  indicesArray = { 0, 1, 2 };
-
-  std::vector<GLfloat> positions(posArray.begin(),   posArray.end());
-  std::vector<GLfloat> colors(colorsArray.begin(),   colorsArray.end());
-  std::vector<GLuint>  indices(indicesArray.begin(), indicesArray.end());
-
-  gx::vertexAttrib positionsAttrib(posAttribLoc  ,4,0,positions);
-  gx::vertexAttrib colorsAttrib   (colorAttribLoc,4,0,colors);
-
-  std::vector<gx::vertexAttrib> attribs;
-  attribs.push_back(positionsAttrib);
-  attribs.push_back(colorsAttrib);
-
-  gx::vao testTri(indices,attribs);
+    gx::shaderFromFiles("default.vert","default.frag",uniforms,attribs);
 
   //fps setup
   sf::Clock fpsClock;
@@ -109,9 +111,7 @@ int main() {
 
   // run the main loop
   bool running = true;
-  for(int asdf = 0; asdf < 3; ++asdf)
-  //while (running)
-  {
+  while (running) {
     // handle events
     sf::Event event;
     while (window.pollEvent(event))
@@ -128,8 +128,9 @@ int main() {
     }
 
     // clear the buffers
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
-    gx::debugout << "glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);" << gx::endl;
+	  glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
+    gx::debugout << "glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT";
+    gx::debugout << "| GL_STENCIL_BUFFER_BIT);" << gx::endl;
 
     // draw...
     prog.use();
@@ -146,9 +147,6 @@ int main() {
       fpsClock.restart();
     }
   }
-  while(true) {}
-
-  // release resources...
 
   return 0;
 }

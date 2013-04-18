@@ -17,7 +17,7 @@ struct debugStream {
   template<typename T>
   const debugStream& operator<<(const T& a) const {
     if(debugOn) std::cout << a;
-	GLenum err;
+    GLenum err;
     while(gx::debugOn && (err = glGetError())) {
       std::cout << "OpenGL error: " << err << std::endl;
     }
@@ -35,10 +35,14 @@ constexpr GLenum typeVal() {
 }
 
 template <>
-constexpr GLenum gx::typeVal<GLuint>();
+constexpr GLenum typeVal<GLuint>() {
+  return GL_UNSIGNED_INT;
+}
 
 template <>
-constexpr GLenum gx::typeVal<GLfloat>();
+constexpr GLenum typeVal<GLfloat>() {
+  return GL_FLOAT;
+}
 
 } //end namespace gx
 #endif

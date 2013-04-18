@@ -54,8 +54,8 @@ std::string readFile(const std::string fileName) {
 } //end unnamed namespace
 
 gx::shaderProgram::shaderProgram(std::string vsSource,std::string fsSource,
-        const std::vector<std::pair<const std::string,GLuint>> uniforms,
-        const std::vector<std::pair<const std::string,GLuint>> attribs)
+              std::vector<std::pair<const std::string,GLuint>> uniforms,
+              std::vector<const vertexAttrib*> attribs)
                  : prog(glCreateProgram()) {
   debugout << prog << " = glCreateProgram()" << endl;
   const std::string shader_output_name("outputF");
@@ -90,14 +90,14 @@ gx::shaderProgram::shaderProgram(std::string vsSource,std::string fsSource,
 
   //cant use range based for here because of visual c++
   for(auto attribp = attribs.begin() ; attribp != attribs.end() ; ++attribp) {
-	const auto& attrib = *attribp;
-    debugout << "glBindAttribLocation(" << this->prog << ", " << attrib.second;
-    debugout << ", " << attrib.first.c_str() << ");" << endl;
-    glBindAttribLocation(this->prog,attrib.second,attrib.first.c_str());
+    const auto& attrib = **attribp;
+    glBindAttribLocation(this->prog,attrib.loc(),attrib.name().c_str());
+    debugout << "glBindAttribLocation(" << this->prog << ", " << attrib.loc();
+    debugout << ", " << attrib.name().c_str() << ");" << endl;
   }
 
-  debugout << "glLinkProgram(" << this->prog << ");" << endl;
   glLinkProgram(this->prog);
+  debugout << "glLinkProgram(" << this->prog << ");" << endl;
   printProgramInfoLog(this->prog);
 
   if(glGetFragDataLocation(prog,shader_output_name.c_str()) == -1) {
@@ -112,22 +112,23 @@ gx::shaderProgram::shaderProgram(std::string vsSource,std::string fsSource,
   glDeleteShader(fragShader);
 
    //cant use range based for here because of visual c++
-  for(auto uniformp = uniforms.begin() ; uniformp != uniforms.end() ; ++uniformp) {
+  for(auto uniformp = uniforms.begin(); uniformp != uniforms.end(); ++uniformp){
     const auto& uniform = *uniformp;
     //uniform.first is the block name, second is the block binding id
     GLuint localIndex= glGetUniformBlockIndex(this->prog,uniform.first.c_str());
+    debugout << localIndex << " = glGetUniformBlockIndex(" << this->prog;
+    debugout << ", \"" << uniform.first.c_str() << "\");" << endl;
     if(localIndex == GL_INVALID_INDEX) {
       std::cout << uniform.first << ": doesn't exist in shader" << endl;
     }
 
-    debugout << localIndex << " = glGetUniformBlockIndex(" << this->prog;
-    debugout << ", \"" << uniform.first.c_str() << "\");" << endl;
+    glUniformBlockBinding(this->prog,localIndex,uniform.second);
     debugout << "glUniformBlockBinding(" << this->prog << ", " << localIndex;
     debugout << ", " << uniform.second << ");" << endl;
-    glUniformBlockBinding(this->prog,localIndex,uniform.second);
 
     int sz;
-    glGetActiveUniformBlockiv(this->prog, localIndex, GL_UNIFORM_BLOCK_DATA_SIZE, &sz);
+    glGetActiveUniformBlockiv(this->prog, localIndex,
+                              GL_UNIFORM_BLOCK_DATA_SIZE, &sz);
     debugout << "uniform size: " << sz << endl;
   }
 }
@@ -135,6 +136,12 @@ gx::shaderProgram::shaderProgram(std::string vsSource,std::string fsSource,
 gx::shaderProgram::shaderProgram(gx::shaderProgram&& other) {
 	this->prog = other.prog;
 	other.prog = 0; //glDeleteProgram wont do anything
+}
+
+gx::shaderProgram& gx::shaderProgram::operator=(gx::shaderProgram&& other) {
+	this->prog = other.prog;
+	other.prog = 0; //glDeleteProgram wont do anything
+  return *this;
 }
 
 gx::shaderProgram::~shaderProgram() {
@@ -149,8 +156,8 @@ void gx::shaderProgram::use() {
 
 gx::shaderProgram gx::shaderFromFiles(const std::string vsFile,
                                       const std::string fsFile,
-           const std::vector<std::pair<const std::string,GLuint>> uniforms,
-           const std::vector<std::pair<const std::string,GLuint>> attribs) {
+                std::vector<std::pair<const std::string,GLuint>> uniforms,
+                std::vector<const vertexAttrib*> attribs) {
   std::string vsSource, fsSource;
 
   vsSource = readFile(vsFile);
