@@ -18,24 +18,23 @@ public:
   Player(void);
   Player(int x, int y, int z, int assigned_id);
   ~Player(void);
-  virtual bool attackBy(Player*);
+  virtual bool attackBy(DeadlyEntity*);
   void moveForward();
   void moveBackward();
   void moveLeft();
   void moveRight();
   void jump();
   int getHealth();
-  Coordinate getPosition();
   std::string getString();
   void handleAction(ClientGameTimeAction a);
 private:
   int health;
   int maxHealth;
-  int strength;
   int defense;
+  int jumpCount;
   Weapon weapon[2]; //0 bare hand, 1 fireball
   int current_weapon_selection; //0 bare hand, 1 fireball
-  bool damageBy(Player *);
+  bool damageBy(DeadlyEntity *);
   void fixPosition();
   void handleSelfAction(ClientGameTimeAction a);
   void handleOtherAction(ClientGameTimeAction a);

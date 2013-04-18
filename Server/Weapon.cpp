@@ -16,11 +16,9 @@ Weapon::Weapon(int dam, int ran, Coordinate d)
 {
 	Cool_Down_Counter = sf::Clock();
 	Cool_Down_Time = 2000;
-	damage = dam;
+	strength = dam;
 	range = ran;
 	position = d;
-	
-
 }
 
 

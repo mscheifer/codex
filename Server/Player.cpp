@@ -10,7 +10,6 @@ Player::Player(int x, int y, int z, int assigned_id)
   direction.x = 0.0;
   direction.y = -1.0;
   direction.z = 0.0;
-  strength = 10;
   defense = 5;
   health = 100;
   maxHealth = 100;
@@ -22,11 +21,7 @@ Player::~Player(void)
 {
 }
 
-Coordinate Player::getPosition(void){
-  return position;
-}
-
-bool Player::attackBy(Player *other)
+bool Player::attackBy(DeadlyEntity *other)
 {
   if(other)
   {
@@ -36,11 +31,9 @@ bool Player::attackBy(Player *other)
     return false;
 }
 
-bool Player::damageBy(Player *otherPlayer)
+bool Player::damageBy(DeadlyEntity *deadly)
 {
-  if(otherPlayer->health <= 0)
-    return false;
-  int damage = otherPlayer->strength - defense;
+  int damage = deadly->getStrength() - defense;
   damage = ( damage > 0? damage: 0);
   int newHealth = health - damage;
   health = (newHealth > 0 ? newHealth : 0);
