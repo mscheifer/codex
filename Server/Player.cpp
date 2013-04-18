@@ -33,16 +33,11 @@ bool Player::attackBy(DeadlyEntity *other)
 
 bool Player::damageBy(DeadlyEntity *deadly)
 {
-  int damage = deadly->getStrength() - defense;
+  float damage = deadly->getStrength() - defense;
   damage = ( damage > 0? damage: 0);
-  int newHealth = health - damage;
+  float newHealth = (health - damage);
   health = (newHealth > 0 ? newHealth : 0);
   return true;
-}
-
-int Player::getHealth()
-{
-  return health;
 }
 
 int getTerrainHeight(int x, int y)
@@ -124,20 +119,20 @@ void Player::handleSelfAction(ClientGameTimeAction a) {
 	direction = a.facingDirection;
 	
 	switch(a.movement) {
-		case User_Movement::FORWARD :
+		case FORWARD :
 			moveForward();
 		// is this right allen?
-		case User_Movement::BACKWARD:
+		case BACKWARD:
 				break;
-		case User_Movement::LEFT:
+		case LEFT:
 				break;
-		case User_Movement::RIGHT:
+		case RIGHT:
 				break;
-		case User_Movement::BACKWARD_LEFT:
-		case User_Movement::BACKWARD_RIGHT:
-		case User_Movement::FORWARD_LEFT:
-		case User_Movement::FORWARD_RIGHT:
-		case User_Movement::NONE:
+		case BACKWARD_LEFT:
+		case BACKWARD_RIGHT:
+		case FORWARD_LEFT:
+		case FORWARD_RIGHT:
+		case NONE:
 		default:
 			throw "Oh... something got fucked up in player handleSelfAction";
 

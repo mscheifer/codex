@@ -24,13 +24,13 @@ public:
   void moveLeft();
   void moveRight();
   void jump();
-  int getHealth();
+  float getHealth() { return health; }
   std::string getString();
   void handleAction(ClientGameTimeAction a);
 private:
-  int health;
-  int maxHealth;
-  int defense;
+  float health;
+  float maxHealth;
+  float defense;
   int jumpCount;
   Weapon weapon[2]; //0 bare hand, 1 fireball
   int current_weapon_selection; //0 bare hand, 1 fireball

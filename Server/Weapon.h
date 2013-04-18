@@ -9,7 +9,7 @@ class Weapon : public DeadlyEntity
 public:
 	Weapon(void);
 	~Weapon(void);
-	Weapon(int damage, int range, Coordinate d);
+	Weapon(float damage, float range, Coordinate d);
 	int getRange(void);
 	int getDamage(void);
 	void handleAction(ClientGameTimeAction a);

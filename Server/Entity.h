@@ -16,5 +16,5 @@ protected:
   Coordinate position;
   Direction direction;
   // Some kind of state {paralyzed, frozen, blah blah}
-  // Power ups {contains MULTIPLERS for health, defense/ elemental attributes}
+  // Power ups {contains MULTIPLERS for health, defense/ elemental weapons}
 };
