@@ -5,6 +5,7 @@
 #include <vector>
 #include "NetworkPacket.h"
 #include <time.h>
+#include <SFML/System/Clock.hpp>
 #include "ConfigManager.h"
 #include "NetReceiver.h"
 

@@ -1,8 +1,9 @@
 #include "Player.h"
 
 Player::Player(void){}
-Player::Player(int x, int y, int z)
+Player::Player(int x, int y, int z, int assigned_id)
 {
+  player_id = assigned_id;
   position.x = x;
   position.y = y;
   position.z = z;
@@ -118,8 +119,69 @@ void Player::jump()
 }
 
 void Player::handleAction(ClientGameTimeAction a) {
+	if(a.player_id == player_id) {
+		handleSelfAction(a);
+	}
 
 }
+
+void Player::handleSelfAction(ClientGameTimeAction a) {
+
+	//start of movement logic
+	direction = a.facingDirection;
+	
+	switch(a.movement) {
+		case User_Movement::FORWARD :
+			moveForward();
+		// is this right allen?
+		case User_Movement::BACKWARD:
+				break;
+		case User_Movement::LEFT:
+				break;
+		case User_Movement::RIGHT:
+				break;
+		case User_Movement::BACKWARD_LEFT:
+		case User_Movement::BACKWARD_RIGHT:
+		case User_Movement::FORWARD_LEFT:
+		case User_Movement::FORWARD_RIGHT:
+		case User_Movement::NONE:
+		default:
+			throw "Oh... something got fucked up in player handleSelfAction";
+
+	}
+
+	if(a.jump) {
+		jump();
+	}
+
+
+	//end of calculating movement
+
+	//start of attacking logic
+	//if( a.weapon_switch)
+
+	if(a.attack) {
+		attack(a);
+	}
+}
+
+void Player::handleOtherAction( ClientGameTimeAction a) {
+	//check if the user can really attack
+
+
+}
+// this do substraction of stemina, respond to the user to render the attak animation  
+void Player::attack( ClientGameTimeAction a) {
+
+	if( weapon[current_weapon_selection].useWeapon() ) {
+		// tell client to render stuff
+	} else {
+		// don't do anything
+	}
+
+}
+
+
 std::string Player::getString()
 {
   std::stringstream returnString;
