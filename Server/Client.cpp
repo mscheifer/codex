@@ -96,41 +96,47 @@ void NetworkClient::processInput(sf::Window& window){
 */
 void NetworkClient::doClient(){
 
-
-  
-  ClientServices netRecv;
+    ClientServices netRecv;
     //get current time
-    struct NetworkPacket::Chat netData;
+    sf::Packet packet;
+    
     clock_t c = std::clock();
     std::stringstream out;
-    std::string str = "asdf";
     out << c;
-    str = out.str();
-
+    std::string str = out.str();
+    
     //send first packet
     std::cout << "start send" << str << std::endl;
-    memcpy(&netData.msg, str.c_str(), 100);
-    NetworkPacket netPack;
-    netPack.chat = netData;
-    netPack.opcode = NetworkPacket::CHAT;
+    
+    //specify packet type 
+    packet<<CHAT;
+    packet<<str;
+   
     //socket.send(&netPack, sizeof(netPack));
-    netRecv.client.sendMessage(netPack);
+    netRecv.sendMessage(packet);
 
     //keep sending and calculate difference in time
     while(true){
-      if(netRecv.client.receiveMessage()){
+      sf::Packet packet;
+      if (netRecv.receiveMessage(packet)) {
         clock_t end = std::clock();
-        clock_t start = std::atoi(((NetworkPacket*) netRecv.client.networkBuffer)->chat.msg);
-        std::cout << "start " << start << " end " << end << " " << end - start << " ms" << std::endl;
-        
+        int32_t packetType;
+        packet >> packetType; 
+        std::string startTime;
+        packet >>startTime;
+        clock_t start = std::atoi(startTime.c_str());
+        std::cout << "start " << start << " end " << end << " " << (float) (end - start)/CLOCKS_PER_SEC*1000 << " ms" << std::endl;
+      
         //send new one
+        packet.clear();
         std::stringstream out;
         std::string str;
         out << std::clock();
         str = out.str();
+        packet <<CHAT;
+        packet <<str;
         std::cout << "new start " << out.str() << std::endl;
-        memcpy(&netPack.chat.msg, str.c_str(), 100);
-        netRecv.client.sendMessage(netPack);
+        netRecv.sendMessage(packet);
       }
     }
    
