@@ -67,14 +67,14 @@
   <ItemGroup>
     <ClCompile Include="AsciUI.cpp" />
     <ClCompile Include="AudioManager.cpp" />
+    <ClCompile Include="ChatHandler.cpp" />
     <ClCompile Include="Client.cpp" />
     <ClCompile Include="ConfigManager.cpp" />
     <ClCompile Include="DeadlyEntity.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Map.cpp" />
-    <ClCompile Include="NetReceiver.cpp" />
-    <ClCompile Include="NetworkPacket.cpp" />
+    <ClCompile Include="NetworkServices.cpp" />
     <ClCompile Include="Physics.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="PowerUp.cpp" />
@@ -87,6 +87,7 @@
   <ItemGroup>
     <ClInclude Include="3DCoordinate.h" />
     <ClInclude Include="AsciUI.h" />
+    <ClInclude Include="ChatHandler.h" />
     <ClInclude Include="Client.h" />
     <ClInclude Include="ConfigManager.h" />
     <ClInclude Include="ClientGameTimeAction.h" />
@@ -95,9 +96,8 @@
     <ClInclude Include="Entity.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="Map.h" />
-    <ClInclude Include="NetReceiver.h" />
+    <ClInclude Include="NetworkServices.h" />
     <ClInclude Include="NetworkData.h" />
-    <ClInclude Include="NetworkPacket.h" />
     <ClInclude Include="Physics.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="PowerUp.h" />
