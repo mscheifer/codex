@@ -15,24 +15,6 @@ void NetworkClient::receiveMessages() {
         default: 
           break;
         }
-        //clock_t end = std::clock();
-        //int32_t packetType;
-        //packet >> packetType; 
-        //std::string startTime;
-        //packet >>startTime;
-        //clock_t start = std::atoi(startTime.c_str());
-        //std::cout << "start " << start << " end " << end << " " << (float) (end - start)/CLOCKS_PER_SEC*1000 << " ms" << std::endl;
-      
-        //send new one
-        //packet.clear();
-        //std::stringstream out;
-        //std::string str;
-        //out << std::clock();
-        //str = out.str();
-        //packet <<CHAT;
-        //packet <<str;
-        //std::cout << "new start " << out.str() << std::endl;
-        //netRecv.sendMessage(packet);
       }
 }
 void NetworkClient::updateWindow() {
@@ -42,42 +24,6 @@ void NetworkClient::updateWindow() {
     window.display();
   }
 }
-
-/*
-void NetworkClient::sendChatMessage(const std::string& message){
-  struct NetworkPacket::Chat netData;
-  memcpy( netData.message.data() , message.c_str(), message.length()+1 );
-
-  NetworkPacket netPack;
-  netPack.chat = netData;
-  netPack.opcode = NetworkPacket::CHAT;
-  socket.send(&netPack, sizeof(netPack));
-}
-*/
-
-/*
-void NetworkClient::processMessage(){
-  NetworkPacket netPack;
-
-  std::size_t received = 0; 
-  sf::TcpSocket::Status stat = socket.receive(&netPack, sizeof(NetworkPacket), received);
-
-  if( stat == sf::Socket::Done ){
-    switch(netPack.opcode){
-    case NetworkPacket::CHAT:
-      recieveChatMessage(netPack);
-    }
-  }
-} */
-/*
-void NetworkClient::recieveChatMessage(const NetworkPacket& netPack){
-  char buffer[100];
-  memcpy(buffer, &netPack.chat.message, netPack.chat.message.size());
-  chatHistory.push_back(buffer);
-  if(chatHistory.size() > 10)
-    chatHistory.pop_front();
-}
-*/
 
 void NetworkClient::processInput(){
   if (window.isOpen())
@@ -122,30 +68,6 @@ void NetworkClient::processInput(){
 }
 
 void NetworkClient::doClient(){
-
-    //ClientServices netRecv;
-    //get current time
-    //sf::Packet packet;
-    
-    //clock_t c = std::clock();
-    //std::stringstream out;
-    //out << c;
-    //std::string str = out.str();
-    
-    //send first packet
-    //std::cout << "start send" << str << std::endl;
-    
-    //specify packet type 
-    //packet<<CHAT;
-    //packet<<str;
-   
-    //socket.send(&netPack, sizeof(netPack));
-    //netRecv.sendMessage(packet);
-    //sf::RenderWindow window( sf::VideoMode(800, 600), "sf::Text test" ) ;
-    //sf::CircleShape shape(100.f);
-    //shape.setFillColor(sf::Color::Green);
-      
-    //keep sending and calculate difference in time
     while(true){
       sf::Packet packet;
       //process input and send events

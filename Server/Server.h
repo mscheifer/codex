@@ -3,7 +3,6 @@
 #include <iostream>
 #include <string>
 #include <vector>
-#include "NetworkPacket.h"
 #include <time.h>
 #include "ConfigManager.h"
 #include "NetworkServices.h"
@@ -20,6 +19,5 @@ public:
 
   }
   
-  //run the server
   void doServer();
 };

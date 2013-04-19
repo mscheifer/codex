@@ -73,8 +73,7 @@
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Map.cpp" />
-    <ClCompile Include="NetReceiver.cpp" />
-    <ClCompile Include="NetworkPacket.cpp" />
+    <ClCompile Include="NetworkServices.cpp" />
     <ClCompile Include="Physics.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="Server.cpp" />
