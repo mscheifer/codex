@@ -67,6 +67,7 @@
   <ItemGroup>
     <ClCompile Include="AsciUI.cpp" />
     <ClCompile Include="AudioManager.cpp" />
+    <ClCompile Include="ChatHandler.cpp" />
     <ClCompile Include="Client.cpp" />
     <ClCompile Include="ConfigManager.cpp" />
     <ClCompile Include="Game.cpp" />
@@ -83,6 +84,7 @@
   <ItemGroup>
     <ClInclude Include="3DCoordinate.h" />
     <ClInclude Include="AsciUI.h" />
+    <ClInclude Include="ChatHandler.h" />
     <ClInclude Include="Client.h" />
     <ClInclude Include="ConfigManager.h" />
     <ClInclude Include="ClientGameTimeAction.h" />
@@ -92,7 +94,6 @@
     <ClInclude Include="Map.h" />
     <ClInclude Include="NetworkServices.h" />
     <ClInclude Include="NetworkData.h" />
-    <ClInclude Include="NetworkPacket.h" />
     <ClInclude Include="Physics.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="Server.h" />

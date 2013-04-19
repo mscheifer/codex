@@ -4,9 +4,13 @@
 #include <SFML/Network.hpp>
 #include "NetworkPacket.h"
 #include <algorithm>
+#define PORT_NUMBER 55001
+#define TIMEOUT 3
 
-  const int maxSize = 9000;
-  const int sizeSize = 4;
+enum Opcode {INIT, CHAT , T1, T2};
+
+const int maxSize = 9000;
+const int sizeSize = 4;
  
 class ClientServices{
 public:
@@ -26,7 +30,7 @@ public:
     std::cout << "Enter Ip Address to connect to:";
     std::string input = myIpAddress.toString(); //"192.168.1.71";
     s = sf::Socket::Error;
-    s = client.connect(input, 55001, sf::seconds(3.0));
+    s = client.connect(input, PORT_NUMBER, sf::seconds(TIMEOUT));
     client.setBlocking(false);
   //change  this->socket = socket;
   }

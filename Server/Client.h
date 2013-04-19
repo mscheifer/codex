@@ -5,42 +5,40 @@
 #include <iostream>
 #include <string>
 #include <list>
+#include <ctime>
 #include "NetworkPacket.h"
 #include "NetworkServices.h"
-#include <ctime>
 #include "AsciUI.h"
 #include "ServerGameTimeRespond.h"
+#include "ChatHandler.h"
+
+#define L_ASCII_BOUND 32
+#define U_ASCII_BOUND 125
+
 
 class NetworkClient{
 
 private:
-  
-  //chat vars
-  std::list<std::string> chatHistory;
-  std::string chatBuffer;
-  sf::Text chatText;
-  sf::Font chatFont;
-  bool typing;
+  ClientServices netRecv;
+  sf::RenderWindow window;
+  ChatHandler chat;
 
 public:
-  NetworkClient(){
-
-
-    //chat
-    chatInit();
+  NetworkClient():window(sf::VideoMode(800,600), "sf::Text test")
+  {
   }
 
   ~NetworkClient(){
   }
-
+  void processInput();
+  void updateWindow();
+  void receiveMessages();
   //void processInput(sf::Window& window);
 
   //chat functions
   //initialize chat variables
-  void chatInit();
   
   //draw the chat
-  void drawChat(sf::RenderWindow& window);
 
   //send a chat message over the network
  // void sendChatMessage(const std::string& message);

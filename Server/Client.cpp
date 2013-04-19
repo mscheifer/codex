@@ -1,25 +1,48 @@
 #include "Client.h"
 
-void NetworkClient::chatInit(){
-  typing = false;
-  chatBuffer = "";
-  //chat gfx
-  chatFont.loadFromFile("arial.ttf");
-  chatText.setFont(chatFont);
-  chatText.setColor(sf::Color::Green);
-  chatText.setCharacterSize(16);
-  chatText.setString("");
-  chatText.setPosition(200,200);
+void NetworkClient::receiveMessages() {
+      //receive from server and process
+      sf::Packet packet;
+      if (netRecv.receiveMessage(packet)) {
+        int32_t packetType =0;
+        std::string chatMsg;
+        packet >> packetType;
+        switch (packetType) {
+        case CHAT:
+          packet >>chatMsg;
+          chat.addChat(chatMsg);
+          break;
+        default: 
+          break;
+        }
+        //clock_t end = std::clock();
+        //int32_t packetType;
+        //packet >> packetType; 
+        //std::string startTime;
+        //packet >>startTime;
+        //clock_t start = std::atoi(startTime.c_str());
+        //std::cout << "start " << start << " end " << end << " " << (float) (end - start)/CLOCKS_PER_SEC*1000 << " ms" << std::endl;
+      
+        //send new one
+        //packet.clear();
+        //std::stringstream out;
+        //std::string str;
+        //out << std::clock();
+        //str = out.str();
+        //packet <<CHAT;
+        //packet <<str;
+        //std::cout << "new start " << out.str() << std::endl;
+        //netRecv.sendMessage(packet);
+      }
+}
+void NetworkClient::updateWindow() {
+  if (window.isOpen()) {
+    window.clear();
+    chat.drawChat(window);
+    window.display();
+  }
 }
 
-void NetworkClient::drawChat(sf::RenderWindow& window){
-  chatText.setString("");
-  for( std::list<std::string>::iterator iter = chatHistory.begin(); iter != chatHistory.end(); iter++){
-    chatText.setString(chatText.getString() + "\n" + *iter);
-  }
-  chatText.setString(chatText.getString() + "\n" + chatBuffer);
-  window.draw(chatText);
-}
 /*
 void NetworkClient::sendChatMessage(const std::string& message){
   struct NetworkPacket::Chat netData;
@@ -31,6 +54,7 @@ void NetworkClient::sendChatMessage(const std::string& message){
   socket.send(&netPack, sizeof(netPack));
 }
 */
+
 /*
 void NetworkClient::processMessage(){
   NetworkPacket netPack;
@@ -54,8 +78,8 @@ void NetworkClient::recieveChatMessage(const NetworkPacket& netPack){
     chatHistory.pop_front();
 }
 */
-/*
-void NetworkClient::processInput(sf::Window& window){
+
+void NetworkClient::processInput(){
   if (window.isOpen())
   {
     sf::Event event;
@@ -67,80 +91,72 @@ void NetworkClient::processInput(sf::Window& window){
       if (event.type == sf::Event::KeyReleased){        
         switch(event.key.code){
         case sf::Keyboard::Return:
-          if(!typing){ //start typing
-            chatBuffer = "";
+          if(!chat.isTyping()){ //start typing
+            chat.setBuffer("");
           }
           else{ //done typing
+            sf::Packet packet;
+            std:: string chatBuffer = chat.getBuffer();
+            //when sending packet
+            //first specify the packet type
+            //then call serailize on the sending object`
+            packet << CHAT;
+            packet << chat.getBuffer();
             if(chatBuffer.size() > 0)
-              sendChatMessage(chatBuffer);
-              chatBuffer = "";
+              netRecv.sendMessage(packet);
+            chat.setBuffer("");
           }
-          typing = !typing;
-          break;
-
-        case sf::Keyboard::Back:
-          if(typing){
-            chatBuffer = chatBuffer.substr(0,chatBuffer.size()-1);
-          }
+          chat.revertTyping();
           break;
         }
       }
 
       if (event.type == sf::Event::TextEntered){
-        if( event.text.unicode >= 32 && event.text.unicode <= 125 && typing && chatBuffer.size() < 99)
-          chatBuffer += (char) event.text.unicode;
+        if( event.text.unicode >= 32 && event.text.unicode <= 125 && chat.isTyping() && chat.getBuffer().size() < 99)
+          chat.appendBuffer((char) event.text.unicode);
+        if (event.text.unicode == 8 &&chat.isTyping())
+          chat.backspace();
       }
     }
   }
 }
-*/
+
 void NetworkClient::doClient(){
 
-    ClientServices netRecv;
+    //ClientServices netRecv;
     //get current time
-    sf::Packet packet;
+    //sf::Packet packet;
     
-    clock_t c = std::clock();
-    std::stringstream out;
-    out << c;
-    std::string str = out.str();
+    //clock_t c = std::clock();
+    //std::stringstream out;
+    //out << c;
+    //std::string str = out.str();
     
     //send first packet
-    std::cout << "start send" << str << std::endl;
+    //std::cout << "start send" << str << std::endl;
     
     //specify packet type 
-    packet<<CHAT;
-    packet<<str;
+    //packet<<CHAT;
+    //packet<<str;
    
     //socket.send(&netPack, sizeof(netPack));
-    netRecv.sendMessage(packet);
-
+    //netRecv.sendMessage(packet);
+    //sf::RenderWindow window( sf::VideoMode(800, 600), "sf::Text test" ) ;
+    //sf::CircleShape shape(100.f);
+    //shape.setFillColor(sf::Color::Green);
+      
     //keep sending and calculate difference in time
     while(true){
       sf::Packet packet;
-      if (netRecv.receiveMessage(packet)) {
-        clock_t end = std::clock();
-        int32_t packetType;
-        packet >> packetType; 
-        std::string startTime;
-        packet >>startTime;
-        clock_t start = std::atoi(startTime.c_str());
-        std::cout << "start " << start << " end " << end << " " << (float) (end - start)/CLOCKS_PER_SEC*1000 << " ms" << std::endl;
-      
-        //send new one
-        packet.clear();
-        std::stringstream out;
-        std::string str;
-        out << std::clock();
-        str = out.str();
-        packet <<CHAT;
-        packet <<str;
-        std::cout << "new start " << out.str() << std::endl;
-        netRecv.sendMessage(packet);
-      }
+      //process input and send events
+      processInput(); 
+
+      receiveMessages();
+
+      updateWindow();
     }
-   
     
+/*    
     struct ServerGameTimeRespond s;
     s.players[0] =  Player(0,0,1);
     s.players[1] = Player(2,3,1);
@@ -174,5 +190,5 @@ void NetworkClient::doClient(){
 
         }
     }
-  
+  */
 }

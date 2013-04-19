@@ -20,12 +20,20 @@ void NetworkServer::doServer(){
        sf::Packet packet;
        if(server.receiveMessage(packet,i)){
          int32_t packetType;
-         packet >> packetType; 
-         std::string recvTime;
-         packet >>recvTime;
-         clock_t recv = std::atoi(recvTime.c_str());
-         std::cout << recv << std::endl;
-         server.sendToAll(packet); //right now just echoing what received
+         packet >> packetType;
+         switch (packetType) {
+         case CHAT:
+           server.sendToAll(packet); //right now just echoing what received
+           break;
+         default: 
+           break;
+         }
+         //int32_t packetType;
+         //packet >> packetType; 
+         //std::string recvTime;
+         //packet >>recvTime;
+         //clock_t recv = std::atoi(recvTime.c_str());
+         //std::cout << recv << std::endl;
       }
 
       /*sf::TcpSocket::Status stat = clients[i]->receive(&buffer, NetworkPacket::maxPacketSize, received);

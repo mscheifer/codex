@@ -1,15 +1,37 @@
 #pragma once
 #include <string>
+#include <SFML/Network.hpp>
 
-struct ChatHandler {
-    std::list<std::string> chatHistory;
-    std::string chatBuffer;
-    sf::Text chatText;
-    sf::Font chatFont;
-    bool typing;    
+class sampleObject {
+  std::vector<std::string> a;
+  int b;
+  float c;
+  sampleObject() {
     
-    ChatHandler();
-    void drawChat(sf::RenderWindow & window);
-    void sendChatMessage(sf::TcpSocket & socket);
-    void receiveChatMessage(const NetworkPacket & netPack );
-}
+  }
+  void init(){
+    a.push_back("hello");
+    a.push_back("this is a test");
+    b = -5;
+    c=3.14;
+  }
+  void seraialize(sf::Packet & packet ) {
+    packet<<a.size();
+    for (int i=0;i<a.size();i++) 
+      packet <<a[i];
+    packet <<b;
+    packet <<c;
+  }
+  void desrialize(sf::Packet & packet ) {
+    int size;
+    packet >> size;
+    std::string temp;
+    for (int i=0;i<size; i++) {
+      packet >> temp;
+      a.push_back(temp);
+    }
+    packet >> b;
+    packet >> c;
+  }
+};
+
