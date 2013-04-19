@@ -1,7 +1,6 @@
 #include "Map.h"
 
-
-
+const float Map::Item_Pick_Up_Ranges = 1.0f;
 
 
 Map::Map(void)

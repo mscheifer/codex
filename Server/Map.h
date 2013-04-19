@@ -3,6 +3,8 @@
 #include "Player.h"
 #include <array>
 #include <stdlib.h>
+
+ 
 class Map
 {
 public:
@@ -10,6 +12,7 @@ public:
   ~Map(void);
   static int const Max_Entities = 10;
   static int const Number_Of_Players = 4;
+  static const float Item_Pick_Up_Ranges;
   int map_size;
   
   std::array<Entity, Max_Entities > getEntities(void);

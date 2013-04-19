@@ -4,6 +4,7 @@
 #include <string>
 #include <vector>
 #include <time.h>
+#include <SFML/System/Clock.hpp>
 #include "ConfigManager.h"
 #include "NetworkServices.h"
 
