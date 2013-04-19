@@ -12,6 +12,7 @@
 #define MOVESCALE 100
 #define PI 3.1415926535897932384626433832795
 #define MAXJUMP 10
+#define MAXWEAPONS 2
 class Player: public Entity
 {
 public:
@@ -20,11 +21,11 @@ public:
   Player(void);
   Player(Position x, Position y, Position z, int assigned_id);
   ~Player(void);
+  std::string getString();
   virtual bool attackBy(DeadlyEntity*);
+  float getHealth() { return health; }
   bool moveTowardDirection(User_Movement degree);
   void jump();
-  float getHealth() { return health; }
-  std::string getString();
   void handleAction(ClientGameTimeAction a);
 private:
   float health;
@@ -33,9 +34,11 @@ private:
   float maxMana;
   float defense;
   float speed;
+  float castDownTime;
+  sf::Clock castDownCounter;
   int jumpCount;
   bool canJump;
-  Weapon weapon[2]; //0 bare hand, 1 fireball
+  Weapon weapon[MAXWEAPONS]; //0 bare hand, 1 fireball
   int current_weapon_selection; //0 bare hand, 1 fireball
   bool damageBy(DeadlyEntity *);
   void fixPosition();

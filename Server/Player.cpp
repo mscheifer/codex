@@ -16,6 +16,7 @@ Player::Player(Position x, Position y, Position z, int assigned_id)
   speed = 1;
   mana = 100;
   maxMana = 100;
+  castDownCounter = sf::Clock();
 }
 
 
@@ -104,7 +105,10 @@ bool Player::moveTowardDirection(User_Movement degree)
 }
 
 void Player::handleSelfAction(ClientGameTimeAction a) {
-
+  // User is still casting their spell (in case we have spell cast time)
+  // This is NOT spell cool down time.
+  if(castDownCounter.getElapsedTime().asMilliseconds() < castDownTime )
+    return;
 	//start of movement logic
 	direction = a.facingDirection;
   if(moveTowardDirection(a.movement))
@@ -125,7 +129,7 @@ void Player::handleSelfAction(ClientGameTimeAction a) {
 	//start of attacking logic
 	//if( a.weapon_switch)
 
-	if(a.attack) {
+  if(a.attackRange || a.attackMelee) {
 		attack(a);
 	}
 }
@@ -137,13 +141,18 @@ void Player::handleOtherAction( ClientGameTimeAction a) {
 }
 // this do substraction of stemina, respond to the user to render the attak animation  
 void Player::attack( ClientGameTimeAction a) {
+  Weapon currentWeapon = weapon[current_weapon_selection];
+  if( !currentWeapon.canUseWeapon() || currentWeapon.getMpCost() > mana)
+    return;
 
-	if( weapon[current_weapon_selection].useWeapon() ) {
-		// tell client to render stuff
-	} else {
-		// don't do anything
-	}
+  if(a.attackRange)
+  {
 
+  }
+  else if(a.attackMelee)
+  {
+
+  }
 }
 
 
