@@ -11,7 +11,7 @@
 
 #define MOVESCALE 100
 #define PI 3.1415926535897932384626433832795
-
+#define MAXJUMP 10
 class Player: public Entity
 {
 public:
@@ -29,9 +29,12 @@ public:
 private:
   float health;
   float maxHealth;
+  float mana;
+  float maxMana;
   float defense;
   float speed;
   int jumpCount;
+  bool canJump;
   Weapon weapon[2]; //0 bare hand, 1 fireball
   int current_weapon_selection; //0 bare hand, 1 fireball
   bool damageBy(DeadlyEntity *);

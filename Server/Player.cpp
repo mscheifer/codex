@@ -14,6 +14,8 @@ Player::Player(Position x, Position y, Position z, int assigned_id)
   health = 100;
   maxHealth = 100;
   speed = 1;
+  mana = 100;
+  maxMana = 100;
 }
 
 
@@ -60,10 +62,22 @@ void Player::fixPosition()
 
 void Player::jump()
 {
-  // CANNOT JUMP IF YOU ARE NOT ON THE GROUND
-  if(getTerrainHeight(position.x, position.y) != position.z)
-    return;
-  position = ThreeDMovement(position, direction, 10000); // TODO: Not sure if this will work
+  if(getTerrainHeight(position.x, position.y) == position.z)
+  {
+    canJump = true;
+    jumpCount = 0;
+  }
+
+  if(jumpCount == MAXJUMP)
+  {
+    canJump = false;
+  }
+
+  if(canJump)
+  {
+    position = ThreeDMovement(position, direction, 10000); // TODO: Value needs to be modified
+    fixPosition();
+  }
 }
 
 void Player::handleAction(ClientGameTimeAction a) {
@@ -99,6 +113,11 @@ void Player::handleSelfAction(ClientGameTimeAction a) {
 	if(a.jump) {
 		jump();
 	}
+  else
+  {
+    // Do not allow double jumps
+    canJump = false;
+  }
 
 
 	//end of calculating movement
