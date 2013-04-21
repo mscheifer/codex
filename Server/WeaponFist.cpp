@@ -11,8 +11,10 @@ WeaponFist::~WeaponFist(void)
 }
 bool WeaponFist::attackMelee()
 {
+  return false;
 }
 bool WeaponFist::attackRange()
 {
-  attackMelee();
+  return false;
+  //attackMelee();
 }

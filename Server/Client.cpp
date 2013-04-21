@@ -68,17 +68,26 @@ void NetworkClient::processInput(){
 }
 
 void NetworkClient::doClient(){
-    while(true){
-      sf::Packet packet;
-      //process input and send events
-      processInput(); 
+  /*  main run looop
+  while(true){
+    //process input and send events
+    processInput(); 
+    receiveMessages();
+    updateWindow();
+  }
+  */
 
-      receiveMessages();
-
-      updateWindow();
-    }
+  ClientGameTimeAction test1;
+  test1.player_id = 9;
+  test1.movement = LEFT;
+  test1.attackMelee = true;
+  test1.attackRange = false;
+  test1.weapon1 = true;
+  test1.weapon2 = false;
+  test1.jump = true;
+  test1.facingDirection = Direction(1,2,3);
+  netRecv.sendPacket<ClientGameTimeAction>( test1 );
     
-/*    
 
 	//temp code to simular server respond
     struct ServerGameTimeRespond s;
@@ -91,7 +100,7 @@ void NetworkClient::doClient(){
 	ClientGameTimeAction c ;
 	Direction d; 
     sf::Event event;
-    sf::RenderWindow window( sf::VideoMode(800, 600), "sf::Text test");
+    //sf::RenderWindow window( sf::VideoMode(800, 600), "sf::Text test");
     AsciUI as;
     while(window.isOpen()){
 
@@ -100,8 +109,8 @@ void NetworkClient::doClient(){
 			c.facingDirection = d; //this should somehow change too;
 		
 
-            if(event.type == sf::Event::KeyPressed){
-                if(event.key.code == sf::Keyboard::W) {
+       if(event.type == sf::Event::KeyPressed){
+          if(event.key.code == sf::Keyboard::W) {
 					s.players[0].moveTowardDirection(FORWARD);//simulating server pending remove
 				//	c.forward = true;		
 				} if(event.key.code == sf::Keyboard::S) {
@@ -125,5 +134,5 @@ void NetworkClient::doClient(){
 
         }
     }
-  */
+  
 }

@@ -39,3 +39,14 @@ bool Weapon::canUseWeapon() {
 	}
 	return false;
 }
+
+
+bool Weapon::attackMelee()
+{
+  return false;
+}
+bool Weapon::attackRange()
+{
+  return false;
+}
+
