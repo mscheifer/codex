@@ -1,11 +1,12 @@
 #pragma once
+typedef float DirectionValue;
 struct Direction
 {
-  float x;
-  float y;
-  float z;
+  DirectionValue x;
+  DirectionValue y;
+  DirectionValue z;
   Direction() :
     x(0), y(0), z(0){}
-  Direction(float a, float b, float c) :
+  Direction(DirectionValue a, DirectionValue b, DirectionValue c) :
     x(a), y(b), z(c){}
 };

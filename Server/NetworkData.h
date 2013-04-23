@@ -1,33 +1,37 @@
 #pragma once
 #include <string>
+#include <SFML/Network.hpp>
 
-class NetworkData{
-public:
-  virtual std::string toString(){
-    return "NetworkData";
+class sampleObject {
+  std::vector<std::string> a;
+  int b;
+  float c;
+  sampleObject() {
+    
   }
-
-  NetworkData(){};
-  NetworkData(NetworkData& n){};
-  ~NetworkData(){}
+  void init(){
+    a.push_back("hello");
+    a.push_back("this is a test");
+    b = -5;
+    c=3.14;
+  }
+  void seraialize(sf::Packet & packet ) {
+    packet<<a.size();
+    for (int i=0;i<a.size();i++) 
+      packet <<a[i];
+    packet <<b;
+    packet <<c;
+  }
+  void desrialize(sf::Packet & packet ) {
+    int size;
+    packet >> size;
+    std::string temp;
+    for (int i=0;i<size; i++) {
+      packet >> temp;
+      a.push_back(temp);
+    }
+    packet >> b;
+    packet >> c;
+  }
 };
 
-class NetworkData2 : public NetworkData{
-public:
-  std::string str1;
-  std::string str2;
-
-  std::string toString(){
-    return "str 1: " + str1 + "\nstr2: " + str2 + "\n";
-  }
-
-  NetworkData2(){}
-  NetworkData2(NetworkData2& n){
-    str1 = n.str1;
-    str2 = n.str2;
-    //std::memcpy(this, &n, sizeof(n));
-  }
-  ~NetworkData2(){}
-
-
-};

@@ -3,8 +3,11 @@
 
 Weapon::Weapon()
 {
-	Cool_Down_Time = 2000;
-	Cool_Down_Counter = sf::Clock();
+	Range_Cool_Down_Time = 0;
+  Melee_Cool_Down_Time = 0;
+  mpCost = 0;
+	Range_Cool_Down_Counter = sf::Clock();
+  Melee_Cool_Down_Counter = sf::Clock();
 }
 
 
@@ -12,13 +15,16 @@ Weapon::~Weapon()
 {
 }
 
-Weapon::Weapon(float damage, float ran, Coordinate d)
+Weapon::Weapon(float damage, float ran, Coordinate d, float mpcost)
 {
-	Cool_Down_Counter = sf::Clock();
-	Cool_Down_Time = 2000;
+	Range_Cool_Down_Time = 0;
+  Melee_Cool_Down_Time = 0;
+  Range_Cool_Down_Counter = sf::Clock();
+  Melee_Cool_Down_Counter = sf::Clock();
 	strength = damage;
 	range = ran;
 	position = d;
+  mpCost = mpcost;
 }
 
 
@@ -26,15 +32,9 @@ void Weapon::handleAction(ClientGameTimeAction a){
 
 }
 
-bool Weapon::useWeapon() {
-	if( canUseWeapon())  {
-		//owner.subtractshit();
-	}
-	return false;
-}
-
 bool Weapon::canUseWeapon() {
-	if( Cool_Down_Counter.getElapsedTime().asMilliseconds() < Cool_Down_Time /* && some other attributes*/ ) {
+	if( Range_Cool_Down_Counter.getElapsedTime().asMilliseconds() < Range_Cool_Down_Time
+      && Melee_Cool_Down_Counter.getElapsedTime().asMilliseconds() < Melee_Cool_Down_Time) {
 		return true;
 	}
 	return false;

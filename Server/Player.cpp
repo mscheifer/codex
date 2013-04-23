@@ -1,7 +1,7 @@
 #include "Player.h"
 
 Player::Player(void){}
-Player::Player(int x, int y, int z, int assigned_id)
+Player::Player(Position x, Position y, Position z, int assigned_id)
 {
   player_id = assigned_id;
   position.x = x;
@@ -13,6 +13,10 @@ Player::Player(int x, int y, int z, int assigned_id)
   defense = 5;
   health = 100;
   maxHealth = 100;
+  speed = 1;
+  mana = 100;
+  maxMana = 100;
+  castDownCounter = sf::Clock();
 }
 
 
@@ -40,70 +44,41 @@ bool Player::damageBy(DeadlyEntity *deadly)
   return true;
 }
 
-int getTerrainHeight(int x, int y)
+Position getTerrainHeight(Position x, Position y)
 {
+  // TODO: Will need to ask map for this information
   return 0;
 }
 void Player::fixPosition()
 {
   position.velocityX = 0;
   position.velocityY = 0;
-  int terrainHeight = getTerrainHeight( position.x, position.y);
+  double terrainHeight = getTerrainHeight( position.x, position.y);
   if( position.z < terrainHeight )
   {
     position.z = terrainHeight;
     position.velocityZ = 0;
   }
 }
-void Player::moveForward()
-{
-  // Normalizing x and y to be 1
-  float length = sqrt(direction.x *direction.x + direction.y * direction.y);
-  position.velocityX = direction.x/length * MOVESCALE;
-  position.velocityY = direction.y/length * MOVESCALE;
-  position = ThreeDMovement(position, direction, GRAVITY); // TODO: Not sure if this will work
-  fixPosition();
-}
 
-void Player::moveBackward()
-{
-  float length = sqrt(direction.x *direction.x + direction.y * direction.y);
-  position.velocityX = -direction.x/length * MOVESCALE;
-  position.velocityY = -direction.y/length * MOVESCALE;
-  position = ThreeDMovement(position, direction, GRAVITY); // TODO: Not sure if this will work
-  fixPosition();
-}
-
-void Player::moveRight()
-{
-  // x' = xcos@ - ysin@
-  // y' = xsin@ + ycos@ 
-  float newX = -direction.y;
-  float newY = direction.x;
-  float length = sqrt(newX *newX + newY * newY);
-  position.velocityX = newX/length * MOVESCALE;
-  position.velocityY = newY/length * MOVESCALE;
-  position = ThreeDMovement(position, Direction(newX, newY, direction.z), GRAVITY); // TODO: Not sure if this will work
-  fixPosition();
-}
-void Player::moveLeft()
-{
-  // x' = xcos@ - ysin@
-  // y' = xsin@ + ycos@ 
-  float newX = direction.y;
-  float newY = -direction.x;
-  float length = sqrt(newX *newX + newY * newY);
-  position.velocityX = newX/length * MOVESCALE;
-  position.velocityY = newY/length * MOVESCALE;
-  position = ThreeDMovement(position, Direction(newX, newY, direction.z), GRAVITY); // TODO: Not sure if this will work
-  fixPosition();
-}
 void Player::jump()
 {
-  // CANNOT JUMP IF YOU ARE NOT ON THE GROUND
-  if(getTerrainHeight(position.x, position.y) != position.z)
-    return;
-  position = ThreeDMovement(position, direction, 10000); // TODO: Not sure if this will work
+  if(getTerrainHeight(position.x, position.y) == position.z)
+  {
+    canJump = true;
+    jumpCount = 0;
+  }
+
+  if(jumpCount == MAXJUMP)
+  {
+    canJump = false;
+  }
+
+  if(canJump)
+  {
+    position = ThreeDMovement(position, direction, 10000); // TODO: Value needs to be modified
+    fixPosition();
+  }
 }
 
 void Player::handleAction(ClientGameTimeAction a) {
@@ -113,34 +88,40 @@ void Player::handleAction(ClientGameTimeAction a) {
 
 }
 
-void Player::handleSelfAction(ClientGameTimeAction a) {
+bool Player::moveTowardDirection(User_Movement degree)
+{
+  if(degree == NONE)
+    return false;
+  // x' = xcos@ - ysin@
+  // y' = xsin@ + ycos@ 
+  DirectionValue newX = (DirectionValue)(direction.x * cos(degree*PI/180) - direction.y * sin(degree*PI/180));
+  DirectionValue newY = (DirectionValue)(direction.x * sin(degree*PI/180) + direction.y * cos(degree*PI/180));
+  double length = sqrt(newX *newX + newY * newY);
+  position.velocityX = newX/length * MOVESCALE * speed;
+  position.velocityY = newY/length * MOVESCALE * speed;
+  position = ThreeDMovement(position, Direction(newX, newY, direction.z), GRAVITY);
+  fixPosition();
+  return true;
+}
 
+void Player::handleSelfAction(ClientGameTimeAction a) {
+  // User is still casting their spell (in case we have spell cast time)
+  // This is NOT spell cool down time.
+  if(castDownCounter.getElapsedTime().asMilliseconds() < castDownTime )
+    return;
 	//start of movement logic
 	direction = a.facingDirection;
-	
-	switch(a.movement) {
-		case FORWARD :
-			moveForward();
-		// is this right allen?
-		case BACKWARD:
-				break;
-		case LEFT:
-				break;
-		case RIGHT:
-				break;
-		case BACKWARD_LEFT:
-		case BACKWARD_RIGHT:
-		case FORWARD_LEFT:
-		case FORWARD_RIGHT:
-		case NONE:
-		default:
-			throw "Oh... something got fucked up in player handleSelfAction";
-
-	}
+  if(moveTowardDirection(a.movement))
+    throw "Oh... something got fucked up in player handleSelfAction";
 
 	if(a.jump) {
 		jump();
 	}
+  else
+  {
+    // Do not allow double jumps
+    canJump = false;
+  }
 
 
 	//end of calculating movement
@@ -148,7 +129,7 @@ void Player::handleSelfAction(ClientGameTimeAction a) {
 	//start of attacking logic
 	//if( a.weapon_switch)
 
-	if(a.attack) {
+  if(a.attackRange || a.attackMelee) {
 		attack(a);
 	}
 }
@@ -160,13 +141,18 @@ void Player::handleOtherAction( ClientGameTimeAction a) {
 }
 // this do substraction of stemina, respond to the user to render the attak animation  
 void Player::attack( ClientGameTimeAction a) {
+  Weapon currentWeapon = weapon[current_weapon_selection];
+  if( !currentWeapon.canUseWeapon() || currentWeapon.getMpCost() > mana)
+    return;
 
-	if( weapon[current_weapon_selection].useWeapon() ) {
-		// tell client to render stuff
-	} else {
-		// don't do anything
-	}
+  if(a.attackRange)
+  {
 
+  }
+  else if(a.attackMelee)
+  {
+
+  }
 }
 
 

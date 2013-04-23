@@ -35,3 +35,5 @@ SFML-2.0-rc/doc
 ipch/*.ipch
 ipch/
 *.swp
+TestingProject.sdf
+Server/config.txt

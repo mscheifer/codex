@@ -2,6 +2,7 @@
 #include <typeinfo>
 #include <iostream>
 #include <sstream>
+#include <cmath>
 #include "Entity.h"
 #include "Physics.h"
 #include <string>
@@ -9,30 +10,35 @@
 #include "ClientGameTimeAction.h"
 
 #define MOVESCALE 100
-
+#define PI 3.1415926535897932384626433832795
+#define MAXJUMP 10
+#define MAXWEAPONS 2
 class Player: public Entity
 {
 public:
   int player_id;
   char name[20];
   Player(void);
-  Player(int x, int y, int z, int assigned_id);
+  Player(Position x, Position y, Position z, int assigned_id);
   ~Player(void);
-  virtual bool attackBy(DeadlyEntity*);
-  void moveForward();
-  void moveBackward();
-  void moveLeft();
-  void moveRight();
-  void jump();
-  float getHealth() { return health; }
   std::string getString();
+  virtual bool attackBy(DeadlyEntity*);
+  float getHealth() { return health; }
+  bool moveTowardDirection(User_Movement degree);
+  void jump();
   void handleAction(ClientGameTimeAction a);
 private:
   float health;
   float maxHealth;
+  float mana;
+  float maxMana;
   float defense;
+  float speed;
+  float castDownTime;
+  sf::Clock castDownCounter;
   int jumpCount;
-  Weapon weapon[2]; //0 bare hand, 1 fireball
+  bool canJump;
+  Weapon weapon[MAXWEAPONS]; //0 bare hand, 1 fireball
   int current_weapon_selection; //0 bare hand, 1 fireball
   bool damageBy(DeadlyEntity *);
   void fixPosition();
