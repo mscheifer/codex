@@ -12,8 +12,8 @@ gx::vector3 upDirection     = gx::vector3( 0.0,  1.0,  0.0);
 
 const double mouseSensitivity = 0.001;
 
-sf::Vector2i startMousePosition;
-sf::Vector2i prevMousePosition;
+sf::Vector2i mouseBasePosition;
+sf::Vector2i mouseDiff;
 
 const double movementAngles[8] = {
   0.0,
@@ -30,9 +30,8 @@ const double movementAngles[8] = {
 
 void gx::setUpMouse() {
   //somehow change this to set it to the center of the screen
-  sf::Mouse::setPosition(sf::Vector2i(200,200));
-  startMousePosition = sf::Mouse::getPosition();
-  prevMousePosition = sf::Mouse::getPosition();
+  mouseBasePosition = sf::Vector2i(200,200);
+  sf::Mouse::setPosition(mouseBasePosition);
 }
 
 void gx::setCamera(displaySet& display) {
@@ -86,12 +85,13 @@ void gx::movePlayer(displaySet& display) {
 
 void gx::turnPlayer(displaySet& display) {
   sf::Vector2i curPosition = sf::Mouse::getPosition();
-  if(curPosition != prevMousePosition) {
-    prevMousePosition == curPosition;
-    sf::Vector2i diff = curPosition - startMousePosition;
-    vector3 newDirection = rotateY(-diff.x * mouseSensitivity) * 
-      rotateX(-diff.y * mouseSensitivity) * startPlayerDirection;
-    playerDirection = newDirection;
+  if(curPosition != mouseBasePosition) {
+    sf::Vector2i newDiff = curPosition - mouseBasePosition;
+    mouseDiff += newDiff;
+    playerDirection = rotateY(-mouseDiff.x * mouseSensitivity) * 
+      rotateX(-mouseDiff.y * mouseSensitivity) * startPlayerDirection;
+
+    sf::Mouse::setPosition(mouseBasePosition);
 
     setCamera(display);
   }
