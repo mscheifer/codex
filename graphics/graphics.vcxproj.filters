@@ -45,6 +45,9 @@
     <ClCompile Include="vertexAttrib.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="userInput.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="displaySet.h">
@@ -72,6 +75,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="windowsHacks.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="userInput.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
