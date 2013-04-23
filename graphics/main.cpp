@@ -23,27 +23,18 @@ int main() {
   const unsigned int defaultWindowWidth  = 800;
   const unsigned int defaultWindowHeight = 600;
 
-  // set openGL 3 context
-/*
-  //keep this uncommented for now because of weird bug
-  sf::ContextSettings oglContext;
-  oglContext.depthBits = 24;
-  oglContext.stencilBits = 8;
-  oglContext.antialiasingLevel = 0;
-  oglContext.majorVersion = 3;
-  oglContext.minorVersion = 1;
-*/
   // create the window
   //make sure this is above all other calls so that the desctructor is called
   //last so we have an opengl context for destructors
   sf::Window window(sf::VideoMode(defaultWindowWidth, defaultWindowHeight),
-    "DrChao", sf::Style::Default);//, oglContext);
+    "DrChao", sf::Style::Default);
   window.setVerticalSyncEnabled(false);
+  window.setMouseCursorVisible(false);
 
   // load resources, initialize the OpenGL states, ...
   GLenum glewErr = glewInit();
   if(GLEW_OK != glewErr) {
-    std::cout << "error initializing GLEW" << std::endl;
+    std::cout << "error initializing GLEW!" << std::endl;
     exit(1);
   }
 
@@ -74,6 +65,21 @@ int main() {
                                            0.0f, 0.0f, 1.0f, 1.0f,
                                            0.0f, 0.0f, 1.0f, 1.0f,
                                            1.0f, 0.0f, 1.0f, 1.0f }};
+  std::array<GLfloat,8*4> normalArray = {{-1.0f,-1.0f,-1.0f,
+                                           1.0f,-1.0f,-1.0f, 
+                                          -1.0f, 1.0f,-1.0f, 
+                                           1.0f, 1.0f,-1.0f, 
+                                          -1.0f,-1.0f, 1.0f, 
+                                           1.0f,-1.0f, 1.0f, 
+                                          -1.0f, 1.0f, 1.0f, 
+                                           1.0f, 1.0f, 1.0f }};
+  for(size_t i = 0; i < normalArray.size(); i += 3) {
+    gx::vector3 norm(normalArray[i],normalArray[i+1],normalArray[i+2]);
+    norm.normalize();
+    normalArray[i]   = norm.x;
+    normalArray[i+1] = norm.y;
+    normalArray[i+2] = norm.z;
+  }
   std::array<GLuint,6*6>  indicesArray = {{ 0, 1, 2, 1, 3, 2,
                                             2, 3, 6, 3, 7, 6,
                                             4, 0, 6, 0, 2, 4,
@@ -81,23 +87,22 @@ int main() {
                                             4, 5, 0, 5, 1, 0,
                                             5, 4, 7, 4, 6, 7 }};
 
-  std::vector<GLfloat> positions(posArray.begin(),   posArray.end());
-  std::vector<GLfloat> colors(colorsArray.begin(),   colorsArray.end());
+  std::vector<GLfloat> positions(  posArray.begin(),     posArray.end());
+  std::vector<GLfloat> colors(  colorsArray.begin(),  colorsArray.end());
+  std::vector<GLfloat> normals( normalArray.begin(),  normalArray.end());
   std::vector<GLuint>  indices(indicesArray.begin(), indicesArray.end());
 
   gx::vertexAttrib positionsAttrib("position",4,0,positions);
   gx::vertexAttrib colorsAttrib   ("color"   ,4,0,colors);
+  gx::vertexAttrib normalsAttrib  ("normal"  ,3,0,normals);
 
   std::vector<const gx::vertexAttrib*> attribs;
   attribs.push_back(&positionsAttrib);
   attribs.push_back(&colorsAttrib);
+  attribs.push_back(&normalsAttrib);
 
   gx::vao testTri(indices,attribs);
 
-  /*const std::vector<std::pair<const std::string,GLuint>> uniforms = 
-    { std::make_pair("display", display.bindPoint()) }; */
-
-  //yet another visual c++ hack
   std::vector<std::pair<const std::string,GLuint>> uniforms;
   uniforms.push_back(std::make_pair("display", display.bindPoint()));
 
@@ -115,10 +120,13 @@ int main() {
     sf::Event event;
     while (window.pollEvent(event)) {
       if (event.type == sf::Event::Closed) {
-        // end the program
-        running = false;
+        running = false; // end the program
       } else if (event.type == sf::Event::Resized) {
         reshape(display,event.size.width, event.size.height);
+      } else if (event.type == sf::Event::KeyPressed) {
+        if(event.key.code == sf::Keyboard::Escape) {
+          running = false; // end the program
+        }
       }
     }
     gx::handleUserInput(display);
