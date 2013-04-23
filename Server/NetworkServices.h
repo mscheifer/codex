@@ -37,6 +37,24 @@ public:
   sf::TcpSocket * newClient;
   
    ServerServices();
+   template <typename Data>
+   void sendPacketToAll(Data & data) {
+     sf::Packet packet;
+     packet.clear();
+     packet << Data::packetType;
+     data.serialize(packet);
+     sendToAll(packet); 
+   }
+   
+   template <typename Data>
+   void sendPacket(Data & data, int i) {
+     sf::Packet packet;
+     packet.clear();
+     packet << Data::packetType;
+     data.serialize(packet);
+     sendMessage(packet, i); 
+   }
+
    void getNewClient(); 
    bool receiveMessage(sf::Packet &packet, int i );
    bool sendMessage(sf::Packet & packet, int i);
