@@ -4,10 +4,10 @@
 Weapon::Weapon()
 {
 	Range_Cool_Down_Time = 0;
-  Melee_Cool_Down_Time = 0;
-  mpCost = 0;
+	Melee_Cool_Down_Time = 0;
+	mpCost = 0;
 	Range_Cool_Down_Counter = sf::Clock();
-  Melee_Cool_Down_Counter = sf::Clock();
+	Melee_Cool_Down_Counter = sf::Clock();
 }
 
 
@@ -18,17 +18,21 @@ Weapon::~Weapon()
 Weapon::Weapon(float damage, float ran, Coordinate d, float mpcost)
 {
 	Range_Cool_Down_Time = 0;
-  Melee_Cool_Down_Time = 0;
-  Range_Cool_Down_Counter = sf::Clock();
-  Melee_Cool_Down_Counter = sf::Clock();
+	Melee_Cool_Down_Time = 0;
+	Range_Cool_Down_Counter = sf::Clock();
+	Melee_Cool_Down_Counter = sf::Clock();
 	strength = damage;
 	range = ran;
 	position = d;
-  mpCost = mpcost;
+	mpCost = mpcost;
 }
 
 
 void Weapon::handleAction(ClientGameTimeAction a){
+
+}
+
+void Weapon::onCollision(Entity e) {
 
 }
 
@@ -50,10 +54,10 @@ void Weapon::useWeapon( bool range_attack){
 
 bool Weapon::attackMelee()
 {
-  return false;
+	return false;
 }
 bool Weapon::attackRange()
 {
-  return false;
+	return false;
 }
 

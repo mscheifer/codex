@@ -47,4 +47,5 @@ private:
   void handleSelfAction(ClientGameTimeAction a);
   void handleOtherAction(ClientGameTimeAction a);
   void attack(ClientGameTimeAction a);
+  bool isPlayer(void) {return true;};
 };
