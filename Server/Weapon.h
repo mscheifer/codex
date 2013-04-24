@@ -14,6 +14,7 @@ public:
 	int getDamage(void);
 	float getMpCost(){ return mpCost; }
 	void handleAction(ClientGameTimeAction a);
+	void onCollision(Entity e);
 	bool canUseWeapon(bool range_attack);
 	void useWeapon(bool range_attack);
 	bool canPickUp() { return pickedUp; }
