@@ -7,6 +7,7 @@ class Projectile :
 public:
   Projectile(void);
   ~Projectile(void);
+  bool isProjectile(){return true;}
 private:
   Player * owner;
 };

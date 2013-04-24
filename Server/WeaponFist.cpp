@@ -15,6 +15,6 @@ bool WeaponFist::attackMelee()
 }
 bool WeaponFist::attackRange()
 {
-  attackMelee();
   return false;
+  //attackMelee();
 }

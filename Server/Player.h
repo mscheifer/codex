@@ -27,6 +27,7 @@ public:
   bool moveTowardDirection(User_Movement degree);
   void jump();
   void handleAction(ClientGameTimeAction a);
+  void onCollision(Entity a);
 private:
   float health;
   float maxHealth;
@@ -38,6 +39,7 @@ private:
   sf::Clock castDownCounter;
   int jumpCount;
   bool canJump;
+  bool attacking;
   Weapon weapon[MAXWEAPONS]; //0 bare hand, 1 fireball
   int current_weapon_selection; //0 bare hand, 1 fireball
   bool damageBy(DeadlyEntity *);

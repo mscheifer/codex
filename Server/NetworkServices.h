@@ -2,33 +2,32 @@
 #include <stdint.h>
 #include <iostream>
 #include <SFML/Network.hpp>
+#include "StaticEnums.h"
 #define PORT_NUMBER 55001
 #define TIMEOUT 3
 
-enum Opcode {INIT, CHAT , T1, T2};
-
 const int maxSize = 9000;
 const int sizeSize = 4;
-
-template <typename Data>
-void sendPacket(Data & data) {
-  sf::Packet packet;
-  packet.clear();
-  packet << CHAT; //data.packetType
-  data.serialize(packet);
-  sendMessage(packet); 
-}
 
 class ClientServices{
 public:
   //network vars
   sf::Socket::Status s;
   sf::TcpSocket client;
-  bool validIpAddress;
+  bool invalidIpAddress;
   
   ClientServices();
   bool sendMessage(sf::Packet &packet );
   bool receiveMessage(sf::Packet & packet);
+
+  template <typename Data>
+  void sendPacket(Data & data) {
+    sf::Packet packet;
+    packet.clear();
+    packet << Data::packetType;
+    data.serialize(packet);
+    sendMessage(packet); 
+  }
 };
 
 class ServerServices{
@@ -38,6 +37,24 @@ public:
   sf::TcpSocket * newClient;
   
    ServerServices();
+   template <typename Data>
+   void sendPacketToAll(Data & data) {
+     sf::Packet packet;
+     packet.clear();
+     packet << Data::packetType;
+     data.serialize(packet);
+     sendToAll(packet); 
+   }
+   
+   template <typename Data>
+   void sendPacket(Data & data, int i) {
+     sf::Packet packet;
+     packet.clear();
+     packet << Data::packetType;
+     data.serialize(packet);
+     sendMessage(packet, i); 
+   }
+
    void getNewClient(); 
    bool receiveMessage(sf::Packet &packet, int i );
    bool sendMessage(sf::Packet & packet, int i);

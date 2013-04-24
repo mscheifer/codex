@@ -10,12 +10,18 @@ void NetworkServer::doServer(){
   while(true){
    clock.restart();
    server.getNewClient();
-     for( unsigned int i = 0; i < server.size(); i++){
+     for( int i = 0; i < server.size(); i++){
        sf::Packet packet;
        if(server.receiveMessage(packet,i)){
          int32_t packetType;
          packet >> packetType;
+
+         ClientGameTimeAction cgta;
          switch (packetType) {
+         case CGTA:
+           cgta.deserialize(packet);
+           cgta.print();
+           break;
          case CHAT:
            server.sendToAll(packet); //right now just echoing what received
            break;

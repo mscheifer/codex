@@ -7,6 +7,7 @@
 #include <SFML/System/Clock.hpp>
 #include "ConfigManager.h"
 #include "NetworkServices.h"
+#include "ClientGameTimeAction.h"
 
 
 class NetworkServer{

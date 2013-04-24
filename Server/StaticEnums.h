@@ -10,3 +10,6 @@ enum User_Movement {
 		BACKWARD_RIGHT=135,
 		NONE
 };
+
+//Networking enums
+enum Opcode {INIT, CHAT , T1, T2, CGTA};
