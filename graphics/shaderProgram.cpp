@@ -93,7 +93,7 @@ gx::shaderProgram::shaderProgram(std::string vsSource,std::string fsSource,
     const auto& attrib = **attribp;
     glBindAttribLocation(this->prog,attrib.loc(),attrib.name().c_str());
     debugout << "glBindAttribLocation(" << this->prog << ", " << attrib.loc();
-    debugout << ", " << attrib.name().c_str() << ");" << endl;
+    debugout << ", \"" << attrib.name().c_str() << "\");" << endl;
   }
 
   glLinkProgram(this->prog);

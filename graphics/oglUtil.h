@@ -11,7 +11,7 @@ const std::string shaderHeader =
   "#version 130\n\
    #extension GL_ARB_uniform_buffer_object : require\n";
 
-constexpr bool debugOn = false;
+constexpr bool debugOn = true;
 
 struct debugStream {
   template<typename T>
