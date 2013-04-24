@@ -32,14 +32,21 @@ void Weapon::handleAction(ClientGameTimeAction a){
 
 }
 
-bool Weapon::canUseWeapon() {
-	if( Range_Cool_Down_Counter.getElapsedTime().asMilliseconds() < Range_Cool_Down_Time
-      && Melee_Cool_Down_Counter.getElapsedTime().asMilliseconds() < Melee_Cool_Down_Time) {
-		return true;
+bool Weapon::canUseWeapon(bool range_attack) {
+	if(		(range_attack && Range_Cool_Down_Counter.getElapsedTime().asMilliseconds() < Range_Cool_Down_Time)
+		||	(!range_attack && Melee_Cool_Down_Counter.getElapsedTime().asMilliseconds() < Melee_Cool_Down_Time)){
+			return true;
 	}
 	return false;
 }
 
+void Weapon::useWeapon( bool range_attack){
+	if(range_attack) {
+		Range_Cool_Down_Counter.restart();
+	} else {
+		Melee_Cool_Down_Counter.restart();
+	}
+}
 
 bool Weapon::attackMelee()
 {

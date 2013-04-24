@@ -8,6 +8,9 @@ public:
   ~Entity() {}
   
   virtual void handleAction(ClientGameTimeAction a){}
+  virtual void onCollision(Entity a){}
+  virtual bool isProjectile(void){ return false;}
+  virtual bool isWeapon(void){ return false;}
   Coordinate getPosition(void){ return position; }
   Direction getDirection(void){ return direction; }
 
