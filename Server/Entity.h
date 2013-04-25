@@ -8,9 +8,23 @@ public:
   ~Entity() {}
   
   virtual void handleAction(ClientGameTimeAction a){}
+  virtual void onCollision(Entity a){}
+  virtual bool isProjectile(void){ return false;}
+  virtual bool isWeapon(void){ return false;}
+  virtual bool isPlayer(void){ return false;}
   Coordinate getPosition(void){ return position; }
   Direction getDirection(void){ return direction; }
+  void serialize(sf::Packet& packet)
+  {
+    position.serialize(packet);
+    direction.serialize(packet);
+  }
 
+  void deserialize(sf::Packet& packet)
+  {
+    position.deserialize(packet);
+    direction.deserialize(packet);
+  }
 
 protected:
   Coordinate position;

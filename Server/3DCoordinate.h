@@ -1,4 +1,5 @@
 #pragma once
+#include <SFML/Network.hpp> //this might need to go in StaticEnum
 typedef double Position;
 typedef double Velocity;
 typedef double Acceleration;
@@ -16,4 +17,15 @@ struct Coordinate
   Coordinate():x(0),y(0),z(0),velocityX(0),velocityY(0),velocityZ(0) {}
   Coordinate(Position a, Position b, Position c, Velocity va, Velocity vb, Velocity vc) :
     x(a), y(b), z(c), velocityX(va), velocityY(vb), velocityZ(vc){}
+  void serialize(sf::Packet & packet) {
+     packet<<x;
+     packet<<y;
+     packet<<z;
+  }
+
+  void deserialize(sf::Packet & packet) {
+     packet>>x;
+     packet>>y;
+     packet>>z;
+  }
 };

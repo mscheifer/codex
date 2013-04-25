@@ -8,5 +8,7 @@ public:
   ~WeaponFist(void);
   bool attackMelee();
   bool attackRange();
+  bool pickUp();
+  bool dropDown(Coordinate dropPosition);
 };
 
