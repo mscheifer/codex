@@ -56,10 +56,15 @@ bool Weapon::attackMelee()
 {
 	return false;
 }
-Projectile* Weapon::attackRange()
+Projectile* Weapon::attackRange(Direction d , Coordinate c)
 {
-	Projectile* pj; // somehow get it 
-
+	Projectile* pj = map.produceProjectile();
+	c.velocityX = projectileSpeed;
+	c.velocityY = projectileSpeed;
+	c.velocityZ = projectileSpeed;
+	
+	pj->setPosition(c);
+	pj->setDirection(d);
 	pj->setStrength(projectileStrength);
 
 

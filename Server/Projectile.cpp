@@ -49,3 +49,7 @@ void Projectile::setOwner(Player * player)
 {
   owner = player;
 }
+
+void Projectile::setStrength(float f) {
+	strength = f;
+}

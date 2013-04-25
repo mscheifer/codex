@@ -13,6 +13,7 @@ public:
 	Weapon(float damage, float range, Coordinate d, float mpcost);
 	int getRange(void);
 	int getDamage(void);
+	Velocity projectileSpeed;
 	float getMpCost(){ return mpCost; }
 	void handleAction(ClientGameTimeAction a);
 	void onCollision(Entity e);
@@ -21,7 +22,7 @@ public:
 	bool canPickUp() { return pickedUp; }
 	virtual bool attackMelee(); 
 	float projectileStrength;
-	virtual Projectile* attackRange();
+	virtual Projectile* attackRange(Direction d, Coordinate c);
   virtual bool pickUp(){ return false; };
   virtual bool dropDown(Coordinate dropPosition){ position = dropPosition; return false; };
 protected:

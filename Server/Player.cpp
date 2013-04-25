@@ -163,7 +163,7 @@ void Player::attack( ClientGameTimeAction a) {
 			return;
 		}
 		mana -= currentWeapon.getMpCost();
-		currentWeapon.attackRange();
+		currentWeapon.attackRange(direction, position);
 	}
 	else if(a.attackMelee)
 	{
@@ -182,6 +182,7 @@ void Player::attack( ClientGameTimeAction a) {
 
 std::string Player::getString()
 {
+
 	std::stringstream returnString;
 	returnString<<"ID:"<< player_id <<" x="<<position.x<< " y="<<position.y<< " z="<<position.z<<std::endl;
 	returnString<< " x="<<position.velocityX<< " y="<<position.velocityY<< " z="<<position.velocityZ<<std::endl;

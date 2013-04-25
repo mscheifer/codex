@@ -1,4 +1,7 @@
 #include "Map.h"
+#include "Projectile.h"
+#include "Player.h"
+#include "Entity.h"
 
 const float Map::Item_Pick_Up_Ranges = 1.0f;
 

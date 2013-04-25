@@ -1,11 +1,15 @@
 #pragma once
-#include "Entity.h"
-#include "Player.h"
-#include "Projectile.h"
+//#include "Entity.h"
+//#include "Player.h"
+//#include "Projectile.h"
 #include <array>
 #include <vector>
 #include <stdlib.h>
 #include <stack>
+
+class Entity;
+class Player;
+class Projectile;
 
 
 class Map
