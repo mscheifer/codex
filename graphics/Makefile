@@ -1,7 +1,7 @@
 NAME	   = drchao
 ECHO	   = @echo
 CC       = @g++
-WARNINGS = -Wall -Wextra -Wstrict-overflow=5 -Wshadow #-Wconversion
+WARNINGS = -Wall -Wextra -Wstrict-overflow=5 -Wshadow -Wconversion
 CPPFLAGS = -O3 $(WARNINGS) -ISFML/include -std=c++11
 LDFLAGS  = -LSFML/lib -lsfml-window -lsfml-system -lGL -lGLEW
 OBJDIR   = obj/

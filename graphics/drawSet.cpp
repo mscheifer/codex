@@ -9,27 +9,33 @@ gx::drawSet::entityClass::entityClass(entityClass&& other)
 gx::drawSet::drawSet(const std::string vertShader, const std::string fragShader,
                      const std::vector<vaoData_t> vaoDatas,
                      std::vector<const uniform*>  globalUniforms)
-  : instancePos("trans",sizeof(GLfloat[16])), //fix this initialization
-    program(vertShader, fragShader, (globalUniforms.push_back(&instancePos),
-    globalUniforms)), entityClasses() {
+  : program(vertShader, fragShader, globalUniforms), entityClasses(),
+    modelToWorldLoc(program.uniformLoc("modelToWorld"))               {
   for(auto vaoDatap = vaoDatas.begin(); vaoDatap != vaoDatas.end(); ++vaoDatap){
     const auto& vaoData = *vaoDatap;
     entityClass newEntClass(std::vector<matrix>(),
                   vao(vaoData.first,vaoData.second,program.vars()));
     entityClasses.push_back(std::move(newEntClass));
   }
-  //setup instancePos
 }
 
 void gx::drawSet::draw() const {
   this->program.use();
-  for(auto entityCp = entityClasses.begin(); entityCp != entityClasses.end(); ++entityCp){
+  for(auto entityCp = entityClasses.begin(); entityCp != entityClasses.end();
+                                                                 ++entityCp) {
     const auto& entityC = *entityCp;
-    for(auto locp = entityC.positions.begin(); locp != entityC.positions.end(); ++locp){
+    for(auto locp = entityC.positions.begin(); locp != entityC.positions.end(); 
+                                                                       ++locp) {
       const auto& loc = *locp;
-      this->instancePos.write(0,loc.oglmatrix());
+      glUniformMatrix4fv(this->modelToWorldLoc,1,false,loc.oglmatrix().data());
       entityC.vertData.draw();
     }
+  }
+}
+
+void gx::drawSet::reset() {
+  for(auto& entityC : this->entityClasses) {
+    entityC.positions.clear();
   }
 }
 

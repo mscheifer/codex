@@ -3,9 +3,7 @@ layout(std140) uniform display {
   mat4 projMatrix;
 };
 
-layout(std140) uniform trans {
-  mat4 modelToWorld;
-};
+uniform  mat4 modelToWorld;
  
 in vec4 position;
 in vec4 color;

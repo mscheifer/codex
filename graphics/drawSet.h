@@ -9,21 +9,22 @@
 namespace gx {
 
 class drawSet {
-	struct entityClass {
+   struct entityClass {
       std::vector<matrix> positions;
       vao                 vertData;
-	  entityClass(std::vector<matrix>,vao);
-	  entityClass(entityClass&&);
+      entityClass(std::vector<matrix>,vao);
+      entityClass(entityClass&&);
     };
-    uniform                  instancePos; //add another for direction
     shaderProgram            program;
     std::vector<entityClass> entityClasses;
+    GLint                    modelToWorldLoc;
   public:
     typedef std::pair<std::vector<GLuint>,
                       std::vector<const vertexAttrib*>> vaoData_t;
     drawSet(const std::string, const std::string, const std::vector<vaoData_t>,
             std::vector<const uniform*>);
     void draw() const;
+    void reset();
     void addEntity(vector3,unsigned int);
 };
 

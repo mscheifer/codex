@@ -120,16 +120,13 @@ int main() {
 
   std::vector<gx::drawSet::vaoData_t> entitiesData;
   entitiesData.push_back(std::make_pair(indices,attribs));
+  entitiesData.push_back(std::make_pair(indices,attribs));
 
   std::vector<const gx::uniform*> uniforms;
   uniforms.push_back(&display.storage());
 
   gx::drawSet entities(readFile("default.vert"),readFile("default.frag"),
                        entitiesData,uniforms);
-
-  entities.addEntity(gx::vector3( 0, 4,-1), 0);
-  entities.addEntity(gx::vector3( 1, 2,-2), 0);
-  entities.addEntity(gx::vector3(-1, 0,-3), 0);
 
   //fps setup
   sf::Clock fpsClock;
@@ -157,6 +154,12 @@ int main() {
 	  glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
     gx::debugout << "glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT";
     gx::debugout << "| GL_STENCIL_BUFFER_BIT);" << gx::endl;
+
+    entities.reset();
+
+    entities.addEntity(gx::vector3( 0, 4, -1 ), 0);
+    entities.addEntity(gx::vector3( 1, 2, -2), 1);
+    entities.addEntity(gx::vector3(-1, 0, -3 ), 1);
 
     // draw...
     entities.draw();

@@ -26,6 +26,7 @@ class shaderProgram {
     ~shaderProgram(); //not virtual because there's no inheiritance
     void use() const;
     std::map<std::string,vertexAttribSignature> vars() const;
+    GLint uniformLoc(const std::string) const;
 };
 
 } //end namespace gx

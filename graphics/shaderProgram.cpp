@@ -57,8 +57,10 @@ gx::shaderProgram::shaderProgram(   const std::string vsSource,
   std::array<const GLchar*,2> fullSourceF =
     {{ shaderHeader.c_str(), fsSource.c_str() }};
 
-  glShaderSource(vertShader, fullSourceV.size(), fullSourceV.data(), nullptr);
-  glShaderSource(fragShader, fullSourceF.size(), fullSourceF.data(), nullptr);
+  glShaderSource(vertShader, GLsizei(fullSourceV.size()), fullSourceV.data(),
+                                                                    nullptr);
+  glShaderSource(fragShader, GLsizei(fullSourceF.size()), fullSourceF.data(),
+                                                                    nullptr);
 
   glCompileShader(vertShader);
   glCompileShader(fragShader);
@@ -170,4 +172,8 @@ void gx::shaderProgram::use() const {
 
 std::map<std::string,gx::vertexAttribSignature> gx::shaderProgram::vars() const{
   return this->attribSigs;
+}
+
+GLint gx::shaderProgram::uniformLoc(const std::string name) const {
+  return glGetUniformLocation(this->prog, name.c_str());
 }
