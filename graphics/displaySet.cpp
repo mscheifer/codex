@@ -1,38 +1,11 @@
 #include "displaySet.h"
 
-//stores the next available uniform bind point
-//should be incremented every time it is used
-GLuint gx::displaySet::nextUniformBindPoint = 0;
-
-GLuint gx::displaySet::freshBindPoint() {
-  if(nextUniformBindPoint >= GL_MAX_UNIFORM_BUFFER_BINDINGS) {
-    std::cout << "Error, too many uniform objects" << std::endl;
-    exit(1);
-  }
-  return nextUniformBindPoint++;
-}
+namespace { //don't export
+ const std::string uniformName = "display";
+} //end unnamed namespace
 
 gx::displaySet::displaySet()
-  : view(), projection(), bindingIndex(freshBindPoint()), bufferName() {
-  debugout << "glGenBuffers(1, &(this->bufferName));" << endl;
-  glGenBuffers(1, &(this->bufferName));
-  debugout << "glBindBuffer(GL_UNIFORM_BUFFER, " << this->bufferName << ");";
-  debugout << endl;
-  glBindBuffer(GL_UNIFORM_BUFFER, this->bufferName);
-  debugout << "glBufferData(GL_UNIFORM_BUFFER, ";
-  debugout << sizeof(gx::matrix::elem_t[16]) * 2 << ", nullptr, ";
-  debugout << "GL_DYNAMIC_DRAW);" << endl;
-  glBufferData(GL_UNIFORM_BUFFER, sizeof(gx::matrix::elem_t[16]) * 2, nullptr,
-               GL_DYNAMIC_DRAW);
-  debugout << "glBindBufferBase(GL_UNIFORM_BUFFER, " << this->bindingIndex;
-  debugout << ", " << this->bufferName << ");" << endl;
-  glBindBufferBase(GL_UNIFORM_BUFFER, this->bindingIndex, this->bufferName);
-}
-
-gx::displaySet::~displaySet() {
-  debugout << "glDeleteBuffers(1, &(this->bufferName));" << endl;
-  glDeleteBuffers(1, &(this->bufferName));
-}
+  : view(), projection(), unif(uniformName,sizeof(gx::matrix::elem_t[16]) * 2){}
 
 void gx::displaySet::setProjection(elem_t fov, elem_t ratio, elem_t nearP,
                                elem_t farP) {
@@ -49,12 +22,7 @@ void gx::displaySet::setProjection(elem_t fov, elem_t ratio, elem_t nearP,
 
   auto oglM = this->projection.oglmatrix();
 
-  debugout << "glBindBuffer(GL_UNIFORM_BUFFER, " << this->bufferName << ");";
-  debugout << endl;
-  glBindBuffer(GL_UNIFORM_BUFFER, this->bufferName);
-  debugout << "glBufferSubData(GL_UNIFORM_BUFFER, " << sizeof(oglM) << ", ";
-  debugout << sizeof(oglM) << ", oglM.data());" << endl;
-  glBufferSubData(GL_UNIFORM_BUFFER, sizeof(oglM), sizeof(oglM), oglM.data());
+  this->storage().write(sizeof(oglM),oglM);
 }
 //e is camera position and d is look at point
 void gx::displaySet::setView(const vector3& e, const vector3& d, 
@@ -93,14 +61,9 @@ void gx::displaySet::setView(const vector3& e, const vector3& d,
 
   auto oglM = this->view.oglmatrix();
 
-  glBindBuffer(GL_UNIFORM_BUFFER, this->bufferName);
-  debugout << "glBindBuffer(GL_UNIFORM_BUFFER, " << this->bufferName << ");";
-  debugout << endl;
-  glBufferSubData(GL_UNIFORM_BUFFER, 0, sizeof(oglM), oglM.data());
-  debugout << "glBufferSubData(GL_UNIFORM_BUFFER, 0, " << sizeof(oglM);
-  debugout << ", oglM.data());" << endl;
+  this->storage().write(0,oglM);
 }
 
-GLuint gx::displaySet::bindPoint() {
-  return this->bindingIndex;
+const gx::uniform& gx::displaySet::storage() const {
+  return this->unif;
 }

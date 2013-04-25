@@ -1,29 +1,32 @@
+#ifndef SHADERPROGRAM_H
+#define SHADERPROGRAM_H
 #include <GL/glew.h>
 #include <string>
 #include <vector>
-#include <utility>
+#include <map>
 #include "oglUtil.h"
 #include "vertexAttrib.h"
+#include "vertexAttribSignature.h"
 
 namespace gx {
 
+class uniform;
+
 class shaderProgram {
     GLuint prog;
+    std::map<std::string,vertexAttribSignature> attribSigs;
   public:
-    shaderProgram(std::string,std::string,
-                  std::vector<std::pair<const std::string,GLuint>>,
-                  std::vector<const vertexAttrib*>);
+    shaderProgram(const std::string,const std::string,
+                  const std::vector<const uniform*>);
 	//vc++ is dumb
-    //shaderProgram(const shaderProgram&) = delete; //don't copy
-    //shaderProgram& operator=(const shaderProgram&) = delete; //don't assign
+    shaderProgram(const shaderProgram&) = delete; //don't copy
+    shaderProgram& operator=(const shaderProgram&) = delete; //don't assign
     shaderProgram(shaderProgram&&);
     shaderProgram& operator=(shaderProgram&&);
     ~shaderProgram(); //not virtual because there's no inheiritance
-    void use();
+    void use() const;
+    std::map<std::string,vertexAttribSignature> vars() const;
 };
 
-shaderProgram shaderFromFiles(const std::string,const std::string,
-        std::vector<std::pair<const std::string,GLuint>>,
-        std::vector<const vertexAttrib*>);
-
 } //end namespace gx
+#endif //SHADERPROGRAM_H

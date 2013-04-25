@@ -6,19 +6,16 @@
 namespace gx {
 
 class vertexAttrib {
-    static GLuint nextAttribLocation;
-    static GLuint freshAttribLocation();
     std::string varName;
-    GLuint      buffer;
-    GLuint      shaderLocation;
     GLint       vectorSize;
     GLenum      glType;
     GLsizei     byteOffset;
+    GLuint      buffer;
   public:
     template<typename T>
     vertexAttrib(std::string n, GLint vs, GLsizei st, std::vector<T> d)
-          : varName(n), shaderLocation(freshAttribLocation()), vectorSize(vs), 
-            glType(typeVal(d[0]))                            , byteOffset(st) {
+          : varName(n), vectorSize(vs), glType(typeVal(d[0])), byteOffset(st),
+            buffer () {
       glGenBuffers(1, &buffer);
       debugout << "glGenBuffers(1, &buffer@" << &buffer << ");" << endl;
       this->bindBuffer();
@@ -28,14 +25,13 @@ class vertexAttrib {
       debugout << ", d.data(), GL_STATIC_DRAW);" << endl;
     }
 	//vc++ is dumb
-    //vertexAttrib(const vertexAttrib&) = delete; //don't copy
-    //vertexAttrib& operator=(const vertexAttrib&) = delete; //don't assign
-    //vertexAttrib(vertexAttrib&&) = delete; //define later
-    //vertexAttrib& operator=(vertexAttrib&&) = delete; //define later
+    vertexAttrib(const vertexAttrib&) = delete; //don't copy
+    vertexAttrib& operator=(const vertexAttrib&) = delete; //don't assign
+    vertexAttrib(vertexAttrib&&) = delete; //define later
+    vertexAttrib& operator=(vertexAttrib&&) = delete; //define later
     ~vertexAttrib();
     void bindBuffer()     const;
     std::string name()    const;
-    GLuint      loc()     const;
     GLint       vecSize() const;
     GLenum      type()    const;
     GLsizei     stride()  const;

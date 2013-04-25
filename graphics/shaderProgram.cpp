@@ -1,7 +1,7 @@
 #include "shaderProgram.h"
 #include <array>
 #include <iostream>
-#include <fstream>
+#include "uniform.h"
 
 namespace { //to not export
 void printShaderInfoLog(GLuint obj,const std::string name) {
@@ -36,27 +36,11 @@ void printProgramInfoLog(GLuint obj) {
   }
 }
 
-std::string readFile(const std::string fileName) {
-  std::ifstream vsFile(fileName);
-  std::string fullSource = "";
-
-  if(vsFile.is_open()) {
-    std::string line;
-    while(vsFile.good()) {
-      getline(vsFile,line);
-      fullSource += line + "\n";
-    }
-    vsFile.close();
-  }
-  return fullSource;
-}
-
 } //end unnamed namespace
 
-gx::shaderProgram::shaderProgram(std::string vsSource,std::string fsSource,
-              std::vector<std::pair<const std::string,GLuint>> uniforms,
-              std::vector<const vertexAttrib*> attribs)
-                 : prog(glCreateProgram()) {
+gx::shaderProgram::shaderProgram(   const std::string vsSource,
+        const std::string fsSource, const std::vector<const uniform*> uniforms)
+                 : prog(glCreateProgram()), attribSigs() {
   debugout << prog << " = glCreateProgram()" << endl;
   const std::string shader_output_name("outputF");
 
@@ -88,43 +72,74 @@ gx::shaderProgram::shaderProgram(std::string vsSource,std::string fsSource,
   //we have to do this here because we're stuck on GLSL 1.3
   glBindFragDataLocation(prog, 0, shader_output_name.c_str());
 
-  //cant use range based for here because of visual c++
-  for(auto attribp = attribs.begin() ; attribp != attribs.end() ; ++attribp) {
-    const auto& attrib = **attribp;
-    glBindAttribLocation(this->prog,attrib.loc(),attrib.name().c_str());
-    debugout << "glBindAttribLocation(" << this->prog << ", " << attrib.loc();
-    debugout << ", \"" << attrib.name().c_str() << "\");" << endl;
-  }
-
   glLinkProgram(this->prog);
   debugout << "glLinkProgram(" << this->prog << ");" << endl;
   printProgramInfoLog(this->prog);
 
-  if(glGetFragDataLocation(prog,shader_output_name.c_str()) == -1) {
+  if(glGetFragDataLocation(this->prog,shader_output_name.c_str()) == -1) {
     std::cout << "Error, bad output for frag shader" << std::endl;
   }
+  debugout << "glGetFragDataLocation(" << this->prog << ", ";
+  debugout << shader_output_name << ");" << endl;
 
   glDetachShader(this->prog,vertShader);
+  debugout << "glDetachShader("<< this->prog<< ","<< vertShader << ");" << endl;
   glDetachShader(this->prog,fragShader);
+  debugout << "glDetachShader("<< this->prog<< ","<< fragShader << ");" << endl;
 
   //we already linked so we don't need these anymore
   glDeleteShader(vertShader);
+  debugout << "glDeleteShader(" << vertShader << ");" << endl;
   glDeleteShader(fragShader);
+  debugout << "glDeleteShader(" << fragShader << ");" << endl;
+
+  GLint maxAttribNameLength, numAttribs;
+
+  glGetProgramiv(this->prog, GL_ACTIVE_ATTRIBUTES, &numAttribs);
+  debugout << "glGetProgramiv(" << this->prog << ", GL_ACTIVE_ATTRIBUTES, ";
+  debugout << "&numAttribs@" << &numAttribs << ");" << endl;
+  debugout << "numAttribs = " << numAttribs << endl;
+  glGetProgramiv(this->prog, GL_ACTIVE_ATTRIBUTE_MAX_LENGTH,
+                                                   &maxAttribNameLength);
+  debugout << "glGetProgramiv(" << this->prog << ", ";
+  debugout << "GL_ACTIVE_ATTRIBUTE_MAX_LENGTH, &maxAttribNameLength@";
+  debugout << &maxAttribNameLength << ");" << endl;
+  debugout << "maxAttribNameLength = " << maxAttribNameLength << endl;
+
+  GLchar* attribName = new GLchar[maxAttribNameLength];
+
+  for(GLuint i = 0; i < GLuint(numAttribs); ++i) {
+    GLint attribSize;
+    GLenum attribType;
+    glGetActiveAttrib(this->prog, i, maxAttribNameLength, nullptr, &attribSize,
+                      &attribType, attribName);
+    debugout << "glGetActiveAttrib(" << this->prog << ", " << i << ", ";
+    debugout << maxAttribNameLength << ", nullptr, &attribSize@" << &attribSize;
+    debugout << ", &attribType@" << &attribType << ", " << attribName << ");";
+    debugout << endl;
+    GLint attribLoc = glGetAttribLocation(this->prog, attribName);
+    debugout << attribLoc << " = glGetAttribLocation(" << this->prog << ", ";
+    debugout << attribName << ");" << endl;
+    vertexAttribSignature sig(attribType,attribLoc);
+    attribSigs.insert(std::make_pair(attribName,sig));
+  }
+
+  delete[] attribName;
 
    //cant use range based for here because of visual c++
   for(auto uniformp = uniforms.begin(); uniformp != uniforms.end(); ++uniformp){
-    const auto& uniform = *uniformp;
+    const auto& unif = **uniformp;
     //uniform.first is the block name, second is the block binding id
-    GLuint localIndex= glGetUniformBlockIndex(this->prog,uniform.first.c_str());
+    GLuint localIndex = glGetUniformBlockIndex(this->prog,unif.name().c_str());
     debugout << localIndex << " = glGetUniformBlockIndex(" << this->prog;
-    debugout << ", \"" << uniform.first.c_str() << "\");" << endl;
+    debugout << ", \"" << unif.name().c_str() << "\");" << endl;
     if(localIndex == GL_INVALID_INDEX) {
-      std::cout << uniform.first << ": doesn't exist in shader" << endl;
+      std::cout << unif.name() << ": doesn't exist in shader" << endl;
     }
 
-    glUniformBlockBinding(this->prog,localIndex,uniform.second);
+    glUniformBlockBinding(this->prog,localIndex,unif.bindPoint());
     debugout << "glUniformBlockBinding(" << this->prog << ", " << localIndex;
-    debugout << ", " << uniform.second << ");" << endl;
+    debugout << ", " << unif.bindPoint() << ");" << endl;
 
     int sz;
     glGetActiveUniformBlockiv(this->prog, localIndex,
@@ -133,8 +148,7 @@ gx::shaderProgram::shaderProgram(std::string vsSource,std::string fsSource,
   }
 }
 
-gx::shaderProgram::shaderProgram(gx::shaderProgram&& other) {
-	this->prog = other.prog;
+gx::shaderProgram::shaderProgram(gx::shaderProgram&& other): prog(other.prog) {
 	other.prog = 0; //glDeleteProgram wont do anything
 }
 
@@ -149,19 +163,11 @@ gx::shaderProgram::~shaderProgram() {
   debugout << "glDeleteProgram(" << this->prog << ");" << endl;
 }
 
-void gx::shaderProgram::use() {
+void gx::shaderProgram::use() const {
   glUseProgram(this->prog);
   debugout << "glUseProgram(" << this->prog << ");" << endl;
 }
 
-gx::shaderProgram gx::shaderFromFiles(const std::string vsFile,
-                                      const std::string fsFile,
-                std::vector<std::pair<const std::string,GLuint>> uniforms,
-                std::vector<const vertexAttrib*> attribs) {
-  std::string vsSource, fsSource;
-
-  vsSource = readFile(vsFile);
-  fsSource = readFile(fsFile);
-
-  return shaderProgram(vsSource,fsSource,uniforms,attribs);
+std::map<std::string,gx::vertexAttribSignature> gx::shaderProgram::vars() const{
+  return this->attribSigs;
 }

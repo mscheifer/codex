@@ -37,5 +37,9 @@ inline constexpr GLenum typeVal(GLfloat) {
   return GL_FLOAT;
 }
 
+GLint  typeComponents(GLenum type);
+
+GLenum baseType      (GLenum type);
+
 } //end namespace gx
 #endif

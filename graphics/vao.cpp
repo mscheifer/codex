@@ -1,8 +1,9 @@
 #include "vao.h"
 
-gx::vao::vao(std::vector<GLuint> indices,
-             std::vector<const vertexAttrib*> attribs)
-       : id(), numIndices(indices.size()) {
+gx::vao::vao(const std::vector<GLuint>                   indices,
+             const std::vector<const vertexAttrib*>      attribs,
+             std::map<std::string,vertexAttribSignature> sigs)
+       : id(), numIndices(indices.size()), ibo() {
   glGenVertexArrays(1, &(this->id));
   debugout << "glGenVertexArrays(1, &(this->id));" << endl;
   glBindVertexArray(this->id);
@@ -21,15 +22,30 @@ gx::vao::vao(std::vector<GLuint> indices,
   //cant use range based for here because of visual c++
   for(auto attribp = attribs.begin() ; attribp != attribs.end() ; ++attribp) {
     const auto& attrib = **attribp;
-    attrib.bindBuffer();
-    glEnableVertexAttribArray(attrib.loc());
-    debugout << "glEnableVertexAttribArray(" << attrib.loc() << ");" << endl;
-    glVertexAttribPointer(attrib.loc(), attrib.vecSize(), attrib.type(),
-                          GL_FALSE, attrib.stride(), 0);
-    debugout << "glVertexAttribPointer(" << attrib.loc() << ", ";
-    debugout << attrib.vecSize() << ", attrib.type(), GL_FALSE, ";
-    debugout << attrib.stride() << ", 0);" << endl;
+    auto itPos = sigs.find(attrib.name());
+    if(itPos != sigs.end()) {
+      if(!itPos->second.checkAndBind(attrib)) {
+        std::cout << "error: shader variable: " << attrib.name();
+        std::cout << " does not match type or vector size" << std::endl;
+      }
+      sigs.erase(itPos);
+    } else {
+      std::cout << "error: no variable in shader named: " << attrib.name();
+      std::cout << std::endl;
+    }
   }
+  if(!sigs.empty()) {
+    std::cout << "Error: no data for shader variables: " << std::endl;
+    for(const auto& s : sigs) {
+      std::cout << s.first << std::endl;
+    }
+  }
+}
+
+gx::vao::vao(vao&& other): id(other.id), numIndices(other.numIndices),
+                           ibo(other.ibo) {
+  other.id  = 0; //delete vertex array won't complain
+  other.ibo = 0; //dlete buffers won't complain
 }
 
 gx::vao::~vao() {
@@ -39,7 +55,7 @@ gx::vao::~vao() {
   debugout << "glDeleteVertexArrays(1, &(this->id)@" << &(this->id) << ");\n";
 }
 
-void gx::vao::draw() {
+void gx::vao::draw() const {
   glBindVertexArray(this->id);
   debugout << "glBindVertexArray(" << this->id << ");" << endl;
   glDrawElements(GL_TRIANGLES, this->numIndices, GL_UNSIGNED_INT, nullptr);

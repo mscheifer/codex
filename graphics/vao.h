@@ -2,18 +2,26 @@
 #define VAO_H
 #include <GL/glew.h>
 #include <vector>
+#include <map>
+#include <string>
 #include "vertexAttrib.h"
+#include "vertexAttribSignature.h"
 
 namespace gx {
 
 class vao {
     GLuint  id;
     GLsizei numIndices;
-    GLuint ibo;
+    GLuint  ibo;
   public:
-    vao(std::vector<GLuint>,std::vector<const vertexAttrib*>);
+    vao(const std::vector<GLuint>,const std::vector<const vertexAttrib*>,
+        std::map<std::string,vertexAttribSignature>);
+    vao(const vao&) = delete; //don't copy
+    vao& operator=(const vao&) = delete; //don't assign
+    vao(vao&&);
+    vao& operator=(vao&&) = delete; //define later
     ~vao();
-    void draw();
+    void draw() const;
 };
 
 } //end namespace gx

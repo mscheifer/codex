@@ -2,6 +2,10 @@ layout(std140) uniform display {
   mat4 viewMatrix;
   mat4 projMatrix;
 };
+
+layout(std140) uniform trans {
+  mat4 modelToWorld;
+};
  
 in vec4 position;
 in vec4 color;
@@ -13,5 +17,5 @@ out vec3 Normal;
 void main() {
     Color = color;
     Normal = normal;
-    gl_Position = projMatrix * viewMatrix * position;
+    gl_Position = projMatrix * viewMatrix * modelToWorld * position;
 }

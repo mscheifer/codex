@@ -2,10 +2,27 @@
 #include <SFML/Window.hpp>
 #include <SFML/OpenGL.hpp>
 #include <iostream>
+#include <fstream>
 #include "userInput.h"
 #include "displaySet.h"
 #include "shaderProgram.h"
 #include "vao.h"
+#include "drawSet.h"
+
+std::string readFile(const std::string fileName) {
+  std::ifstream vsFile(fileName);
+  std::string fullSource = "";
+
+  if(vsFile.is_open()) {
+    std::string line;
+    while(vsFile.good()) {
+      getline(vsFile,line);
+      fullSource += line + "\n";
+    }
+    vsFile.close();
+  }
+  return fullSource;
+}
 
 void reshape(gx::displaySet& display, unsigned int w, unsigned int h) {
   typedef gx::displaySet::elem_t elem_t;
@@ -101,13 +118,18 @@ int main() {
   attribs.push_back(&colorsAttrib);
   attribs.push_back(&normalsAttrib);
 
-  gx::vao testTri(indices,attribs);
+  std::vector<gx::drawSet::vaoData_t> entitiesData;
+  entitiesData.push_back(std::make_pair(indices,attribs));
 
-  std::vector<std::pair<const std::string,GLuint>> uniforms;
-  uniforms.push_back(std::make_pair("display", display.bindPoint()));
+  std::vector<const gx::uniform*> uniforms;
+  uniforms.push_back(&display.storage());
 
-  gx::shaderProgram prog =
-    gx::shaderFromFiles("default.vert","default.frag",uniforms,attribs);
+  gx::drawSet entities(readFile("default.vert"),readFile("default.frag"),
+                       entitiesData,uniforms);
+
+  entities.addEntity({ 0, 0,-1}, 0);
+  entities.addEntity({ 1, 0,-2}, 0);
+  entities.addEntity({-1, 0,-3}, 0);
 
   //fps setup
   sf::Clock fpsClock;
@@ -137,8 +159,7 @@ int main() {
     gx::debugout << "| GL_STENCIL_BUFFER_BIT);" << gx::endl;
 
     // draw...
-    prog.use();
-    testTri.draw();
+    entities.draw();
 
     // end the current frame (internally swaps the front and back buffers)
     window.display();
