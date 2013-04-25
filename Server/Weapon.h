@@ -20,6 +20,7 @@ public:
 	void useWeapon(bool range_attack);
 	bool canPickUp() { return pickedUp; }
 	virtual bool attackMelee(); 
+	float projectileStrength;
 	virtual Projectile* attackRange();
 protected:
 	int Range_Cool_Down_Time; //cool down time between uses in milliseconds

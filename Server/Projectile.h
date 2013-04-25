@@ -10,6 +10,7 @@ public:
   Projectile(Position r);
   ~Projectile(void);
   void update(void);
+  void setStrength(float a);
   Position range;
   Position distanceLeftToTravel;
   bool isProjectile(){return true;}

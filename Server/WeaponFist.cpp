@@ -15,6 +15,7 @@ bool WeaponFist::attackMelee()
 }
 Projectile* WeaponFist::attackRange()
 {
+
   return NULL;
   //attackMelee();
 }

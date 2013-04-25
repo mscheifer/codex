@@ -58,6 +58,11 @@ bool Weapon::attackMelee()
 }
 Projectile* Weapon::attackRange()
 {
-	return NULL;
+	Projectile* pj; // somehow get it 
+
+	pj->setStrength(projectileStrength);
+
+
+	return pj;
 }
 
