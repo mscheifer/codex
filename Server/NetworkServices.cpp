@@ -39,7 +39,7 @@ ClientServices::ClientServices(){
     newClient = new sf::TcpSocket; 
   }
 
-   void ServerServices::getNewClient(){ 
+   bool ServerServices::getNewClient(){ 
   // Wait for a connection
     if ( listener.accept(*newClient) == sf::Socket::Done ){
       std::cout << "New client connected: " << newClient->getRemoteAddress() << std::endl;
@@ -47,7 +47,9 @@ ClientServices::ClientServices(){
       clients.push_back(newClient);
       std::cout <<size()<<" clients have connceted"<<std::endl;
       newClient = new sf::TcpSocket;
+      return true;
     }
+    return false;
    }
 
    bool ServerServices::receiveMessage(sf::Packet &packet, int i ) {

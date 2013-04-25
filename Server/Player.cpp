@@ -93,7 +93,7 @@ void Player::handleAction(ClientGameTimeAction a) {
 bool Player::moveTowardDirection(User_Movement degree)
 {
 	if(degree == NONE)
-		return false;
+		return true;
 	// x' = xcos@ - ysin@
 	// y' = xsin@ + ycos@ 
 	DirectionValue newX = (DirectionValue)(direction.x * cos(degree*PI/180) - direction.y * sin(degree*PI/180));
@@ -113,8 +113,7 @@ void Player::handleSelfAction(ClientGameTimeAction a) {
 		return;
 	//start of movement logic
 	direction = a.facingDirection;
-	if(moveTowardDirection(a.movement))
-		throw "Oh... something got fucked up in player handleSelfAction";
+	moveTowardDirection(a.movement);
 
 	if(a.jump) {
 		jump();

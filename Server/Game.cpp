@@ -3,11 +3,21 @@
 
 Game::Game(void)
 {
+
 }
 
 
 Game::~Game(void)
 {
+}
+
+int Game::join()
+{
+  int userID = world.getPlayers().size();
+  Player * newPlayer = new Player();
+  newPlayer->player_id = userID;
+  world.addPlayer(newPlayer);
+  return userID;
 }
 
 ServerGameTimeRespond Game::evaluate(ClientGameTimeAction a) {

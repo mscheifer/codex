@@ -6,6 +6,7 @@ void NetworkClient::receiveMessages() {
       if (netRecv.receiveMessage(packet)) {
         ChatObject chatObj;
         size_t packetType;
+        IdPacket newId(0);
         packet >> packetType;
         switch (packetType) {
         case CHAT:
@@ -15,6 +16,10 @@ void NetworkClient::receiveMessages() {
         case SGTR:
           s.deserialize(packet);
           as.render(s.players);
+        case JOINID:
+          newId.deserialize(packet);
+          id = newId.id;
+          action.player_id = id;
         default: 
           break;
         }

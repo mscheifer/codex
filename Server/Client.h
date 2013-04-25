@@ -14,6 +14,7 @@
 #include "ServerGameTimeRespond.h"
 #include "ChatHandler.h"
 #include "boundingSphere.h"
+#include "Game.h"
 
 class NetworkClient{
 private:
@@ -23,7 +24,7 @@ private:
   ClientServices netRecv;
   sf::RenderWindow window;
   ChatHandler chat;
-
+  int id;
   bool sendPacket;
 
   //this is for collision detection test

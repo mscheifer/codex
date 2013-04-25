@@ -29,7 +29,11 @@ void NetworkServer::doServer(){
   sf::Clock clock;
   
   while (server.size()<NUM_PLAYERS) {
-    server.getNewClient();
+    if(server.getNewClient())
+    {
+      IdPacket newPacket = IdPacket(game.join());
+      server.sendPacket<IdPacket>(newPacket,server.size()-1);
+    }
   }
   sf::Packet initPacket;
   initPacket<<INIT;

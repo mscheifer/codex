@@ -20,7 +20,7 @@ public:
   std::vector<Player *> getPlayers(void);
   Projectile* produceProjectile(void);
   void destroyProjectile(Projectile *);
-
+  bool addPlayer(Player *);
 private:
 	std::vector<Player *> players;
 	std::vector<Entity *> entities;

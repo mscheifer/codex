@@ -37,4 +37,8 @@ std::vector<Entity *> Map::getEntity() {
    freeProjectiles.push(proj);
  }
 
-
+ bool Map::addPlayer(Player * newPlayer)
+ {
+   players.push_back(newPlayer);
+   return true;
+ }
