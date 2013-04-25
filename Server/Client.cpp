@@ -153,8 +153,10 @@ void NetworkClient::doClient(){
     processInput(); 
     receiveMessages();
     updateWindow();
-    if(sendPacket)
+    if(sendPacket){
       action.print();
       netRecv.sendPacket<ClientGameTimeAction>(action);
+      sendPacket = false;
+    }
   }
 }
