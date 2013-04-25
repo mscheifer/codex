@@ -14,12 +14,31 @@ Map::~Map(void)
 {
 }
 
-std::array<Entity, Map::Max_Entities> Map::getEntities() {
+std::vector<Entity *> Map::getEntity() {
 	 return entities;
 }
   
- std::array<Player, Map::Number_Of_Players> Map::getPlayers(){
+ std::vector<Player *> Map::getPlayers(){
 	 return players;
  }
 
+ Projectile* Map::produceProjectile()
+ {
+   if(freeProjectiles.empty())
+     return NULL;
+   Projectile* ret = freeProjectiles.top();
+   freeProjectiles.pop();
+   return ret;
+ }
 
+ void Map::destroyProjectile(Projectile * proj)
+ {
+   proj->setOwner(NULL);
+   freeProjectiles.push(proj);
+ }
+
+ bool Map::addPlayer(Player * newPlayer)
+ {
+   players.push_back(newPlayer);
+   return true;
+ }

@@ -1,26 +1,30 @@
 #pragma once
 #include "Entity.h"
 #include "Player.h"
+#include "Projectile.h"
 #include <array>
+#include <vector>
 #include <stdlib.h>
+#include <stack>
 
- 
+
 class Map
 {
 public:
   Map(void);
   ~Map(void);
-  static int const Max_Entities = 10;
-  static int const Number_Of_Players = 4;
   static const float Item_Pick_Up_Ranges;
   int map_size;
   
-  std::array<Entity, Max_Entities > getEntities(void);
-  std::array<Player, Number_Of_Players> getPlayers(void);
-
+  std::vector<Entity *> getEntity(void);
+  std::vector<Player *> getPlayers(void);
+  Projectile* produceProjectile(void);
+  void destroyProjectile(Projectile *);
+  bool addPlayer(Player *);
 private:
-	std::array<Player, Map::Number_Of_Players> players;
-	std::array<Entity, Map::Max_Entities> entities;
-	
+	std::vector<Player *> players;
+	std::vector<Entity *> entities;
+	std::stack<Projectile *> freeProjectiles;
+	std::vector<Projectile *> liveProjectTile;
 
 };

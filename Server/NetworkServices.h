@@ -6,7 +6,7 @@
 #include <SFML/Network.hpp>
 #include "StaticEnums.h"
 #define PORT_NUMBER 55001
-#define TIMEOUT 3
+#define TIMEOUT 1
 #define NUM_PLAYERS 2
 
 const int maxSize = 9000;
@@ -28,7 +28,7 @@ public:
   void sendPacket(Data & data) {
     sf::Packet packet;
     packet.clear();
-    packet << data.packetType; //data.packetType
+    packet << Data::packetType; 
     data.serialize(packet);
     sendMessage(packet); 
   }
@@ -59,7 +59,7 @@ public:
      sendMessage(packet, i); 
    }
 
-   void getNewClient(); 
+   bool getNewClient(); 
    bool receiveMessage(sf::Packet &packet, int i );
    bool sendMessage(sf::Packet & packet, int i);
    void sendToAll(sf::Packet & packet );

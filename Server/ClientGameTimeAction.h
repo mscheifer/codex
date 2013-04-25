@@ -6,7 +6,7 @@
 
 struct ClientGameTimeAction
 {
-  static const int packetType = CGTA;
+  static const int packetType = CGTA;  //might be a BUG
 
 	int player_id;
 	User_Movement movement;
@@ -16,6 +16,13 @@ struct ClientGameTimeAction
   bool weapon2; // Used for switching weapon
 	bool jump;
 	Direction facingDirection;
+
+  void clear(){
+    movement = NONE;
+    attackMelee = attackRange = weapon1 = weapon2 = jump = false;
+    facingDirection.x = facingDirection.z = 0;
+    facingDirection.y = -1;
+  }
 
 	ClientGameTimeAction() : 
     player_id(-1), weapon1(false), weapon2(false),

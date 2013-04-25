@@ -67,6 +67,7 @@
   <ItemGroup>
     <ClCompile Include="AsciUI.cpp" />
     <ClCompile Include="AudioManager.cpp" />
+    <ClCompile Include="boundingSphere.cpp" />
     <ClCompile Include="ChatHandler.cpp" />
     <ClCompile Include="Client.cpp" />
     <ClCompile Include="ConfigManager.cpp" />
@@ -81,12 +82,15 @@
     <ClCompile Include="Projectile.cpp" />
     <ClCompile Include="Server.cpp" />
     <ClCompile Include="ServerGameTimeRespond.h" />
+    <ClCompile Include="vector3.cpp" />
+    <ClCompile Include="vector4.cpp" />
     <ClCompile Include="Weapon.cpp" />
     <ClCompile Include="WeaponFist.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="3DCoordinate.h" />
     <ClInclude Include="AsciUI.h" />
+    <ClInclude Include="boundingSphere.h" />
     <ClInclude Include="ChatHandler.h" />
     <ClInclude Include="Client.h" />
     <ClInclude Include="ConfigManager.h" />
@@ -105,6 +109,8 @@
     <ClInclude Include="Server.h" />
     <ClInclude Include="StaticEnums.h" />
     <ClInclude Include="AudioManager.h" />
+    <ClInclude Include="vector3.h" />
+    <ClInclude Include="vector4.h" />
     <ClInclude Include="Weapon.h" />
     <ClInclude Include="WeaponFist.h" />
   </ItemGroup>

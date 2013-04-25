@@ -19,11 +19,16 @@ public:
 	bool canUseWeapon(bool range_attack);
 	void useWeapon(bool range_attack);
 	bool canPickUp() { return pickedUp; }
+<<<<<<< HEAD
 	virtual bool attackMelee(); 
 	float projectileStrength;
 	virtual Projectile* attackRange();
+=======
+  virtual bool attackMelee(); 
+	virtual bool attackRange();
   virtual bool pickUp(){ return false; };
   virtual bool dropDown(Coordinate dropPosition){ position = dropPosition; return false; };
+>>>>>>> bda2230785562d6dc78a7ce6108df4f264f1a5db
 protected:
 	int Range_Cool_Down_Time; //cool down time between uses in milliseconds
 	int Melee_Cool_Down_Time; 

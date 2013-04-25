@@ -76,7 +76,9 @@ int AsciUI::render(Player* players)
 		out_map.append("Player2 health: "  + std::to_string( long long(players[1].getHealth() ) ) + "\n" );
 		out_map.append("Player3 health: " + std::to_string( long long(players[2].getHealth() ) ) + "\n");
 		out_map.append("Player4 health: " + std::to_string( long long(players[3].getHealth() ) ) + "\n");
-    out_map.append(players[0].getString());
+    out_map.append(players[0].getString()+"\n");
+    out_map.append(players[1].getString()+"\n");
+
 	cout << out_map << endl;
 
 		

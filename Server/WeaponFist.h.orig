@@ -7,8 +7,12 @@ public:
   WeaponFist(Coordinate);
   ~WeaponFist(void);
   bool attackMelee();
+<<<<<<< HEAD
   Projectile* attackRange();
+=======
+  bool attackRange();
   bool pickUp();
   bool dropDown(Coordinate dropPosition);
+>>>>>>> bda2230785562d6dc78a7ce6108df4f264f1a5db
 };
 

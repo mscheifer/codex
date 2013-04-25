@@ -16,6 +16,7 @@ Projectile::~Projectile(void)
 {
 }
 
+<<<<<<< HEAD
 void Projectile::update(void) {
 
 	Coordinate nextPosition = ThreeDMovement(position, direction, 0);
@@ -44,8 +45,9 @@ void Projectile::update(void) {
 
 	}
 }
-
+=======
 void Projectile::setOwner(Player * player)
 {
   owner = player;
 }
+>>>>>>> bda2230785562d6dc78a7ce6108df4f264f1a5db
