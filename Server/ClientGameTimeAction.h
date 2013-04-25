@@ -18,7 +18,6 @@ struct ClientGameTimeAction
 	Direction facingDirection;
 
   void clear(){
-    player_id = 0;
     movement = NONE;
     attackMelee = attackRange = weapon1 = weapon2 = jump = false;
     facingDirection.x = facingDirection.z = 0;

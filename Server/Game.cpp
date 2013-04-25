@@ -14,7 +14,7 @@ Game::~Game(void)
 int Game::join()
 {
   int userID = world.getPlayers().size();
-  Player * newPlayer = new Player();
+  Player * newPlayer = new Player(0,0,0,0);
   newPlayer->player_id = userID;
   world.addPlayer(newPlayer);
   return userID;

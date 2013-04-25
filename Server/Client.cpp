@@ -19,6 +19,7 @@ void NetworkClient::receiveMessages() {
         case JOINID:
           newId.deserialize(packet);
           id = newId.id;
+          std::cout<<"USERID:"<<id<<std::endl;
           action.player_id = id;
         default: 
           break;

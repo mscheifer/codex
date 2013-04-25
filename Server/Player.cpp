@@ -1,6 +1,9 @@
 #include "Player.h"
 
-Player::Player(void){}
+Player::Player(void)
+{
+  Player(0,0,0,0);
+}
 Player::Player(Position x, Position y, Position z, int assigned_id)
 {
 	player_id = assigned_id;
