@@ -2,6 +2,7 @@
 #include "3DCoordinate.h"
 #include "directionalVector.h"
 #include "ClientGameTimeAction.h"
+#include "Physics.h"
 class Entity{
 public:
   Entity() {}
