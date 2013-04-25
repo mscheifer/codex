@@ -1,5 +1,5 @@
 #pragma once
-#include "SFML\Network\Packet.hpp"
+#include "SFML/Network/Packet.hpp"
 
 typedef float DirectionValue;
 struct Direction

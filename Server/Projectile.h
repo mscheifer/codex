@@ -1,5 +1,5 @@
 #pragma once
-#include "deadlyentity.h"
+#include "DeadlyEntity.h"
 #include "Player.h"
 class Projectile :
 

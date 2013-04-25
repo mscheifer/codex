@@ -2,7 +2,7 @@
 #include "directionalVector.h"
 #include "StaticEnums.h"
 #include <iostream>
-#include "SFML\Network\Packet.hpp"
+#include "SFML/Network/Packet.hpp"
 
 struct ClientGameTimeAction
 {
