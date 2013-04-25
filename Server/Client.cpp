@@ -16,11 +16,13 @@ void NetworkClient::receiveMessages() {
         case SGTR:
           s.deserialize(packet);
           as.render(s.players);
+          break;
         case JOINID:
           newId.deserialize(packet);
           id = newId.id;
           std::cout<<"USERID:"<<id<<std::endl;
           action.player_id = id;
+          break;
         default: 
           break;
         }
