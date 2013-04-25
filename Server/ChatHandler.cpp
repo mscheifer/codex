@@ -60,3 +60,11 @@ void ChatHandler::drawChat(sf::RenderWindow& window){
 ChatHandler::~ChatHandler(void)
 {
 }
+
+void ChatObject::serialize(sf::Packet & packet) {
+  packet << chatMsg;
+}
+
+void ChatObject::deserialize(sf:: Packet & packet) {
+  packet >> chatMsg;
+}

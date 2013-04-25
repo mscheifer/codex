@@ -9,7 +9,7 @@ public:
   Projectile(void);
   ~Projectile(void);
   bool isProjectile(){return true;}
-
+  void setOwner(Player *);
 private:
   Player * owner;
 };

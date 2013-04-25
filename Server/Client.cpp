@@ -4,13 +4,13 @@ void NetworkClient::receiveMessages() {
       //receive from server and process
       sf::Packet packet;
       if (netRecv.receiveMessage(packet)) {
-        int32_t packetType =0;
-        std::string chatMsg;
+        ChatObject chatObj;
+        size_t packetType;
         packet >> packetType;
         switch (packetType) {
         case CHAT:
-          packet >>chatMsg;
-          chat.addChat(chatMsg);
+          chatObj.deserialize(packet);
+          chat.addChat(chatObj.getChat());
           break;
         default: 
           break;
@@ -29,8 +29,31 @@ void NetworkClient::processInput(){
   if (window.isOpen())
   {
     sf::Event event;
-    while (window.pollEvent(event))
-    {
+    while (window.pollEvent(event)) {
+       if(event.type == sf::Event::KeyPressed){
+          if(event.key.code == sf::Keyboard::W) {
+					s.players[0].moveTowardDirection(FORWARD);//simulating server pending remove
+          sf::Packet packet;
+          netRecv.sendPacket<ServerGameTimeRespond>(packet);
+				//	c.forward = true;		
+				} if(event.key.code == sf::Keyboard::S) {
+					s.players[0].moveTowardDirection(BACKWARD); //simulating server pending remove
+				//	c.back = true;
+				}if(event.key.code == sf::Keyboard::D) {
+					s.players[0].moveTowardDirection(RIGHT); //simulating server pending remove
+			//		c.right = true;
+				}if(event.key.code == sf::Keyboard::A) {
+					s.players[0].moveTowardDirection(LEFT); //simulating server pending remove
+			//		c.left = true;
+				}if(event.key.code == sf::Keyboard::Space) {
+					s.players[0].jump(); //simulating server pending remove
+					c.jump = true;
+                }
+				//send client run time c
+				//render s
+				as.render(s.players);
+            
+            }
       if (event.type == sf::Event::Closed)
           window.close();
 
@@ -59,13 +82,8 @@ void NetworkClient::processInput(){
           else{ //done typing
             sf::Packet packet;
             std:: string chatBuffer = chat.getBuffer();
-            //when sending packet
-            //first specify the packet type
-            //then call serailize on the sending object`
-            packet << CHAT;
-            packet << chat.getBuffer();
             if(chatBuffer.size() > 0)
-              netRecv.sendMessage(packet);
+              netRecv.sendPacket<ChatObject>(ChatObject(chatBuffer));
             chat.setBuffer("");
           }
           chat.revertTyping();
@@ -94,6 +112,16 @@ void NetworkClient::doClient(){
   c2.setPosition(25,25);
   c2.setFillColor(sf::Color::Blue);
   s2 = boundingSphere(35,0,35,10);
+    std::cout<<"Waiting for other players to join"<<std::endl;
+    while(true) {
+      sf::Packet initPacket;
+      size_t packetType;
+      if (netRecv.receiveMessage(initPacket)) {
+         initPacket >> packetType;
+         if (packetType==INIT) break;
+      }
+    }
+    std::cout<<"game started"<<std::endl;
   //  main run looop
   while(true){
     //process input and send events
@@ -111,7 +139,7 @@ void NetworkClient::doClient(){
     window.display();
   }
   
-
+ 
   ClientGameTimeAction test1;
   test1.player_id = 9;
   test1.movement = LEFT;
@@ -145,28 +173,6 @@ void NetworkClient::doClient(){
 			c.facingDirection = d; //this should somehow change too;
 		
 
-       if(event.type == sf::Event::KeyPressed){
-          if(event.key.code == sf::Keyboard::W) {
-					s.players[0].moveTowardDirection(FORWARD);//simulating server pending remove
-				//	c.forward = true;		
-				} if(event.key.code == sf::Keyboard::S) {
-					s.players[0].moveTowardDirection(BACKWARD); //simulating server pending remove
-				//	c.back = true;
-				}if(event.key.code == sf::Keyboard::D) {
-					s.players[0].moveTowardDirection(RIGHT); //simulating server pending remove
-			//		c.right = true;
-				}if(event.key.code == sf::Keyboard::A) {
-					s.players[0].moveTowardDirection(LEFT); //simulating server pending remove
-			//		c.left = true;
-				}if(event.key.code == sf::Keyboard::Space) {
-					s.players[0].jump(); //simulating server pending remove
-					c.jump = true;
-                }
-				//send client run time c
-				//render s
-				as.render(s.players);
-            
-            }
 
         }
     }
