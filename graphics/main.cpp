@@ -82,7 +82,7 @@ int main() {
                                            0.0f, 0.0f, 1.0f, 1.0f,
                                            0.0f, 0.0f, 1.0f, 1.0f,
                                            1.0f, 0.0f, 1.0f, 1.0f }};
-  std::array<GLfloat,8*4> normalArray = {{-1.0f,-1.0f,-1.0f,
+  std::array<GLfloat,8*3> normalArray = {{-1.0f,-1.0f,-1.0f,
                                            1.0f,-1.0f,-1.0f, 
                                           -1.0f, 1.0f,-1.0f, 
                                            1.0f, 1.0f,-1.0f, 

@@ -3,5 +3,5 @@ in vec3 Normal;
 out vec4 outputF;
  
 void main() {
-  outputF = Color;
+  outputF = Color + vec4(Normal,0);
 }

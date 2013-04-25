@@ -1,5 +1,11 @@
 #include "drawSet.h"
 
+gx::drawSet::entityClass::entityClass(std::vector<matrix> poses, vao vaostuff)
+  : positions(std::move(poses)), vertData(std::move(vaostuff)) {}
+
+gx::drawSet::entityClass::entityClass(entityClass&& other)
+  : positions(std::move(other.positions)), vertData(std::move(other.vertData)) {}
+
 gx::drawSet::drawSet(const std::string vertShader, const std::string fragShader,
                      const std::vector<vaoData_t> vaoDatas,
                      std::vector<const uniform*>  globalUniforms)
@@ -8,8 +14,8 @@ gx::drawSet::drawSet(const std::string vertShader, const std::string fragShader,
     globalUniforms)), entityClasses() {
   for(auto vaoDatap = vaoDatas.begin(); vaoDatap != vaoDatas.end(); ++vaoDatap){
     const auto& vaoData = *vaoDatap;
-    entityClass newEntClass = { std::vector<matrix>(),
-                  vao(vaoData.first,vaoData.second,program.vars()) };
+    entityClass newEntClass(std::vector<matrix>(),
+                  vao(vaoData.first,vaoData.second,program.vars()));
     entityClasses.push_back(std::move(newEntClass));
   }
   //setup instancePos

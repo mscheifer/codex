@@ -8,12 +8,13 @@
 
 namespace gx {
 
-struct entityClass {
-  std::vector<matrix> positions;
-  vao                 vertData;
-};
-
 class drawSet {
+	struct entityClass {
+      std::vector<matrix> positions;
+      vao                 vertData;
+	  entityClass(std::vector<matrix>,vao);
+	  entityClass(entityClass&&);
+    };
     uniform                  instancePos; //add another for direction
     shaderProgram            program;
     std::vector<entityClass> entityClasses;

@@ -46,7 +46,15 @@ gx::vao::vao(const std::vector<GLuint>                   indices,
 gx::vao::vao(vao&& other): id(other.id), numIndices(other.numIndices),
                            ibo(other.ibo) {
   other.id  = 0; //delete vertex array won't complain
-  other.ibo = 0; //dlete buffers won't complain
+  other.ibo = 0; //delete buffers won't complain
+}
+
+gx::vao& gx::vao::operator=(vao&& other) {
+  this->id  = other.id;
+  this->ibo = other.ibo;
+  other.id  = 0; //delete vertex array won't complain
+  other.ibo = 0; //delete buffers won't complain
+  return *this;
 }
 
 gx::vao::~vao() {
