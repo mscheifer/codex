@@ -12,5 +12,5 @@ enum User_Movement {
 };
 
 //Networking enums
-enum Opcode {INIT, CHAT , T1, T2, CGTA, ERROR};
+enum Opcode {INIT, CHAT , T1, T2, CGTA, SGTR, ERROR};
 

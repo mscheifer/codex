@@ -14,7 +14,17 @@ public:
   virtual bool isPlayer(void){ return false;}
   Coordinate getPosition(void){ return position; }
   Direction getDirection(void){ return direction; }
+  void serialize(sf::Packet& packet)
+  {
+    position.serialize(packet);
+    direction.serialize(packet);
+  }
 
+  void deserialize(sf::Packet& packet)
+  {
+    position.deserialize(packet);
+    direction.deserialize(packet);
+  }
 
 protected:
   Coordinate position;

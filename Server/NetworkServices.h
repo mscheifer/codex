@@ -28,7 +28,7 @@ public:
   void sendPacket(Data & data) {
     sf::Packet packet;
     packet.clear();
-    packet << data.packetType; //data.packetType
+    packet << Data::packetType; 
     data.serialize(packet);
     sendMessage(packet); 
   }

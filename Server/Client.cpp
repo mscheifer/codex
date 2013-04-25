@@ -29,8 +29,31 @@ void NetworkClient::processInput(){
   if (window.isOpen())
   {
     sf::Event event;
-    while (window.pollEvent(event))
-    {
+    while (window.pollEvent(event)) {
+       if(event.type == sf::Event::KeyPressed){
+          if(event.key.code == sf::Keyboard::W) {
+					s.players[0].moveTowardDirection(FORWARD);//simulating server pending remove
+          sf::Packet packet;
+          netRecv.sendPacket<ServerGameTimeRespond>(packet);
+				//	c.forward = true;		
+				} if(event.key.code == sf::Keyboard::S) {
+					s.players[0].moveTowardDirection(BACKWARD); //simulating server pending remove
+				//	c.back = true;
+				}if(event.key.code == sf::Keyboard::D) {
+					s.players[0].moveTowardDirection(RIGHT); //simulating server pending remove
+			//		c.right = true;
+				}if(event.key.code == sf::Keyboard::A) {
+					s.players[0].moveTowardDirection(LEFT); //simulating server pending remove
+			//		c.left = true;
+				}if(event.key.code == sf::Keyboard::Space) {
+					s.players[0].jump(); //simulating server pending remove
+					c.jump = true;
+                }
+				//send client run time c
+				//render s
+				as.render(s.players);
+            
+            }
       if (event.type == sf::Event::Closed)
           window.close();
 
@@ -112,28 +135,6 @@ void NetworkClient::doClient(){
 			c.facingDirection = d; //this should somehow change too;
 		
 
-       if(event.type == sf::Event::KeyPressed){
-          if(event.key.code == sf::Keyboard::W) {
-					s.players[0].moveTowardDirection(FORWARD);//simulating server pending remove
-				//	c.forward = true;		
-				} if(event.key.code == sf::Keyboard::S) {
-					s.players[0].moveTowardDirection(BACKWARD); //simulating server pending remove
-				//	c.back = true;
-				}if(event.key.code == sf::Keyboard::D) {
-					s.players[0].moveTowardDirection(RIGHT); //simulating server pending remove
-			//		c.right = true;
-				}if(event.key.code == sf::Keyboard::A) {
-					s.players[0].moveTowardDirection(LEFT); //simulating server pending remove
-			//		c.left = true;
-				}if(event.key.code == sf::Keyboard::Space) {
-					s.players[0].jump(); //simulating server pending remove
-					c.jump = true;
-                }
-				//send client run time c
-				//render s
-				as.render(s.players);
-            
-            }
 
         }
     }

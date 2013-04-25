@@ -16,6 +16,7 @@
 
 class NetworkClient{
 private:
+  ServerGameTimeRespond s;
   ClientServices netRecv;
   sf::RenderWindow window;
   ChatHandler chat;
