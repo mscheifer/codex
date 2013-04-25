@@ -14,6 +14,7 @@
 class NetworkServer{
 
 public:
+  ServerServices server;
   NetworkServer(){
 
   }
@@ -21,7 +22,7 @@ public:
   ~NetworkServer(){
 
   }
-  
+  void receiveMessages(int i);  
   void doServer();
 };
 #endif
