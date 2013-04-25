@@ -1,4 +1,6 @@
-#pragma once
+//#pragma once
+#ifndef CLIENT
+#define CLIENT
 #include <SFML/Network.hpp>
 #include <SFML/Window.hpp>
 #include <SFML/Graphics.hpp>
@@ -29,3 +31,4 @@ public:
   void receiveMessages();
   void doClient();
 };
+#endif

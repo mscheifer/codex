@@ -18,7 +18,7 @@ public:
 	bool canUseWeapon(bool range_attack);
 	void useWeapon(bool range_attack);
 	bool canPickUp() { return pickedUp; }
-	virtual bool attackMelee();
+  virtual bool attackMelee(); 
 	virtual bool attackRange();
   virtual bool pickUp(){ return false; };
   virtual bool dropDown(Coordinate dropPosition){ position = dropPosition; return false; };

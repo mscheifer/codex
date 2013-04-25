@@ -3,9 +3,10 @@
 #include <SFML/Window.hpp>
 #include <SFML/Graphics.hpp>
 #include <list>
+#include <SFML/Network.hpp>
+#include "StaticEnums.h" //just for DEFINE right now
 
-class ChatHandler
-{
+class ChatHandler {
 public:
   std::list<std::string> chatHistory;
   std::string chatBuffer;
@@ -23,4 +24,15 @@ public:
   std::string getBuffer();
   void revertTyping();
   void appendBuffer(char c);
+};
+
+class ChatObject {
+public:
+  std::string chatMsg;
+  size_t packetType;
+  ChatObject():chatMsg("") {packetType = CHAT;}
+  ChatObject(std::string chatMsg):chatMsg(chatMsg) {packetType = CHAT;}
+  void serialize(sf::Packet & packet);
+  void deserialize(sf::Packet & packet);
+  std::string getChat() { return chatMsg;}
 };

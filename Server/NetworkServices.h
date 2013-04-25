@@ -1,10 +1,13 @@
-#pragma once
+//#pragma once
+#ifndef NETWORKSERVICE
+#define NETWORKSERVICE
 #include <stdint.h>
 #include <iostream>
 #include <SFML/Network.hpp>
 #include "StaticEnums.h"
 #define PORT_NUMBER 55001
 #define TIMEOUT 3
+#define NUM_PLAYERS 2
 
 const int maxSize = 9000;
 const int sizeSize = 4;
@@ -19,12 +22,13 @@ public:
   ClientServices();
   bool sendMessage(sf::Packet &packet );
   bool receiveMessage(sf::Packet & packet);
-
+  
+  //we might need to put this in cpp. might have compile problems
   template <typename Data>
   void sendPacket(Data & data) {
     sf::Packet packet;
     packet.clear();
-    packet << Data::packetType;
+    packet << data.packetType; //data.packetType
     data.serialize(packet);
     sendMessage(packet); 
   }
@@ -62,3 +66,4 @@ public:
    int size();
    ~ServerServices();
 };
+#endif
