@@ -19,8 +19,8 @@ class shaderProgram {
     shaderProgram(const std::string,const std::string,
                   const std::vector<const uniform*>);
 	//vc++ is dumb
-    shaderProgram(const shaderProgram&) = delete; //don't copy
-    shaderProgram& operator=(const shaderProgram&) = delete; //don't assign
+    //shaderProgram(const shaderProgram&) = delete; //don't copy
+    //shaderProgram& operator=(const shaderProgram&) = delete; //don't assign
     shaderProgram(shaderProgram&&);
     shaderProgram& operator=(shaderProgram&&);
     ~shaderProgram(); //not virtual because there's no inheiritance

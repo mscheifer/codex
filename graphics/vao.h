@@ -16,10 +16,10 @@ class vao {
   public:
     vao(const std::vector<GLuint>,const std::vector<const vertexAttrib*>,
         std::map<std::string,vertexAttribSignature>);
-    vao(const vao&) = delete; //don't copy
-    vao& operator=(const vao&) = delete; //don't assign
+    //vao(const vao&) = delete; //don't copy
+    //vao& operator=(const vao&) = delete; //don't assign
     vao(vao&&);
-    vao& operator=(vao&&) = delete; //define later
+    //vao& operator=(vao&&) = delete; //define later
     ~vao();
     void draw() const;
 };

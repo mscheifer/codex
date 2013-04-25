@@ -14,10 +14,10 @@ class uniform {
     GLuint      bufferName;
   public:
     uniform(std::string,GLsizeiptr);
-    uniform(const uniform&) = delete;
-    uniform& operator=(const uniform&) = delete;
-    uniform(uniform&&) = delete;
-    uniform& operator=(uniform&&) = delete;
+    //uniform(const uniform&) = delete;
+    //uniform& operator=(const uniform&) = delete;
+    //uniform(uniform&&) = delete;
+    //uniform& operator=(uniform&&) = delete;
     ~uniform();
     void write(GLintptr,GLsizeiptr,const GLvoid*) const;
     template<typename T,size_t N>
