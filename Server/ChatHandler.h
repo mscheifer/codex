@@ -28,10 +28,10 @@ public:
 
 class ChatObject {
 public:
+  static const int packetType = CHAT;  //might be a BUG
   std::string chatMsg;
-  size_t packetType;
-  ChatObject():chatMsg("") {packetType = CHAT;}
-  ChatObject(std::string chatMsg):chatMsg(chatMsg) {packetType = CHAT;}
+  ChatObject():chatMsg("") {}
+  ChatObject(std::string chatMsg):chatMsg(chatMsg) {}
   void serialize(sf::Packet & packet);
   void deserialize(sf::Packet & packet);
   std::string getChat() { return chatMsg;}

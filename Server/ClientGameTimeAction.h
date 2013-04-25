@@ -6,7 +6,7 @@
 
 struct ClientGameTimeAction
 {
-  static const int packetType = CGTA;
+  static const int packetType = CGTA;  //might be a BUG
 
 	int player_id;
 	User_Movement movement;
