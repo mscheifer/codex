@@ -34,8 +34,8 @@ void Projectile::update(void) {
 		for(int i = 0; i < entities.size() ; i++){
 			if(entities[i].isPlayer()) {
 				// hits a player
-				Player unLuckyPerson = *(Player*)&entities[i];
-				unLuckyPerson.attackBy(this);
+			//	Player unLuckyPerson = *(Player*)&entities[i];
+		//		unLuckyPerson.attackBy(this);
 			}
 		}
 

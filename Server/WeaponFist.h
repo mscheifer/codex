@@ -7,6 +7,6 @@ public:
   WeaponFist(Coordinate);
   ~WeaponFist(void);
   bool attackMelee();
-  bool attackRange();
+  Projectile* attackRange();
 };
 

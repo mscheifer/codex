@@ -13,8 +13,8 @@ bool WeaponFist::attackMelee()
 {
   return false;
 }
-bool WeaponFist::attackRange()
+Projectile* WeaponFist::attackRange()
 {
-  return false;
+  return NULL;
   //attackMelee();
 }

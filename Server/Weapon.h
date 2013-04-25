@@ -1,7 +1,8 @@
 #pragma once
-#include "Entity.h"
+
 #include <SFML/System/Clock.hpp>
 #include "DeadlyEntity.h"
+#include "Projectile.h"
 
 
 class Weapon : public DeadlyEntity
@@ -18,8 +19,8 @@ public:
 	bool canUseWeapon(bool range_attack);
 	void useWeapon(bool range_attack);
 	bool canPickUp() { return pickedUp; }
-  virtual bool attackMelee(); 
-	virtual bool attackRange();
+	virtual bool attackMelee(); 
+	virtual Projectile* attackRange();
 protected:
 	int Range_Cool_Down_Time; //cool down time between uses in milliseconds
 	int Melee_Cool_Down_Time; 

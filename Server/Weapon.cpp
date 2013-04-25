@@ -56,8 +56,8 @@ bool Weapon::attackMelee()
 {
 	return false;
 }
-bool Weapon::attackRange()
+Projectile* Weapon::attackRange()
 {
-	return false;
+	return NULL;
 }
 
