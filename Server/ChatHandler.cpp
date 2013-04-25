@@ -6,7 +6,7 @@ void ChatHandler::addChat (std::string & chatMsg) {
     chatHistory.pop_front();
 }
 
-ChatHandler::ChatHandler(void): shape(100.f)
+ChatHandler::ChatHandler(void): shape(10.f)
 {
   typing = false;
   chatBuffer = "";

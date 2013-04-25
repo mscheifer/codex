@@ -36,6 +36,22 @@ void NetworkClient::processInput(){
 
       if (event.type == sf::Event::KeyReleased){        
         switch(event.key.code){
+        case sf::Keyboard::Right:
+          c1.setPosition(c1.getPosition().x+5 , c1.getPosition().y);
+          s1.move(gx::vector3(5,0,0));
+          break;
+        case sf::Keyboard::Left:
+          c1.setPosition(c1.getPosition().x-5 , c1.getPosition().y);
+          s1.move(gx::vector3(-5,0,0));
+          break;
+        case sf::Keyboard::Up:
+          c1.setPosition(c1.getPosition().x , c1.getPosition().y-5);
+          s1.move(gx::vector3(0,0,-5));
+          break;
+        case sf::Keyboard::Down:
+          c1.setPosition(c1.getPosition().x , c1.getPosition().y+5);
+          s1.move(gx::vector3(0,0,5));
+          break;
         case sf::Keyboard::Return:
           if(!chat.isTyping()){ //start typing
             chat.setBuffer("");
@@ -68,14 +84,33 @@ void NetworkClient::processInput(){
 }
 
 void NetworkClient::doClient(){
-  /*  main run looop
+
+  c1 = sf::CircleShape(10.f);
+  c1.setPosition(0,0);
+  c1.setFillColor(sf::Color::Blue);
+  s1 = boundingSphere(10,0,10,10);
+
+  c2 = sf::CircleShape(10.f);
+  c2.setPosition(25,25);
+  c2.setFillColor(sf::Color::Blue);
+  s2 = boundingSphere(35,0,35,10);
+  //  main run looop
   while(true){
     //process input and send events
     processInput(); 
     receiveMessages();
-    updateWindow();
+    //updateWindow();
+    window.clear();
+    if(s1.collideWith(s2)){
+      c1.setFillColor(sf::Color::Red);
+    }
+    else
+      c1.setFillColor(sf::Color::Blue);
+    window.draw(c1);
+    window.draw(c2);
+    window.display();
   }
-  */
+  
 
   ClientGameTimeAction test1;
   test1.player_id = 9;
@@ -87,10 +122,11 @@ void NetworkClient::doClient(){
   test1.jump = true;
   test1.facingDirection = Direction(1,2,3);
   netRecv.sendPacket<ClientGameTimeAction>( test1 );
+  std::cout << "sending packet" << std::endl;
     
 
 	//temp code to simular server respond
-    struct ServerGameTimeRespond s;
+  struct ServerGameTimeRespond s;
 	s.players[0] =  Player(0,0,1,42);
 	s.players[1] = Player(2,3,1,43);
 	s.players[2] =  Player(7,2,1,44);
