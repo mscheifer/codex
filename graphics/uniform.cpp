@@ -29,7 +29,8 @@ gx::uniform::uniform(std::string n, GLsizeiptr buffSize)
 }
 
 gx::uniform::~uniform() {
-  debugout << "glDeleteBuffers(1, &(this->bufferName));" << endl;
+  debugout << "glDeleteBuffers(1, &(this->bufferName): " << this->bufferName;
+  debugout << ");" << endl;
   glDeleteBuffers(1, &(this->bufferName));
 }
 

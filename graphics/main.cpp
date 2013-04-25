@@ -127,8 +127,8 @@ int main() {
   gx::drawSet entities(readFile("default.vert"),readFile("default.frag"),
                        entitiesData,uniforms);
 
-  entities.addEntity({ 0, 0,-1}, 0);
-  entities.addEntity({ 1, 0,-2}, 0);
+  entities.addEntity({ 0, 4,-1}, 0);
+  entities.addEntity({ 1, 2,-2}, 0);
   entities.addEntity({-1, 0,-3}, 0);
 
   //fps setup

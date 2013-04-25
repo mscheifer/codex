@@ -50,9 +50,9 @@ gx::vao::vao(vao&& other): id(other.id), numIndices(other.numIndices),
 
 gx::vao::~vao() {
   glDeleteBuffers(1, &(this->ibo));
-  debugout << "glDeleteBuffers(1, &(this->ibo)@" << &(this->ibo) << ");\n";
+  debugout << "glDeleteBuffers(1, &(this->ibo): " << this->ibo << ");\n";
   glDeleteVertexArrays(1, &(this->id));
-  debugout << "glDeleteVertexArrays(1, &(this->id)@" << &(this->id) << ");\n";
+  debugout << "glDeleteVertexArrays(1, &(this->id): " << this->id << ");\n";
 }
 
 void gx::vao::draw() const {
