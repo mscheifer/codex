@@ -13,25 +13,28 @@ Opcode processMeta(sf::Packet & packet) {
 
 ClientServices::ClientServices(){
     //network
-    validIpAddress = true;
+    invalidIpAddress = true;
     sf::IpAddress myIpAddress = sf::IpAddress::getLocalAddress();
     std::cout << "Client Ip Address: " << myIpAddress.toString() << std::endl;
 
     //input is ipaddress to connect to
     //std::cout << "Enter Ip Address to connect to:";
     std::string input = myIpAddress.toString(); //"192.168.1.71";
+
+    //TODO uncomment this
+    //do{
+    //std::getline(std::cin, input);
     s = sf::Socket::Error;
     s = client.connect(input, PORT_NUMBER, sf::seconds(TIMEOUT));
-    client.setBlocking(false);
+    
+     if(s == sf::Socket::Done){
+       client.setBlocking(false);
+       invalidIpAddress = false;
+     }
+     else
+       std::cout << "try again, " << input << " is an invalid ip address" << std::endl;
 
-    /****sending init packet, joining the game ****/
-    /*
-    std::cout <<"Joining the game"<<std::endl;
-    size_t initGame = 0x80000000;
-    sf::Packet packet;
-    packet << initGame;
-    sendMessage(packet);
-    */
+    //}while(invalidIpAddress);
   }
   bool ClientServices::sendMessage(sf::Packet &packet ) {
     return (client.send(packet)==sf::Socket::Done);
@@ -59,19 +62,19 @@ ClientServices::ClientServices(){
    }
 
    bool ServerServices::receiveMessage(sf::Packet &packet, int i ) {
-      if (i>=0 && i<clients.size())//error checking for i?
+      if (i>=0 && i<(int)clients.size())//error checking for i?
         return (clients[i]->receive(packet)==sf::Socket::Done);
       return false;
    }
 
    bool ServerServices::sendMessage(sf::Packet & packet, int i) {
-      if (i>=0 && i<clients.size())//error checking for i?
+      if (i>=0 && i<(int)clients.size())//error checking for i?
         return (clients[i]->send(packet)==sf::Socket::Done);
       return false;      
    }
    
    void ServerServices::sendToAll(sf::Packet & packet ) {
-     for (int i=0;i<clients.size();i++) {
+     for (int i=0;i<(int)clients.size();i++) {
        sendMessage(packet, i);
      }
    }
@@ -81,7 +84,7 @@ ClientServices::ClientServices(){
    }
 
    ServerServices::~ServerServices() {
-     for (int i=0;i<clients.size();i++) {
+     for (int i=0;i<(int)clients.size();i++) {
         delete clients[i];
      }
      delete newClient;

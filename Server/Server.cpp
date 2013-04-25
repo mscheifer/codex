@@ -24,6 +24,12 @@ void NetworkServer::doServer(){
       if(server.receiveMessage(packet,i)){
         sf::Packet copy =packet;
         switch (processMeta(packet)) {
+
+         ClientGameTimeAction cgta;
+         case CGTA:
+           cgta.deserialize(packet);
+           cgta.print();
+           break;
         case CHAT:
           server.sendToAll(copy); //right now just echoing what received
           break;

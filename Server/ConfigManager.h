@@ -6,9 +6,17 @@
 #include <time.h>
 #include <stdlib.h>
 #include <sstream>
+  
+  template <typename T>
+  T StringToNumber (const std::string &Text ){
+    istringstream ss(Text);
+    T result;
+    return ss >> result ? result : 0;
+  }
 
 class ConfigManager{
 public:
+
   enum LogLevels {DEBUG1=1, DEBUG2=2, NOTE=3};
   static const LogLevels level = ConfigManager::DEBUG2;
   static std::ofstream logfile;
@@ -33,6 +41,8 @@ public:
       return "DEBUG2";
     case NOTE:
       return "NOTE";
+    default:
+      return "UNK";
     }
   }
 };

@@ -4,6 +4,7 @@
 #include <stdint.h>
 #include <iostream>
 #include <SFML/Network.hpp>
+#include "StaticEnums.h"
 #define PORT_NUMBER 55001
 #define TIMEOUT 3
 #define NUM_PLAYERS 2
@@ -11,20 +12,17 @@
 #define ERROR_NET 0x00000001
 #define INIT_NET 0x10000000
 
-enum Opcode {ERROR, INIT, CHAT , T1, T2};
 
 Opcode processMeta(sf::Packet & packet);
-
 const int maxSize = 9000;
 const int sizeSize = 4;
-
 
 class ClientServices{
 public:
   //network vars
   sf::Socket::Status s;
   sf::TcpSocket client;
-  bool validIpAddress;
+  bool invalidIpAddress;
   
   ClientServices();
   bool sendMessage(sf::Packet &packet );
@@ -48,6 +46,24 @@ public:
   sf::TcpSocket * newClient;
   
    ServerServices();
+   template <typename Data>
+   void sendPacketToAll(Data & data) {
+     sf::Packet packet;
+     packet.clear();
+     packet << Data::packetType;
+     data.serialize(packet);
+     sendToAll(packet); 
+   }
+   
+   template <typename Data>
+   void sendPacket(Data & data, int i) {
+     sf::Packet packet;
+     packet.clear();
+     packet << Data::packetType;
+     data.serialize(packet);
+     sendMessage(packet, i); 
+   }
+
    void getNewClient(); 
    bool receiveMessage(sf::Packet &packet, int i );
    bool sendMessage(sf::Packet & packet, int i);
