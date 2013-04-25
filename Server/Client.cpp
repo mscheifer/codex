@@ -4,13 +4,11 @@ void NetworkClient::receiveMessages() {
       //receive from server and process
       sf::Packet packet;
       if (netRecv.receiveMessage(packet)) {
-        int32_t packetType =0;
-        std::string chatMsg;
-        packet >> packetType;
-        switch (packetType) {
+        ChatObject chatObj;
+        switch (processMeta(packet)) {
         case CHAT:
-          packet >>chatMsg;
-          chat.addChat(chatMsg);
+          chatObj.deserialize(packet);
+          chat.addChat(chatObj.getChat());
           break;
         default: 
           break;
@@ -43,13 +41,8 @@ void NetworkClient::processInput(){
           else{ //done typing
             sf::Packet packet;
             std:: string chatBuffer = chat.getBuffer();
-            //when sending packet
-            //first specify the packet type
-            //then call serailize on the sending object`
-            packet << CHAT;
-            packet << chat.getBuffer();
             if(chatBuffer.size() > 0)
-              netRecv.sendMessage(packet);
+              netRecv.sendPacket<ChatObject>(ChatObject(chatBuffer));
             chat.setBuffer("");
           }
           chat.revertTyping();
@@ -68,8 +61,13 @@ void NetworkClient::processInput(){
 }
 
 void NetworkClient::doClient(){
+    std::cout<<"Waiting for other players to join"<<std::endl;
+    while(true) {
+      sf::Packet initPacket;
+      if (netRecv.receiveMessage(initPacket) && processMeta(initPacket)==INIT) break;
+    }
+    std::cout<<"game started"<<std::endl;
     while(true){
-      sf::Packet packet;
       //process input and send events
       processInput(); 
 

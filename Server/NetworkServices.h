@@ -1,23 +1,23 @@
-#pragma once
+//#pragma once
+#ifndef NETWORKSERVICE
+#define NETWORKSERVICE
 #include <stdint.h>
 #include <iostream>
 #include <SFML/Network.hpp>
 #define PORT_NUMBER 55001
 #define TIMEOUT 3
+#define NUM_PLAYERS 2
+#define CHAT_NET 0x00000000
+#define ERROR_NET 0x00000001
+#define INIT_NET 0x10000000
 
-enum Opcode {INIT, CHAT , T1, T2};
+enum Opcode {ERROR, INIT, CHAT , T1, T2};
+
+Opcode processMeta(sf::Packet & packet);
 
 const int maxSize = 9000;
 const int sizeSize = 4;
 
-template <typename Data>
-void sendPacket(Data & data) {
-  sf::Packet packet;
-  packet.clear();
-  packet << CHAT; //data.packetType
-  data.serialize(packet);
-  sendMessage(packet); 
-}
 
 class ClientServices{
 public:
@@ -29,6 +29,16 @@ public:
   ClientServices();
   bool sendMessage(sf::Packet &packet );
   bool receiveMessage(sf::Packet & packet);
+  
+  //we might need to put this in cpp. might have compile problems
+  template <typename Data>
+  void sendPacket(Data & data) {
+    sf::Packet packet;
+    packet.clear();
+    packet << data.packetType; //data.packetType
+    data.serialize(packet);
+    sendMessage(packet); 
+  }
 };
 
 class ServerServices{
@@ -45,3 +55,4 @@ public:
    int size();
    ~ServerServices();
 };
+#endif

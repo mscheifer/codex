@@ -1,4 +1,6 @@
-#pragma once
+//#pragma once
+#ifndef SERVER
+#define SERVER
 #include <SFML/Network.hpp>
 #include <iostream>
 #include <string>
@@ -7,7 +9,6 @@
 #include <SFML/System/Clock.hpp>
 #include "ConfigManager.h"
 #include "NetworkServices.h"
-
 
 class NetworkServer{
 
@@ -22,3 +23,4 @@ public:
   
   void doServer();
 };
+#endif
