@@ -8,15 +8,16 @@ void NetworkServer::receiveMessages(int i) {
       size_t packetType;
       packet >> packetType;
       switch (packetType) {
-       case CGTA:
-         cgta.deserialize(packet);
-         cgta.print();
-         break;
-      case CHAT:
-        server.sendToAll(copy); //right now just echoing what received
-        break;
-      default: 
-        break;
+        case CGTA:
+          cgta.deserialize(packet);
+          cgta.print();
+          server.sendPacketToAll<ServerGameTimeRespond>(game.evaluate(cgta));
+          break;
+        case CHAT:
+          server.sendToAll(copy); //right now just echoing what received
+          break;
+        default: 
+          break;
       }
     } 
 }
@@ -37,7 +38,7 @@ void NetworkServer::doServer(){
 
   while(true){
     clock.restart();
-    for( unsigned int i = 0; i < server.size(); i++){
+    for( int i = 0; i < server.size(); i++){
       receiveMessages(i);
       /* maybe put this in a method just like in client*/
     }

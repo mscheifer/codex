@@ -17,20 +17,26 @@
 
 class NetworkClient{
 private:
+  AsciUI as; //TODO delete this later
   ServerGameTimeRespond s;
+	ClientGameTimeAction action;
   ClientServices netRecv;
   sf::RenderWindow window;
   ChatHandler chat;
 
+  bool sendPacket;
+
+  //this is for collision detection test
   sf::CircleShape c1;
   boundingSphere s1;
-
   sf::CircleShape c2;
   boundingSphere s2;
+  //end collision
 
 public:
   NetworkClient():window(sf::VideoMode(800,600), "sf::Text test")
   {
+    sendPacket = false;
   }
 
   ~NetworkClient(){

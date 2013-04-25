@@ -12,6 +12,9 @@ void NetworkClient::receiveMessages() {
           chatObj.deserialize(packet);
           chat.addChat(chatObj.getChat());
           break;
+        case SGTR:
+          s.deserialize(packet);
+          as.render(s.players);
         default: 
           break;
         }
@@ -26,34 +29,48 @@ void NetworkClient::updateWindow() {
 }
 
 void NetworkClient::processInput(){
+  bool updateAS = false;
+  action.clear();
+  
   if (window.isOpen())
   {
     sf::Event event;
     while (window.pollEvent(event)) {
-       if(event.type == sf::Event::KeyPressed){
-          if(event.key.code == sf::Keyboard::W) {
-					s.players[0].moveTowardDirection(FORWARD);//simulating server pending remove
-          sf::Packet packet;
-          netRecv.sendPacket<ServerGameTimeRespond>(packet);
-				//	c.forward = true;		
+
+      if(event.type == sf::Event::KeyPressed){
+        if(event.key.code == sf::Keyboard::W) {
+          action.movement = FORWARD;
+          updateAS = true;
 				} if(event.key.code == sf::Keyboard::S) {
-					s.players[0].moveTowardDirection(BACKWARD); //simulating server pending remove
-				//	c.back = true;
+          if(action.movement == FORWARD)
+            action.movement = NONE;
+          else
+            action.movement = BACKWARD;
+          updateAS = true;
 				}if(event.key.code == sf::Keyboard::D) {
-					s.players[0].moveTowardDirection(RIGHT); //simulating server pending remove
-			//		c.right = true;
+          if(action.movement == FORWARD)
+            action.movement = FORWARD_RIGHT;
+          else if (action.movement == BACKWARD)
+            action.movement = BACKWARD_RIGHT;
+          else
+            action.movement = RIGHT;
+          updateAS = true;
 				}if(event.key.code == sf::Keyboard::A) {
-					s.players[0].moveTowardDirection(LEFT); //simulating server pending remove
-			//		c.left = true;
+          if(action.movement == FORWARD)
+            action.movement = FORWARD_LEFT;
+          else if (action.movement == BACKWARD)
+            action.movement = BACKWARD_LEFT;
+          else if (action.movement == RIGHT)
+            action.movement = NONE;
+          else
+            action.movement = LEFT;
+          updateAS = true;
 				}if(event.key.code == sf::Keyboard::Space) {
-					s.players[0].jump(); //simulating server pending remove
-					c.jump = true;
-                }
-				//send client run time c
-				//render s
-				as.render(s.players);
-            
-            }
+          action.jump = true;
+          updateAS = true;
+        }
+      }
+
       if (event.type == sf::Event::Closed)
           window.close();
 
@@ -99,82 +116,40 @@ void NetworkClient::processInput(){
       }
     }
   }
+
+  if(updateAS){
+    sendPacket = true;
+  }
 }
 
 void NetworkClient::doClient(){
-
-  c1 = sf::CircleShape(10.f);
-  c1.setPosition(0,0);
-  c1.setFillColor(sf::Color::Blue);
-  s1 = boundingSphere(10,0,10,10);
-
-  c2 = sf::CircleShape(10.f);
-  c2.setPosition(25,25);
-  c2.setFillColor(sf::Color::Blue);
-  s2 = boundingSphere(35,0,35,10);
-    std::cout<<"Waiting for other players to join"<<std::endl;
-    while(true) {
-      sf::Packet initPacket;
-      size_t packetType;
-      if (netRecv.receiveMessage(initPacket)) {
-         initPacket >> packetType;
-         if (packetType==INIT) break;
-      }
+  /*
+  std::cout<<"Waiting for other players to join"<<std::endl;
+  while(true) {
+    sf::Packet initPacket;
+    size_t packetType;
+    if (netRecv.receiveMessage(initPacket)) {
+        initPacket >> packetType;
+        if (packetType==INIT) break;
     }
-    std::cout<<"game started"<<std::endl;
-  //  main run looop
+  }
+  std::cout<<"game started"<<std::endl;
+  */
+
+  s.players[0] =  Player(0,0,1,42);
+	s.players[1] = Player(2,3,1,43);
+	s.players[2] =  Player(7,2,1,44);
+	s.players[3] = Player(4,6,1,45);
+  as.render(s.players);
+
+  //  main run loop
   while(true){
     //process input and send events
     processInput(); 
     receiveMessages();
-    //updateWindow();
-    window.clear();
-    if(s1.collideWith(s2)){
-      c1.setFillColor(sf::Color::Red);
-    }
-    else
-      c1.setFillColor(sf::Color::Blue);
-    window.draw(c1);
-    window.draw(c2);
-    window.display();
+    updateWindow();
+    if(sendPacket)
+      action.print();
+      netRecv.sendPacket<ClientGameTimeAction>(action);
   }
-  
- 
-  ClientGameTimeAction test1;
-  test1.player_id = 9;
-  test1.movement = LEFT;
-  test1.attackMelee = true;
-  test1.attackRange = false;
-  test1.weapon1 = true;
-  test1.weapon2 = false;
-  test1.jump = true;
-  test1.facingDirection = Direction(1,2,3);
-  netRecv.sendPacket<ClientGameTimeAction>( test1 );
-  std::cout << "sending packet" << std::endl;
-    
-
-	//temp code to simular server respond
-  struct ServerGameTimeRespond s;
-	s.players[0] =  Player(0,0,1,42);
-	s.players[1] = Player(2,3,1,43);
-	s.players[2] =  Player(7,2,1,44);
-	s.players[3] = Player(4,6,1,45);
-	//end of temp code
-
-	ClientGameTimeAction c ;
-	Direction d; 
-    sf::Event event;
-    //sf::RenderWindow window( sf::VideoMode(800, 600), "sf::Text test");
-    AsciUI as;
-    while(window.isOpen()){
-
-        while(window.pollEvent(event)){
-	
-			c.facingDirection = d; //this should somehow change too;
-		
-
-
-        }
-    }
-  
 }
