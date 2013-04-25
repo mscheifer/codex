@@ -1,6 +1,9 @@
 #include "Player.h"
 
-Player::Player(void){}
+Player::Player(void)
+{
+  Player(0,0,0,0);
+}
 Player::Player(Position x, Position y, Position z, int assigned_id)
 {
 	player_id = assigned_id;
@@ -82,6 +85,7 @@ void Player::jump()
 }
 
 void Player::handleAction(ClientGameTimeAction a) {
+  std::cout<<"PLAYER:"<<player_id<<" handling packet from "<< a.player_id<<std::endl;
 	if(a.player_id == player_id) {
 		handleSelfAction(a);
 	} else {
@@ -93,7 +97,7 @@ void Player::handleAction(ClientGameTimeAction a) {
 bool Player::moveTowardDirection(User_Movement degree)
 {
 	if(degree == NONE)
-		return false;
+		return true;
 	// x' = xcos@ - ysin@
 	// y' = xsin@ + ycos@ 
 	DirectionValue newX = (DirectionValue)(direction.x * cos(degree*PI/180) - direction.y * sin(degree*PI/180));
@@ -113,8 +117,7 @@ void Player::handleSelfAction(ClientGameTimeAction a) {
 		return;
 	//start of movement logic
 	direction = a.facingDirection;
-	if(moveTowardDirection(a.movement))
-		throw "Oh... something got fucked up in player handleSelfAction";
+	moveTowardDirection(a.movement);
 
 	if(a.jump) {
 		jump();
@@ -160,7 +163,7 @@ void Player::attack( ClientGameTimeAction a) {
 			return;
 		}
 		mana -= currentWeapon.getMpCost();
-		currentWeapon.attackRange();
+		currentWeapon.attackRange(direction, position);
 	}
 	else if(a.attackMelee)
 	{
@@ -179,8 +182,9 @@ void Player::attack( ClientGameTimeAction a) {
 
 std::string Player::getString()
 {
+
 	std::stringstream returnString;
-	returnString<< " x="<<position.x<< " y="<<position.y<< " z="<<position.z<<std::endl;
+	returnString<<"ID:"<< player_id <<" x="<<position.x<< " y="<<position.y<< " z="<<position.z<<std::endl;
 	returnString<< " x="<<position.velocityX<< " y="<<position.velocityY<< " z="<<position.velocityZ<<std::endl;
 	return returnString.str();
 }

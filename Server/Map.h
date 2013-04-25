@@ -1,11 +1,15 @@
 #pragma once
-#include "Entity.h"
-#include "Player.h"
-#include "Projectile.h"
+//#include "Entity.h"
+//#include "Player.h"
+//#include "Projectile.h"
 #include <array>
 #include <vector>
 #include <stdlib.h>
 #include <stack>
+
+class Entity;
+class Player;
+class Projectile;
 
 
 class Map
@@ -20,7 +24,7 @@ public:
   std::vector<Player *> getPlayers(void);
   Projectile* produceProjectile(void);
   void destroyProjectile(Projectile *);
-
+  bool addPlayer(Player *);
 private:
 	std::vector<Player *> players;
 	std::vector<Entity *> entities;

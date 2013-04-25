@@ -13,7 +13,12 @@ bool WeaponFist::attackMelee()
 {
   return false;
 }
+<<<<<<< HEAD
 Projectile* WeaponFist::attackRange()
+=======
+
+bool WeaponFist::attackRange()
+>>>>>>> bda2230785562d6dc78a7ce6108df4f264f1a5db
 {
 
   return NULL;

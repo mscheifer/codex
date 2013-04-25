@@ -1,5 +1,5 @@
 #include "Weapon.h"
-
+#include "Projectile.h"
 
 Weapon::Weapon()
 {
@@ -56,8 +56,18 @@ bool Weapon::attackMelee()
 {
 	return false;
 }
-bool Weapon::attackRange()
+Projectile* Weapon::attackRange(Direction d , Coordinate c)
 {
-	return false;
+	Projectile* pj = map.produceProjectile();
+	c.velocityX = projectileSpeed;
+	c.velocityY = projectileSpeed;
+	c.velocityZ = projectileSpeed;
+	
+	pj->setPosition(c);
+	pj->setDirection(d);
+	pj->setStrength(projectileStrength);
+
+
+	return pj;
 }
 
