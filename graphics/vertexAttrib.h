@@ -25,10 +25,10 @@ class vertexAttrib {
       debugout << ", d.data(), GL_STATIC_DRAW);" << endl;
     }
 	//vc++ is dumb
-    vertexAttrib(const vertexAttrib&) = delete; //don't copy
-    vertexAttrib& operator=(const vertexAttrib&) = delete; //don't assign
-    vertexAttrib(vertexAttrib&&) = delete; //define later
-    vertexAttrib& operator=(vertexAttrib&&) = delete; //define later
+    //vertexAttrib(const vertexAttrib&) = delete; //don't copy
+    //vertexAttrib& operator=(const vertexAttrib&) = delete; //don't assign
+    //vertexAttrib(vertexAttrib&&) = delete; //define later
+    //vertexAttrib& operator=(vertexAttrib&&) = delete; //define later
     ~vertexAttrib();
     void bindBuffer()     const;
     std::string name()    const;

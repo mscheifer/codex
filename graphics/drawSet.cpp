@@ -6,17 +6,21 @@ gx::drawSet::drawSet(const std::string vertShader, const std::string fragShader,
   : instancePos("trans",sizeof(GLfloat[16])), //fix this initialization
     program(vertShader, fragShader, (globalUniforms.push_back(&instancePos),
     globalUniforms)), entityClasses() {
-  for(const auto& vaoData : vaoDatas) {
-    entityClasses.push_back({ std::vector<matrix>(),
-                  vao(vaoData.first,vaoData.second,program.vars()) });
+  for(auto vaoDatap = vaoDatas.begin(); vaoDatap != vaoDatas.end(); ++vaoDatap){
+    const auto& vaoData = *vaoDatap;
+	entityClass newEntClass = { std::vector<matrix>(),
+                  vao(vaoData.first,vaoData.second,program.vars()) };
+    entityClasses.push_back(newEntClass);
   }
   //setup instancePos
 }
 
 void gx::drawSet::draw() const {
   this->program.use();
-  for(const auto& entityC : entityClasses) {
-    for(const auto& loc     : entityC.positions) {
+  for(auto entityCp = entityClasses.begin(); entityCp != entityClasses.end(); ++entityCp){
+    const auto& entityC = * entityCp;
+	for(auto locp = entityC.positions.begin(); locp != entityC.positions.end(); ++locp){
+      const auto& loc = *locp;
       this->instancePos.write(0,loc.oglmatrix());
       entityC.vertData.draw();
     }

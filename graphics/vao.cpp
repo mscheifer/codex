@@ -36,7 +36,8 @@ gx::vao::vao(const std::vector<GLuint>                   indices,
   }
   if(!sigs.empty()) {
     std::cout << "Error: no data for shader variables: " << std::endl;
-    for(const auto& s : sigs) {
+	for(auto sigp = sigs.begin(); sigp != sigs.end(); ++sigp){
+	  const auto& s = *sigp;
       std::cout << s.first << std::endl;
     }
   }

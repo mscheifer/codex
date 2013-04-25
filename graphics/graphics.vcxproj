@@ -72,25 +72,32 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="displaySet.cpp" />
+    <ClCompile Include="drawSet.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="matrix.cpp" />
+    <ClCompile Include="oglUtil.cpp" />
     <ClCompile Include="shaderProgram.cpp" />
+    <ClCompile Include="uniform.cpp" />
     <ClCompile Include="userInput.cpp" />
     <ClCompile Include="vao.cpp" />
     <ClCompile Include="vector3.cpp" />
     <ClCompile Include="vector4.cpp" />
     <ClCompile Include="vertexAttrib.cpp" />
+    <ClCompile Include="vertexAttribSignature.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="displaySet.h" />
+    <ClInclude Include="drawSet.h" />
     <ClInclude Include="matrix.h" />
     <ClInclude Include="oglUtil.h" />
     <ClInclude Include="shaderProgram.h" />
+    <ClInclude Include="uniform.h" />
     <ClInclude Include="userInput.h" />
     <ClInclude Include="vao.h" />
     <ClInclude Include="vector3.h" />
     <ClInclude Include="vector4.h" />
     <ClInclude Include="vertexAttrib.h" />
+    <ClInclude Include="vertexAttribSignature.h" />
     <ClInclude Include="windowsHacks.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
