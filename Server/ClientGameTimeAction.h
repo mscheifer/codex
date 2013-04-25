@@ -17,6 +17,14 @@ struct ClientGameTimeAction
 	bool jump;
 	Direction facingDirection;
 
+  void clear(){
+    player_id = 0;
+    movement = NONE;
+    attackMelee = attackRange = weapon1 = weapon2 = jump = false;
+    facingDirection.x = facingDirection.z = 0;
+    facingDirection.y = -1;
+  }
+
 	ClientGameTimeAction() : 
     player_id(-1), weapon1(false), weapon2(false),
     attackMelee(false),attackRange(false),

@@ -17,7 +17,7 @@ ServerGameTimeRespond Game::evaluate(ClientGameTimeAction a) {
   std::vector<Player *> currentPlayers =  world.getPlayers();
 	std::vector<Entity *> currentEntities = world.getEntity();
 
-	for(int i = 0; i <  currentPlayers.size(); i++ ) {
+	for( unsigned int i = 0; i <  currentPlayers.size(); i++ ) {
 		 currentPlayers[i]->handleAction(a);
 		 s.players[i] = *currentPlayers[i]; //add the player to the return struct
 	}

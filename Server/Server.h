@@ -10,11 +10,15 @@
 #include "ConfigManager.h"
 #include "NetworkServices.h"
 #include "ClientGameTimeAction.h"
+#include "Game.h"
+#include "ServerGameTimeRespond.h"
 
 class NetworkServer{
 
 public:
   ServerServices server;
+  Game game;
+
   NetworkServer(){
 
   }
@@ -22,6 +26,7 @@ public:
   ~NetworkServer(){
 
   }
+  
   void receiveMessages(int i);  
   void doServer();
 };

@@ -69,6 +69,15 @@
     <ClCompile Include="WeaponFist.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="vector4.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="vector3.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="boundingSphere.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">
@@ -135,6 +144,15 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="WeaponFist.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="vector4.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="vector3.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="boundingSphere.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
