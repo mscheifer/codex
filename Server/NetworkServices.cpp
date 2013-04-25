@@ -1,16 +1,5 @@
 #include "NetworkServices.h"
 
-Opcode processMeta(sf::Packet & packet) {
-  size_t packetMeta;
-  packet >> packetMeta;
-//  bool initGame = packetMeta >> 31; 
-//  bool error = packetMeta & 0x1;
-  if (packetMeta == ERROR_NET) return ERROR;
-  if (packetMeta == INIT_NET) {std::cout<<"received init game"<<std::endl; return INIT;} 
-  if (packetMeta == CHAT_NET) return CHAT;
-  return ERROR;
-}
-
 ClientServices::ClientServices(){
     //network
     invalidIpAddress = true;

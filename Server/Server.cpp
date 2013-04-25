@@ -11,8 +11,7 @@ void NetworkServer::doServer(){
     server.getNewClient();
   }
   sf::Packet initPacket;
-  size_t initGame = 0x80000000;    
-  initPacket<<initGame;
+  initPacket<<INIT;
   server.sendToAll(initPacket);
   std::cout<<"server start game"<<std::endl;
 
@@ -23,9 +22,10 @@ void NetworkServer::doServer(){
       sf::Packet packet;
       if(server.receiveMessage(packet,i)){
         sf::Packet copy =packet;
-        switch (processMeta(packet)) {
-
-         ClientGameTimeAction cgta;
+        ClientGameTimeAction cgta;
+        size_t packetType;
+        packet >> packetType;
+        switch (packetType) {
          case CGTA:
            cgta.deserialize(packet);
            cgta.print();

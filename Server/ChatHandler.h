@@ -4,7 +4,7 @@
 #include <SFML/Graphics.hpp>
 #include <list>
 #include <SFML/Network.hpp>
-#include "NetworkServices.h" //just for DEFINE right now
+#include "StaticEnums.h" //just for DEFINE right now
 
 class ChatHandler {
 public:
@@ -30,8 +30,8 @@ class ChatObject {
 public:
   std::string chatMsg;
   size_t packetType;
-  ChatObject():chatMsg("") {packetType = CHAT_NET;}
-  ChatObject(std::string chatMsg):chatMsg(chatMsg) {packetType = CHAT_NET;}
+  ChatObject():chatMsg("") {packetType = CHAT;}
+  ChatObject(std::string chatMsg):chatMsg(chatMsg) {packetType = CHAT;}
   void serialize(sf::Packet & packet);
   void deserialize(sf::Packet & packet);
   std::string getChat() { return chatMsg;}

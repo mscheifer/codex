@@ -5,7 +5,9 @@ void NetworkClient::receiveMessages() {
       sf::Packet packet;
       if (netRecv.receiveMessage(packet)) {
         ChatObject chatObj;
-        switch (processMeta(packet)) {
+        size_t packetType;
+        packet >> packetType;
+        switch (packetType) {
         case CHAT:
           chatObj.deserialize(packet);
           chat.addChat(chatObj.getChat());
@@ -64,7 +66,11 @@ void NetworkClient::doClient(){
     std::cout<<"Waiting for other players to join"<<std::endl;
     while(true) {
       sf::Packet initPacket;
-      if (netRecv.receiveMessage(initPacket) && processMeta(initPacket)==INIT) break;
+      size_t packetType;
+      if (netRecv.receiveMessage(initPacket)) {
+         initPacket >> packetType;
+         if (packetType==INIT) break;
+      }
     }
     std::cout<<"game started"<<std::endl;
   while(true){
@@ -73,8 +79,7 @@ void NetworkClient::doClient(){
     receiveMessages();
     updateWindow();
   }
-  */
-
+ 
   ClientGameTimeAction test1;
   test1.player_id = 9;
   test1.movement = LEFT;

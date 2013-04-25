@@ -8,12 +8,7 @@
 #define PORT_NUMBER 55001
 #define TIMEOUT 3
 #define NUM_PLAYERS 2
-#define CHAT_NET 0x00000000
-#define ERROR_NET 0x00000001
-#define INIT_NET 0x10000000
 
-
-Opcode processMeta(sf::Packet & packet);
 const int maxSize = 9000;
 const int sizeSize = 4;
 
