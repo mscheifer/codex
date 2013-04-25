@@ -2,8 +2,8 @@
 
 #include <SFML/System/Clock.hpp>
 #include "DeadlyEntity.h"
-#include "Projectile.h"
 
+class Projectile;
 
 class Weapon : public DeadlyEntity
 {

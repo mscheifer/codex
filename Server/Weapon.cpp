@@ -1,5 +1,5 @@
 #include "Weapon.h"
-
+#include "Projectile.h"
 
 Weapon::Weapon()
 {
