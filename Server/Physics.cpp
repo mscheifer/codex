@@ -18,6 +18,11 @@ Position calculateVelocity(Velocity v, Acceleration a)
   return v + a * SERVERCLOCK;
 }
 
+Position calculateDistanceInBetween( Coordinate x, Coordinate y){
+	// dist = sqrt( (x-x)^2 + (y-y)^2  + (z-z)^2  )
+	return sqrt( pow((x.x - y.x), 2) + pow((x.y - y.y), 2) + pow((x.z - y.z), 2));
+}
+
 Coordinate ThreeDMovement(Coordinate location, Direction direction, Acceleration accelerationZ)
 {
   double length = sqrt(direction.x *direction.x + direction.y * direction.y + direction.z * direction.z);
@@ -28,3 +33,4 @@ Coordinate ThreeDMovement(Coordinate location, Direction direction, Acceleration
 
   return Coordinate(newX, newY, newZ, location.velocityX, location.velocityY, newVZ);
 }
+

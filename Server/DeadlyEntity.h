@@ -1,7 +1,6 @@
 #pragma once
-#include "entity.h"
-class DeadlyEntity :
-  public Entity
+#include "Entity.h"
+class DeadlyEntity : public Entity
 {
 public:
   DeadlyEntity(void);

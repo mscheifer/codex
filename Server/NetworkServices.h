@@ -59,7 +59,7 @@ public:
      sendMessage(packet, i); 
    }
 
-   void getNewClient(); 
+   bool getNewClient(); 
    bool receiveMessage(sf::Packet &packet, int i );
    bool sendMessage(sf::Packet & packet, int i);
    void sendToAll(sf::Packet & packet );
