@@ -31,6 +31,7 @@ std::vector<Entity *> Map::getEntity() {
      return NULL;
    Projectile* ret = freeProjectiles.top();
    freeProjectiles.pop();
+   entities.push_back(ret);
    return ret;
  }
 
@@ -38,6 +39,11 @@ std::vector<Entity *> Map::getEntity() {
  {
    proj->setOwner(NULL);
    freeProjectiles.push(proj);
+   for(int i = 0; i < entities.size(); i++) {
+	   if(entities.at(i) == proj) {
+			entities.erase(entities.begin() + i);
+	   }
+   }
  }
 
  bool Map::addPlayer(Player * newPlayer)

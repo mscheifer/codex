@@ -4,8 +4,9 @@
 
 struct ServerGameTimeRespond
 {
-	static const int packetType = SGTR;
+  static const int packetType = SGTR;
   Player players[4];
+  std::vector<Entity> entities;
 	//Entity entities[15];	
   void serialize(sf::Packet & packet) {
     for (int i=0;i<4;i++) 

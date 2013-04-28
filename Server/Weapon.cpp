@@ -66,7 +66,7 @@ Projectile* Weapon::attackRange(Direction d , Coordinate c)
 	pj->setPosition(c);
 	pj->setDirection(d);
 	pj->setStrength(projectileStrength);
-
+	pj->setRange(projectileRange);
 
 	return pj;
 }

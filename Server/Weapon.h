@@ -21,13 +21,15 @@ public:
 	void useWeapon(bool range_attack);
 	bool canPickUp() { return pickedUp; }
 	virtual bool attackMelee(); 
-	float projectileStrength;
+	
 	virtual Projectile* attackRange(Direction d, Coordinate c);
   virtual bool pickUp(){ return false; };
   virtual bool dropDown(Coordinate dropPosition){ position = dropPosition; return false; };
 protected:
 	int Range_Cool_Down_Time; //cool down time between uses in milliseconds
 	int Melee_Cool_Down_Time; 
+	float projectileStrength;
+	Position projectileRange;
 	float mpCost;
 	bool pickedUp;
 	sf::Clock Range_Cool_Down_Counter;
