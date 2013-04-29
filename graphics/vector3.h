@@ -3,6 +3,7 @@
 #include <GL/glew.h>
 #include <iostream>
 #include <cmath>
+#include <array>
 
 namespace gx {
 
@@ -25,6 +26,8 @@ public:
   void cross(const vector3&,const vector3&);
   elem_t magnitude() const;
   void normalize();
+
+  std::array<elem_t,3> oglVec3() const;
 
   elem_t& get(int);
   const elem_t& get(int) const;

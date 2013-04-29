@@ -12,6 +12,7 @@ namespace gx {
 class displaySet {
     matrix  view;
     matrix  projection;
+    vector3 cameraPos;
     uniform unif;
   public:
     typedef matrix::elem_t elem_t;

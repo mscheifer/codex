@@ -1,6 +1,5 @@
 #include <GL/glew.h>
 #include <SFML/Window.hpp>
-#include <SFML/OpenGL.hpp>
 #include <iostream>
 #include <fstream>
 #include "userInput.h"
@@ -8,6 +7,7 @@
 #include "shaderProgram.h"
 #include "vao.h"
 #include "drawSet.h"
+#include "light.h"
 
 std::string readFile(const std::string fileName) {
   std::ifstream vsFile(fileName);
@@ -47,6 +47,10 @@ int main() {
     "DrChao", sf::Style::Default);
   window.setVerticalSyncEnabled(false);
   window.setMouseCursorVisible(false);
+  if(!window.setActive()) {
+    std::cout << "error activating window" << std::endl;
+    exit(1);
+  }
 
   // load resources, initialize the OpenGL states, ...
   GLenum glewErr = glewInit();
@@ -55,25 +59,33 @@ int main() {
     exit(1);
   }
 
-  gx::displaySet display;
-
-  gx::setCamera(display);
-  gx::setUpMouse();
-  reshape(display,defaultWindowWidth, defaultWindowHeight);
-
   glEnable(GL_DEPTH_TEST); //enable depth buffer
   glClearColor(1.0,1.0,1.0,1.0); //start with a white screen
   glClearDepth(1.f);
   glDepthFunc(GL_LEQUAL);
 
+  glEnable(GL_CULL_FACE);
+  glCullFace(GL_BACK);
+  glFrontFace(GL_CCW);
+
+  //setup drawing data
+
+  gx::displaySet display;
+  gx::setCamera(display);
+  gx::setUpMouse();
+  reshape(display,defaultWindowWidth, defaultWindowHeight);
+
+  gx::light light1(gx::vector4(1,1,1),0.5,0.5,0.05f);
+  light1.updatePosition({ 0, 5, -1});
+
   std::array<GLfloat,8*4> posArray    = {{ 0.0f, 0.0f, 0.0f, 1.0f,
                                            1.0f, 0.0f, 0.0f, 1.0f,
                                            0.0f, 1.0f, 0.0f, 1.0f,
                                            1.0f, 1.0f, 0.0f, 1.0f,
-                                           0.0f, 0.0f, 1.0f, 1.0f,
-                                           1.0f, 0.0f, 1.0f, 1.0f,
-                                           0.0f, 1.0f, 1.0f, 1.0f,
-                                           1.0f, 1.0f, 1.0f, 1.0f }};
+                                           0.0f, 0.0f,-1.0f, 1.0f,
+                                           1.0f, 0.0f,-1.0f, 1.0f,
+                                           0.0f, 1.0f,-1.0f, 1.0f,
+                                           1.0f, 1.0f,-1.0f, 1.0f }};
   std::array<GLfloat,8*4> colorsArray = {{ 0.0f, 0.0f, 1.0f, 1.0f,
                                            0.0f, 0.0f, 1.0f, 1.0f,
                                            0.0f, 0.0f, 1.0f, 1.0f,
@@ -81,42 +93,51 @@ int main() {
                                            0.0f, 0.0f, 1.0f, 1.0f,
                                            0.0f, 0.0f, 1.0f, 1.0f,
                                            0.0f, 0.0f, 1.0f, 1.0f,
-                                           1.0f, 0.0f, 1.0f, 1.0f }};
-  std::array<GLfloat,8*3> normalArray = {{-1.0f,-1.0f,-1.0f,
-                                           1.0f,-1.0f,-1.0f, 
-                                          -1.0f, 1.0f,-1.0f, 
-                                           1.0f, 1.0f,-1.0f, 
-                                          -1.0f,-1.0f, 1.0f, 
+                                           0.0f, 0.0f, 1.0f, 1.0f }};
+  std::array<GLfloat,8*3> normalArray = {{-1.0f,-1.0f, 1.0f,
                                            1.0f,-1.0f, 1.0f, 
                                           -1.0f, 1.0f, 1.0f, 
-                                           1.0f, 1.0f, 1.0f }};
+                                           1.0f, 1.0f, 1.0f, 
+                                          -1.0f,-1.0f,-1.0f, 
+                                           1.0f,-1.0f,-1.0f, 
+                                          -1.0f, 1.0f,-1.0f, 
+                                           1.0f, 1.0f,-1.0f }};
+  std::array<GLfloat,8> normDiffArray;
   for(size_t i = 0; i < normalArray.size(); i += 3) {
     gx::vector3 norm(normalArray[i],normalArray[i+1],normalArray[i+2]);
     norm.normalize();
+    //normal diff calculatio is just a hack that works for this cube
+    normDiffArray[i/3] =((norm - gx::vector3(normalArray[i],  0,0)).magnitude()
+                       + (norm - gx::vector3(0,normalArray[i+1],0)).magnitude()
+                       + (norm - gx::vector3(0,0,normalArray[i+2])).magnitude())
+                       / 3;
     normalArray[i]   = norm.x;
     normalArray[i+1] = norm.y;
     normalArray[i+2] = norm.z;
   }
   std::array<GLuint,6*6>  indicesArray = {{ 0, 1, 2, 1, 3, 2,
                                             2, 3, 6, 3, 7, 6,
-                                            4, 0, 6, 0, 2, 4,
+                                            4, 0, 6, 0, 2, 6,
                                             1, 5, 3, 5, 7, 3,
                                             4, 5, 0, 5, 1, 0,
                                             5, 4, 7, 4, 6, 7 }};
 
-  std::vector<GLfloat> positions(  posArray.begin(),     posArray.end());
-  std::vector<GLfloat> colors(  colorsArray.begin(),  colorsArray.end());
-  std::vector<GLfloat> normals( normalArray.begin(),  normalArray.end());
-  std::vector<GLuint>  indices(indicesArray.begin(), indicesArray.end());
+  std::vector<GLfloat> positions(      posArray.begin(),       posArray.end());
+  std::vector<GLfloat> colors(      colorsArray.begin(),    colorsArray.end());
+  std::vector<GLfloat> normals(     normalArray.begin(),    normalArray.end());
+  std::vector<GLfloat> normDiffs( normDiffArray.begin(),  normDiffArray.end());
+  std::vector<GLuint>  indices(    indicesArray.begin(),   indicesArray.end());
 
-  gx::vertexAttrib positionsAttrib("position",4,0,positions);
-  gx::vertexAttrib colorsAttrib   ("color"   ,4,0,colors);
-  gx::vertexAttrib normalsAttrib  ("normal"  ,3,0,normals);
+  gx::vertexAttrib positionsAttrib ("position",4,0,positions);
+  gx::vertexAttrib colorsAttrib    ("color"   ,4,0,colors);
+  gx::vertexAttrib normalsAttrib   ("normal"  ,3,0,normals);
+  gx::vertexAttrib normDiffAttrib  ("normDiff",1,0,normDiffs);
 
   std::vector<const gx::vertexAttrib*> attribs;
   attribs.push_back(&positionsAttrib);
   attribs.push_back(&colorsAttrib);
   attribs.push_back(&normalsAttrib);
+  attribs.push_back(&normDiffAttrib);
 
   std::vector<gx::drawSet::vaoData_t> entitiesData;
   entitiesData.push_back(std::make_pair(indices,attribs));
@@ -124,6 +145,7 @@ int main() {
 
   std::vector<const gx::uniform*> uniforms;
   uniforms.push_back(&display.storage());
+  uniforms.push_back(&light1.storage());
 
   gx::drawSet entities(readFile("default.vert"),readFile("default.frag"),
                        entitiesData,uniforms);
@@ -151,7 +173,7 @@ int main() {
     gx::handleUserInput(display);
 
     // clear the buffers
-	  glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
     gx::debugout << "glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT";
     gx::debugout << "| GL_STENCIL_BUFFER_BIT);" << gx::endl;
 

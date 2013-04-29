@@ -4,8 +4,8 @@ namespace { //don't export
  const std::string uniformName = "display";
 } //end unnamed namespace
 
-gx::displaySet::displaySet()
-  : view(), projection(), unif(uniformName,sizeof(gx::matrix::elem_t[16]) * 2){}
+gx::displaySet::displaySet(): view(), projection(), cameraPos(),
+    unif(uniformName,sizeof(elem_t[16]) * 2 + sizeof(elem_t) * 4) {}
 
 void gx::displaySet::setProjection(elem_t fov, elem_t ratio, elem_t nearP,
                                elem_t farP) {
@@ -62,6 +62,8 @@ void gx::displaySet::setView(const vector3& e, const vector3& d,
   auto oglM = this->view.oglmatrix();
 
   this->storage().write(0,oglM);
+  this->cameraPos = e;
+  this->storage().write(sizeof(oglM)*2,e.oglVec3());
 }
 
 const gx::uniform& gx::displaySet::storage() const {

@@ -40,7 +40,7 @@ void gx::uniform::write(GLintptr offset, GLsizeiptr size,
   debugout << endl;
   glBindBuffer(GL_UNIFORM_BUFFER, this->bufferName);
   debugout << "glBufferSubData(GL_UNIFORM_BUFFER, " << offset << ", ";
-  debugout << size << ", oglM.data());" << endl;
+  debugout << size << ", data@" << data << ");" << endl;
   glBufferSubData(GL_UNIFORM_BUFFER, offset, size, data);
 }
 

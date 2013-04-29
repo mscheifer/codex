@@ -14,15 +14,19 @@ class uniform {
     GLuint      bufferName;
   public:
     uniform(std::string,GLsizeiptr);
-    //uniform(const uniform&) = delete;
-    //uniform& operator=(const uniform&) = delete;
-    //uniform(uniform&&) = delete;
-    //uniform& operator=(uniform&&) = delete;
+    uniform(const uniform&);// = delete;
+    uniform& operator=(const uniform&);// = delete;
+    uniform(uniform&&);// = delete;
+    uniform& operator=(uniform&&);// = delete;
     ~uniform();
     void write(GLintptr,GLsizeiptr,const GLvoid*) const;
     template<typename T,size_t N>
-    void write(GLintptr offset, std::array<T,N> data) const {
+    void write(GLintptr offset,const std::array<T,N>& data) const {
       this->write(offset, sizeof(data), data.data());
+    }
+    template<typename T>
+    void writeStruct(GLintptr offset,const T& data) const {
+      this->write(offset, sizeof(data), &data);
     }
     std::string name()      const;
     GLuint      bindPoint() const;
