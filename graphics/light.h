@@ -1,3 +1,4 @@
+#include <GL/glew.h>
 #include <array>
 #include "vector4.h"
 #include "uniform.h"

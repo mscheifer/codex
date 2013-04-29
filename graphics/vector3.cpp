@@ -79,7 +79,8 @@ void gx::vector3::normalize() {
 }
 
 std::array<gx::vector3::elem_t,3> gx::vector3::oglVec3() const {
-  return {{ this->x, this->y, this->z }};
+  std::array<gx::vector3::elem_t,3> ret = {{ this->x, this->y, this->z }};
+  return ret;
 }
 
 gx::vector3::elem_t& gx::vector3::get(int i) {

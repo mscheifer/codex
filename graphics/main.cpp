@@ -76,7 +76,7 @@ int main() {
   reshape(display,defaultWindowWidth, defaultWindowHeight);
 
   gx::light light1(gx::vector4(1,1,1),0.5,0.5,0.05f);
-  light1.updatePosition({ 0, 5, -1});
+  light1.updatePosition(gx::vector4( 0, 5, -10));
 
   std::array<GLfloat,8*4> posArray    = {{ 0.0f, 0.0f, 0.0f, 1.0f,
                                            1.0f, 0.0f, 0.0f, 1.0f,

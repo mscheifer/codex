@@ -1,14 +1,21 @@
 #include "light.h"
 
 gx::light::light(vector4 co, GLfloat ca, GLfloat la, GLfloat qa)
-         : data{ std::array<GLfloat,4>(),
-           std::array<GLfloat,4>{{ co.x, co.y, co.z, co.w }}, ca, la, qa },
-           unif("light1",sizeof(lightData)) {
-    unif.writeStruct(0,data);
+         : data(), unif("light1",sizeof(lightData)) {
+    //have to initialize here instead of initialization list because of visual studio
+    this->data.constantAttenuation = ca;
+    this->data.linearAttenuation = la;
+    this->data.quadraticAttenuation = qa;
+    this->data.color[0] = co.x;
+    this->data.color[1] = co.y;
+    this->data.color[2] = co.z;
+    this->data.color[3] = co.w;
+    this->unif.writeStruct(0,data);
   }
 
 void gx::light::updatePosition(vector4 pos) {
-  data.position = {{ pos.x, pos.y, pos.z, pos.w }};
+  std::array<GLfloat,4> newpos = {{ pos.x, pos.y, pos.z, pos.w }};
+  data.position = newpos;
   unif.write(0, data.position);
 }
 

@@ -73,6 +73,7 @@
   <ItemGroup>
     <ClCompile Include="displaySet.cpp" />
     <ClCompile Include="drawSet.cpp" />
+    <ClCompile Include="light.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="matrix.cpp" />
     <ClCompile Include="oglUtil.cpp" />
@@ -88,6 +89,7 @@
   <ItemGroup>
     <ClInclude Include="displaySet.h" />
     <ClInclude Include="drawSet.h" />
+    <ClInclude Include="light.h" />
     <ClInclude Include="matrix.h" />
     <ClInclude Include="oglUtil.h" />
     <ClInclude Include="shaderProgram.h" />

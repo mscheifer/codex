@@ -34,7 +34,9 @@ void gx::drawSet::draw() const {
 }
 
 void gx::drawSet::reset() {
-  for(auto& entityC : this->entityClasses) {
+  for(auto entityCp = entityClasses.begin(); entityCp != entityClasses.end();
+                                                                 ++entityCp) {
+    auto& entityC = *entityCp;
     entityC.positions.clear();
   }
 }

@@ -40,7 +40,7 @@ void main() {
     //color = vec4(0.0,0.0,0.0,1.0); //disable until better models
   }
   if(interpNormDiff > 3) {
-    //color = vec4(0.0,0.0,0.0,1.0); //disable until better models
+    color = vec4(0.0,0.0,0.0,1.0); //disable until better models
   }
   outputF = color;
 }
