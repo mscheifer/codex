@@ -42,7 +42,7 @@ public:
   
    ServerServices();
    template <typename Data>
-   void sendPacketToAll(Data & data) {
+   void sendPacketToAll(const Data & data) {
      sf::Packet packet;
      packet.clear();
      packet << Data::packetType;

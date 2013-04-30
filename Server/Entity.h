@@ -10,8 +10,8 @@ public:
   Entity() {}
   ~Entity() {}
   
-  virtual void handleAction(ClientGameTimeAction a){}
-  virtual void onCollision(Entity a){}
+  virtual void handleAction(ClientGameTimeAction){}
+  virtual void onCollision(Entity){}
   virtual bool isProjectile(void){ return false;}
   virtual bool isWeapon(void){ return false;}
   virtual bool isPlayer(void){ return false;}
@@ -24,7 +24,7 @@ public:
   void setPosition(Coordinate c) {
 	  position = c;
   }
-  void serialize(sf::Packet& packet)
+  void serialize(sf::Packet& packet) const
   {
     position.serialize(packet);
     direction.serialize(packet);

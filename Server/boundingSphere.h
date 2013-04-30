@@ -12,7 +12,7 @@ private:
 public:
   boundingSphere();
   boundingSphere(float x, float y, float z, float radius);
-  void boundingSphere::move(const gx::vector3 & v);
+  void move(const gx::vector3 & v);
   bool collideWith(boundingSphere & o);
   ~boundingSphere(void);
 };

@@ -12,7 +12,7 @@ struct Direction
   Direction(DirectionValue a, DirectionValue b, DirectionValue c) :
     x(a), y(b), z(c){}
 
-  void serialize(sf::Packet & packet){
+  void serialize(sf::Packet & packet) const {
     packet << x;
     packet << y;
     packet << z;

@@ -9,7 +9,7 @@
   
   template <typename T>
   T StringToNumber (const std::string &Text ){
-    istringstream ss(Text);
+    std::istringstream ss(Text);
     T result;
     return ss >> result ? result : 0;
   }

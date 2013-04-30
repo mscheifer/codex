@@ -5,7 +5,7 @@ void NetworkClient::receiveMessages() {
       sf::Packet packet;
       if (netRecv.receiveMessage(packet)) {
         ChatObject chatObj;
-        size_t packetType;
+        uint32_t packetType;
         IdPacket newId(0);
         packet >> packetType;
         std::vector<std::pair<gx::vector3,int>> entities;
@@ -169,7 +169,7 @@ void NetworkClient::doClient(){
   std::cout<<"Waiting for other players to join"<<std::endl;
   while(true) {
     sf::Packet initPacket;
-    size_t packetType;
+    uint32_t packetType;
     if (netRecv.receiveMessage(initPacket)) {
         initPacket >> packetType;
         if (packetType==INIT) break;

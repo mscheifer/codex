@@ -17,7 +17,7 @@ public:
   ChatHandler(void);
   ~ChatHandler(void);
   void drawChat(sf::RenderWindow & window);
-  void addChat(std::string & chatMsg);
+  void addChat(const std::string & chatMsg);
   void backspace();
   bool isTyping();
   void setBuffer(const std::string & buffer );

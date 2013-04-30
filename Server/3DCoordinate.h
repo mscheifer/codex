@@ -17,7 +17,7 @@ struct Coordinate
   Coordinate():x(0),y(0),z(0),velocityX(0),velocityY(0),velocityZ(0) {}
   Coordinate(Position a, Position b, Position c, Velocity va, Velocity vb, Velocity vc) :
     x(a), y(b), z(c), velocityX(va), velocityY(vb), velocityZ(vc){}
-  void serialize(sf::Packet & packet) {
+  void serialize(sf::Packet & packet) const {
      packet<<x;
      packet<<y;
      packet<<z;

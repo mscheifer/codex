@@ -7,7 +7,7 @@ struct ServerGameTimeRespond
 	static const int packetType = SGTR;
   Player players[4];
 	//Entity entities[15];	
-  void serialize(sf::Packet & packet) {
+  void serialize(sf::Packet & packet) const {
     for (int i=0;i<4;i++) 
       players[i].serialize(packet);
   }

@@ -5,7 +5,7 @@ void NetworkServer::receiveMessages(int i) {
     if(server.receiveMessage(packet,i)){
       sf::Packet copy =packet;
       ClientGameTimeAction cgta;
-      size_t packetType;
+      uint32_t packetType;
       packet >> packetType;
       switch (packetType) {
         case CGTA:

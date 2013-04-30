@@ -1,6 +1,6 @@
 #include "ChatHandler.h"
 
-void ChatHandler::addChat (std::string & chatMsg) {
+void ChatHandler::addChat (const std::string & chatMsg) {
   chatHistory.push_back(chatMsg);
   if (chatHistory.size()>10)
     chatHistory.pop_front();
