@@ -91,7 +91,7 @@ std::vector<gx::drawSet::vaoData_t> entitiesData() {
   return entitiesData;
 }
 //must call after window is initialized
-void initGlew() {
+GLenum initGlew() {
   //should glew be done per context?? if so, move to static method
   //and ensure that it is only called once
   GLenum glewErr = glewInit();
@@ -99,6 +99,7 @@ void initGlew() {
     std::cout << "error initializing GLEW!" << std::endl;
     exit(1);
   }
+  return glewErr;
 }
 } //end unnamed namespace
 
@@ -126,8 +127,8 @@ std::vector<const gx::uniform*> gx::graphicsClient::uniforms() {
 gx::graphicsClient::graphicsClient():
     window(sf::VideoMode(defaultWindowWidth, defaultWindowHeight),
            "DrChao", sf::Style::Default),
-    //really stupid but will init glew before any setup calls
-    light1((initGlew(), gx::vector4(1,1,1)),0.5,0.5,0.05f),
+    glewStatus(initGlew()), //glew needs to be called here, after window, before anything else
+    light1(gx::vector4(1,1,1),0.5,0.5,0.05f),
     display(),
     entities(readFile("graphics/default.vert"),readFile("graphics/default.frag"),
                        entitiesData(),uniforms()),

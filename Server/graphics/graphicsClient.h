@@ -10,6 +10,7 @@ namespace gx {
 
 class graphicsClient {
     sf::Window window;
+	GLenum     glewStatus;
 
     //scene data
     light light1;
