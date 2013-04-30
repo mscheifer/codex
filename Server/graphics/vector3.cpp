@@ -69,13 +69,18 @@ void gx::vector3::cross(const vector3 &a,const vector3 &b) {
 }
 
 gx::vector3::elem_t gx::vector3::magnitude() const {
-  return sqrt(x*x + y*y + z*z);
+  return elem_t(sqrt(x*x + y*y + z*z));
 }
 
 void gx::vector3::normalize() {
   if(magnitude() > 0) {
     scale(elem_t(1.0)/magnitude());
   }
+}
+
+std::array<gx::vector3::elem_t,3> gx::vector3::oglVec3() const {
+  std::array<gx::vector3::elem_t,3> ret = {{ this->x, this->y, this->z }};
+  return ret;
 }
 
 gx::vector3::elem_t& gx::vector3::get(int i) {

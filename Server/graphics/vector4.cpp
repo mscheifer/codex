@@ -3,13 +3,13 @@
 gx::vector4::vector4(): x(0.0), y(0.0), z(0.0), w(1) {}
 
 gx::vector4::vector4(elem_t x0,elem_t y0,elem_t z0): x(x0), y(y0), z(z0), w(1){}
-/*
+
 gx::vector4::vector4(const std::initializer_list<elem_t> l)
            : x(l.begin()   != l.end() ? *(l.begin())   : 0),
              y(l.begin()+1 != l.end() ? *(l.begin()+1) : 0),
              z(l.begin()+2 != l.end() ? *(l.begin()+2) : 0),
              w(1) {}
-             */
+
 void gx::vector4::set(elem_t x0,elem_t y0,elem_t z0,elem_t w0) {
   this->x = x0;
   this->y = y0;

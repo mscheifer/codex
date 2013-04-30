@@ -1,18 +1,15 @@
-///////////////////////////////////////////////////////
-//////////TODO: remove this file, it should be using the graphics vector3 ///////////////
-///////////////////////////////////////////////////////
-///////////////////////////////////////////////////////
-
 #ifndef VECTOR3_H
 #define VECTOR3_H
+#include <GL/glew.h>
 #include <iostream>
 #include <cmath>
+#include <array>
 
 namespace gx {
 
 class vector3 {
 public:
-  typedef float elem_t;
+  typedef GLfloat elem_t;
   elem_t x,y,z;
   vector3();
   vector3(elem_t,elem_t,elem_t);
@@ -29,6 +26,8 @@ public:
   void cross(const vector3&,const vector3&);
   elem_t magnitude() const;
   void normalize();
+
+  std::array<elem_t,3> oglVec3() const;
 
   elem_t& get(int);
   const elem_t& get(int) const;

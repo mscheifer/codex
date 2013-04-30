@@ -46,7 +46,7 @@
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>..\SFML-2.0-rc\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>sfml-graphics-d.lib;sfml-network-d.lib;sfml-system-d.lib;sfml-window-d.lib;sfml-audio-d.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>opengl32.lib;glew32.lib;sfml-graphics-d.lib;sfml-network-d.lib;sfml-system-d.lib;sfml-window-d.lib;sfml-audio-d.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -73,6 +73,20 @@
     <ClCompile Include="ConfigManager.cpp" />
     <ClCompile Include="DeadlyEntity.cpp" />
     <ClCompile Include="Game.cpp" />
+    <ClCompile Include="graphics\displaySet.cpp" />
+    <ClCompile Include="graphics\drawSet.cpp" />
+    <ClCompile Include="graphics\graphicsClient.cpp" />
+    <ClCompile Include="graphics\light.cpp" />
+    <ClCompile Include="graphics\matrix.cpp" />
+    <ClCompile Include="graphics\oglUtil.cpp" />
+    <ClCompile Include="graphics\shaderProgram.cpp" />
+    <ClCompile Include="graphics\uniform.cpp" />
+    <ClCompile Include="graphics\userInput.cpp" />
+    <ClCompile Include="graphics\vao.cpp" />
+    <ClCompile Include="graphics\vector3.cpp" />
+    <ClCompile Include="graphics\vector4.cpp" />
+    <ClCompile Include="graphics\vertexAttrib.cpp" />
+    <ClCompile Include="graphics\vertexAttribSignature.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Map.cpp" />
     <ClCompile Include="NetworkServices.cpp" />
@@ -82,8 +96,6 @@
     <ClCompile Include="Projectile.cpp" />
     <ClCompile Include="Server.cpp" />
     <ClCompile Include="ServerGameTimeRespond.h" />
-    <ClCompile Include="vector3.cpp" />
-    <ClCompile Include="vector4.cpp" />
     <ClCompile Include="Weapon.cpp" />
     <ClCompile Include="WeaponFist.cpp" />
   </ItemGroup>
@@ -99,6 +111,21 @@
     <ClInclude Include="directionalVector.h" />
     <ClInclude Include="Entity.h" />
     <ClInclude Include="Game.h" />
+    <ClInclude Include="graphics\displaySet.h" />
+    <ClInclude Include="graphics\drawSet.h" />
+    <ClInclude Include="graphics\graphicsClient.h" />
+    <ClInclude Include="graphics\light.h" />
+    <ClInclude Include="graphics\matrix.h" />
+    <ClInclude Include="graphics\oglUtil.h" />
+    <ClInclude Include="graphics\shaderProgram.h" />
+    <ClInclude Include="graphics\uniform.h" />
+    <ClInclude Include="graphics\userInput.h" />
+    <ClInclude Include="graphics\vao.h" />
+    <ClInclude Include="graphics\vector3.h" />
+    <ClInclude Include="graphics\vector4.h" />
+    <ClInclude Include="graphics\vertexAttrib.h" />
+    <ClInclude Include="graphics\vertexAttribSignature.h" />
+    <ClInclude Include="graphics\windowsHacks.h" />
     <ClInclude Include="Map.h" />
     <ClInclude Include="NetworkServices.h" />
     <ClInclude Include="NetworkData.h" />
@@ -109,10 +136,13 @@
     <ClInclude Include="Server.h" />
     <ClInclude Include="StaticEnums.h" />
     <ClInclude Include="AudioManager.h" />
-    <ClInclude Include="vector3.h" />
-    <ClInclude Include="vector4.h" />
     <ClInclude Include="Weapon.h" />
     <ClInclude Include="WeaponFist.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="graphics\default.frag" />
+    <None Include="graphics\default.vert" />
+    <None Include="graphics\Makefile" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -8,6 +8,7 @@ void NetworkClient::receiveMessages() {
         size_t packetType;
         IdPacket newId(0);
         packet >> packetType;
+        std::vector<std::pair<gx::vector3,int>> entities;
         switch (packetType) {
         case CHAT:
           chatObj.deserialize(packet);
@@ -15,7 +16,11 @@ void NetworkClient::receiveMessages() {
           break;
         case SGTR:
           s.deserialize(packet);
-          as.render(s.players);
+          for(size_t i = 0; i < 4; i++) {
+            auto pos = s.players[i].getPosition();
+            entities.push_back(std::make_pair(gx::vector3(pos.x,pos.y,pos.z),0));
+          }
+          gxClient.updateEntities(entities);
           break;
         case JOINID:
           newId.deserialize(packet);
@@ -28,14 +33,43 @@ void NetworkClient::receiveMessages() {
         }
       }
 }
-void NetworkClient::updateWindow() {
-  if (window.isOpen()) {
-    window.clear();
-    chat.drawChat(window);
-    window.display();
+void NetworkClient::processInput(gx::userInput ui) {
+
+  if(ui.stopped) {
+    this->running = false;
+  }
+  action.clear();
+  switch (ui.move) {
+    case gx::FORWARD:
+      action.movement = FORWARD;
+      break;
+    case gx::FORWARD_LEFT:
+      action.movement = FORWARD_LEFT;
+      break;
+    case gx::LEFT:
+      action.movement = LEFT;
+      break;
+    case gx::BACKWARD_LEFT:
+      action.movement = BACKWARD_LEFT;
+      break;
+    case gx::BACKWARD:
+      action.movement = BACKWARD;
+      break;
+    case gx::BACKWARD_RIGHT:
+      action.movement = BACKWARD_RIGHT;
+      break;
+    case gx::RIGHT:
+      action.movement = RIGHT;
+      break;
+    case gx::FORWARD_RIGHT:
+      action.movement = FORWARD_RIGHT;
+      break;
+    case gx::NULL_DIR:
+      action.movement = NONE;
+      break;
   }
 }
-
+/*
 void NetworkClient::processInput(){
   bool updateAS = false;
   action.clear();
@@ -129,9 +163,9 @@ void NetworkClient::processInput(){
     sendPacket = true;
   }
 }
-
+*/
 void NetworkClient::doClient(){
-  /*
+  
   std::cout<<"Waiting for other players to join"<<std::endl;
   while(true) {
     sf::Packet initPacket;
@@ -142,20 +176,27 @@ void NetworkClient::doClient(){
     }
   }
   std::cout<<"game started"<<std::endl;
-  */
-
+  
+  //temp code ------------------------------
   s.players[0] =  Player(0,0,1,42);
 	s.players[1] = Player(2,3,1,43);
 	s.players[2] =  Player(7,2,1,44);
 	s.players[3] = Player(4,6,1,45);
-  as.render(s.players);
+  std::vector<std::pair<gx::vector3,int>> entities;
+  for(size_t i = 0; i < 4; i++) {
+    auto pos = s.players[i].getPosition();
+    entities.push_back(std::make_pair(gx::vector3(pos.x,pos.y,pos.z),0));
+  }
+  gxClient.updateEntities(entities);
+  //temp code -----------------------------
+  //as.render(s.players);
 
   //  main run loop
-  while(true){
+  while(this->running){
     //process input and send events
-    processInput(); 
+    processInput(this->gxClient.handleInput());
     receiveMessages();
-    updateWindow();
+    gxClient.draw();
     if(sendPacket){
       action.print();
       netRecv.sendPacket<ClientGameTimeAction>(action);

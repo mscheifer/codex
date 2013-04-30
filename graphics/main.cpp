@@ -172,10 +172,7 @@ int main() {
     }
     gx::handleUserInput(display);
 
-    // clear the buffers
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
-    gx::debugout << "glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT";
-    gx::debugout << "| GL_STENCIL_BUFFER_BIT);" << gx::endl;
+
 
     entities.reset();
 

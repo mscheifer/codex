@@ -1,6 +1,6 @@
 //#pragma once
-#ifndef CLIENT
-#define CLIENT
+#ifndef CLIENT_H
+#define CLIENT_H
 #include <SFML/Network.hpp>
 #include <SFML/Window.hpp>
 #include <SFML/Graphics.hpp>
@@ -10,7 +10,7 @@
 #include <list>
 #include <ctime>
 #include "NetworkServices.h"
-#include "AsciUI.h"
+#include "graphics/graphicsClient.h"
 #include "ServerGameTimeRespond.h"
 #include "ChatHandler.h"
 #include "boundingSphere.h"
@@ -18,14 +18,15 @@
 
 class NetworkClient{
 private:
-  AsciUI as; //TODO delete this later
+  //AsciUI as; //TODO delete this later
+  gx::graphicsClient gxClient;
   ServerGameTimeRespond s;
 	ClientGameTimeAction action;
   ClientServices netRecv;
-  sf::RenderWindow window;
   ChatHandler chat;
   int id;
   bool sendPacket;
+  bool running;
 
   //this is for collision detection test
   sf::CircleShape c1;
@@ -35,16 +36,12 @@ private:
   //end collision
 
 public:
-  NetworkClient():window(sf::VideoMode(800,600), "sf::Text test")
-  {
-    sendPacket = false;
-  }
+  NetworkClient(): gxClient(), s(), action(), netRecv(), chat(), id(-1), sendPacket(false), running(true)
+  {}
 
-  ~NetworkClient(){
-  }
-  void processInput();
-  void updateWindow();
+  ~NetworkClient(){}
+  void processInput(gx::userInput);
   void receiveMessages();
   void doClient();
 };
-#endif
+#endif //CLIENT_H

@@ -1,13 +1,8 @@
-///////////////////////////////////////////////////////
-//////////TODO: remove this file, it should be using the graphics vector4 ///////////////
-///////////////////////////////////////////////////////
-///////////////////////////////////////////////////////
-
-
 #ifndef VECTOR4_H
 #define VECTOR4_H
 #include <iostream>
 #include "vector3.h"
+#include "oglUtil.h"
 
 namespace gx {
 
@@ -20,7 +15,7 @@ public:
   elem_t x,y,z,w;
   vector4();
   vector4(elem_t,elem_t,elem_t);
-  //vector4(const std::initializer_list<elem_t>);
+  vector4(const std::initializer_list<elem_t>);
   void set(elem_t,elem_t,elem_t,elem_t);
   void add(const vector3&);
   void add(const vector4&,const vector3&);
