@@ -16,6 +16,8 @@ void NetworkClient::receiveMessages() {
         case SGTR:
           s.deserialize(packet);
           as.render(s.players);
+          if (s.players[id].getHealth() == 0) alive = false;
+          //render death
           break;
         case JOINID:
           newId.deserialize(packet);
@@ -23,6 +25,11 @@ void NetworkClient::receiveMessages() {
           std::cout<<"USERID:"<<id<<std::endl;
           action.player_id = id;
           break;
+        case WIN:
+          //render win
+          break;
+        case LOSE:
+          //render lose 
         default: 
           break;
         }
@@ -125,7 +132,7 @@ void NetworkClient::processInput(){
     }
   }
 
-  if(updateAS){
+  if(updateAS && alive){ //player should still be able to chat?
     sendPacket = true;
   }
 }
@@ -156,7 +163,7 @@ void NetworkClient::doClient(){
     processInput(); 
     receiveMessages();
     updateWindow();
-    if(sendPacket){
+    if(sendPacket){ //if dead player still should be able to chat?
       action.print();
       netRecv.sendPacket<ClientGameTimeAction>(action);
       sendPacket = false;

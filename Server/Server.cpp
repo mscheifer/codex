@@ -33,6 +33,7 @@ void NetworkServer::doServer(){
     {
       IdPacket newPacket = IdPacket(game.join());
       server.sendPacket<IdPacket>(newPacket,server.size()-1);
+      activePlayers++;
     }
   }
   sf::Packet initPacket;
@@ -44,7 +45,6 @@ void NetworkServer::doServer(){
     clock.restart();
     for( int i = 0; i < server.size(); i++){
       receiveMessages(i);
-      /* maybe put this in a method just like in client*/
     }
     sf::sleep( sf::milliseconds( (int)((float)1.0/(float)tickspersecond*1000 - (float)clock.getElapsedTime().asMilliseconds())) );
     clock.restart();
