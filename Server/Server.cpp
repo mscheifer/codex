@@ -3,10 +3,11 @@
 void NetworkServer::receiveMessages(int i) {
     sf::Packet packet;
     if(this->server.receiveMessage(packet,i)) {
-      sf::Packet copy = packet;
+      sf::Packet copy = packet; //TODO: maybe we don't need this. fix later
       ClientGameTimeAction cgta;
       uint32_t packetType;
       packet >> packetType;
+      
       switch (packetType) {
         case CGTA:
           cgta.deserialize(packet);

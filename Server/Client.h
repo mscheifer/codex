@@ -13,6 +13,7 @@
 #include "ChatHandler.h"
 #include "boundingSphere.h"
 #include "Game.h"
+#include "Quadtree.h"
 
 class NetworkClient {
   ServerGameTimeRespond s;
@@ -23,13 +24,6 @@ class NetworkClient {
   int id;
   bool sendPacket;
   bool running;
-
-  //this is for collision detection test
-  sf::CircleShape c1;
-  boundingSphere s1;
-  sf::CircleShape c2;
-  boundingSphere s2;
-  //end collision
 
 public:
   NetworkClient(): s(), action(), netRecv(), chat(), gxClient(), id(-1), sendPacket(false), running(true) {}
