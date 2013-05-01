@@ -24,7 +24,7 @@ void Projectile::update(void) {
 	//if it already traveled a its range
 	if(distanceLeftToTravel <= 0.0 ) {
 		// destroy yourself and return
-		map.destroyProjectile(this);
+		map->destroyProjectile(this);
 		return;
 	}
 	// some collision detection
@@ -38,7 +38,7 @@ void Projectile::update(void) {
 				unLuckyPerson.attackBy(this);
 			}
 		}
-		map.destroyProjectile(this);
+		map->destroyProjectile(this);
 		//now destory youself
 	}
 }

@@ -15,7 +15,7 @@ void NetworkClient::receiveMessages() {
           break;
         case SGTR:
           s.deserialize(packet);
-          as.render(s.players);
+		  as.render(s.players , s.entities);
           break;
         case JOINID:
           newId.deserialize(packet);
@@ -148,7 +148,7 @@ void NetworkClient::doClient(){
 	s.players[1] = Player(2,3,1,43);
 	s.players[2] =  Player(7,2,1,44);
 	s.players[3] = Player(4,6,1,45);
-  as.render(s.players);
+	as.render(s.players , s.entities);
 
   //  main run loop
   while(true){

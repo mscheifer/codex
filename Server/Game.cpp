@@ -23,7 +23,7 @@ int Game::join()
 ServerGameTimeRespond Game::evaluate(ClientGameTimeAction a) {
 	
 	ServerGameTimeRespond s;
-
+	
 	std::vector<Player *> currentPlayers =  world.getPlayers();
 	std::vector<Entity *> currentEntities = world.getEntity();
 
@@ -33,8 +33,9 @@ ServerGameTimeRespond Game::evaluate(ClientGameTimeAction a) {
 	}
 
 	for(int i = 0; i < currentEntities.size(); i++ ) {
+		 printf(" hello nigga");
 		 currentEntities[i]->update();
-		 s.entities[i] = *currentEntities[i]; //add the player to the return struct
+		 s.entities[i] = currentEntities[i]; //add the player to the return struct
 	}
 
 	return s;

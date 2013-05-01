@@ -8,6 +8,6 @@ public:
 	AsciUI(void);
 	~AsciUI(void);
 	int update(Map*);
-	int render(Player*);
+	int render(Player*, std::vector<Entity *>);
 };
 

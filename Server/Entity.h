@@ -22,6 +22,10 @@ public:
 	  direction = d;
   }
 
+  void setMap(Map* m) {
+	  map = m;
+  }
+
   void setPosition(Coordinate c) {
 	  position = c;
   }
@@ -40,7 +44,7 @@ public:
 protected:
   Coordinate position;
   Direction direction;
-  Map map;
+  Map* map;
   // Some kind of state {paralyzed, frozen, blah blah}
   // Power ups {contains MULTIPLERS for health, defense/ elemental weapons}
 };
