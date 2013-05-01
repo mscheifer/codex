@@ -108,7 +108,7 @@ void gx::graphicsClient::reshape(unsigned int w, unsigned int h) {
   const elem_t fov       = 53.13f;
   const elem_t ratio     = elem_t(w) / elem_t(h);
   const elem_t nearPlane = 1.0f;
-  const elem_t farPlane  = 30.0f;
+  const elem_t farPlane  = 3000.0f;
   // adjust the viewport when the window is resized
   glViewport(0, 0, w, h);
   gx::debugout << "glViewport(0, 0, w, h);" << gx::endl;

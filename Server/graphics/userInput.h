@@ -1,5 +1,6 @@
 #include <SFML/Window.hpp>
 #include "displaySet.h"
+#include "StaticEnums.h"
 
 namespace gx {
 
