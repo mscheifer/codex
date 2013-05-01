@@ -1,5 +1,5 @@
 #pragma once
-#define NUM_PLAYERS 2
+#define NUM_PLAYERS 1
 enum User_Movement {
 		FORWARD=0,
 		BACKWARD=180,

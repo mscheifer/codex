@@ -147,23 +147,13 @@ void NetworkClient::doClient() {
   //  main run loop
   while(this->running){
     //process input and send events
-<<<<<<< HEAD
     this->processInput(this->gxClient.handleInput());
     this->receiveMessages();
     this->gxClient.draw();
-    if(this->sendPacket) {
+    if(this->sendPacket) {//if dead player still should be able to chat?
       this->action.print();
       this->netRecv.sendPacket<ClientGameTimeAction>(action);
       this->sendPacket = false;
-=======
-    processInput(); 
-    receiveMessages();
-    updateWindow();
-    if(sendPacket){ //if dead player still should be able to chat?
-      action.print();
-      netRecv.sendPacket<ClientGameTimeAction>(action);
-      sendPacket = false;
->>>>>>> 9454dddc35633d0688023789909a44122e498f5c
     }
   }
   while(true){}
