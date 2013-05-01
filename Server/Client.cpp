@@ -25,12 +25,6 @@ void NetworkClient::receiveMessages() {
           if (s.players[id].dead) { /*render death everytime ? */} ;
           //render WIN OR LOSE based on s.state
           break;
-        case JOINID:
-          newId.deserialize(packet);
-          this->id = newId.id;
-          std::cout << "USERID: " << this->id << std::endl;
-          this->action.player_id = id;
-          break;
         }
       }
 }
@@ -118,16 +112,20 @@ void NetworkClient::processInput(){
 void NetworkClient::doClient() {
   std::cout << "Waiting for other players to join" << std::endl;
   while(true) {
-    sf::Packet initPacket;
-    uint32_t packetType;
+	sf::Packet initPacket;
+	//std::cout<<"in loop"<<std::endl;
     if (netRecv.receiveMessage(initPacket)) {
-        initPacket >> packetType;
-		IdPacket idp;
-		idp.deserialize(initPacket);
-		this->id = idp.id;
-		this->action.player_id = idp.id; //set the id returned by the id packet
-        if (packetType == INIT) break;
-    }
+		std::cout<<"received message"<<std::endl;
+		uint32_t packetType;
+		initPacket >>packetType;
+		if (packetType == JOINID) {
+			IdPacket newId(0);
+			newId.deserialize(initPacket);
+			this->id = newId.id;
+			std::cout << "USERID: " << this->id << std::endl;
+			this->action.player_id = id;
+		} else if (packetType == INIT) break;
+	}
   }
   std::cout<<"game started"<<std::endl;
   /*
@@ -151,7 +149,7 @@ void NetworkClient::doClient() {
     this->receiveMessages();
     this->gxClient.draw();
     if(this->sendPacket) {//if dead player still should be able to chat?
-      this->action.print();
+      //this->action.print();
       this->netRecv.sendPacket<ClientGameTimeAction>(action);
       this->sendPacket = false;
     }
