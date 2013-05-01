@@ -11,7 +11,6 @@ int main(){
   std::cout<<Allen.getString()<<std::endl;
   std::string bleh;
   std::cin>>bleh;*/
-  BoundingBox::test();
   std::cout << "Run (s)erver or (c)lient?" << std::endl;
   std::string input = ""; 
   std::getline(std::cin, input);
