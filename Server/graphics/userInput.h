@@ -18,6 +18,7 @@ enum move_t {
 struct userInput {
   move_t move;
   //direction
+  bool   jumped;
   bool   stopped;
 };
 

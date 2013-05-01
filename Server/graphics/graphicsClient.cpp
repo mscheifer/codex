@@ -139,7 +139,6 @@ gx::graphicsClient::graphicsClient():
     std::cout << "error activating window" << std::endl;
     exit(1);
   }
-
   
   glEnable(GL_DEPTH_TEST); //enable depth buffer
   glClearColor(1.0,1.0,1.0,1.0); //start with a white screen
@@ -158,8 +157,8 @@ gx::graphicsClient::graphicsClient():
 }
 
 gx::userInput gx::graphicsClient::handleInput() {
-  // handle events
   bool stopped = false;
+  userInput curInput;
   sf::Event event;
   while (window.pollEvent(event)) {
     if (event.type == sf::Event::Closed) {
@@ -169,10 +168,11 @@ gx::userInput gx::graphicsClient::handleInput() {
     } else if (event.type == sf::Event::KeyPressed) {
       if(event.key.code == sf::Keyboard::Escape) {
         stopped = true; // end the program
-      }
+	  } else if(event.key.code == sf::Keyboard::Space) {
+        curInput.jumped = true;
+	  }
     }
   }
-  userInput curInput;
   curInput.move = movePlayer(display);
   curInput.stopped = stopped;
   turnPlayer(display);

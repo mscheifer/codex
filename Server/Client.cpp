@@ -12,33 +12,37 @@ void NetworkClient::receiveMessages() {
         switch (packetType) {
         case CHAT:
           chatObj.deserialize(packet);
-          chat.addChat(chatObj.getChat());
+          this->chat.addChat(chatObj.getChat());
           break;
         case SGTR:
           s.deserialize(packet);
           for(size_t i = 0; i < 4; i++) {
             auto pos = s.players[i].getPosition();
             entities.push_back(std::make_pair(gx::vector3(pos.x,pos.y,pos.z),0));
+			std::cout << "recieved player at: " << gx::vector3(pos.x,pos.y,pos.z) << std::endl;
           }
           gxClient.updateEntities(entities);
           break;
         case JOINID:
           newId.deserialize(packet);
-          id = newId.id;
-          std::cout<<"USERID:"<<id<<std::endl;
-          action.player_id = id;
+          this->id = newId.id;
+          std::cout << "USERID: " << this->id << std::endl;
+          this->action.player_id = id;
           break;
         default: 
           break;
         }
       }
 }
-void NetworkClient::processInput(gx::userInput ui) {
 
+void NetworkClient::processInput(gx::userInput ui) {
   if(ui.stopped) {
     this->running = false;
   }
   action.clear();
+  if(ui.jumped) {
+    action.jump = true;
+  }
   switch (ui.move) {
     case gx::FORWARD:
       action.movement = FORWARD;
@@ -68,6 +72,7 @@ void NetworkClient::processInput(gx::userInput ui) {
       action.movement = NONE;
       break;
   }
+  this->sendPacket = true;
 }
 /*
 void NetworkClient::processInput(){
@@ -78,62 +83,8 @@ void NetworkClient::processInput(){
   {
     sf::Event event;
     while (window.pollEvent(event)) {
-
-      if(event.type == sf::Event::KeyPressed){
-        if(event.key.code == sf::Keyboard::W) {
-          action.movement = FORWARD;
-          updateAS = true;
-				} if(event.key.code == sf::Keyboard::S) {
-          if(action.movement == FORWARD)
-            action.movement = NONE;
-          else
-            action.movement = BACKWARD;
-          updateAS = true;
-				}if(event.key.code == sf::Keyboard::D) {
-          if(action.movement == FORWARD)
-            action.movement = FORWARD_RIGHT;
-          else if (action.movement == BACKWARD)
-            action.movement = BACKWARD_RIGHT;
-          else
-            action.movement = RIGHT;
-          updateAS = true;
-				}if(event.key.code == sf::Keyboard::A) {
-          if(action.movement == FORWARD)
-            action.movement = FORWARD_LEFT;
-          else if (action.movement == BACKWARD)
-            action.movement = BACKWARD_LEFT;
-          else if (action.movement == RIGHT)
-            action.movement = NONE;
-          else
-            action.movement = LEFT;
-          updateAS = true;
-				}if(event.key.code == sf::Keyboard::Space) {
-          action.jump = true;
-          updateAS = true;
-        }
-      }
-
-      if (event.type == sf::Event::Closed)
-          window.close();
-
       if (event.type == sf::Event::KeyReleased){        
         switch(event.key.code){
-        case sf::Keyboard::Right:
-          c1.setPosition(c1.getPosition().x+5 , c1.getPosition().y);
-          s1.move(gx::vector3(5,0,0));
-          break;
-        case sf::Keyboard::Left:
-          c1.setPosition(c1.getPosition().x-5 , c1.getPosition().y);
-          s1.move(gx::vector3(-5,0,0));
-          break;
-        case sf::Keyboard::Up:
-          c1.setPosition(c1.getPosition().x , c1.getPosition().y-5);
-          s1.move(gx::vector3(0,0,-5));
-          break;
-        case sf::Keyboard::Down:
-          c1.setPosition(c1.getPosition().x , c1.getPosition().y+5);
-          s1.move(gx::vector3(0,0,5));
-          break;
         case sf::Keyboard::Return:
           if(!chat.isTyping()){ //start typing
             chat.setBuffer("");
@@ -164,19 +115,22 @@ void NetworkClient::processInput(){
   }
 }
 */
-void NetworkClient::doClient(){
-  
-  std::cout<<"Waiting for other players to join"<<std::endl;
+void NetworkClient::doClient() {
+  std::cout << "Waiting for other players to join" << std::endl;
   while(true) {
     sf::Packet initPacket;
     uint32_t packetType;
     if (netRecv.receiveMessage(initPacket)) {
         initPacket >> packetType;
-        if (packetType==INIT) break;
+		IdPacket idp;
+		idp.deserialize(initPacket);
+		this->id = idp.id;
+		this->action.player_id = idp.id; //set the id returned by the id packet
+        if (packetType == INIT) break;
     }
   }
   std::cout<<"game started"<<std::endl;
-  
+  /*
   //temp code ------------------------------
   s.players[0] =  Player(0,0,1,42);
 	s.players[1] = Player(2,3,1,43);
@@ -189,18 +143,18 @@ void NetworkClient::doClient(){
   }
   gxClient.updateEntities(entities);
   //temp code -----------------------------
-  //as.render(s.players);
-
+  */
   //  main run loop
   while(this->running){
     //process input and send events
-    processInput(this->gxClient.handleInput());
-    receiveMessages();
-    gxClient.draw();
-    if(sendPacket){
-      action.print();
-      netRecv.sendPacket<ClientGameTimeAction>(action);
-      sendPacket = false;
+    this->processInput(this->gxClient.handleInput());
+    this->receiveMessages();
+    this->gxClient.draw();
+    if(this->sendPacket) {
+      this->action.print();
+      this->netRecv.sendPacket<ClientGameTimeAction>(action);
+      this->sendPacket = false;
     }
   }
+  while(true){}
 }

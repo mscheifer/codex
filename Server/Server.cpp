@@ -2,8 +2,8 @@
 
 void NetworkServer::receiveMessages(int i) {
     sf::Packet packet;
-    if(server.receiveMessage(packet,i)){
-      sf::Packet copy =packet;
+    if(this->server.receiveMessage(packet,i)) {
+      sf::Packet copy = packet;
       ClientGameTimeAction cgta;
       uint32_t packetType;
       packet >> packetType;
@@ -11,43 +11,50 @@ void NetworkServer::receiveMessages(int i) {
         case CGTA:
           cgta.deserialize(packet);
           cgta.print();
-          server.sendPacketToAll<ServerGameTimeRespond>(game.evaluate(cgta));
+          if(!this->server.sendPacketToAll<ServerGameTimeRespond>(game.evaluate(cgta))) {
+            std::cout << "Error sending cgta to everybody" << std::endl;
+		  }
           break;
         case CHAT:
-          server.sendToAll(copy); //right now just echoing what received
+          this->server.sendToAll(copy); //right now just echoing what received
           break;
-        default: 
+        default:
+          std::cout << "Error: received bad packet: " << packetType << std::endl;
           break;
       }
-    } 
+    }
 }
 
-void NetworkServer::doServer(){
+void NetworkServer::doServer() {
   sf::IpAddress myIpAddress = sf::IpAddress::getLocalAddress();
   std::cout << "Server Ip Address: " << myIpAddress.toString() << std::endl;
-  int tickspersecond = 30;
+  const int tickspersecond = 30;
+  const int tick_length = 1000 / tickspersecond;
   sf::Clock clock;
   
-  while (server.size()<NUM_PLAYERS) {
+  while (server.size() < NUM_PLAYERS) {
     if(server.getNewClient())
     {
       IdPacket newPacket = IdPacket(game.join());
-      server.sendPacket<IdPacket>(newPacket,server.size()-1);
+      if(!server.sendPacket<IdPacket>(newPacket,server.size()-1)) {
+        std::cout << "Error sending game join packet" << std::endl;
+	  }
     }
   }
   sf::Packet initPacket;
-  initPacket<<INIT;
-  server.sendToAll(initPacket);
-  std::cout<<"server start game"<<std::endl;
+  initPacket << INIT;
+  if(!server.sendToAll(initPacket)) {
+	  std::cout << "Error sending game start packet" << std::endl;
+  }
+  std::cout << "server start game" << std::endl;
 
-  while(true){
+  while(true) {
     clock.restart();
     for( int i = 0; i < server.size(); i++){
-      receiveMessages(i);
+      this->receiveMessages(i);
       /* maybe put this in a method just like in client*/
     }
-    sf::sleep( sf::milliseconds( (int)((float)1.0/(float)tickspersecond*1000 - (float)clock.getElapsedTime().asMilliseconds())) );
-    clock.restart();
+    sf::sleep( sf::milliseconds( tick_length - clock.getElapsedTime().asMilliseconds()) );
   }
 } 
 

@@ -1,4 +1,3 @@
-//#pragma once
 #ifndef CLIENT_H
 #define CLIENT_H
 #include <SFML/Network.hpp>
@@ -8,7 +7,6 @@
 #include <iostream>
 #include <string>
 #include <list>
-#include <ctime>
 #include "NetworkServices.h"
 #include "graphics/graphicsClient.h"
 #include "ServerGameTimeRespond.h"
@@ -16,14 +14,12 @@
 #include "boundingSphere.h"
 #include "Game.h"
 
-class NetworkClient{
-private:
-  //AsciUI as; //TODO delete this later
-  gx::graphicsClient gxClient;
+class NetworkClient {
   ServerGameTimeRespond s;
-	ClientGameTimeAction action;
+  ClientGameTimeAction action;
   ClientServices netRecv;
   ChatHandler chat;
+  gx::graphicsClient gxClient;
   int id;
   bool sendPacket;
   bool running;
@@ -36,10 +32,11 @@ private:
   //end collision
 
 public:
-  NetworkClient(): gxClient(), s(), action(), netRecv(), chat(), id(-1), sendPacket(false), running(true)
-  {}
-
-  ~NetworkClient(){}
+  NetworkClient(): s(), action(), netRecv(), chat(), gxClient(), id(-1), sendPacket(false), running(true) {}
+  NetworkClient(const NetworkClient&);// = delete;
+  NetworkClient& operator=(const NetworkClient&);// = delete;
+  NetworkClient(NetworkClient&&);// = delete;
+  NetworkClient& operator=(NetworkClient&&);// = delete;
   void processInput(gx::userInput);
   void receiveMessages();
   void doClient();

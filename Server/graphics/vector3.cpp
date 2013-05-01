@@ -153,11 +153,11 @@ bool gx::vector3::operator!=(const vector3& o) const {
   return !((*this)==o);
 }
 
-gx::vector3 operator*(gx::vector3::elem_t f, const gx::vector3& v) {
+gx::vector3 gx::operator*(gx::vector3::elem_t f, const gx::vector3& v) {
   return v * f;
 }
 
-std::ostream& operator<< (std::ostream& out, const gx::vector3& v) {
+std::ostream& gx::operator<< (std::ostream& out, const gx::vector3& v) {
   v.print(out);
   return out;
 }

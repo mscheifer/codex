@@ -85,7 +85,7 @@ void Player::jump()
 }
 
 void Player::handleAction(ClientGameTimeAction a) {
-  std::cout<<"PLAYER:"<<player_id<<" handling packet from "<< a.player_id<<std::endl;
+  std::cout<<"PLAYER: "<<player_id<<" handling packet from "<< a.player_id<<std::endl;
 	if(a.player_id == player_id) {
 		handleSelfAction(a);
 	} else {
@@ -96,8 +96,9 @@ void Player::handleAction(ClientGameTimeAction a) {
 
 bool Player::moveTowardDirection(User_Movement degree)
 {
-	if(degree == NONE)
+	if(degree == NONE) {
 		return true;
+	}
 	// x' = xcos@ - ysin@
 	// y' = xsin@ + ycos@ 
 	DirectionValue newX = (DirectionValue)(direction.x * cos(degree*PI/180) - direction.y * sin(degree*PI/180));

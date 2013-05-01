@@ -1,4 +1,3 @@
-//#pragma once
 #ifndef NETWORKSERVICE
 #define NETWORKSERVICE
 #include <stdint.h>
@@ -34,7 +33,7 @@ public:
   }
 };
 
-class ServerServices{
+class ServerServices {
 public:
   sf::TcpListener listener;
   std::vector<sf::TcpSocket*> clients;
@@ -42,27 +41,27 @@ public:
   
    ServerServices();
    template <typename Data>
-   void sendPacketToAll(const Data & data) {
+   bool sendPacketToAll(const Data & data) {
      sf::Packet packet;
      packet.clear();
      packet << Data::packetType;
      data.serialize(packet);
-     sendToAll(packet); 
+     return sendToAll(packet); 
    }
    
    template <typename Data>
-   void sendPacket(Data & data, int i) {
+   bool sendPacket(Data & data, int i) {
      sf::Packet packet;
      packet.clear();
      packet << Data::packetType;
      data.serialize(packet);
-     sendMessage(packet, i); 
+     return sendMessage(packet, i); 
    }
 
    bool getNewClient(); 
-   bool receiveMessage(sf::Packet &packet, int i );
-   bool sendMessage(sf::Packet & packet, int i);
-   void sendToAll(sf::Packet & packet );
+   bool receiveMessage(sf::Packet &packet, size_t i );
+   bool sendMessage(sf::Packet & packet, size_t i);
+   bool sendToAll(sf::Packet & packet );
    int size();
    ~ServerServices();
 };

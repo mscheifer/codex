@@ -28,7 +28,7 @@ _ReSharper*/
 *.vssscc
 $tf*/
 TestingProject.opensdf
-SFML-2.0-rc/doc
+SFML-2.0/doc
 *.ipch
 *.ipch
 *.sdf

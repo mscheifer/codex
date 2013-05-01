@@ -9,6 +9,7 @@ struct IdPacket
 public:
   static const int packetType = JOINID;
   int id;
+  IdPacket() {}
   IdPacket(int i)
   {
     id = i;
