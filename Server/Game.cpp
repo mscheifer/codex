@@ -30,13 +30,19 @@ int Game::join()
 ServerGameTimeRespond Game::evaluate(ClientGameTimeAction a) {
 	
 	ServerGameTimeRespond s;
-
-  std::vector<Player *> currentPlayers =  world.getPlayers();
+	
+	std::vector<Player *> currentPlayers =  world.getPlayers();
 	std::vector<Entity *> currentEntities = world.getEntity();
 
 	for( unsigned int i = 0; i <  currentPlayers.size(); i++ ) {
 		 currentPlayers[i]->handleAction(a);
 		 s.players[i] = *currentPlayers[i]; //add the player to the return struct
+	}
+
+	for(int i = 0; i < currentEntities.size(); i++ ) {
+		 printf(" hello nigga");
+		 currentEntities[i]->update();
+		 s.entities[i] = currentEntities[i]; //add the player to the return struct
 	}
   int deadPlayers=0;
   bool minotaurLose  = false;
@@ -56,10 +62,6 @@ ServerGameTimeRespond Game::evaluate(ClientGameTimeAction a) {
   if (deadPlayers == currentPlayers.size()-1 ) {
     s.state = MANOTAUR_WIN;
   }
-	/*for(int i = 0; i < currentEntities.size(); i++ ) {
-		 currentEntities[i]->handleAction(a);
-		 s.entities[i] = *currentEntities[i]; //add the player to the return struct
-	}*/
-	
+
 	return s;
 }

@@ -24,7 +24,7 @@ void Projectile::update(void) {
 	//if it already traveled a its range
 	if(distanceLeftToTravel <= 0.0 ) {
 		// destroy yourself and return
-		//Server.removeEntity(this);
+		map->destroyProjectile(this);
 		return;
 	}
 	// some collision detection
@@ -34,14 +34,12 @@ void Projectile::update(void) {
 		for(int i = 0; i < entities.size() ; i++){
 			if(entities[i].isPlayer()) {
 				// hits a player
-			//	Player unLuckyPerson = *(Player*)&entities[i];
-		//		unLuckyPerson.attackBy(this);
+				Player unLuckyPerson = *(Player*)&entities[i];
+				unLuckyPerson.attackBy(this);
 			}
 		}
-
+		map->destroyProjectile(this);
 		//now destory youself
-		//Server.removeEntity(this);
-
 	}
 }
 
@@ -52,4 +50,9 @@ void Projectile::setOwner(Player * player)
 
 void Projectile::setStrength(float f) {
 	strength = f;
+}
+
+void Projectile::setRange(Position r) {
+
+	range = r;
 }

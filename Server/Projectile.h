@@ -11,6 +11,7 @@ public:
   ~Projectile(void);
   void update(void);
   void setStrength(float a);
+  void setRange(Position r);
   Position range;
   Position distanceLeftToTravel;
   bool isProjectile(){return true;}
