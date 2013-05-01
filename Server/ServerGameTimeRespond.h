@@ -6,6 +6,9 @@ struct ServerGameTimeRespond
 {
 	static const int packetType = SGTR;
   Player players[4];
+  Game_State state;
+  ServerGameTimeRespond():state(PLAYING) {}
+
 	//Entity entities[15];	
   void serialize(sf::Packet & packet) const {
     for (int i=0;i<4;i++) 

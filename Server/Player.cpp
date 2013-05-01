@@ -6,6 +6,8 @@ Player::Player(void)
 }
 Player::Player(Position x, Position y, Position z, int assigned_id)
 {
+  minotaur = false;
+  dead = false;
 	player_id = assigned_id;
 	position.x = x;
 	position.y = y;

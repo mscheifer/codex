@@ -3,6 +3,9 @@
 #include "ServerGameTimeRespond.h"
 #include "ClientGameTimeAction.h"
 #include "StaticEnums.h"
+#include <time.h>
+#include <stdlib.h> /* srand rand */
+#include <time.h>   /* time */
 
 struct IdPacket
 {
@@ -34,6 +37,7 @@ public:
 	ServerGameTimeRespond evaluate(ClientGameTimeAction a);
 	~Game(void);
   int join();
+  void chooseMinotaur();
 private:
 	Map world;
 };

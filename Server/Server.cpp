@@ -42,6 +42,9 @@ void NetworkServer::doServer() {
 	  }
     }
   }
+  //choose minotaur
+  game.chooseMinotaur();
+
   sf::Packet initPacket;
   initPacket << INIT;
   if(!server.sendToAll(initPacket)) {
@@ -54,6 +57,7 @@ void NetworkServer::doServer() {
     for( int i = 0; i < server.size(); i++){
       this->receiveMessages(i);
       /* maybe put this in a method just like in client*/
+      receiveMessages(i);
     }
     sf::sleep( sf::milliseconds( tick_length - clock.getElapsedTime().asMilliseconds()) );
   }

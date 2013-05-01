@@ -22,14 +22,14 @@ void NetworkClient::receiveMessages() {
 			std::cout << "recieved player at: " << gx::vector3(pos.x,pos.y,pos.z) << std::endl;
           }
           gxClient.updateEntities(entities);
+          if (s.players[id].dead) { /*render death everytime ? */} ;
+          //render WIN OR LOSE based on s.state
           break;
         case JOINID:
           newId.deserialize(packet);
           this->id = newId.id;
           std::cout << "USERID: " << this->id << std::endl;
           this->action.player_id = id;
-          break;
-        default: 
           break;
         }
       }
@@ -110,7 +110,7 @@ void NetworkClient::processInput(){
     }
   }
 
-  if(updateAS){
+  if(updateAS && !s.players[id].dead){ //player should still be able to chat?
     sendPacket = true;
   }
 }
@@ -147,6 +147,7 @@ void NetworkClient::doClient() {
   //  main run loop
   while(this->running){
     //process input and send events
+<<<<<<< HEAD
     this->processInput(this->gxClient.handleInput());
     this->receiveMessages();
     this->gxClient.draw();
@@ -154,6 +155,15 @@ void NetworkClient::doClient() {
       this->action.print();
       this->netRecv.sendPacket<ClientGameTimeAction>(action);
       this->sendPacket = false;
+=======
+    processInput(); 
+    receiveMessages();
+    updateWindow();
+    if(sendPacket){ //if dead player still should be able to chat?
+      action.print();
+      netRecv.sendPacket<ClientGameTimeAction>(action);
+      sendPacket = false;
+>>>>>>> 9454dddc35633d0688023789909a44122e498f5c
     }
   }
   while(true){}
