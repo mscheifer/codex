@@ -99,15 +99,15 @@ void Player::handleAction(ClientGameTimeAction a) {
 
 }
 
-bool Player::moveTowardDirection(User_Movement degree)
+bool Player::moveTowardDirection(move_t dir)
 {
-	if(degree == NONE) {
+	if(dir == NULL_DIR) {
 		return true;
 	}
 	// x' = xcos@ - ysin@
 	// y' = xsin@ + ycos@ 
-	DirectionValue newX = (DirectionValue)(direction.x * cos(degree*PI/180) - direction.y * sin(degree*PI/180));
-	DirectionValue newY = (DirectionValue)(direction.x * sin(degree*PI/180) + direction.y * cos(degree*PI/180));
+	DirectionValue newX = (DirectionValue)(direction.x * cos(movementAngles[dir]) - direction.y * sin(movementAngles[dir]));
+	DirectionValue newY = (DirectionValue)(direction.x * sin(movementAngles[dir]) + direction.y * cos(movementAngles[dir]));
 	double length = sqrt(newX *newX + newY * newY);
 	position.velocityX = newX/length * MOVESCALE * speed;
 	position.velocityY = newY/length * MOVESCALE * speed;

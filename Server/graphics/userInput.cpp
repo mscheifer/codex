@@ -1,4 +1,6 @@
 #include "userInput.h"
+#include "vector3.h"
+#include "displaySet.h"
 
 namespace {
 //player needs to start looking forward because mouse movement needs to rotate
@@ -14,17 +16,6 @@ const double mouseSensitivity = 0.001;
 
 sf::Vector2i mouseBasePosition;
 sf::Vector2i mouseDiff;
-
-const double movementAngles[8] = {
-  0.0,
-  M_PI_4,
-  M_PI_2,
-  M_PI_2 + M_PI_4,
-  M_PI,
-  -(M_PI_2 + M_PI_4),
-  -M_PI_2,
-  -M_PI_4,
-};
 
 } //end unnamed namespace
 
@@ -42,7 +33,7 @@ void gx::setCamera(displaySet& display) {
                   upDirection);
 }
 
-gx::move_t gx::movePlayer(displaySet& display) {
+move_t gx::movePlayer(displaySet& display) {
   move_t movement = NULL_DIR;
   if (sf::Keyboard::isKeyPressed(sf::Keyboard::W)) {
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::A)) {
