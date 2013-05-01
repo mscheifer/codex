@@ -39,6 +39,7 @@ std::vector<Entity *> Map::getEntity() {
  {
    proj->setOwner(NULL);
    freeProjectiles.push(proj);
+   // should probably use a hasmap soon
    for(int i = 0; i < entities.size(); i++) {
 	   if(entities.at(i) == proj) {
 			entities.erase(entities.begin() + i);

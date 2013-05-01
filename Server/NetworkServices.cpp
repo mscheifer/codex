@@ -11,7 +11,7 @@ ClientServices::ClientServices() {
     std::string input = myIpAddress.toString();
 
   do {
-    //std::getline(std::cin, input);
+    std::getline(std::cin, input);
     s = sf::Socket::Error;
     s = client.connect(input, PORT_NUMBER, sf::seconds(TIMEOUT));
     

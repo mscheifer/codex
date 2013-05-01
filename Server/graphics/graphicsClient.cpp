@@ -186,7 +186,7 @@ void gx::graphicsClient::draw() {
     gx::debugout << "| GL_STENCIL_BUFFER_BIT);" << gx::endl;
 
     // draw...
-    entities.draw();
+	entities.draw(display.projection * display.view);
 
     // end the current frame (internally swaps the front and back buffers)
     window.display();

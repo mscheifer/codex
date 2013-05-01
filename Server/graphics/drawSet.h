@@ -23,7 +23,7 @@ class drawSet {
                       std::vector<const vertexAttrib*>> vaoData_t;
     drawSet(const std::string, const std::string, const std::vector<vaoData_t>,
             std::vector<const uniform*>);
-    void draw() const;
+    void draw(matrix) const;
     void reset();
     void addEntity(vector3,unsigned int);
 };

@@ -19,7 +19,7 @@ gx::drawSet::drawSet(const std::string vertShader, const std::string fragShader,
   }
 }
 
-void gx::drawSet::draw() const {
+void gx::drawSet::draw(matrix mat) const {
   this->program.use();
   for(auto entityCp = entityClasses.begin(); entityCp != entityClasses.end();
                                                                  ++entityCp) {
@@ -27,7 +27,7 @@ void gx::drawSet::draw() const {
     for(auto locp = entityC.positions.begin(); locp != entityC.positions.end(); 
                                                                        ++locp) {
       const auto& loc = *locp;
-      glUniformMatrix4fv(this->modelToWorldLoc,1,false,loc.oglmatrix().data());
+      glUniformMatrix4fv(this->modelToWorldLoc,1,false,(mat * loc).oglmatrix().data());
       entityC.vertData.draw();
     }
   }

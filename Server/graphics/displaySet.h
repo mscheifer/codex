@@ -10,6 +10,7 @@
 namespace gx {
 
 class displaySet {
+public:
     matrix  view;
     matrix  projection;
     vector3 cameraPos;

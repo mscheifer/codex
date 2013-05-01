@@ -37,6 +37,6 @@ void main() {
   interpColor    =                                          color;
   interpNormDiff =                                          normDiff;
   interpNormal   =                           normalMatrix * normal;
-  interpPosition =              viewMatrix * modelToWorld * position;
-  gl_Position    = projMatrix * viewMatrix * modelToWorld * position;
+  interpPosition =  modelToWorld * position;
+  gl_Position    =  modelToWorld * position;
 }
