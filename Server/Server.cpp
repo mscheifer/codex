@@ -33,9 +33,11 @@ void NetworkServer::doServer(){
     {
       IdPacket newPacket = IdPacket(game.join());
       server.sendPacket<IdPacket>(newPacket,server.size()-1);
-      activePlayers++;
     }
   }
+  //choose minotaur
+  game.chooseMinotaur();
+
   sf::Packet initPacket;
   initPacket<<INIT;
   server.sendToAll(initPacket);

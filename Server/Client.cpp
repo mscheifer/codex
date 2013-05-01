@@ -16,21 +16,14 @@ void NetworkClient::receiveMessages() {
         case SGTR:
           s.deserialize(packet);
           as.render(s.players);
-          if (s.players[id].getHealth() == 0) alive = false;
-          //render death
+          if (s.players[id].dead) { /*render death everytime ? */} ;
+          //render WIN OR LOSE based on s.state
           break;
         case JOINID:
           newId.deserialize(packet);
           id = newId.id;
           std::cout<<"USERID:"<<id<<std::endl;
           action.player_id = id;
-          break;
-        case WIN:
-          //render win
-          break;
-        case LOSE:
-          //render lose 
-        default: 
           break;
         }
       }
@@ -132,7 +125,7 @@ void NetworkClient::processInput(){
     }
   }
 
-  if(updateAS && alive){ //player should still be able to chat?
+  if(updateAS && !s.players[id].dead){ //player should still be able to chat?
     sendPacket = true;
   }
 }

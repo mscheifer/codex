@@ -18,7 +18,6 @@
 
 class NetworkClient{
 private:
-  bool alive;
   AsciUI as; //TODO delete this later
   ServerGameTimeRespond s;
 	ClientGameTimeAction action;
@@ -39,7 +38,6 @@ public:
   NetworkClient():window(sf::VideoMode(800,600), "sf::Text test")
   {
     sendPacket = false;
-    alive=true;
   }
 
   ~NetworkClient(){
