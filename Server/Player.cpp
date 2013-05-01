@@ -22,6 +22,10 @@ Player::Player(Position x, Position y, Position z, int assigned_id)
 	mana = 100;
 	maxMana = 100;
 	castDownCounter = sf::Clock();
+
+	weapon[1] = WeaponFire(Coordinate());
+	current_weapon_selection = 1;
+
 }
 
 
