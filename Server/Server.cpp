@@ -3,10 +3,11 @@
 void NetworkServer::receiveMessages(int i) {
     sf::Packet packet;
     if(server.receiveMessage(packet,i)){
-      sf::Packet copy =packet;
+      //sf::Packet copy =packet;
       ClientGameTimeAction cgta;
       size_t packetType;
       packet >> packetType;
+      
       switch (packetType) {
         case CGTA:
           cgta.deserialize(packet);
@@ -14,7 +15,7 @@ void NetworkServer::receiveMessages(int i) {
           server.sendPacketToAll<ServerGameTimeRespond>(game.evaluate(cgta));
           break;
         case CHAT:
-          server.sendToAll(copy); //right now just echoing what received
+          server.sendToAll(packet); //right now just echoing what received
           break;
         default: 
           break;

@@ -84,22 +84,6 @@ void NetworkClient::processInput(){
 
       if (event.type == sf::Event::KeyReleased){        
         switch(event.key.code){
-        case sf::Keyboard::Right:
-          c1.setPosition(c1.getPosition().x+5 , c1.getPosition().y);
-          s1.move(gx::vector3(5,0,0));
-          break;
-        case sf::Keyboard::Left:
-          c1.setPosition(c1.getPosition().x-5 , c1.getPosition().y);
-          s1.move(gx::vector3(-5,0,0));
-          break;
-        case sf::Keyboard::Up:
-          c1.setPosition(c1.getPosition().x , c1.getPosition().y-5);
-          s1.move(gx::vector3(0,0,-5));
-          break;
-        case sf::Keyboard::Down:
-          c1.setPosition(c1.getPosition().x , c1.getPosition().y+5);
-          s1.move(gx::vector3(0,0,5));
-          break;
         case sf::Keyboard::Return:
           if(!chat.isTyping()){ //start typing
             chat.setBuffer("");
@@ -143,6 +127,8 @@ void NetworkClient::doClient(){
   }
   std::cout<<"game started"<<std::endl;
   */
+
+  while(true);
 
   s.players[0] =  Player(0,0,1,42);
 	s.players[1] = Player(2,3,1,43);

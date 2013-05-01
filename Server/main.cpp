@@ -2,6 +2,7 @@
 #include "Server.h"
 #include "Client.h"
 #include "Player.h"
+#include "boundingBox.h"
 #include <cctype> //this is for toupper method
 
 int main(){
@@ -10,7 +11,6 @@ int main(){
   std::cout<<Allen.getString()<<std::endl;
   std::string bleh;
   std::cin>>bleh;*/
-  
   std::cout << "Run (s)erver or (c)lient?" << std::endl;
   std::string input = ""; 
   std::getline(std::cin, input);
