@@ -23,6 +23,7 @@ struct ServerGameTimeRespond
 	  // TODO: Matt&Bowen is this correct??
     for (int i=0;i<4;i++)
       players[i].deserialize(packet);
+
 	int size = 0;
 	packet>>size;
 	for(int i = 0; i < size; i++)
