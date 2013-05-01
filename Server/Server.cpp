@@ -3,10 +3,11 @@
 void NetworkServer::receiveMessages(int i) {
     sf::Packet packet;
     if(server.receiveMessage(packet,i)){
-      sf::Packet copy =packet;
+      //sf::Packet copy =packet;
       ClientGameTimeAction cgta;
       size_t packetType;
       packet >> packetType;
+      
       switch (packetType) {
         case CGTA:
           cgta.deserialize(packet);
@@ -14,7 +15,7 @@ void NetworkServer::receiveMessages(int i) {
           server.sendPacketToAll<ServerGameTimeRespond>(game.evaluate(cgta));
           break;
         case CHAT:
-          server.sendToAll(copy); //right now just echoing what received
+          server.sendToAll(packet); //right now just echoing what received
           break;
         default: 
           break;
@@ -35,6 +36,9 @@ void NetworkServer::doServer(){
       server.sendPacket<IdPacket>(newPacket,server.size()-1);
     }
   }
+  //choose minotaur
+  game.chooseMinotaur();
+
   sf::Packet initPacket;
   initPacket<<INIT;
   server.sendToAll(initPacket);
@@ -44,7 +48,6 @@ void NetworkServer::doServer(){
     clock.restart();
     for( int i = 0; i < server.size(); i++){
       receiveMessages(i);
-      /* maybe put this in a method just like in client*/
     }
     sf::sleep( sf::milliseconds( (int)((float)1.0/(float)tickspersecond*1000 - (float)clock.getElapsedTime().asMilliseconds())) );
     clock.restart();

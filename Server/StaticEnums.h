@@ -1,4 +1,5 @@
 #pragma once
+#define NUM_PLAYERS 2
 enum User_Movement {
 		FORWARD=0,
 		BACKWARD=180,
@@ -11,6 +12,7 @@ enum User_Movement {
 		NONE
 };
 
+enum Game_State {MANOTAUR_WIN, CIVILIAN_WIN, PLAYING}; 
+
 //Networking enums
 enum Opcode {INIT,JOINID, CHAT , T1, T2, CGTA, SGTR, ERROR};
-

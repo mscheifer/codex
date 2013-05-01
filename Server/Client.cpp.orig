@@ -15,9 +15,13 @@ void NetworkClient::receiveMessages() {
           break;
         case SGTR:
           s.deserialize(packet);
+<<<<<<< HEAD
 		  as.render(s.players , s.entities);
+=======
+          as.render(s.players);
           if (s.players[id].dead) { /*render death everytime ? */} ;
           //render WIN OR LOSE based on s.state
+>>>>>>> 9454dddc35633d0688023789909a44122e498f5c
           break;
         case JOINID:
           newId.deserialize(packet);

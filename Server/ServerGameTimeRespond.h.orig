@@ -6,10 +6,13 @@ struct ServerGameTimeRespond
 {
   static const int packetType = SGTR;
   Player players[4];
+<<<<<<< HEAD
   std::vector<Entity *> entities;
+=======
   Game_State state;
   ServerGameTimeRespond():state(PLAYING) {}
 
+>>>>>>> 9454dddc35633d0688023789909a44122e498f5c
 	//Entity entities[15];	
   void serialize(sf::Packet & packet) {
     for (int i=0;i<4;i++) 

@@ -38,12 +38,15 @@ ServerGameTimeRespond Game::evaluate(ClientGameTimeAction a) {
 		 currentPlayers[i]->handleAction(a);
 		 s.players[i] = *currentPlayers[i]; //add the player to the return struct
 	}
+<<<<<<< HEAD
 
 	for(int i = 0; i < currentEntities.size(); i++ ) {
 		 printf(" hello nigga");
 		 currentEntities[i]->update();
 		 s.entities[i] = currentEntities[i]; //add the player to the return struct
 	}
+
+=======
   int deadPlayers=0;
   bool minotaurLose  = false;
   //determine who wins
@@ -62,6 +65,11 @@ ServerGameTimeRespond Game::evaluate(ClientGameTimeAction a) {
   if (deadPlayers == currentPlayers.size()-1 ) {
     s.state = MANOTAUR_WIN;
   }
-
+	/*for(int i = 0; i < currentEntities.size(); i++ ) {
+		 currentEntities[i]->handleAction(a);
+		 s.entities[i] = *currentEntities[i]; //add the player to the return struct
+	}*/
+	
+>>>>>>> 9454dddc35633d0688023789909a44122e498f5c
 	return s;
 }

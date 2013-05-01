@@ -16,6 +16,8 @@
 class Player: public Entity
 {
 public:
+  bool dead; //might be private. should be determined in handleAction
+  bool minotaur; //might be private
   int player_id;
   char name[20];
   Player(void);
