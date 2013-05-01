@@ -106,6 +106,7 @@
     <ClInclude Include="3DCoordinate.h" />
     <ClInclude Include="AsciUI.h" />
     <ClInclude Include="boundingBox.h" />
+    <ClInclude Include="boundingObj.h" />
     <ClInclude Include="boundingSphere.h" />
     <ClInclude Include="ChatHandler.h" />
     <ClInclude Include="Client.h" />

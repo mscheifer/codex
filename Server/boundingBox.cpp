@@ -78,6 +78,10 @@ bool BoundingBox::collideWith(const BoundingBox & b){
     !separatedByAxis(t,azbx,b) && !separatedByAxis(t,azby,b) && !separatedByAxis(t,azbz,b);
 }
 
+void BoundingBox::move(const gx::vector3 & v){
+  center = center+v;
+}
+
 bool BoundingBox::raySlab(float start, float dir, float min, float max, float& tfirst, float& tlast){
   if (fabs(dir) < 1.0E-8)
   {

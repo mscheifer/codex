@@ -1,11 +1,10 @@
 #pragma once
-#include "graphics/vector4.h"
-#include "graphics/vector3.h"
 #include "Ray.h"
+#include "boundingObj.h"
 #include <math.h>
 #include <iostream>
 
-class BoundingSphere
+class BoundingSphere : public BoundingObj
 {
 private:
   gx::vector4 center;
@@ -13,11 +12,15 @@ private:
 
 public:
   BoundingSphere();
+  BoundingSphere(gx::vector4 cen, float r) : center(cen), radius(r) {
+    updateRect();
+  }
   BoundingSphere(float x, float y, float z, float radius);
   void move(const gx::vector3 & v);
   bool collideWith(const BoundingSphere & o);
   bool collideWith(const Ray & r);
   ~BoundingSphere(void);
+  void updateRect();
   
   static void test(){
     BoundingSphere s1(0,0,0,100);
