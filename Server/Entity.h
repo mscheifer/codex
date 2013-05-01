@@ -10,8 +10,9 @@ public:
   Entity() {}
   ~Entity() {}
   
-  virtual void handleAction(ClientGameTimeAction){}
-  virtual void onCollision(Entity){}
+  virtual void handleAction(ClientGameTimeAction a){}
+  virtual void update(){}
+  virtual void onCollision(Entity a){}
   virtual bool isProjectile(void){ return false;}
   virtual bool isWeapon(void){ return false;}
   virtual bool isPlayer(void){ return false;}
@@ -19,6 +20,10 @@ public:
   Direction getDirection(void){ return direction; }
   void setDirection(Direction d) {
 	  direction = d;
+  }
+
+  void setMap(Map* m) {
+	  map = m;
   }
 
   void setPosition(Coordinate c) {
@@ -39,7 +44,7 @@ public:
 protected:
   Coordinate position;
   Direction direction;
-  Map map;
+  Map* map;
   // Some kind of state {paralyzed, frozen, blah blah}
   // Power ups {contains MULTIPLERS for health, defense/ elemental weapons}
 };

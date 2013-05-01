@@ -8,10 +8,10 @@ ClientServices::ClientServices() {
 
     //input is ipaddress to connect to
     std::cout << "Enter Ip Address to connect to: ";
-    std::string input;
+    std::string input = myIpAddress.toString();
 
   do {
-    std::getline(std::cin, input);
+    //std::getline(std::cin, input);
     s = sf::Socket::Error;
     s = client.connect(input, PORT_NUMBER, sf::seconds(TIMEOUT));
     

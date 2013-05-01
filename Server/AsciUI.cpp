@@ -13,16 +13,22 @@ AsciUI::~AsciUI(void)
 {
 }
 
-int AsciUI::render(Player* players)
+int AsciUI::render(Player* players, std::vector<Entity *> entities)
 {
 	
 	system("cls");
 	int layout[15][15];
+	for(int i = 0 ; i < entities.size() ;i++) {
+		layout[(int)(entities[i]->getPosition()).y][(int)(entities[i]->getPosition()).x] = 5;
+		
+	}
 
 	for(int i = 0 ; i < 4 ;i++) {
 		layout[(int)(players[i].getPosition()).y][(int)(players[i].getPosition()).x] = i;
 		
 	}
+
+	
 
 	string out_map = "+";
 	for(int j = 0; j < 15; j++) {

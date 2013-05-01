@@ -40,6 +40,8 @@ void NetworkServer::doServer() {
       if(!server.sendPacket<IdPacket>(newPacket,server.size()-1)) {
         std::cout << "Error sending game join packet" << std::endl;
 	  }
+	  else
+	    std::cout << "I sent the id " << std::endl;
     }
   }
   //choose minotaur
