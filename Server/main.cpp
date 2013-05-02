@@ -5,7 +5,7 @@
 #include <cctype> //this is for toupper method
 
 int main(){  
-  Quadtree::test();
+  //Quadtree::test();
   std::cout << "Run (s)erver or (c)lient?: ";
   std::string input = ""; 
   std::getline(std::cin, input);
