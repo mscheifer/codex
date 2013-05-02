@@ -100,6 +100,7 @@
     <ClCompile Include="Server.cpp" />
     <ClCompile Include="ServerGameTimeRespond.h" />
     <ClCompile Include="Weapon.cpp" />
+    <ClCompile Include="WeaponFire.cpp" />
     <ClCompile Include="WeaponFist.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -144,6 +145,7 @@
     <ClInclude Include="StaticEnums.h" />
     <ClInclude Include="AudioManager.h" />
     <ClInclude Include="Weapon.h" />
+    <ClInclude Include="WeaponFire.h" />
     <ClInclude Include="WeaponFist.h" />
   </ItemGroup>
   <ItemGroup>

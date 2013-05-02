@@ -25,6 +25,9 @@ Weapon::Weapon(float damage, float ran, Coordinate d, float mpcost)
 	range = ran;
 	position = d;
 	mpCost = mpcost;
+	projectileSpeed = 2.0; // pending removal
+	projectileRange = 300; //pending removal
+	projectileStrength = 1; //pending removal
 }
 
 
