@@ -22,6 +22,10 @@ Player::Player(Position x, Position y, Position z, int assigned_id)
 	mana = 100;
 	maxMana = 100;
 	castDownCounter = sf::Clock();
+
+	weapon[1] = WeaponFire(Coordinate());
+	current_weapon_selection = 1;
+
 }
 
 
@@ -90,7 +94,7 @@ void Player::jump()
 }
 
 void Player::handleAction(ClientGameTimeAction a) {
-  std::cout<<"PLAYER: "<<player_id<<" handling packet from "<< a.player_id<<std::endl;
+  //std::cout<<"PLAYER: "<<player_id<<" handling packet from "<< a.player_id<<std::endl;
 	if(a.player_id == player_id) {
 		handleSelfAction(a);
 	} else {

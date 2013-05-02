@@ -7,7 +7,9 @@
 #include "Physics.h"
 #include <string>
 #include "Weapon.h"
+#include "WeaponFire.h"
 #include "ClientGameTimeAction.h"
+
 
 #define MOVESCALE 100
 #define PI 3.1415926535897932384626433832795

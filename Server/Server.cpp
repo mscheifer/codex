@@ -1,29 +1,39 @@
 #include "Server.h"
 
 void NetworkServer::receiveMessages(int i) {
-    sf::Packet packet;
-    if(this->server.receiveMessage(packet,i)) {
-      sf::Packet copy = packet; //TODO: maybe we don't need this. fix later
-      ClientGameTimeAction cgta;
-      uint32_t packetType;
-      packet >> packetType;
+  sf::Packet packet;
+  sf::Packet oldPacket;
+  bool recv = false;
+   
+  while(this->server.receiveMessage(packet,i)){
+    oldPacket = packet;
+    recv = true;
+  }
+
+  packet = oldPacket;
+
+  if(recv) {
+    sf::Packet copy = packet; //TODO: maybe we don't need this. fix later
+    ClientGameTimeAction cgta;
+    uint32_t packetType;
+    packet >> packetType;
       
-      switch (packetType) {
-        case CGTA:
-          cgta.deserialize(packet);
-          cgta.print();
-          if(!this->server.sendPacketToAll<ServerGameTimeRespond>(game.evaluate(cgta))) {
-            std::cout << "Error sending cgta to everybody" << std::endl;
-		  }
-          break;
-        case CHAT:
-          this->server.sendToAll(copy); //right now just echoing what received
-          break;
-        default:
-          std::cout << "Error: received bad packet: " << packetType << std::endl;
-          break;
-      }
+    switch (packetType) {
+      case CGTA:
+        cgta.deserialize(packet);
+        //cgta.print();
+        if(!this->server.sendPacketToAll<ServerGameTimeRespond>(game.evaluate(cgta))) {
+          std::cout << "Error sending cgta to everybody" << std::endl;
+		    }
+        break;
+      case CHAT:
+        this->server.sendToAll(copy); //right now just echoing what received
+        break;
+      default:
+        std::cout << "Error: received bad packet: " << packetType << std::endl;
+        break;
     }
+  }
 }
 
 void NetworkServer::doServer() {
