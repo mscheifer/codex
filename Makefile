@@ -2,7 +2,7 @@ NAME	   = drchao
 ECHO	   = @echo
 CC       = @g++
 WARNINGS = -Wall -Wextra -Wstrict-overflow=5 -Wshadow -Wconversion
-CPPFLAGS = -O3 $(WARNINGS) -std=c++11
+CPPFLAGS = -O3 $(WARNINGS) -IServer/ -ISFML-2.0/include -std=c++11
 LDFLAGS  = -lsfml-window -lsfml-system -lsfml-audio -lsfml-network -lsfml-graphics -lGL -lGLEW
 OBJDIR   = obj/
 SRCDIRS  = Server/ Server/graphics/

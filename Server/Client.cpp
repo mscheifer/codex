@@ -18,7 +18,10 @@ void NetworkClient::receiveMessages() {
           s.deserialize(packet);
           for(size_t i = 0; i < 4; i++) {
             auto pos = s.players[i].getPosition();
-            entities.push_back(std::make_pair(gx::vector3(pos.x,pos.y,pos.z),0));
+            entities.push_back(std::make_pair(
+              gx::vector3(static_cast<gx::vector3::elem_t>(pos.x),
+                          static_cast<gx::vector3::elem_t>(pos.y),
+                          static_cast<gx::vector3::elem_t>(pos.z)),0));
 			//std::cout << "recieved player at: " << gx::vector3(pos.x,pos.y,pos.z) << std::endl;
           }
           gxClient.updateEntities(entities);

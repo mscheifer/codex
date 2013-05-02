@@ -18,7 +18,7 @@ int AsciUI::render(Player* players, std::vector<Entity *> entities)
 	
 	system("cls");
 	int layout[15][15];
-	for(int i = 0 ; i < entities.size() ;i++) {
+	for(unsigned int i = 0 ; i < entities.size() ;i++) {
 		layout[(int)(entities[i]->getPosition()).y][(int)(entities[i]->getPosition()).x] = 5;
 		
 	}

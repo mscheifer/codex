@@ -31,7 +31,7 @@ public:
   static const int packetType = CHAT;  //might be a BUG
   std::string chatMsg;
   ChatObject():chatMsg("") {}
-  ChatObject(std::string chatMsg):chatMsg(chatMsg) {}
+  ChatObject(std::string msg):chatMsg(msg) {}
   void serialize(sf::Packet & packet);
   void deserialize(sf::Packet & packet);
   std::string getChat() { return chatMsg;}

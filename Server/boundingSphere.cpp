@@ -3,11 +3,8 @@
 BoundingSphere::BoundingSphere():center(0,0,0), radius(0){
 }
 
-BoundingSphere::BoundingSphere(float x, float y, float z, float radius) :
-center(x,y,z)
-{
-  this->radius = radius;
-}
+BoundingSphere::BoundingSphere(float x, float y, float z, float rad) :
+center(x,y,z), radius(rad) {}
 
 void BoundingSphere::move(const gx::vector3 & v){
   center = center+v;

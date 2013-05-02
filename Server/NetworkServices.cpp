@@ -19,17 +19,18 @@ ClientServices::ClientServices() {
        client.setBlocking(false);
        invalidIpAddress = false;
     } else {
-      std::cout << "try again, " << input << " is an invalid ip address" << std::endl;
+      std::cout << "try again, " << input << " is an invalid ip address";
+      std::cout << std::endl;
     }
   } while(invalidIpAddress);
 }
 
-  bool ClientServices::sendMessage(sf::Packet &packet ) {
-    return (client.send(packet)==sf::Socket::Done);
-  }
-  bool ClientServices::receiveMessage(sf::Packet & packet) {
-    return (client.receive(packet)==sf::Socket::Done);
-  }
+bool ClientServices::sendMessage(sf::Packet &packet ) {
+  return (client.send(packet)==sf::Socket::Done);
+}
+bool ClientServices::receiveMessage(sf::Packet & packet) {
+  return (client.receive(packet)==sf::Socket::Done);
+}
 
   
 ServerServices::ServerServices(){
@@ -41,7 +42,8 @@ ServerServices::ServerServices(){
 bool ServerServices::getNewClient(){ 
   // Wait for a connection
   if ( this->listener.accept(*newClient) == sf::Socket::Done ){
-    std::cout << "New client connected: " << newClient->getRemoteAddress() << std::endl;
+    std::cout << "New client connected: " << newClient->getRemoteAddress();
+    std::cout << std::endl;
     newClient->setBlocking(false);
     clients.push_back(newClient);
     std::cout << size() << " clients have connceted" << std::endl;
@@ -51,35 +53,35 @@ bool ServerServices::getNewClient(){
   return false;
 }
 
-   bool ServerServices::receiveMessage(sf::Packet &packet, size_t i ) {
-      if (i >= 0 && i < clients.size()) {//error checking for i?
-        return (clients[i]->receive(packet) == sf::Socket::Done);
-	  }
-	  return false;
-   }
+bool ServerServices::receiveMessage(sf::Packet &packet, unsigned int i ) {
+  if (i < clients.size()) {//error checking for i?
+    return (clients[i]->receive(packet) == sf::Socket::Done);
+  }
+  return false;
+}
 
-   bool ServerServices::sendMessage(sf::Packet & packet, size_t i) {
-      if (i >= 0 && i < clients.size()) {//error checking for i?
-        return (clients[i]->send(packet) == sf::Socket::Done);
-	  }
-	  return false;      
-   }
+bool ServerServices::sendMessage(sf::Packet & packet, unsigned int i) {
+  if (i < clients.size()) {//error checking for i?
+    return (clients[i]->send(packet) == sf::Socket::Done);
+  }
+  return false;      
+}
    
-   bool ServerServices::sendToAll(sf::Packet & packet ) {
-     bool allGood = true;
-     for (size_t i = 0;i < clients.size();i++) {
-       allGood = allGood && this->sendMessage(packet, i);
-     }
-	 return allGood;
-   }
+bool ServerServices::sendToAll(sf::Packet & packet ) {
+  bool allGood = true;
+  for (unsigned int i = 0;i < clients.size();i++) {
+    allGood = allGood && this->sendMessage(packet, i);
+  }
+  return allGood;
+}
 
-   int ServerServices::size() {
-     return clients.size();
-   }
+unsigned int ServerServices::size() {
+  return static_cast<unsigned int>(clients.size());
+}
 
-   ServerServices::~ServerServices() {
-     for (int i=0;i<(int)clients.size();i++) {
-        delete clients[i];
-     }
-     delete newClient;
-   }
+ServerServices::~ServerServices() {
+  for (int i=0;i<(int)clients.size();i++) {
+    delete clients[i];
+  }
+  delete newClient;
+}

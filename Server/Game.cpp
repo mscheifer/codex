@@ -13,14 +13,14 @@ Game::~Game(void)
 
 void Game::chooseMinotaur() 
 {
-  srand(time(NULL));
+  srand(static_cast<unsigned int>(time(NULL)));
   int minotaur = rand() % NUM_PLAYERS;
   world.getPlayers()[minotaur]->minotaur=true;
 }
 
 int Game::join()
 {
-  int userID = world.getPlayers().size();
+  unsigned int userID = world.getPlayers().size();
   Player * newPlayer = new Player(0,0,0,0);
   newPlayer->player_id = userID;
   world.addPlayer(newPlayer);
@@ -39,12 +39,12 @@ ServerGameTimeRespond Game::evaluate(ClientGameTimeAction a) {
 		 s.players[i] = *currentPlayers[i]; //add the player to the return struct
 	}
 
-	for(int i = 0; i < currentEntities.size(); i++ ) {
-		 printf(" hello nigga");
+	for( unsigned int i = 0; i < currentEntities.size(); i++ ) {
+		 std::cout << " hello nigga" << std::endl;
 		 currentEntities[i]->update();
 		 s.entities[i] = currentEntities[i]; //add the player to the return struct
 	}
-  int deadPlayers=0;
+  unsigned int deadPlayers = 0;
   bool minotaurLose  = false;
   //determine who wins
   for (unsigned int i = 0; i< currentPlayers.size(); i++ ) {

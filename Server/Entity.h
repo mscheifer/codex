@@ -10,9 +10,9 @@ public:
   Entity() {}
   ~Entity() {}
   
-  virtual void handleAction(ClientGameTimeAction a){}
+  virtual void handleAction(ClientGameTimeAction){}
   virtual void update(){}
-  virtual void onCollision(Entity a){}
+  virtual void onCollision(Entity){}
   virtual bool isProjectile(void){ return false;}
   virtual bool isWeapon(void){ return false;}
   virtual bool isPlayer(void){ return false;}
