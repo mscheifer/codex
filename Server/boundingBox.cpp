@@ -1,4 +1,59 @@
 #include "boundingBox.h"
+#include "Quadtree.h"
+
+void BoundingBox::updateRect(){
+  gx::vector4 c[8]; //8 corners
+  gx::vector3 up, down, left, right, in, out;
+  c[1] = c[2] = c[3] = c[4] = c[5] = c[6] = c[7] = c[0] = center;
+  up = az;
+  up.scale(hd);
+  down = up;
+  down.negate();
+
+  in = ay;
+  in.scale(hh);
+  out = in;
+  out.negate();
+
+  right = ax;
+  right.scale(hw);
+  left = right;
+  right.negate();
+
+  c[1] = c[1] + in + down + right;
+  c[2] = c[2] + in + down + left;
+  c[3] = c[3] + in + up + right;
+  c[4] = c[4] + in + up + left;
+  
+  c[5] = c[5] + out + down + right;
+  c[6] = c[6] + out + down + left;
+  c[7] = c[7] + out + up + right;
+  c[0] = c[0] + out + up + left;
+
+  float minX, minY, minZ, maxX, maxY, maxZ;
+  maxX = minX = c[0].x;
+  maxY = minY = c[0].y;
+  //maxZ = minZ = c[0].z;
+
+  for(int i = 0; i < 8; i++){
+    if( c[i].x > maxX )
+      maxX = c[i].x;
+    if( c[i].x < minX )
+      minX = c[i].x;
+    if( c[i].y > maxY )
+      maxY = c[i].y;
+    if( c[i].y < minY )
+      minY = c[i].y;
+    //if( c[i].z > maxZ )
+    //  maxZ = c[i].z;
+    //if( c[i].z < minZ )
+    //  minZ = c[i].z;
+  }
+
+  getRect()->setCenter(gx::vector4((minX+maxX)/2,(minY+maxY)/2,0));
+  getRect()->setHalfWidth((maxX-minX)/2);
+  getRect()->setHalfHeight((maxY-minY)/2);
+}
 
 bool BoundingBox::separatedByAxis(const gx::vector3 t, const gx::vector3 axis, const BoundingBox & b){
   float centerDist = abs(t.dot(axis));
@@ -78,8 +133,12 @@ bool BoundingBox::collideWith(const BoundingBox & b){
     !separatedByAxis(t,azbx,b) && !separatedByAxis(t,azby,b) && !separatedByAxis(t,azbz,b);
 }
 
+//TOD this method is the same here and bounding sphere
 void BoundingBox::move(const gx::vector3 & v){
   center = center+v;
+  getQtree()->remove(*this);
+  updateRect();
+  getQtree()->insert(*this);
 }
 
 bool BoundingBox::raySlab(float start, float dir, float min, float max, float& tfirst, float& tlast){

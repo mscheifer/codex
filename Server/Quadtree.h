@@ -4,7 +4,9 @@
 #include <iostream>
 #include "boundingObj.h"
 
-#include "boundingSphere.h" //TODO remove this is for testing
+//TODO remove these are for testing
+#include "boundingBox.h"
+#include "boundingSphere.h" 
 
 class Quadtree{
 private:
@@ -38,7 +40,6 @@ public:
     q.insert(r1);
     q.insert(r1_2);
     std::list<BoundingObj> l;
-    
     q.retrieve(l,r1);
     std::cout << "quadtree test:" << std::endl;
     std::cout << l.size() << "==1 r1 collide with r1_2." << std::endl;
@@ -54,16 +55,44 @@ public:
     q.remove(r2);
     q.retrieve(l,r1);
     std::cout << l.size() << "==1 r1 cw: r1_2." << std::endl;
-    q.clear();
-    
-    r1.move(gx::vector3(51,0,0));
+    //q.clear();
+    r1.move(gx::vector3(-104,0,0));
     l.clear();
     q.retrieve(l,r1);
     std::cout << l.size() << "==0 r1 cw:." << std::endl;
 
     l.clear();
+    q.clear();
     q.retrieve(l,r1);
     std::cout << l.size() << "==0 clear" << std::endl;
+
+    //bounding box test
+    q.clear();
+    l.clear();
+    BoundingBox b3(gx::vector4(20,20,0), 
+      gx::vector3(1,1,0), gx::vector3(1,-1,0), gx::vector3(0,0,1),
+      5,5,5);
+    BoundingBox b4(gx::vector4(27,20,0), 
+      gx::vector3(1,1,0), gx::vector3(1,-1,0), gx::vector3(0,0,1),
+      5,5,5);
+    BoundingBox b5(gx::vector4(34.3,20,0), 
+      gx::vector3(1,1,0), gx::vector3(1,-1,0), gx::vector3(0,0,1),
+      5,5,5);
+    q.insert(b3);
+    q.insert(b4);
+    q.retrieve(l,b3);
+    std::cout << l.size() << "==1 b3 cw: b4." << std::endl;
+
+    q.remove(b4);
+    q.insert(b5);
+    l.clear();
+    q.retrieve(l,b3);
+    std::cout << l.size() << "==1 b3 cw: b5." << std::endl;
+    b5.move(gx::vector3(-100,-100,1));
+
+    l.clear();
+    q.retrieve(l,b3);
+    std::cout << l.size() << "==0 b3 cw:. b5 moved" << std::endl;
   }
   
 };

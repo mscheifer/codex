@@ -2,11 +2,11 @@
 #include "graphics/vector4.h"
 #include "graphics/vector3.h"
 #include "Ray.h"
-#include "Rectangle.h"
+#include "boundingObj.h"
 #include <math.h>
 #include <iostream>
 
-class BoundingBox{
+class BoundingBox : public BoundingObj{
 private:
   gx::vector4 center;
   //these vectors should be normalized
@@ -16,12 +16,11 @@ private:
   float hw;  //half width ax
   float hh;  //half height ay
   float hd;  //half depth az
-  Rectangle rec;
 
   //true if they are separated by the axis axis
   bool separatedByAxis(const gx::vector3 t, const gx::vector3 axis, const BoundingBox & b);
   bool raySlab(float start, float dir, float min, float max, float& tfirst, float& tlast);
-  void generateRec();
+  void updateRect();
 
 public:
   BoundingBox(gx::vector4 c, gx::vector3 x, gx::vector3 y, gx::vector3 z,
@@ -30,6 +29,7 @@ public:
       ax.normalize();
       ay.normalize();
       az.normalize();
+      updateRect();
   }
 
   bool collideWith(const BoundingBox & b);
