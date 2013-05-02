@@ -257,6 +257,9 @@
     <ClInclude Include="graphics\globalUniform.h">
       <Filter>Header Files\graphics</Filter>
     </ClInclude>
+    <ClInclude Include="localUniform.h">
+      <Filter>Header Files\graphics</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="graphics\Makefile">
