@@ -1,24 +1,27 @@
 #pragma once
-#include "graphics/vector4.h"
-#include "graphics/vector3.h"
 #include "Ray.h"
+#include "boundingObj.h"
 #include <math.h>
 #include <iostream>
 
-class BoundingSphere
-{
+class BoundingSphere : public BoundingObj{
 private:
   gx::vector4 center;
   float radius; //TODO: change to glfloat
 
 public:
   BoundingSphere();
+  BoundingSphere(gx::vector4 cen, float r) : center(cen), radius(r) {
+    updateRect();
+  }
   BoundingSphere(float x, float y, float z, float radius);
   void move(const gx::vector3 & v);
   bool collideWith(const BoundingSphere & o);
   bool collideWith(const Ray & r);
   ~BoundingSphere(void);
+  void updateRect();
   
+  /*
   static void test(){
     BoundingSphere s1(0,0,0,100);
     BoundingSphere s2(109,0,0,10);
@@ -34,6 +37,7 @@ public:
     std::cout << "true " << s3.collideWith(r2) << std::endl;
     std::cout << "false " << s3.collideWith(r3) << std::endl;
   }
+  */
 };
 
   /*vars for client.h

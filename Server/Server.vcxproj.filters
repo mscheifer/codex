@@ -132,6 +132,9 @@
     <ClCompile Include="WeaponFire.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="ray.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">
@@ -258,6 +261,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="boundingBox.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="boundingObj.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="WeaponFire.h">

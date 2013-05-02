@@ -97,6 +97,7 @@
     <ClCompile Include="PowerUp.cpp" />
     <ClCompile Include="Projectile.cpp" />
     <ClCompile Include="Quadtree.cpp" />
+    <ClCompile Include="ray.cpp" />
     <ClCompile Include="Server.cpp" />
     <ClCompile Include="ServerGameTimeRespond.h" />
     <ClCompile Include="Weapon.cpp" />
@@ -107,6 +108,7 @@
     <ClInclude Include="3DCoordinate.h" />
     <ClInclude Include="AsciUI.h" />
     <ClInclude Include="boundingBox.h" />
+    <ClInclude Include="boundingObj.h" />
     <ClInclude Include="boundingSphere.h" />
     <ClInclude Include="ChatHandler.h" />
     <ClInclude Include="Client.h" />

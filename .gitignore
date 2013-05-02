@@ -1,4 +1,6 @@
 Thumbs.db
+*.wav
+*.mp3
 *.obj
 *.exe
 *.pdb
@@ -38,3 +40,5 @@ ipch/
 TestingProject.sdf
 Server/config.txt
 drchao
+SFML-2.0-rc/doc/html/
+SFML-2.0-rc/doc/sfml.chm

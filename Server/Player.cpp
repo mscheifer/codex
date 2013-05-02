@@ -94,7 +94,7 @@ void Player::jump()
 }
 
 void Player::handleAction(ClientGameTimeAction a) {
-  std::cout<<"PLAYER: "<<player_id<<" handling packet from "<< a.player_id<<std::endl;
+  //std::cout<<"PLAYER: "<<player_id<<" handling packet from "<< a.player_id<<std::endl;
 	if(a.player_id == player_id) {
 		handleSelfAction(a);
 	} else {
