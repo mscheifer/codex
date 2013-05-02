@@ -30,7 +30,7 @@ void BoundingBox::updateRect(){
   c[7] = c[7] + out + up + right;
   c[0] = c[0] + out + up + left;
 
-  float minX, minY, minZ, maxX, maxY, maxZ;
+  float minX, minY, /*minZ,*/ maxX, maxY/*, maxZ*/;
   maxX = minX = c[0].x;
   maxY = minY = c[0].y;
   //maxZ = minZ = c[0].z;

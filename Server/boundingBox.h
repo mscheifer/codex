@@ -36,6 +36,7 @@ public:
   bool collideWith(const Ray & r);
   void move(const gx::vector3 & v);
 
+  /*
   static void test(){
     BoundingBox b1(gx::vector4(0,0,0), 
       gx::vector3(1,0,0), gx::vector3(0,1,0), gx::vector3(0,0,1),
@@ -63,4 +64,5 @@ public:
     std::cout << "true " << b3.collideWith(r1) << std::endl;
     std::cout << "false: " << b5.collideWith(r2) << std::endl;
   }
+  */
 };

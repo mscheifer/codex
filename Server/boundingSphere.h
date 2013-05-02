@@ -21,6 +21,7 @@ public:
   ~BoundingSphere(void);
   void updateRect();
   
+  /*
   static void test(){
     BoundingSphere s1(0,0,0,100);
     BoundingSphere s2(109,0,0,10);
@@ -36,6 +37,7 @@ public:
     std::cout << "true " << s3.collideWith(r2) << std::endl;
     std::cout << "false " << s3.collideWith(r3) << std::endl;
   }
+  */
 };
 
   /*vars for client.h

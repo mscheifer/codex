@@ -124,7 +124,7 @@ void Quadtree::remove(BoundingObj& o){
     objects.remove(o);
 }
 
-std::list<BoundingObj> & Quadtree::retrieve(std::list<BoundingObj> & returnObjects, BoundingObj pRect){
+std::list<BoundingObj*> & Quadtree::retrieve(std::list<BoundingObj*> & returnObjects, BoundingObj pRect){
   int index = getIndex(pRect);
   if( index == -1 && nodes[0] != nullptr){
     nodes[0]->retrieve(returnObjects, pRect);
@@ -138,7 +138,7 @@ std::list<BoundingObj> & Quadtree::retrieve(std::list<BoundingObj> & returnObjec
  
   for( std::list<BoundingObj>::iterator it = objects.begin(); it != objects.end(); it++){
     if(*it != pRect)
-      returnObjects.push_front(*it);
+      returnObjects.push_front(&*it);
   }
   return returnObjects;
 }
