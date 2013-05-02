@@ -82,7 +82,7 @@
     <ClCompile Include="graphics\matrix.cpp" />
     <ClCompile Include="graphics\oglUtil.cpp" />
     <ClCompile Include="graphics\shaderProgram.cpp" />
-    <ClCompile Include="graphics\uniform.cpp" />
+    <ClCompile Include="graphics\globalUniform.cpp" />
     <ClCompile Include="graphics\userInput.cpp" />
     <ClCompile Include="graphics\vao.cpp" />
     <ClCompile Include="graphics\vector3.cpp" />
@@ -122,7 +122,7 @@
     <ClInclude Include="graphics\matrix.h" />
     <ClInclude Include="graphics\oglUtil.h" />
     <ClInclude Include="graphics\shaderProgram.h" />
-    <ClInclude Include="graphics\uniform.h" />
+    <ClInclude Include="graphics\globalUniform.h" />
     <ClInclude Include="graphics\userInput.h" />
     <ClInclude Include="graphics\vao.h" />
     <ClInclude Include="graphics\vector3.h" />

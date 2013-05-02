@@ -7,11 +7,16 @@
 
 namespace gx {
 
-const std::string shaderHeader = 
-  "#version 130\n\
-   #extension GL_ARB_uniform_buffer_object : require\n\n";
+//don't set to true or it will break on Matt, Alvin and Bowen's machines
+constexpr bool sharedUniformsOn = false;
 
 constexpr bool debugOn = false;
+
+const std::string shaderExtensions = 
+  shaderUnfiromsOn ? "#extension GL_ARB_uniform_buffer_object : require\n" : "";
+
+const std::string shaderHeader = 
+  "#version 130\n" + shaderExtensions + "\n";
 
 struct debugStream {
   template<typename T>

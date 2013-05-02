@@ -4,8 +4,7 @@ namespace { //don't export
  const std::string uniformName = "display";
 } //end unnamed namespace
 
-gx::displaySet::displaySet(): view(), projection(), cameraPos(),
-    unif(uniformName,sizeof(elem_t[16]) * 2 + sizeof(elem_t) * 4) {}
+gx::displaySet::displaySet(): view(), projection(), cameraPos() {}
 
 void gx::displaySet::setProjection(elem_t fov, elem_t ratio, elem_t nearP,
                                elem_t farP) {
@@ -19,10 +18,6 @@ void gx::displaySet::setProjection(elem_t fov, elem_t ratio, elem_t nearP,
   this->projection[2][3] = (2.0f * farP * nearP) / (nearP - farP);
   this->projection[3][2] = -1.0f;
   this->projection[3][3] = 0.0f;
-
-  auto oglM = this->projection.oglmatrix();
-
-  this->storage().write(sizeof(oglM),oglM);
 }
 //e is camera position and d is look at point
 void gx::displaySet::setView(const vector3& e, const vector3& d, 
@@ -59,13 +54,5 @@ void gx::displaySet::setView(const vector3& e, const vector3& d,
 
   this->view = r * t;
 
-  auto oglM = this->view.oglmatrix();
-
-  this->storage().write(0,oglM);
   this->cameraPos = e;
-  this->storage().write(sizeof(oglM)*2,e.oglVec3());
-}
-
-const gx::uniform& gx::displaySet::storage() const {
-  return this->unif;
 }

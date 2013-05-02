@@ -1,4 +1,5 @@
 #include "drawSet.h"
+#include "displaySet.h"
 
 gx::drawSet::entityClass::entityClass(std::vector<matrix> poses, vao vaostuff)
   : positions(std::move(poses)), vertData(std::move(vaostuff)) {}
@@ -8,9 +9,11 @@ gx::drawSet::entityClass::entityClass(entityClass&& other)
 
 gx::drawSet::drawSet(const std::string vertShader, const std::string fragShader,
                      const std::vector<vaoData_t> vaoDatas,
-                     std::vector<const uniform*>  globalUniforms)
+        std::vector<const globalUniform*>  globalUniforms, displaySet& d)
   : program(vertShader, fragShader, globalUniforms), entityClasses(),
-    modelToWorldLoc(program.uniformLoc("modelToWorld"))               {
+    viewLoc(program.uniformLoc("viewMatrix")),
+	projLoc(program.uniformLoc("projMatrix")),
+    modelToWorldLoc(program.uniformLoc("modelToWorld")), display(d)            {
   for(auto vaoDatap = vaoDatas.begin(); vaoDatap != vaoDatas.end(); ++vaoDatap){
     const auto& vaoData = *vaoDatap;
     entityClass newEntClass(std::vector<matrix>(),
@@ -21,6 +24,8 @@ gx::drawSet::drawSet(const std::string vertShader, const std::string fragShader,
 
 void gx::drawSet::draw(matrix mat) const {
   this->program.use();
+  glUniformMatrix4fv(this->viewLoc,1,false,this->display.view.oglmatrix().data());
+  glUniformMatrix4fv(this->projLoc,1,false,this->display.projection.oglmatrix().data());
   for(auto entityCp = entityClasses.begin(); entityCp != entityClasses.end();
                                                                  ++entityCp) {
     const auto& entityC = *entityCp;

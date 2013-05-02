@@ -1,7 +1,7 @@
 #include "shaderProgram.h"
 #include <array>
 #include <iostream>
-#include "uniform.h"
+#include "globalUniform.h"
 
 namespace { //to not export
 void printShaderInfoLog(GLuint obj,const std::string name) {
@@ -39,7 +39,7 @@ void printProgramInfoLog(GLuint obj) {
 } //end unnamed namespace
 
 gx::shaderProgram::shaderProgram(   const std::string vsSource,
-        const std::string fsSource, const std::vector<const uniform*> uniforms)
+        const std::string fsSource, const std::vector<const globalUniform*> uniforms)
                  : prog(glCreateProgram()), attribSigs() {
   debugout << prog << " = glCreateProgram()" << endl;
   const std::string shader_output_name("outputF");
@@ -131,7 +131,6 @@ gx::shaderProgram::shaderProgram(   const std::string vsSource,
    //cant use range based for here because of visual c++
   for(auto uniformp = uniforms.begin(); uniformp != uniforms.end(); ++uniformp){
     const auto& unif = **uniformp;
-    //uniform.first is the block name, second is the block binding id
     GLuint localIndex = glGetUniformBlockIndex(this->prog,unif.name().c_str());
     debugout << localIndex << " = glGetUniformBlockIndex(" << this->prog;
     debugout << ", \"" << unif.name().c_str() << "\");" << endl;
@@ -176,4 +175,8 @@ std::map<std::string,gx::vertexAttribSignature> gx::shaderProgram::vars() const{
 
 GLint gx::shaderProgram::uniformLoc(const std::string name) const {
   return glGetUniformLocation(this->prog, name.c_str());
+}
+
+GLuint gx::shaderProgram::progNum() const {
+  return this->prog;
 }

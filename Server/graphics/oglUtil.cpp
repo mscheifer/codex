@@ -16,6 +16,22 @@ GLint gx::typeComponents(GLenum type) {
   }
 }
 
+GLuint gx::typeSize(GLenum type) {
+  switch(type) {
+    case GL_FLOAT:
+      return 4;
+    case GL_FLOAT_VEC2:
+      return typeSize(GL_FLOAT) * 2;
+    case GL_FLOAT_VEC3:
+      return typeSize(GL_FLOAT) * 3;
+    case GL_FLOAT_VEC4:
+      return typeSize(GL_FLOAT) * 4;
+    default:
+      std::cout << "Add size for: " << type << std::endl;
+      return 0;
+  }
+}
+
 GLenum gx::baseType(GLenum type) {
   switch(type) {
     case GL_FLOAT:
