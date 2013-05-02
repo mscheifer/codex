@@ -30,42 +30,15 @@ void NetworkClient::receiveMessages() {
 }
 
 void NetworkClient::processInput(gx::userInput ui) {
-  if(ui.stopped) {
+  if(ui.getStop()) {
     this->running = false;
   }
   action.clear();
-  if(ui.jumped) {
+  if(ui.getJump()) {
     action.jump = true;
   }
-  switch (ui.move) {
-    case gx::FORWARD:
-      action.movement = FORWARD;
-      break;
-    case gx::FORWARD_LEFT:
-      action.movement = FORWARD_LEFT;
-      break;
-    case gx::LEFT:
-      action.movement = LEFT;
-      break;
-    case gx::BACKWARD_LEFT:
-      action.movement = BACKWARD_LEFT;
-      break;
-    case gx::BACKWARD:
-      action.movement = BACKWARD;
-      break;
-    case gx::BACKWARD_RIGHT:
-      action.movement = BACKWARD_RIGHT;
-      break;
-    case gx::RIGHT:
-      action.movement = RIGHT;
-      break;
-    case gx::FORWARD_RIGHT:
-      action.movement = FORWARD_RIGHT;
-      break;
-    case gx::NULL_DIR:
-      action.movement = NONE;
-      break;
-  }
+  action.movement = ui.getMove();
+  action.facingDirection = Direction(ui.getDir().x, ui.getDir().y, ui.getDir().z);
   this->sendPacket = true;
 }
 /*

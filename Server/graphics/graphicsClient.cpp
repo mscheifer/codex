@@ -158,7 +158,7 @@ gx::graphicsClient::graphicsClient():
 
 gx::userInput gx::graphicsClient::handleInput() {
   bool stopped = false;
-  userInput curInput;
+  bool jumped = false;
   sf::Event event;
   while (window.pollEvent(event)) {
     if (event.type == sf::Event::Closed) {
@@ -168,14 +168,12 @@ gx::userInput gx::graphicsClient::handleInput() {
     } else if (event.type == sf::Event::KeyPressed) {
       if(event.key.code == sf::Keyboard::Escape) {
         stopped = true; // end the program
-	  } else if(event.key.code == sf::Keyboard::Space) {
-        curInput.jumped = true;
-	  }
+	    } else if(event.key.code == sf::Keyboard::Space) {
+        jumped = true;
+	    }
     }
   }
-  curInput.move = movePlayer(display);
-  curInput.stopped = stopped;
-  turnPlayer(display);
+  userInput curInput(movePlayer(display),turnPlayer(display),jumped,stopped);
   return curInput;
 }
 

@@ -7,7 +7,9 @@
 #include "Physics.h"
 #include <string>
 #include "Weapon.h"
+#include "WeaponFire.h"
 #include "ClientGameTimeAction.h"
+
 
 #define MOVESCALE 100
 #define PI 3.1415926535897932384626433832795
@@ -27,7 +29,7 @@ public:
   std::string getString();
   virtual bool attackBy(DeadlyEntity*);
   float getHealth() { return health; }
-  bool moveTowardDirection(User_Movement degree);
+  bool moveTowardDirection(move_t degree);
   void jump();
   void handleAction(ClientGameTimeAction a);
   void onCollision(Entity a);

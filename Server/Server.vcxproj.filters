@@ -129,6 +129,9 @@
     <ClCompile Include="boundingBox.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="WeaponFire.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
     <ClCompile Include="ray.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -261,6 +264,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="boundingObj.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="WeaponFire.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
