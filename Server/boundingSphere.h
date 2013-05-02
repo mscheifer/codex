@@ -4,8 +4,7 @@
 #include <math.h>
 #include <iostream>
 
-class BoundingSphere : public BoundingObj
-{
+class BoundingSphere : public BoundingObj{
 private:
   gx::vector4 center;
   float radius; //TODO: change to glfloat

@@ -1,4 +1,5 @@
 #include "boundingSphere.h"
+#include "Quadtree.h"
 
 BoundingSphere::BoundingSphere():center(0,0,0), radius(0){
   updateRect();
@@ -8,10 +9,14 @@ BoundingSphere::BoundingSphere(float x, float y, float z, float radius) :
 center(x,y,z)
 {
   this->radius = radius;
+  updateRect();
 }
 
 void BoundingSphere::move(const gx::vector3 & v){
   center = center+v;
+  getQtree()->remove(*this);
+  updateRect();
+  getQtree()->insert(*this);
 }
 
 bool BoundingSphere::collideWith(const BoundingSphere & o){
