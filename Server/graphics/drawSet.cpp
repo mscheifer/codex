@@ -24,8 +24,7 @@ gx::drawSet::drawSet(const std::string vertShader, const std::string fragShader,
 
 void gx::drawSet::draw(matrix mat) const {
   this->program.use();
-  glUniformMatrix4fv(this->viewLoc,1,false,this->display.view.oglmatrix().data());
-  glUniformMatrix4fv(this->projLoc,1,false,this->display.projection.oglmatrix().data());
+  this->
   for(auto entityCp = entityClasses.begin(); entityCp != entityClasses.end();
                                                                  ++entityCp) {
     const auto& entityC = *entityCp;

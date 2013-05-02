@@ -126,11 +126,11 @@
     <ClCompile Include="boundingBox.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="graphics\globalUniform.cpp">
-      <Filter>Source Files\graphics</Filter>
-	</ClCompile>
     <ClCompile Include="WeaponFire.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="graphics\uniformBlock.cpp">
+      <Filter>Source Files\graphics</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -257,14 +257,14 @@
     <ClInclude Include="boundingBox.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="graphics\globalUniform.h">
-      <Filter>Header Files\graphics</Filter>
-    </ClInclude>
-    <ClInclude Include="localUniform.h">
-      <Filter>Header Files\graphics</Filter>
-	</ClInclude>
     <ClInclude Include="WeaponFire.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="graphics\uniformBlock.h">
+      <Filter>Header Files\graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="basicUniform.h">
+      <Filter>Header Files\graphics</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

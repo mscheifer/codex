@@ -1,20 +1,20 @@
-#include "globalUniform.h"
+#include "uniformBlock.h"
 #include "oglUtil.h"
 
-//stores the next available globalUniform bind point
+//stores the next available uniform bind point
 //should be incremented every time it is used
-GLuint gx::globalUniform::nextUniformBindPoint = 0;
+GLuint gx::uniform::block::nextUniformBindPoint = 0;
 
-GLuint gx::globalUniform::freshBindPoint() {
+GLuint gx::uniform::block::freshBindPoint() {
   if(nextUniformBindPoint >= GL_MAX_UNIFORM_BUFFER_BINDINGS) {
-    std::cout << "Error, too many globalUniform objects" << std::endl;
+    std::cout << "Error, too many uniform buffers" << std::endl;
     exit(1);
   }
   return nextUniformBindPoint++;
 }
 
-gx::globalUniform::globalUniform(std::string n, std::map<std::string,GLenum> varNameType)
-  : blockName(n), bindingIndex(freshBindPoint()), bufferName(-5), types(), offsets(), basicLocations() {
+gx::uniform::block::block(std::string n, std::map<std::string,GLenum> varNameType)
+  : blockName(n), bindingIndex(freshBindPoint()), bufferName(-5), basicStorage(), offsets(), basicLocations() {
   if(gx::sharedUniformsOn) {
     GLsizeiptr buffSize = -3;//todo fix this
 
@@ -31,16 +31,22 @@ gx::globalUniform::globalUniform(std::string n, std::map<std::string,GLenum> var
     glBindBufferBase(GL_UNIFORM_BUFFER, this->bindingIndex, this->bufferName);
     debugout << "glBindBufferBase(GL_UNIFORM_BUFFER, " << this->bindingIndex;
     debugout << ", " << this->bufferName << ");" << endl;
+  } else {
+    for(auto varp = varNameType.begin(); varp != varNameType.end(); varp++) {
+      basicStorage.push_back(make_uniform(varp->first,varp->second));
+    }
   }
 }
 
-gx::globalUniform::~globalUniform() {
-  debugout << "glDeleteBuffers(1, &(this->bufferName): " << this->bufferName;
-  debugout << ");" << endl;
-  glDeleteBuffers(1, &(this->bufferName));
+gx::uniform::block::~block() {
+  if(gx::sharedUniformsOn) {
+    glDeleteBuffers(1, &(this->bufferName));
+    debugout << "glDeleteBuffers(1, &(this->bufferName): " << this->bufferName;
+    debugout << ");" << endl;
+  }
 }
 
-void gx::globalUniform::write(GLintptr offset, GLsizeiptr size,
+void gx::uniform::block::write(GLintptr offset, GLsizeiptr size,
                         const GLvoid* data) const {
   debugout << "glBindBuffer(GL_UNIFORM_BUFFER, " << this->bufferName << ");";
   debugout << endl;
@@ -50,7 +56,7 @@ void gx::globalUniform::write(GLintptr offset, GLsizeiptr size,
   glBufferSubData(GL_UNIFORM_BUFFER, offset, size, data);
 }
 
-void gx::globalUniform::addShaderBindings(shaderProgram* p) {
+void gx::uniform::block::addShaderBindings(shaderProgram* p) {
   GLuint prog = p->progNum();
   if(gx::sharedUniformsOn) {
     GLuint localIndex = glGetUniformBlockIndex(prog,this->name().c_str());
@@ -79,10 +85,14 @@ void gx::globalUniform::addShaderBindings(shaderProgram* p) {
   }
 }
 
-std::string gx::globalUniform::name() const {
+void frameUpdate(shaderProgram* p) {
+  localUniformUpdate(basicLocations[p][varName],1,false,data.data());
+}
+
+std::string gx::uniform::block::name() const {
   return this->blockName;
 }
 
-GLuint gx::globalUniform::bindPoint() const {
+GLuint gx::uniform::block::bindPoint() const {
   return this->bindingIndex;
 }

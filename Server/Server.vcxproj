@@ -82,7 +82,7 @@
     <ClCompile Include="graphics\matrix.cpp" />
     <ClCompile Include="graphics\oglUtil.cpp" />
     <ClCompile Include="graphics\shaderProgram.cpp" />
-    <ClCompile Include="graphics\globalUniform.cpp" />
+    <ClCompile Include="graphics\uniformBlock.cpp" />
     <ClCompile Include="graphics\userInput.cpp" />
     <ClCompile Include="graphics\vao.cpp" />
     <ClCompile Include="graphics\vector3.cpp" />
@@ -123,7 +123,7 @@
     <ClInclude Include="graphics\matrix.h" />
     <ClInclude Include="graphics\oglUtil.h" />
     <ClInclude Include="graphics\shaderProgram.h" />
-    <ClInclude Include="graphics\globalUniform.h" />
+    <ClInclude Include="graphics\uniformBlock.h" />
     <ClInclude Include="graphics\userInput.h" />
     <ClInclude Include="graphics\vao.h" />
     <ClInclude Include="graphics\vector3.h" />
@@ -131,7 +131,7 @@
     <ClInclude Include="graphics\vertexAttrib.h" />
     <ClInclude Include="graphics\vertexAttribSignature.h" />
     <ClInclude Include="graphics\windowsHacks.h" />
-    <ClInclude Include="localUniform.h" />
+    <ClInclude Include="basicUniform.h" />
     <ClInclude Include="Map.h" />
     <ClInclude Include="NetworkServices.h" />
     <ClInclude Include="NetworkData.h" />
