@@ -69,6 +69,8 @@
     <ClCompile Include="AsciUI.cpp" />
     <ClCompile Include="AudioManager.cpp" />
     <ClCompile Include="boundingBox.cpp" />
+    <ClCompile Include="boundingManager.cpp" />
+    <ClCompile Include="boundingObj.cpp" />
     <ClCompile Include="boundingSphere.cpp" />
     <ClCompile Include="ChatHandler.cpp" />
     <ClCompile Include="Client.cpp" />
@@ -108,6 +110,7 @@
     <ClInclude Include="3DCoordinate.h" />
     <ClInclude Include="AsciUI.h" />
     <ClInclude Include="boundingBox.h" />
+    <ClInclude Include="boundingManager.h" />
     <ClInclude Include="boundingObj.h" />
     <ClInclude Include="boundingSphere.h" />
     <ClInclude Include="ChatHandler.h" />

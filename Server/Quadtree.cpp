@@ -43,9 +43,8 @@ void Quadtree::split(){
      subWidth, subHeight));
 }
 
-//TODO clarify the x y z
-int Quadtree::getIndex(BoundingObj o){
-  Rectangle pRect = *o.getRect();
+int Quadtree::getIndex(BoundingObj* o){
+  Rectangle pRect = *(o->getRect());
   int index = -1;
   float x = pRect.getCenter().x - pRect.getHalfWidth(); //lowest x
   float y = pRect.getCenter().y - pRect.getHalfHeight(); //lowest y
@@ -80,10 +79,10 @@ int Quadtree::getIndex(BoundingObj o){
   return index;
 }
 
-void Quadtree::insert(BoundingObj& o){
-  Rectangle pRect = *o.getRect();
+void Quadtree::insert(BoundingObj* o){
+  Rectangle pRect = *(o->getRect());
   if(level == 0)
-    o.setQuadtree(this);
+    o->setQuadtree(this);
   if (nodes[0] != nullptr) {
     int index = getIndex(o);
  
@@ -102,7 +101,7 @@ void Quadtree::insert(BoundingObj& o){
  
     unsigned int i = 0;
 
-    for( std::list<BoundingObj>::iterator it = objects.begin(); it != objects.end(); ){
+    for( auto it = objects.begin(); it != objects.end(); ){
       int index = getIndex(*it);
       if( index != -1 ){
         nodes[index]->insert(*it);
@@ -114,7 +113,7 @@ void Quadtree::insert(BoundingObj& o){
   }
 }
 
-void Quadtree::remove(BoundingObj& o){
+void Quadtree::remove(BoundingObj* o){
   int index = getIndex(o);
   if( index != -1 && nodes[0] != nullptr){
     nodes[index]->remove(o);
@@ -124,7 +123,7 @@ void Quadtree::remove(BoundingObj& o){
     objects.remove(o);
 }
 
-std::list<BoundingObj*> & Quadtree::retrieve(std::list<BoundingObj*> & returnObjects, BoundingObj pRect){
+std::vector<BoundingObj*> & Quadtree::retrieve(std::vector<BoundingObj*> & returnObjects, BoundingObj* pRect){
   int index = getIndex(pRect);
   if( index == -1 && nodes[0] != nullptr){
     nodes[0]->retrieve(returnObjects, pRect);
@@ -136,9 +135,9 @@ std::list<BoundingObj*> & Quadtree::retrieve(std::list<BoundingObj*> & returnObj
     nodes[index]->retrieve(returnObjects, pRect);
   }
  
-  for( std::list<BoundingObj>::iterator it = objects.begin(); it != objects.end(); it++){
+  for( auto it = objects.begin(); it != objects.end(); it++){
     if(*it != pRect)
-      returnObjects.push_front(&*it);
+      returnObjects.push_back(*it);
   }
   return returnObjects;
 }

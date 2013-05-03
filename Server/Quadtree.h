@@ -1,19 +1,16 @@
 #pragma once
 #include <list>
+#include <vector>
 #include <array>
 #include <iostream>
 #include "boundingObj.h"
 
-//TODO remove these are for testing
-#include "boundingBox.h"
-#include "boundingSphere.h" 
-
 class Quadtree{
 private:
-  static const int maxObjects = 1; //TODO this needs to not be 1
+  static const int maxObjects = 10; //TODO this needs to not be 1
   static const int maxLevels = 5;
   int level;
-  std::list<BoundingObj> objects;
+  std::list<BoundingObj*> objects;
   Rectangle bounds;
   std::array<Quadtree*, 4> nodes;
 
@@ -24,27 +21,29 @@ private:
    * object cannot completely fit within a child node and is part
    * of the parent node
    */
-  int getIndex(BoundingObj o);
+  int getIndex(BoundingObj* o);
 
 public:
   Quadtree(int pLevel, Rectangle pBounds);
   ~Quadtree();
+
   //clear the quadtree
   void clear();
+
   /*
    * Insert the object into the quadtree. If the node
    * exceeds the capacity, it will split and add all
    * objects to their corresponding nodes.
    */
-  void insert(BoundingObj& o);
+  void insert(BoundingObj* o);
+
   //remove object from the tree
-  void remove(BoundingObj& o);
+  void remove(BoundingObj* o);
+
+  //Return all objects that could collide with the given object
+  std::vector<BoundingObj*>& retrieve(std::vector<BoundingObj*> & returnObjects, BoundingObj* pRect);
+  
   /*
-   * Return all objects that could collide with the given object
-   */
-  std::list<BoundingObj*>& retrieve(std::list<BoundingObj*> & returnObjects, BoundingObj pRect);
-  
-  
   static void test(){
     Rectangle worldBounds(gx::vector4(0,0,0),1000,1000);
     Quadtree q(0, worldBounds);
@@ -126,5 +125,6 @@ public:
     q.retrieve(l,b3);
     std::cout << l.size() << "==1 b3 cw: s1." << std::endl;
   }
+  */
   
 };
