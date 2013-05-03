@@ -13,7 +13,7 @@ class graphicsClient {
     GLenum     glewStatus;
 
     //scene data
-    //light light1;
+    light light1;
     displaySet display;
 
     drawSet entities;

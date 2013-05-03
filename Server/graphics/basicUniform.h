@@ -20,6 +20,7 @@ namespace uniform {
         locations.insert(std::make_pair(shader->progNum(),loc));
       }
 		  virtual void write(const GLfloat*) = 0;
+      virtual void write(const GLfloat)  = 0;
       //virtual void write(const GLint*) = 0;
       virtual void update(GLuint) const = 0;
       virtual std::string declaration() = 0;
@@ -32,6 +33,9 @@ namespace uniform {
       virtual void write(const GLfloat* src) {
         std::memcpy(storage.data(),src,sizeof(storage));
       }
+      virtual void write(const GLfloat) {
+        std::cout << "Error: only one value passed" << std::endl;
+      }
       virtual void update(GLuint shader) const {
         glUniformMatrix4fv(this->locations.at(shader),1,false,this->storage.data());
         debugout << "glUniformMatrix4fv(" << this->locations.at(shader);
@@ -41,25 +45,50 @@ namespace uniform {
         return "mat4 " + this->varName + ";";
       }
 	};
-	class vec3 : public basic {
-    std::array<GLfloat,3> storage;
+	class vec4f : public basic {
+    std::array<GLfloat,4> storage;
     public:
-      vec3(std::string name)
+      vec4f(std::string name)
       : basic(std::move(name)) {}
       virtual void write(const GLfloat* src) {
         std::memcpy(storage.data(),src,sizeof(storage));
       }
+      virtual void write(const GLfloat) {
+        std::cout << "Error: only one value passed" << std::endl;
+      }
       virtual void update(GLuint shader) const {
-        glUniform3fv(this->locations.at(shader),1,this->storage.data());
+        glUniform4fv(this->locations.at(shader),1,this->storage.data());
       }
       virtual std::string declaration() {
-        return "vec3 " + this->varName + ";";
+        return "vec4 " + this->varName + ";";
+      }
+	};
+  class vec1f : public basic {
+    GLfloat storage;
+    public:
+      vec1f(std::string name)
+      : basic(std::move(name)) {}
+      virtual void write(const GLfloat* src) {
+        storage = *src;
+      }
+      virtual void write(const GLfloat f) {
+        storage = f;
+      }
+      virtual void update(GLuint shader) const {
+        glUniform1f(this->locations.at(shader),this->storage);
+      }
+      virtual std::string declaration() {
+        return "float " + this->varName + ";";
       }
 	};
   inline std::unique_ptr<basic> make_uniform(std::string name, GLenum type) {
     switch(type) {
       case GL_FLOAT_MAT4:
         return std::unique_ptr<basic>(new mat4f(name));
+      case GL_FLOAT_VEC4:
+        return std::unique_ptr<basic>(new vec4f(name));
+      case GL_FLOAT:
+        return std::unique_ptr<basic>(new vec1f(name));
       default:
         std::cout << "make_uniform for: " << type << std::endl;
     }

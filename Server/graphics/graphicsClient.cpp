@@ -118,7 +118,7 @@ void gx::graphicsClient::reshape(unsigned int w, unsigned int h) {
 std::vector<gx::uniform::block*> gx::graphicsClient::uniforms() {
   std::vector<gx::uniform::block*> ret;
   ret.push_back(&this->display.storage());
-  //ret.push_back(&this->light1.storage());
+  ret.push_back(&this->light1.storage());
   return ret;
 }
 // create the window
@@ -128,7 +128,7 @@ gx::graphicsClient::graphicsClient():
     window(sf::VideoMode(defaultWindowWidth, defaultWindowHeight),
            "DrChao", sf::Style::Default),
     glewStatus(initGlew()), //glew needs to be called here, after window, before anything else
-    //light1(gx::vector4(1,1,1),0.5,0.5,0.05f),
+    light1(gx::vector4(1,1,1),0.5,0.5,0.05f),
     display(),
     entities(readFile("graphics/default.vert"),readFile("graphics/default.frag"),
                        entitiesData(),uniforms()),
@@ -149,7 +149,7 @@ gx::graphicsClient::graphicsClient():
   glCullFace(GL_BACK);
   glFrontFace(GL_CCW);
 
-  //light1.updatePosition(gx::vector4( 0, 5, -10));
+  light1.updatePosition(gx::vector4( 0, 5, -10));
 
   setCamera(display);
   setUpMouse();
