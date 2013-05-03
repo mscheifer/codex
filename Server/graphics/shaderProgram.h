@@ -9,15 +9,16 @@
 #include "vertexAttribSignature.h"
 
 namespace gx {
-
-class globalUniform;
+namespace uniform {
+class block;
+} //end namspace uniform
 
 class shaderProgram {
     GLuint prog;
     std::map<std::string,vertexAttribSignature> attribSigs;
   public:
     shaderProgram(const std::string,const std::string,
-                  const std::vector<const globalUniform*>);
+                  const std::vector<uniform::block*>);
     shaderProgram(const shaderProgram&);// = delete; //don't copy
     shaderProgram& operator=(const shaderProgram&);// = delete; //don't assign
     shaderProgram(shaderProgram&&);

@@ -13,7 +13,7 @@ constexpr bool sharedUniformsOn = false;
 constexpr bool debugOn = false;
 
 const std::string shaderExtensions = 
-  shaderUnfiromsOn ? "#extension GL_ARB_uniform_buffer_object : require\n" : "";
+  sharedUniformsOn ? "#extension GL_ARB_uniform_buffer_object : require\n" : "";
 
 const std::string shaderHeader = 
   "#version 130\n" + shaderExtensions + "\n";
@@ -43,7 +43,7 @@ inline constexpr GLenum typeVal(GLfloat) {
 }
 
 GLint  typeComponents(GLenum type);
-
+GLuint typeSize      (GLenum type);
 GLenum baseType      (GLenum type);
 
 } //end namespace gx

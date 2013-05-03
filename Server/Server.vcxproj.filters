@@ -263,7 +263,7 @@
     <ClInclude Include="graphics\uniformBlock.h">
       <Filter>Header Files\graphics</Filter>
     </ClInclude>
-    <ClInclude Include="basicUniform.h">
+    <ClInclude Include="graphics\basicUniform.h">
       <Filter>Header Files\graphics</Filter>
     </ClInclude>
   </ItemGroup>

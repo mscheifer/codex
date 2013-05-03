@@ -14,7 +14,7 @@ GLuint gx::uniform::block::freshBindPoint() {
 }
 
 gx::uniform::block::block(std::string n, std::map<std::string,GLenum> varNameType)
-  : blockName(n), bindingIndex(freshBindPoint()), bufferName(-5), basicStorage(), offsets(), basicLocations() {
+  : blockName(n), bindingIndex(freshBindPoint()), bufferName(-5), offsets(), basicStorage(), storageNums() {
   if(gx::sharedUniformsOn) {
     GLsizeiptr buffSize = -3;//todo fix this
 
@@ -34,6 +34,7 @@ gx::uniform::block::block(std::string n, std::map<std::string,GLenum> varNameTyp
   } else {
     for(auto varp = varNameType.begin(); varp != varNameType.end(); varp++) {
       basicStorage.push_back(make_uniform(varp->first,varp->second));
+      storageNums.insert(std::make_pair(varp->first,basicStorage.size() - 1));
     }
   }
 }
@@ -46,7 +47,7 @@ gx::uniform::block::~block() {
   }
 }
 
-void gx::uniform::block::write(GLintptr offset, GLsizeiptr size,
+void gx::uniform::block::writeBuffer(GLintptr offset, GLsizeiptr size,
                         const GLvoid* data) const {
   debugout << "glBindBuffer(GL_UNIFORM_BUFFER, " << this->bufferName << ");";
   debugout << endl;
@@ -75,18 +76,34 @@ void gx::uniform::block::addShaderBindings(shaderProgram* p) {
                               GL_UNIFORM_BLOCK_DATA_SIZE, &sz);
     debugout << "uniform size: " << sz << endl;
   } else {
-    std::map<std::string,GLint> locations;
-    for(auto varp = this->types.begin(); varp != this->types.end(); varp++) {
-      const auto varName = varp->first;
-      GLint loc = glGetUniformLocation(prog, varName.c_str());
-      locations.insert(std::make_pair(varName,loc));
+    for(auto varp = this->basicStorage.begin(); varp != this->basicStorage.end(); varp++) {
+      (*varp)->addShader(p);
     }
-    this->basicLocations.insert(std::make_pair(prog,locations));
   }
 }
 
-void frameUpdate(shaderProgram* p) {
-  localUniformUpdate(basicLocations[p][varName],1,false,data.data());
+void gx::uniform::block::frameUpdate(const shaderProgram* p) const {
+  if(!gx::sharedUniformsOn) {
+    for(auto varp = this->basicStorage.begin(); varp != this->basicStorage.end(); varp++) {
+      (*varp)->update(p->progNum());
+    }
+  }
+}
+
+std::string gx::uniform::block::declaration() const {
+  std::string ret;
+  if(gx::sharedUniformsOn) {
+    ret  = "layout(std140) uniform display {";
+    for(auto basicP = basicStorage.begin(); basicP != basicStorage.end(); basicP++) {
+      ret += "  " + (*basicP)->declaration();
+    }
+    ret += "};\n";
+  } else {
+    for(auto basicP = basicStorage.begin(); basicP != basicStorage.end(); basicP++) {
+      ret += "uniform " + (*basicP)->declaration();
+    }
+  }
+  return ret;
 }
 
 std::string gx::uniform::block::name() const {

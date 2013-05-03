@@ -10,10 +10,10 @@ namespace gx {
 
 class graphicsClient {
     sf::Window window;
-	GLenum     glewStatus;
+    GLenum     glewStatus;
 
     //scene data
-    light light1;
+    //light light1;
     displaySet display;
 
     drawSet entities;
@@ -22,7 +22,7 @@ class graphicsClient {
     int fpsFrames;
 
     void reshape(unsigned int, unsigned int);
-    std::vector<const gx::uniform*> uniforms();
+    std::vector<gx::uniform::block*> uniforms();
   public:
     graphicsClient();
     graphicsClient(const graphicsClient&);// = delete;

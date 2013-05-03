@@ -1,7 +1,7 @@
 #include <GL/glew.h>
 #include <array>
 #include "vector4.h"
-#include "globalUniform.h"
+#include "uniformBlock.h"
 
 namespace gx {
 
@@ -13,11 +13,11 @@ class light {
       GLfloat               linearAttenuation;
       GLfloat               quadraticAttenuation;
     } data;
-    globalUniform unif;
+    uniform::block unif;
   public:
     light(vector4,GLfloat,GLfloat,GLfloat);
     void updatePosition(vector4);
-    globalUniform& storage();
+    uniform::block& storage();
 };
 
 }

@@ -1,7 +1,7 @@
 #include "shaderProgram.h"
 #include <array>
 #include <iostream>
-#include "globalUniform.h"
+#include "uniformBlock.h"
 
 namespace { //to not export
 void printShaderInfoLog(GLuint obj,const std::string name) {
@@ -39,7 +39,7 @@ void printProgramInfoLog(GLuint obj) {
 } //end unnamed namespace
 
 gx::shaderProgram::shaderProgram(   const std::string vsSource,
-        const std::string fsSource, const std::vector<const globalUniform*> uniforms)
+        const std::string fsSource, const std::vector<uniform::block*> uniforms)
                  : prog(glCreateProgram()), attribSigs() {
   debugout << prog << " = glCreateProgram()" << endl;
   const std::string shader_output_name("outputF");
@@ -51,11 +51,16 @@ gx::shaderProgram::shaderProgram(   const std::string vsSource,
   fragShader = glCreateShader(GL_FRAGMENT_SHADER);
   debugout << fragShader << " = glCreateShader(GL_FRAGMENT_SHADER);" << endl;
 
+  std::string uniformDecl = "";
+  for(auto uniformp = uniforms.begin(); uniformp != uniforms.end(); ++uniformp){
+    uniformDecl += (*uniformp)->declaration();
+  }
+
   //include version string and stuff
-  std::array<const GLchar*,2> fullSourceV =
-    {{ shaderHeader.c_str(), vsSource.c_str() }};
-  std::array<const GLchar*,2> fullSourceF =
-    {{ shaderHeader.c_str(), fsSource.c_str() }};
+  std::array<const GLchar*,3> fullSourceV =
+    {{ shaderHeader.c_str(), uniformDecl.c_str(), vsSource.c_str() }};
+  std::array<const GLchar*,3> fullSourceF =
+    {{ shaderHeader.c_str(), uniformDecl.c_str(), fsSource.c_str() }};
 
   glShaderSource(vertShader, GLsizei(fullSourceV.size()), fullSourceV.data(),
                                                                     nullptr);
@@ -128,24 +133,9 @@ gx::shaderProgram::shaderProgram(   const std::string vsSource,
 
   delete[] attribName;
 
-   //cant use range based for here because of visual c++
   for(auto uniformp = uniforms.begin(); uniformp != uniforms.end(); ++uniformp){
-    const auto& unif = **uniformp;
-    GLuint localIndex = glGetUniformBlockIndex(this->prog,unif.name().c_str());
-    debugout << localIndex << " = glGetUniformBlockIndex(" << this->prog;
-    debugout << ", \"" << unif.name().c_str() << "\");" << endl;
-    if(localIndex == GL_INVALID_INDEX) {
-      std::cout << unif.name() << ": doesn't exist in shader" << endl;
-    }
-
-    glUniformBlockBinding(this->prog,localIndex,unif.bindPoint());
-    debugout << "glUniformBlockBinding(" << this->prog << ", " << localIndex;
-    debugout << ", " << unif.bindPoint() << ");" << endl;
-
-    int sz;
-    glGetActiveUniformBlockiv(this->prog, localIndex,
-                              GL_UNIFORM_BLOCK_DATA_SIZE, &sz);
-    debugout << "uniform size: " << sz << endl;
+    auto& unif = **uniformp;
+    unif.addShaderBindings(this);
   }
 }
 

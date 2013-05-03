@@ -1,14 +1,15 @@
 #include <GL/glew.h>
 #include <vector>
 #include <string>
-#include "matrix.h"
 #include "shaderProgram.h"
 #include "vao.h"
+#include "matrix.h"
 
 namespace gx {
-
 class displaySet;
-class globalUniform;
+namespace uniform {
+class block;
+} //end namespace uniform
 
 class drawSet {
    struct entityClass {
@@ -19,16 +20,14 @@ class drawSet {
     };
     shaderProgram            program;
     std::vector<entityClass> entityClasses;
-	GLint                    viewLoc;
-    GLint                    projLoc;
     GLint                    modelToWorldLoc;
-	displaySet&              display;
+	  std::vector<uniform::block*> globalUniforms;
   public:
     typedef std::pair<std::vector<GLuint>,
                       std::vector<const vertexAttrib*>> vaoData_t;
     drawSet(const std::string, const std::string, const std::vector<vaoData_t>,
-                  std::vector<const globalUniform*>, displaySet&);
-    void draw(matrix) const;
+                  std::vector<uniform::block*>);
+    void draw() const;
     void reset();
     void addEntity(vector3,unsigned int);
 };

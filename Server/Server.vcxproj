@@ -116,6 +116,7 @@
     <ClInclude Include="directionalVector.h" />
     <ClInclude Include="Entity.h" />
     <ClInclude Include="Game.h" />
+    <ClInclude Include="graphics\basicUniform.h" />
     <ClInclude Include="graphics\displaySet.h" />
     <ClInclude Include="graphics\drawSet.h" />
     <ClInclude Include="graphics\graphicsClient.h" />
@@ -131,7 +132,6 @@
     <ClInclude Include="graphics\vertexAttrib.h" />
     <ClInclude Include="graphics\vertexAttribSignature.h" />
     <ClInclude Include="graphics\windowsHacks.h" />
-    <ClInclude Include="basicUniform.h" />
     <ClInclude Include="Map.h" />
     <ClInclude Include="NetworkServices.h" />
     <ClInclude Include="NetworkData.h" />
