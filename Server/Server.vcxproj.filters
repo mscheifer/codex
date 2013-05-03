@@ -102,9 +102,6 @@
     <ClCompile Include="graphics\shaderProgram.cpp">
       <Filter>Source Files\graphics</Filter>
     </ClCompile>
-    <ClCompile Include="graphics\uniform.cpp">
-      <Filter>Source Files\graphics</Filter>
-    </ClCompile>
     <ClCompile Include="graphics\userInput.cpp">
       <Filter>Source Files\graphics</Filter>
     </ClCompile>
@@ -146,6 +143,9 @@
     </ClCompile>
     <ClCompile Include="boundingManager.cpp">
       <Filter>Source Files\collisions</Filter>
+    </ClCompile>
+    <ClCompile Include="graphics\uniformBlock.cpp">
+      <Filter>Source Files\graphics</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -233,9 +233,6 @@
     <ClInclude Include="graphics\shaderProgram.h">
       <Filter>Header Files\graphics</Filter>
     </ClInclude>
-    <ClInclude Include="graphics\uniform.h">
-      <Filter>Header Files\graphics</Filter>
-    </ClInclude>
     <ClInclude Include="graphics\userInput.h">
       <Filter>Header Files\graphics</Filter>
     </ClInclude>
@@ -283,6 +280,12 @@
     </ClInclude>
     <ClInclude Include="boundingManager.h">
       <Filter>Header Files\collisions</Filter>
+    </ClInclude>
+    <ClInclude Include="graphics\uniformBlock.h">
+      <Filter>Header Files\graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="graphics\basicUniform.h">
+      <Filter>Header Files\graphics</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

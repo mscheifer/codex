@@ -115,8 +115,8 @@ void gx::graphicsClient::reshape(unsigned int w, unsigned int h) {
   this->display.setProjection(fov,ratio,nearPlane,farPlane);
 }
 
-std::vector<const gx::uniform*> gx::graphicsClient::uniforms() {
-  std::vector<const gx::uniform*> ret;
+std::vector<gx::uniform::block*> gx::graphicsClient::uniforms() {
+  std::vector<gx::uniform::block*> ret;
   ret.push_back(&this->display.storage());
   ret.push_back(&this->light1.storage());
   return ret;
@@ -132,7 +132,7 @@ gx::graphicsClient::graphicsClient():
     display(),
     entities(readFile("graphics/default.vert"),readFile("graphics/default.frag"),
                        entitiesData(),uniforms()),
-    fpsClock(), fpsFrames(0) {
+    fpsClock(), fpsFrames(0)                                                     {
   this->window.setVerticalSyncEnabled(false);
   this->window.setMouseCursorVisible(false);
   if(!this->window.setActive()) {
@@ -178,24 +178,24 @@ gx::userInput gx::graphicsClient::handleInput() {
 }
 
 void gx::graphicsClient::draw() {
-      // clear the buffers
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
-    gx::debugout << "glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT";
-    gx::debugout << "| GL_STENCIL_BUFFER_BIT);" << gx::endl;
+    // clear the buffers
+  glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
+  gx::debugout << "glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT";
+  gx::debugout << "| GL_STENCIL_BUFFER_BIT);" << gx::endl;
 
     // draw...
-	entities.draw(display.projection * display.view);
+	entities.draw();
 
-    // end the current frame (internally swaps the front and back buffers)
-    window.display();
+  // end the current frame (internally swaps the front and back buffers)
+  window.display();
 
-    //fps calc
-    fpsFrames++;
-    if(fpsClock.getElapsedTime().asSeconds() >= 1) {
-      std::cout << "fps: " << fpsFrames << std::endl;
-      fpsFrames = 0;
-      fpsClock.restart();
-    }
+  //fps calc
+  fpsFrames++;
+  if(fpsClock.getElapsedTime().asSeconds() >= 1) {
+    std::cout << "fps: " << fpsFrames << std::endl;
+    fpsFrames = 0;
+    fpsClock.restart();
+  }
 }
 
 void gx::graphicsClient::updateEntities(std::vector<std::pair<vector3,int>> data) {
