@@ -1,7 +1,6 @@
 #include "Server.h"
 #include "Client.h"
 #include "Player.h"
-#include "boundingBox.h"
 #include <cctype> //this is for toupper method
 
 int main() {

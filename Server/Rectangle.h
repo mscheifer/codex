@@ -1,22 +1,20 @@
+#pragma once
+#include "graphics\vector4.h"
+
 class Rectangle{
 private:
-  double x;
-  double y;
-  double width;
-  double height;
+  gx::vector4 center;
+  float hw;
+  float hh;
 
 public:
-  Rectangle(double x, double y, double width, double height):
-  x(x), y(y), width(width), height(height){}
-  Rectangle():x(0), y(0), width(0), height(0){}
-  double getWidth(){ return width; }
-  double getHeight(){ return height; }
-  double getX(){ return x; }
-  double getY(){ return y; }
-  bool operator==(const Rectangle &other){
-    return x == other.x && 
-      y == other.y &&
-      width == other.width &&
-      height == other.height;
-  }
+  Rectangle(gx::vector4 cen, float halfWidth, float halfHeight):
+  center(cen), hw(halfWidth), hh(halfHeight){}
+  Rectangle():center(0,0,0), hw(0), hh(0){}
+  float getHalfWidth() const{ return hw; }
+  float getHalfHeight() const{ return hw; }
+  gx::vector4 getCenter() const{return center;}
+  void setCenter(gx::vector4 cen){ center = cen; }
+  void setHalfWidth(float halfWidth){ hw = halfWidth; }
+  void setHalfHeight(float halfHeight){ hh = halfHeight; }
 };

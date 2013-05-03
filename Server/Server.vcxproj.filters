@@ -22,6 +22,12 @@
     <Filter Include="Resource Files\graphics">
       <UniqueIdentifier>{1b561139-0929-44eb-8a02-04cc242b0ff3}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\collisions">
+      <UniqueIdentifier>{6ee135f1-222b-4167-aaa3-efeb45262b68}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\collisions">
+      <UniqueIdentifier>{0f73f378-2807-435c-9b26-22768a910b46}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -78,9 +84,6 @@
     <ClCompile Include="WeaponFist.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="boundingSphere.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="graphics\displaySet.cpp">
       <Filter>Source Files\graphics</Filter>
     </ClCompile>
@@ -97,9 +100,6 @@
       <Filter>Source Files\graphics</Filter>
     </ClCompile>
     <ClCompile Include="graphics\shaderProgram.cpp">
-      <Filter>Source Files\graphics</Filter>
-    </ClCompile>
-    <ClCompile Include="graphics\uniform.cpp">
       <Filter>Source Files\graphics</Filter>
     </ClCompile>
     <ClCompile Include="graphics\userInput.cpp">
@@ -123,14 +123,29 @@
     <ClCompile Include="graphics\graphicsClient.cpp">
       <Filter>Source Files\graphics</Filter>
     </ClCompile>
-    <ClCompile Include="Quadtree.cpp">
+    <ClCompile Include="WeaponFire.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="boundingBox.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\collisions</Filter>
     </ClCompile>
-    <ClCompile Include="WeaponFire.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="boundingObj.cpp">
+      <Filter>Source Files\collisions</Filter>
+    </ClCompile>
+    <ClCompile Include="boundingSphere.cpp">
+      <Filter>Source Files\collisions</Filter>
+    </ClCompile>
+    <ClCompile Include="ray.cpp">
+      <Filter>Source Files\collisions</Filter>
+    </ClCompile>
+    <ClCompile Include="Quadtree.cpp">
+      <Filter>Source Files\collisions</Filter>
+    </ClCompile>
+    <ClCompile Include="boundingManager.cpp">
+      <Filter>Source Files\collisions</Filter>
+    </ClCompile>
+    <ClCompile Include="graphics\uniformBlock.cpp">
+      <Filter>Source Files\graphics</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -200,9 +215,6 @@
     <ClInclude Include="WeaponFist.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="boundingSphere.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="graphics\displaySet.h">
       <Filter>Header Files\graphics</Filter>
     </ClInclude>
@@ -219,9 +231,6 @@
       <Filter>Header Files\graphics</Filter>
     </ClInclude>
     <ClInclude Include="graphics\shaderProgram.h">
-      <Filter>Header Files\graphics</Filter>
-    </ClInclude>
-    <ClInclude Include="graphics\uniform.h">
       <Filter>Header Files\graphics</Filter>
     </ClInclude>
     <ClInclude Include="graphics\userInput.h">
@@ -248,20 +257,35 @@
     <ClInclude Include="graphics\graphicsClient.h">
       <Filter>Header Files\graphics</Filter>
     </ClInclude>
-    <ClInclude Include="Ray.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Quadtree.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Rectangle.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="boundingBox.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="WeaponFire.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Ray.h">
+      <Filter>Header Files\collisions</Filter>
+    </ClInclude>
+    <ClInclude Include="Quadtree.h">
+      <Filter>Header Files\collisions</Filter>
+    </ClInclude>
+    <ClInclude Include="Rectangle.h">
+      <Filter>Header Files\collisions</Filter>
+    </ClInclude>
+    <ClInclude Include="boundingSphere.h">
+      <Filter>Header Files\collisions</Filter>
+    </ClInclude>
+    <ClInclude Include="boundingObj.h">
+      <Filter>Header Files\collisions</Filter>
+    </ClInclude>
+    <ClInclude Include="boundingBox.h">
+      <Filter>Header Files\collisions</Filter>
+    </ClInclude>
+    <ClInclude Include="boundingManager.h">
+      <Filter>Header Files\collisions</Filter>
+    </ClInclude>
+    <ClInclude Include="graphics\uniformBlock.h">
+      <Filter>Header Files\graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="graphics\basicUniform.h">
+      <Filter>Header Files\graphics</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
