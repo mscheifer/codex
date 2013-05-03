@@ -2,10 +2,14 @@
 
 namespace { //don't export
  const std::string uniformName = "display";
+ const std::array<std::pair<std::string,GLenum>,2> uniformVars = {{ 
+   std::make_pair("viewMatrix",GL_FLOAT_MAT4), 
+   std::make_pair("projMatrix",GL_FLOAT_MAT4)
+ }};
 } //end unnamed namespace
 
 gx::displaySet::displaySet(): view(), projection(), cameraPos(),
-    unif(uniformName,sizeof(elem_t[16]) * 2 + sizeof(elem_t) * 4) {}
+    unif(uniformName,std::map<std::string,GLenum>(uniformVars.begin(),uniformVars.end())) {}
 
 void gx::displaySet::setProjection(elem_t fov, elem_t ratio, elem_t nearP,
                                elem_t farP) {
@@ -20,9 +24,7 @@ void gx::displaySet::setProjection(elem_t fov, elem_t ratio, elem_t nearP,
   this->projection[3][2] = -1.0f;
   this->projection[3][3] = 0.0f;
 
-  auto oglM = this->projection.oglmatrix();
-
-  this->storage().write(sizeof(oglM),oglM);
+  this->storage().write("projMatrix",this->projection.oglmatrix());
 }
 //e is camera position and d is look at point
 void gx::displaySet::setView(const vector3& e, const vector3& d, 
@@ -58,14 +60,12 @@ void gx::displaySet::setView(const vector3& e, const vector3& d,
   matrix t = translation(-e[0],-e[1],-e[2]);
 
   this->view = r * t;
+  this->storage().write("viewMatrix",this->view.oglmatrix());
 
-  auto oglM = this->view.oglmatrix();
-
-  this->storage().write(0,oglM);
   this->cameraPos = e;
-  this->storage().write(sizeof(oglM)*2,e.oglVec3());
+  //TODO: add write for camera pos
 }
 
-const gx::uniform& gx::displaySet::storage() const {
+gx::uniform::block& gx::displaySet::storage() {
   return this->unif;
 }

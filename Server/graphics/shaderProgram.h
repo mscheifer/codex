@@ -9,24 +9,25 @@
 #include "vertexAttribSignature.h"
 
 namespace gx {
-
-class uniform;
+namespace uniform {
+class block;
+} //end namspace uniform
 
 class shaderProgram {
     GLuint prog;
     std::map<std::string,vertexAttribSignature> attribSigs;
   public:
     shaderProgram(const std::string,const std::string,
-                  const std::vector<const uniform*>);
-	//vc++ is dumb
-    //shaderProgram(const shaderProgram&) = delete; //don't copy
-    //shaderProgram& operator=(const shaderProgram&) = delete; //don't assign
+                  const std::vector<uniform::block*>);
+    shaderProgram(const shaderProgram&);// = delete; //don't copy
+    shaderProgram& operator=(const shaderProgram&);// = delete; //don't assign
     shaderProgram(shaderProgram&&);
     shaderProgram& operator=(shaderProgram&&);
     ~shaderProgram(); //not virtual because there's no inheiritance
     void use() const;
     std::map<std::string,vertexAttribSignature> vars() const;
     GLint uniformLoc(const std::string) const;
+    GLuint progNum() const;
 };
 
 } //end namespace gx
