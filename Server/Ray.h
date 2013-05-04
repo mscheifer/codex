@@ -12,7 +12,6 @@ public:
     //origin = center;
     updateRect();
   }
-  void move(gx::vector3 v);
   void updateRect();
   bool isRay() const{return true;}
 
