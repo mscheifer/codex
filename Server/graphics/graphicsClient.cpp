@@ -1,6 +1,7 @@
 #include "graphicsClient.h"
 #include <fstream>
 #include "oglUtil.h"
+#include "mesh.h"
 
 namespace {
 const unsigned int defaultWindowWidth  = 800;
@@ -23,7 +24,30 @@ std::string readFile(const std::string fileName) {
   return fullSource;
 }
 
+std::vector<gx::drawSet::vaoData_t> loadModel(const std::string& ModelPath) {
+	gx::Mesh model;
+
+	// we may need the information from this aiScene for later.
+	// Contains all the information on the ModelPath
+	const aiScene* scene = model.LoadMesh(ModelPath);
+
+	// if model fails to load, exit
+	if (!scene) {
+		gx::debugout << "Assimp failed to load model.\n";
+		throw;
+	}
+
+	std::vector<gx::drawSet::vaoData_t> entities;
+  //just do the first one until we get loading working
+  entities.push_back(model.m_Entries[0].entitiesData);
+
+	return entities;
+}
+
 std::vector<gx::drawSet::vaoData_t> entitiesData() {
+	// MODEL LOADING
+	std::vector<gx::drawSet::vaoData_t> model_import = loadModel("bench.obj");
+
     //setup drawing data
   std::array<GLfloat,8*4> posArray    = {{ 0.0f, 0.0f, 0.0f, 1.0f,
                                            1.0f, 0.0f, 0.0f, 1.0f,
@@ -88,6 +112,7 @@ std::vector<gx::drawSet::vaoData_t> entitiesData() {
 
   std::vector<gx::drawSet::vaoData_t> entitiesData;
   entitiesData.push_back(std::make_pair(indices,attribs));
+  //entitiesData += model_import;
   return entitiesData;
 }
 //must call after window is initialized

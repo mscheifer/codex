@@ -1,3 +1,5 @@
+#ifndef DRAWSET_H
+#define DRAWSET_H
 #include <GL/glew.h>
 #include <vector>
 #include <string>
@@ -33,3 +35,4 @@ class drawSet {
 };
 
 } //end namespace gx
+#endif // DRAWSET_H
