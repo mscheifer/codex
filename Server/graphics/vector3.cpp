@@ -72,6 +72,10 @@ gx::vector3::elem_t gx::vector3::magnitude() const {
   return elem_t(sqrt(x*x + y*y + z*z));
 }
 
+gx::vector3::elem_t gx::vector3::magnitudesq() const {
+  return elem_t(x*x + y*y + z*z);
+}
+
 void gx::vector3::normalize() {
   if(magnitude() > 0) {
     scale(elem_t(1.0)/magnitude());
