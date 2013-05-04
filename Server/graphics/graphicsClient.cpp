@@ -46,7 +46,7 @@ std::vector<gx::drawSet::vaoData_t> loadModel(const std::string& ModelPath) {
 
 std::vector<gx::drawSet::vaoData_t> entitiesData() {
 	// MODEL LOADING
-	std::vector<gx::drawSet::vaoData_t> model_import = loadModel("bench.obj");
+	std::vector<gx::drawSet::vaoData_t> model_import = loadModel("models/weird_orange_thing.dae");
 
     //setup drawing data
   std::array<GLfloat,8*4> posArray    = {{ 0.0f, 0.0f, 0.0f, 1.0f,
@@ -111,8 +111,8 @@ std::vector<gx::drawSet::vaoData_t> entitiesData() {
   attribs.push_back(normDiffAttrib);
 
   std::vector<gx::drawSet::vaoData_t> entitiesData;
-  entitiesData.push_back(std::make_pair(indices,attribs));
-  //entitiesData += model_import;
+  //entitiesData.push_back(std::make_pair(indices,attribs));
+  entitiesData.insert(entitiesData.end(),model_import.begin(),model_import.end());
   return entitiesData;
 }
 //must call after window is initialized
@@ -136,7 +136,7 @@ void gx::graphicsClient::reshape(unsigned int w, unsigned int h) {
   const elem_t farPlane  = 3000.0f;
   // adjust the viewport when the window is resized
   glViewport(0, 0, w, h);
-  gx::debugout << "glViewport(0, 0, w, h);" << gx::endl;
+  gx::debugout << "glViewport(0, 0, " << w << ", " << h << ");" << gx::endl;
   this->display.setProjection(fov,ratio,nearPlane,farPlane);
 }
 
@@ -155,7 +155,7 @@ gx::graphicsClient::graphicsClient():
     glewStatus(initGlew()), //glew needs to be called here, after window, before anything else
     light1(gx::vector4(1,1,1),0.5,0.5,0.05f),
     display(),
-    entities(readFile("graphics/default.vert"),readFile("graphics/default.frag"),
+    entities(readFile("shaders/default.vert"),readFile("shaders/default.frag"),
                        entitiesData(),uniforms()),
     fpsClock(), fpsFrames(0)                                                     {
   this->window.setVerticalSyncEnabled(false);
@@ -169,11 +169,11 @@ gx::graphicsClient::graphicsClient():
   glClearColor(1.0,1.0,1.0,1.0); //start with a white screen
   glClearDepth(1.f);
   glDepthFunc(GL_LEQUAL);
-
+/*
   glEnable(GL_CULL_FACE);
   glCullFace(GL_BACK);
   glFrontFace(GL_CCW);
-
+*/
   light1.updatePosition(gx::vector4( 0, 5, -10));
 
   setCamera(display);

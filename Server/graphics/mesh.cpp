@@ -28,32 +28,40 @@ gx::Mesh::MeshEntry::~MeshEntry()
     } */
 }
 
-std::vector<GLfloat> vertToComponentV(std::vector<gx::Vertex>& Vertices,
-									                    int sizePerVertex) {
-	
-	std::vector<GLfloat> component(Vertices.size()*sizePerVertex);
-
-	std::vector<gx::Vertex>::iterator v;
-	for (v = Vertices.begin(); v != Vertices.end(); ++v) {
-		// push in x,y,z,w component of the vertex
-		for (int i = 0; i < sizePerVertex ; i++) {
-			component.push_back(v->m_pos[i]);
-		}
-	}
-	return component;
-}
-
 void gx::Mesh::MeshEntry::Init(std::vector<Vertex>& Vertices,
 						   const std::vector<unsigned int>& Indices)
 {
-    NumIndices = Indices.size();
+  NumIndices = Indices.size();
+
+  std::vector<GLfloat> positions;
+	for (auto v = Vertices.begin(); v != Vertices.end(); ++v) {
+	  positions.push_back(v->m_pos.x);
+	  positions.push_back(v->m_pos.y);
+	  positions.push_back(v->m_pos.z);
+	  positions.push_back(v->m_pos.w);
+	}
+
+  std::vector<GLfloat> colors;
+	for (auto v = Vertices.begin(); v != Vertices.end(); ++v) {
+	  colors.push_back(v->m_color.x);
+	  colors.push_back(v->m_color.y);
+	  colors.push_back(v->m_color.z);
+	  colors.push_back(v->m_color.w);
+	}
+
+  std::vector<GLfloat> normals;
+	for (auto v = Vertices.begin(); v != Vertices.end(); ++v) {
+	  normals.push_back(v->m_normal.x);
+	  normals.push_back(v->m_normal.y);
+	  normals.push_back(v->m_normal.z);
+	}
 
 	gx::vertexAttrib* positionsAttrib = new
-    gx::vertexAttrib("position",4,0,vertToComponentV(Vertices, 4));
+    gx::vertexAttrib("position",4,0,positions);
 	gx::vertexAttrib* colorsAttrib = new
-    gx::vertexAttrib("color",4,0,vertToComponentV(Vertices, 4));
+    gx::vertexAttrib("color",4,0,colors);
 	gx::vertexAttrib* normalsAttrib = new
-    gx::vertexAttrib("normal"  ,3,0,vertToComponentV(Vertices, 3));
+    gx::vertexAttrib("normal",3,0,normals);
 
 	std::vector<const gx::vertexAttrib*> attribs;
 	attribs.push_back(positionsAttrib);

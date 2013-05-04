@@ -119,7 +119,8 @@ void NetworkClient::doClient() {
   //temp code -----------------------------
   */
   //  main run loop
-  while(this->running){
+  //for(int i = 0; i < 3; i++) {
+  while(this->running) {
     //process input and send events
     this->processInput(this->gxClient.handleInput());
     this->receiveMessages();
@@ -130,5 +131,4 @@ void NetworkClient::doClient() {
       this->sendPacket = false;
     }
   }
-  while(true){}
 }
