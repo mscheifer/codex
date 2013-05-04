@@ -14,7 +14,7 @@ all: $(NAME)
 
 $(OBJS): $(OBJDIR)%.o: %.cpp $(HEADERS)
 	$(ECHO) "Compiling $<"
-	$(ECHO) $(CC) $(CPPFLAGS) -c -o $@ $<
+#	$(ECHO) $(CC) $(CPPFLAGS) -c -o $@ $<
 	$(CC) $(CPPFLAGS) -c -o $@ $<
 
 $(NAME): $(OBJS)
