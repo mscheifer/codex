@@ -3,11 +3,7 @@
 #include "Player.h"
 #include <cctype> //this is for toupper method
 
-#include "boundingManager.h" //TODO remove this is for testing
-
 int main(){  
-  boxTest();
-  sphereTest();
   std::cout << "Run (s)erver or (c)lient?: ";
   std::string input = ""; 
   std::getline(std::cin, input);

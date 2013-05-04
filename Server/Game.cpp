@@ -39,8 +39,8 @@ ServerGameTimeRespond Game::evaluate(ClientGameTimeAction a) {
 		 s.players[i] = *currentPlayers[i]; //add the player to the return struct
 	}
 
-	for(int i = 0; i < currentEntities.size(); i++ ) {
-		 printf(" hello nigga");
+	for(unsigned int i = 0; i < currentEntities.size(); i++ ) {
+		 printf(" mah nigga");
 		 currentEntities[i]->update();
 		 s.entities[i] = currentEntities[i]; //add the player to the return struct
 	}

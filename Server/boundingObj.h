@@ -50,6 +50,7 @@ public:
   }
 
   //setters and getters
+  Entity* getEntity() const{return entity;}
   Quadtree* getQtree()const{return qtree;}
   void setQuadtree(Quadtree* q){qtree=q;}
   Rectangle* getRect()const{return rect;}

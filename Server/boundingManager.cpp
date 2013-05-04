@@ -1,6 +1,9 @@
 #include "boundingManager.h"
 
 //////////////////////helper functions/////////////////
+bool sortEntity(std::pair<Entity*,gx::vector3> a, std::pair<Entity*,gx::vector3> b){
+  return a.second.magnitudesq() < b.second.magnitudesq();
+}
 
 int sign( float number)
 {
@@ -228,15 +231,21 @@ std::pair<bool,gx::vector3> collide(const BoundingObj * a,const  BoundingObj * b
     return boxBox((const BoundingBox*)a,(const BoundingBox*)b);
   else if(a->isBox() && b->isRay())
     return boxRay((const BoundingBox*)a,(const Ray*)b);
-  else if(b->isBox() && a->isRay())
-    return boxRay((const BoundingBox*)b,(const Ray*)a);
+  else if(b->isBox() && a->isRay()){
+    std::pair<bool,gx::vector3> r = boxRay((const BoundingBox*)b,(const Ray*)a);
+    r.second.negate();
+    return r;
+  }
   
   else if(a->isSphere() && b->isSphere())
     return sphereSphere((const BoundingSphere*)a,(const BoundingSphere*)b);
   else if(a->isSphere() && b->isRay())
     return sphereRay((const BoundingSphere*)a,(const Ray*)b);
-  else if(b->isSphere() && a->isRay())
-    return sphereRay((const BoundingSphere*)b,(const Ray*)a);
+  else if(b->isSphere() && a->isRay()){
+    std::pair<bool,gx::vector3> r = sphereRay((const BoundingSphere*)b,(const Ray*)a);
+    r.second.negate();
+    return r;
+  }
 
   return std::pair<bool,gx::vector3>(false,gx::vector3());
 }
@@ -296,3 +305,4 @@ void sphereTest(){
   std::cout << "false 0==" << collide(&s3, &r3).first << collide(&r3, &s3).first << std::endl;
     std::cout << "false 0==" << collide(&s3, &r3).second << collide(&r3, &s3).second << std::endl;
 }
+

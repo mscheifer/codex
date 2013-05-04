@@ -6,7 +6,8 @@
 const float Map::Item_Pick_Up_Ranges = 1.0f;
 
 
-Map::Map(void)
+//TODO the rectangle should be the actual world bounds
+Map::Map(void):q(0,Rectangle(gx::vector4(0,0,0),1000,1000))
 {
 	map_size = 15;
 	
@@ -40,7 +41,7 @@ std::vector<Entity *> Map::getEntity() {
    proj->setOwner(NULL);
    freeProjectiles.push(proj);
    // should probably use a hasmap soon
-   for(int i = 0; i < entities.size(); i++) {
+   for(unsigned int i = 0; i < entities.size(); i++) {
 	   if(entities.at(i) == proj) {
 			entities.erase(entities.begin() + i);
 	   }
@@ -51,4 +52,16 @@ std::vector<Entity *> Map::getEntity() {
  {
    players.push_back(newPlayer);
    return true;
+ }
+
+ void Map::addToQtree(Entity* e){
+   for( auto it = e->getBoundingObjs().begin(); it != e->getBoundingObjs().end(); it++){
+       q.insert(*it);
+   }
+ }
+ 
+ void Map::removeFromQtree(Entity* e){
+   for(auto it = e->getBoundingObjs().begin(); it != e->getBoundingObjs().end(); it++){
+       q.remove(*it);
+   }
  }

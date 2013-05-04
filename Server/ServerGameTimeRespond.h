@@ -19,18 +19,19 @@ struct ServerGameTimeRespond
 	for(int i = 0; i < size; i++)
 		entities[i]->serialize(packet);
   }
+
   void deserialize(sf::Packet & packet) {
 	  // TODO: Matt&Bowen is this correct??
     for (int i=0;i<4;i++)
       players[i].deserialize(packet);
 
-	int size = 0;
-	packet>>size;
-	for(int i = 0; i < size; i++)
-	{
-		Entity* newEntity = new Entity();
-		newEntity->deserialize(packet);
-		entities.push_back( newEntity );
-	}
+	  int size = 0;
+	  packet>>size;
+	  for(int i = 0; i < size; i++)
+	  {
+		  Entity* newEntity = new Entity();
+		  newEntity->deserialize(packet);
+		  entities.push_back( newEntity );
+	  }
   }
 };
