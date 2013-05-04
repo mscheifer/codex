@@ -20,7 +20,7 @@ public:
   Entity() {}
   ~Entity() {}
   
-  virtual void handleAction(ClientGameTimeAction a){}
+  virtual void handleAction(ClientGameTimeAction){}
   virtual void update(){}
   virtual void onCollision(Entity*){}
   virtual bool isProjectile(void){ return false;}

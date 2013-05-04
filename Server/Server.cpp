@@ -2,17 +2,17 @@
 
 void NetworkServer::receiveMessages(int i) {
   sf::Packet packet;
-    sf::Packet oldPacket;
-    bool recv = false;
+  sf::Packet oldPacket;
+  bool recv = false;
     
-    while(this->server.receiveMessage(packet,i)){
-      oldPacket = packet;
-      recv = true;
-    }
+  while(this->server.receiveMessage(packet,i)){
+    oldPacket = packet;
+    recv = true;
+  }
 
-    packet = oldPacket;
+  packet = oldPacket;
 
-    if(recv) {
+  if(recv) {
     sf::Packet copy = packet; //TODO: maybe we don't need this. fix later
     ClientGameTimeAction cgta;
     uint32_t packetType;
@@ -22,15 +22,16 @@ void NetworkServer::receiveMessages(int i) {
       case CGTA:
         cgta.deserialize(packet);
         //cgta.print();
-        if(!this->server.sendPacketToAll<ServerGameTimeRespond>(game.evaluate(cgta))) {
+        if(!this->server.sendPacketToAll<ServerGameTimeRespond>
+                                                     (game.evaluate(cgta))) {
           std::cout << "Error sending cgta to everybody" << std::endl;
-          }
+        }
         break;
       case CHAT:
         this->server.sendToAll(copy); //right now just echoing what received
         break;
       default:
-        std::cout << "Error: received bad packet: " << packetType << std::endl;
+        std::cout << "Error: received bad packet: " << packetType<< std::endl;
         break;
     }
   }
@@ -47,7 +48,7 @@ void NetworkServer::doServer() {
     if(server.getNewClient())
     {
       IdPacket newPacket = IdPacket(game.join());
-      if(!server.sendPacket<IdPacket>(newPacket,server.size()-1)) {
+      if(!server.sendPacket<IdPacket>(newPacket,server.size() - 1)) {
         std::cout << "Error sending game join packet" << std::endl;
 	  }
 	  else
@@ -66,11 +67,12 @@ void NetworkServer::doServer() {
 
   while(true) {
     clock.restart();
-    for( int i = 0; i < server.size(); i++){
+    for(unsigned int i = 0; i < server.size(); i++){
       this->receiveMessages(i);
       /* maybe put this in a method just like in client*/
     }
-    sf::sleep( sf::milliseconds( tick_length - clock.getElapsedTime().asMilliseconds()) );
+    sf::sleep( sf::milliseconds( tick_length -
+                                 clock.getElapsedTime().asMilliseconds()) );
   }
 } 
 

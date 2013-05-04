@@ -49,7 +49,7 @@ public:
    }
    
    template <typename Data>
-   bool sendPacket(Data & data, int i) {
+   bool sendPacket(Data & data, unsigned int i) {
      sf::Packet packet;
      packet.clear();
      packet << Data::packetType;
@@ -58,10 +58,10 @@ public:
    }
 
    bool getNewClient(); 
-   bool receiveMessage(sf::Packet &packet, size_t i );
-   bool sendMessage(sf::Packet & packet, size_t i);
+   bool receiveMessage(sf::Packet &packet, unsigned int i );
+   bool sendMessage(sf::Packet & packet, unsigned int i);
    bool sendToAll(sf::Packet & packet );
-   int size();
+   unsigned int size();
    ~ServerServices();
 };
 #endif

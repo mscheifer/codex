@@ -12,26 +12,27 @@ struct ServerGameTimeRespond
 
 	//Entity entities[15];	
   void serialize(sf::Packet & packet) const {
-    for (int i=0;i<4;i++) 
+    for (int i = 0; i < 4;i++) { 
       players[i].serialize(packet);
-	int size = entities.size();
-	packet<<size;
-	for(int i = 0; i < size; i++)
-		entities[i]->serialize(packet);
+    }
+    sf::Uint32 size = static_cast<sf::Uint32>(entities.size());
+    packet << size;
+    for(unsigned int i = 0; i < size; i++) {
+      entities[i]->serialize(packet);
+    }
   }
-
   void deserialize(sf::Packet & packet) {
 	  // TODO: Matt&Bowen is this correct??
-    for (int i=0;i<4;i++)
+    for (int i=0;i<4;i++) {
       players[i].deserialize(packet);
+    }
 
-	  int size = 0;
-	  packet>>size;
-	  for(int i = 0; i < size; i++)
-	  {
-		  Entity* newEntity = new Entity();
-		  newEntity->deserialize(packet);
-		  entities.push_back( newEntity );
-	  }
+    unsigned int size = 0;
+    packet >> size;
+    for(unsigned int i = 0; i < size; i++) {
+      Entity* newEntity = new Entity();
+      newEntity->deserialize(packet);
+      entities.push_back( newEntity );
+    }
   }
 };
