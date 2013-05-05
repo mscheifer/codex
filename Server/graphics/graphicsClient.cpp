@@ -131,17 +131,19 @@ gx::userInput gx::graphicsClient::handleInput() {
 	if(event.type == sf::Event::MouseButtonPressed) {
 		if(event.mouseButton.button == sf::Mouse::Left) {
 		}
-  move_t movement = movePlayer();
-  vector3 newdir = turnPlayer();
-  this->playerDirection = toBasis(playerStartRight,playerStartDirection,upDirection) * newdir;
-  this->setCamera(); //after setting new player position and direction
-  userInput curInput(movement,newdir,jumped,stopped);
+
 		fire = true;
 	}
 	fire = true;
 	
   }
-  userInput curInput(movePlayer(display),turnPlayer(display),jumped,stopped,fire);
+
+  move_t movement = movePlayer();
+  vector3 newdir = turnPlayer();
+  this->playerDirection = toBasis(playerStartRight,playerStartDirection,upDirection) * newdir;
+  this->setCamera(); //after setting new player position and direction
+  userInput curInput(movement,newdir,jumped,stopped, fire);
+
   return curInput;
 }
 
