@@ -209,3 +209,16 @@ void Player::updateBounds(){
   //update the bounding objects
   boundingObjs[0]->setCenter(gx::vector4(position.x, position.y, position.z));
 }
+
+
+void Player::setHealth(float h) {
+	health = h;
+}
+
+void Player::setSpeed(float s) {
+	speed = s;
+}
+
+void Player::setMana(float m) {
+	mana = m;
+}

@@ -40,8 +40,8 @@ void Weapon::onCollision(Entity* e) {
 }
 
 bool Weapon::canUseWeapon(bool range_attack) {
-	if(		(range_attack && Range_Cool_Down_Counter.getElapsedTime().asMilliseconds() < Range_Cool_Down_Time)
-		||	(!range_attack && Melee_Cool_Down_Counter.getElapsedTime().asMilliseconds() < Melee_Cool_Down_Time)){
+	if(		(range_attack && Range_Cool_Down_Counter.getElapsedTime().asMilliseconds() > Range_Cool_Down_Time)
+		||	(!range_attack && Melee_Cool_Down_Counter.getElapsedTime().asMilliseconds() > Melee_Cool_Down_Time)){
 			return true;
 	}
 	return false;

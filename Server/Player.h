@@ -33,13 +33,24 @@ public:
   ~Player(void);
   std::string getString();
   virtual bool attackBy(DeadlyEntity*);
-  float getHealth() { return health; }
+ 
   bool moveTowardDirection(move_t degree);
   void jump();
   void handleAction(ClientGameTimeAction a);
 
   void onCollision(Entity* a);
   void updateBounds();
+  
+  float getHealth() { return health; }
+  void setHealth(float);
+
+  float getMana() {return mana;}
+  void setMana(float);
+
+  float getSpeed(){ return speed;}
+  void setSpeed(float);
+
+
 
 private:
   float health;
