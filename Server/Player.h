@@ -53,7 +53,7 @@ private:
   int jumpCount;
   bool canJump;
   bool attacking;
-  Weapon weapon[MAXWEAPONS]; //0 bare hand, 1 fireball
+  Weapon* weapon[MAXWEAPONS]; //0 bare hand, 1 fireball
   int current_weapon_selection; //0 bare hand, 1 fireball
   bool damageBy(DeadlyEntity *);
   void fixPosition();
