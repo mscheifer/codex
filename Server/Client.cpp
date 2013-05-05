@@ -42,6 +42,7 @@ void NetworkClient::processInput(gx::userInput ui) {
   }
   action.movement = ui.getMove();
   action.facingDirection = Direction(ui.getDir().x, ui.getDir().y, ui.getDir().z);
+  action.attackRange = ui.getFire();
   this->sendPacket = true;
 }
 /*

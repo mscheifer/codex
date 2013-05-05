@@ -99,6 +99,7 @@ gx::graphicsClient::graphicsClient():
 gx::userInput gx::graphicsClient::handleInput() {
   bool stopped = false;
   bool jumped = false;
+  bool fire = false;
   sf::Event event;
   while (window.pollEvent(event)) {
     if (event.type == sf::Event::Closed) {
@@ -110,10 +111,18 @@ gx::userInput gx::graphicsClient::handleInput() {
         stopped = true; // end the program
 	    } else if(event.key.code == sf::Keyboard::Space) {
         jumped = true;
+		fire = true; // a hack now
 	    }
-    }
+	}
+	if(event.type == sf::Event::MouseButtonPressed) {
+		if(event.mouseButton.button == sf::Mouse::Left) {
+		}
+		fire = true;
+	}
+	fire = true;
+	
   }
-  userInput curInput(movePlayer(display),turnPlayer(display),jumped,stopped);
+  userInput curInput(movePlayer(display),turnPlayer(display),jumped,stopped,fire);
   return curInput;
 }
 

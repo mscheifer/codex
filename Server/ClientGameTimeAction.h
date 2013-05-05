@@ -34,6 +34,7 @@ struct ClientGameTimeAction
     packet << player_id;
     packet << (int)movement;
     packet << attackMelee;
+	packet << attackRange;
     packet << weapon1;
     packet << weapon2;
     packet << jump;
@@ -46,6 +47,7 @@ struct ClientGameTimeAction
     packet >> movementInt;
     movement = (move_t) movementInt; //change to static_cast?
     packet >> attackMelee;
+	packet >> attackRange;
     packet >> weapon1;
     packet >> weapon2;
     packet >> jump;
@@ -56,6 +58,7 @@ struct ClientGameTimeAction
     std::cout << "id " << player_id << std::endl
       << "mov " << movement << std::endl
       << "attackMelee " << attackMelee << std::endl
+	  << "range " << attackRange << std::endl
       << "weapon1 " << weapon1 << std::endl
       << "weapon2 " << weapon2 << std::endl
       << "jump " << jump << std::endl

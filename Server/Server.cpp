@@ -21,7 +21,7 @@ void NetworkServer::receiveMessages(int i) {
     switch (packetType) {
       case CGTA:
         cgta.deserialize(packet);
-        //cgta.print();
+        cgta.print();
         if(!this->server.sendPacketToAll<ServerGameTimeRespond>
                                                      (game.evaluate(cgta))) {
           std::cout << "Error sending cgta to everybody" << std::endl;

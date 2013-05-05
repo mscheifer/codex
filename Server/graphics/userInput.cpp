@@ -19,7 +19,7 @@ sf::Vector2i mouseDiff;
 
 } //end unnamed namespace
 
-gx::userInput::userInput(move_t mv, vector3 d, bool jump, bool close)
+gx::userInput::userInput(move_t mv, vector3 d, bool jump, bool close, bool fire)
   : move(mv), dir(d), jumped(jump), stopped(close) {}
 
 move_t gx::userInput::getMove() {
@@ -33,6 +33,9 @@ bool gx::userInput::getJump() {
 }
 bool gx::userInput::getStop() {
   return this->stopped;
+}
+  bool gx::userInput::getFire() {
+  return this->fire;
 }
 
 void gx::setUpMouse() {
