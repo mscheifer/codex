@@ -29,7 +29,8 @@ void Player::init(Position x, Position y, Position z, int assigned_id)
 	maxMana = 100;
 	castDownCounter = sf::Clock();
 
-	weapon[1] = WeaponFire(Coordinate());
+  weapon[0] = WeaponFist(position);
+	weapon[1] = WeaponFire(position);
 	current_weapon_selection = 1;
   BoundingSphere* b = new BoundingSphere(gx::vector4(x,y,z),sphereRadius);
   boundingObjs.push_back(b);

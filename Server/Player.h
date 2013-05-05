@@ -7,6 +7,7 @@
 #include "Physics.h"
 #include <string>
 #include "Weapon.h"
+#include "WeaponFist.h"
 #include "WeaponFire.h"
 #include "ClientGameTimeAction.h"
 #include "boundingManager.h"
