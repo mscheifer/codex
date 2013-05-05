@@ -4,8 +4,6 @@
 
 namespace gx {
 
-class displaySet;
-
 class userInput {
     move_t move;
     vector3 dir;
@@ -21,10 +19,8 @@ class userInput {
 
 void setUpMouse();
 
-void setCamera(displaySet&);
+move_t movePlayer();
 
-move_t movePlayer(displaySet&);
-
-vector3 turnPlayer(displaySet&);
+vector3 turnPlayer();
 
 } //end namespace gx

@@ -3,17 +3,9 @@
 #include "displaySet.h"
 
 namespace {
-//player needs to start looking forward because mouse movement needs to rotate
-//around the axis that are 90 degrees away from the starting direction and its
-//easier if these are the x and y axis
-gx::vector3 startPlayerDirection = gx::vector3( 0.0, -1.0, 0.0);
-
-gx::vector3 playerPosition  = gx::vector3( 0.0,  0.0,  0.0);
-gx::vector3 playerDirection = startPlayerDirection;
-gx::vector3 upDirection     = gx::vector3( 0.0,  0.0,  1.0);
-
 const double mouseSensitivity = 0.001;
 
+gx::vector3  mouseDirection;
 sf::Vector2i mouseBasePosition;
 sf::Vector2i mouseDiff;
 
@@ -41,15 +33,7 @@ void gx::setUpMouse() {
   sf::Mouse::setPosition(mouseBasePosition);
 }
 
-void gx::setCamera(displaySet& display) {
-  //add the direction vector to the player's position to get the position to
-  //look at
-  display.setView(playerPosition,
-                  playerDirection + playerPosition,
-                  upDirection);
-}
-
-move_t gx::movePlayer(displaySet& display) {
+move_t gx::movePlayer() {
   move_t movement = NULL_DIR;
   if (sf::Keyboard::isKeyPressed(sf::Keyboard::W)) {
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::A)) {
@@ -74,29 +58,23 @@ move_t gx::movePlayer(displaySet& display) {
   } else if (sf::Keyboard::isKeyPressed(sf::Keyboard::S)) {
     movement = BACKWARD;
   }
-  if(movement != NULL_DIR) {
-    matrix rotation = rotateZ(movementAngles[movement]);
-    vector3 diff = rotation * vector3(playerDirection[0],playerDirection[1],0);
-    diff.normalize();
-    diff.scale(0.1f);
-    playerPosition += diff;
-
-    setCamera(display);
-  }
   return movement;
 }
 
-gx::vector3 gx::turnPlayer(displaySet& display) {
+gx::vector3 gx::turnPlayer() {
+  //base direction needs to be looking forward because mouse movement needs to rotate
+  //around the axis that are 90 degrees away from the base direction and its
+  //easier if these are the x and z axis
+  const vector3 basePlayerDirection = gx::vector3( 0.0, 1.0, 0.0);
+
   sf::Vector2i curPosition = sf::Mouse::getPosition();
   if(curPosition != mouseBasePosition) {
     sf::Vector2i newDiff = curPosition - mouseBasePosition;
     mouseDiff += newDiff;
-    playerDirection = rotateZ(-mouseDiff.x * mouseSensitivity) * 
-      rotateX(mouseDiff.y * mouseSensitivity) * startPlayerDirection;
+    mouseDirection = rotateZ(-mouseDiff.x * mouseSensitivity) * 
+          rotateX( mouseDiff.y * mouseSensitivity) * basePlayerDirection;
 
     sf::Mouse::setPosition(mouseBasePosition);
-
-    setCamera(display);
   }
-  return playerDirection;
+  return mouseDirection;
 }

@@ -6,6 +6,7 @@
 #include <array>
 
 namespace gx {
+class vector4;
 
 class vector3 {
 public:
@@ -36,6 +37,7 @@ public:
   const elem_t& operator[](int) const;
   vector3  operator-() const;
   vector3  operator+(const vector3&) const;
+  vector4  operator+(const vector4&) const;
   vector3  operator-(const vector3&) const;
   vector3  operator*(const vector3&) const;
   vector3  operator*(elem_t f) const;
