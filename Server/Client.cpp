@@ -22,12 +22,22 @@ void NetworkClient::receiveMessages() {
                 gx::vector4(static_cast<gx::vector3::elem_t>(pos.x),
                             static_cast<gx::vector3::elem_t>(pos.y),
                             static_cast<gx::vector3::elem_t>(pos.z)),0));
-        //  std::cout << "recieved player at: " << gx::vector3(pos.x,pos.y,pos.z) << std::endl;
+        //std::cout << "recieved player at: " << gx::vector3(pos.x,pos.y,pos.z);
+        //std::cout << std::endl;
+        }
+        for(auto entP = s.entities.begin(); entP != s.entities.end(); entP++) {
+          auto pos = (*entP)->getPosition();
+          entities.push_back(std::make_pair(
+                gx::vector4(static_cast<gx::vector3::elem_t>(pos.x),
+                            static_cast<gx::vector3::elem_t>(pos.y),
+                            static_cast<gx::vector3::elem_t>(pos.z)),1));
+          
         }
         auto pos = s.players[this->id].getPosition();
-        gxClient.updatePosition(gx::vector4(static_cast<gx::vector3::elem_t>(pos.x),
-                                            static_cast<gx::vector3::elem_t>(pos.y),
-                                            static_cast<gx::vector3::elem_t>(pos.z)));
+        gxClient.updatePosition(gx::vector4(
+          static_cast<gx::vector3::elem_t>(pos.x),
+          static_cast<gx::vector3::elem_t>(pos.y),
+          static_cast<gx::vector3::elem_t>(pos.z)));
         gxClient.updateEntities(entities);
         if (s.players[id].dead) { /*render death everytime ? */} ;
         //render WIN OR LOSE based on s.state

@@ -27,7 +27,8 @@ std::string readFile(const std::string fileName) {
 std::vector<gx::drawSet::vaoData_t> entitiesData() {
     //setup drawing data
   std::vector<gx::drawSet::vaoData_t> entitiesData;
-  entitiesData.push_back(gx::loadCube());
+  auto cubes = gx::loadCube();
+  entitiesData.insert(entitiesData.end(),cubes.begin(),cubes.end());
   return entitiesData;
 }
 //must call after window is initialized

@@ -10,7 +10,6 @@ struct ServerGameTimeRespond
   Game_State state;
   ServerGameTimeRespond():state(PLAYING) {}
 
-	//Entity entities[15];	
   void serialize(sf::Packet & packet) const {
     for (int i = 0; i < 4;i++) { 
       players[i].serialize(packet);
