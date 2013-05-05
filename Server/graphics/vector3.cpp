@@ -1,4 +1,5 @@
 #include "vector3.h"
+#include "vector4.h"
 
 gx::vector3::vector3(): x(0.0), y(0.0), z(0.0) {}
 
@@ -113,6 +114,10 @@ gx::vector3 gx::vector3::operator+(const vector3 &a) const {
   vector3 r;
   r.add(*this,a);
   return r;
+}
+
+gx::vector4 gx::vector3::operator+(const vector4 &a) const {
+  return a + *this;
 }
 
 gx::vector3 gx::vector3::operator-(const vector3 &a) const {

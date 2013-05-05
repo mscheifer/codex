@@ -46,6 +46,9 @@ matrix rotateArbitrary(vector3 axis, double angle);
 matrix scaling(matrix::elem_t x, matrix::elem_t y, matrix::elem_t z);
 matrix scalingMatrix(matrix::elem_t x, matrix::elem_t y, matrix::elem_t z);
 matrix translation(matrix::elem_t x, matrix::elem_t y, matrix::elem_t z);
+//converts a vector from the standard basis to the supplied basis
+//params: x y and z vectors
+matrix toBasis(vector3,vector3,vector3);
 
 const matrix identity = matrix(1, 0, 0, 0,
                                0, 1, 0, 0,

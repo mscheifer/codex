@@ -7,6 +7,7 @@
 #include "Physics.h"
 #include <string>
 #include "Weapon.h"
+#include "WeaponFist.h"
 #include "WeaponFire.h"
 #include "ClientGameTimeAction.h"
 #include "boundingManager.h"
@@ -63,7 +64,7 @@ private:
   int jumpCount;
   bool canJump;
   bool attacking;
-  Weapon weapon[MAXWEAPONS]; //0 bare hand, 1 fireball
+  Weapon* weapon[MAXWEAPONS]; //0 bare hand, 1 fireball
   int current_weapon_selection; //0 bare hand, 1 fireball
   bool damageBy(DeadlyEntity *);
   void fixPosition();
@@ -71,4 +72,5 @@ private:
   void handleOtherAction(ClientGameTimeAction a);
   void attack(ClientGameTimeAction a);
   bool isPlayer(void) {return true;};
+  void init(Position x, Position y, Position z, int assigned_id);
 };

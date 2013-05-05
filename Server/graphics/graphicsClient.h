@@ -18,9 +18,18 @@ class graphicsClient {
 
     drawSet entities;
 
+    //player info
+    static const vector3 upDirection;
+
+    vector3 playerDirection;
+    vector3 playerStartDirection;
+    vector3 playerStartRight;
+    vector4 playerPosition;
+
     sf::Clock fpsClock;
     int fpsFrames;
 
+    void setCamera();
     void reshape(unsigned int, unsigned int);
     std::vector<gx::uniform::block*> uniforms();
   public:
@@ -31,8 +40,8 @@ class graphicsClient {
     graphicsClient& operator=(graphicsClient&&);// = delete;
     userInput handleInput();
     void draw();
-
-    void updateEntities(std::vector<std::pair<vector3,int>>);
+    void updatePosition(vector4);
+    void updateEntities(std::vector<std::pair<vector4,int>>);
 };
 
 } //end namespace gx

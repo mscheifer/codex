@@ -29,6 +29,7 @@ public:
   const elem_t& operator[](int i) const;
   vector4 operator+(const vector3&) const;
   vector3 operator-(vector4) const;      
+  vector4& operator+=(const vector3&);
   bool operator==(const vector4&) const;
   bool operator!=(const vector4&) const;
   void print(std::ostream&) const;

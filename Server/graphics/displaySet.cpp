@@ -27,7 +27,7 @@ void gx::displaySet::setProjection(elem_t fov, elem_t ratio, elem_t nearP,
   this->storage().write("projMatrix",this->projection.oglmatrix());
 }
 //e is camera position and d is look at point
-void gx::displaySet::setView(const vector3& e, const vector3& d, 
+void gx::displaySet::setView(const vector4& e, const vector4& d, 
                              const vector3& up) {
   vector3 zc, xc, yc;
   zc = e - d;

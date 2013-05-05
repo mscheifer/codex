@@ -46,6 +46,6 @@ void gx::drawSet::reset() {
   }
 }
 
-void gx::drawSet::addEntity(vector3 pos,unsigned int type) {
+void gx::drawSet::addEntity(vector4 pos,unsigned int type) {
   this->entityClasses[type].positions.push_back(translation(pos.x,pos.y,pos.z));
 }

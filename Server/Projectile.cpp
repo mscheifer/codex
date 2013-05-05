@@ -10,6 +10,10 @@ Projectile::Projectile(Position r)
 	range = r;
 	distanceLeftToTravel = r;
 }
+Projectile::Projectile(Map* m)
+{
+  this->map = m;
+}
 
 
 Projectile::~Projectile(void)
