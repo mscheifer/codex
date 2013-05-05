@@ -7,6 +7,7 @@
 #include "Physics.h"
 #include <string>
 #include "Weapon.h"
+#include "WeaponFist.h"
 #include "WeaponFire.h"
 #include "ClientGameTimeAction.h"
 #include "boundingManager.h"
@@ -60,4 +61,5 @@ private:
   void handleOtherAction(ClientGameTimeAction a);
   void attack(ClientGameTimeAction a);
   bool isPlayer(void) {return true;};
+  void init(Position x, Position y, Position z, int assigned_id);
 };

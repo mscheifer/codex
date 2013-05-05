@@ -7,7 +7,7 @@
 
 #include "boundingSphere.h" //TODO remove for testing
 #include "boundingBox.h" //TODO remove for testing
-#include "ray.h" //TODO remove for testing
+#include "Ray.h" //TODO remove for testing
 
 class Quadtree{
 private:

@@ -2,11 +2,17 @@
 
 Player::Player(void)
 {
-  Player(0,0,0,0);
+  this->init(0,0,0,0);
 }
+
 Player::Player(Position x, Position y, Position z, int assigned_id)
 {
-  minotaur = false;
+ this->init(x, y, z, assigned_id);
+}
+
+void Player::init(Position x, Position y, Position z, int assigned_id)
+{
+   minotaur = false;
   dead = false;
 	player_id = assigned_id;
 	position.x = x;
@@ -23,7 +29,8 @@ Player::Player(Position x, Position y, Position z, int assigned_id)
 	maxMana = 100;
 	castDownCounter = sf::Clock();
 
-	weapon[1] = WeaponFire(Coordinate());
+  weapon[0] = WeaponFist(position);
+	weapon[1] = WeaponFire(position);
 	current_weapon_selection = 1;
   BoundingSphere* b = new BoundingSphere(gx::vector4(x,y,z),sphereRadius);
   boundingObjs.push_back(b);
@@ -193,7 +200,8 @@ std::string Player::getString()
 {
 	std::stringstream returnString;
 	returnString<<"ID:"<< player_id <<" x="<<position.x<< " y="<<position.y<< " z="<<position.z<<std::endl;
-	returnString<< " x="<<position.velocityX<< " y="<<position.velocityY<< " z="<<position.velocityZ<<std::endl;
+	returnString<< "Vx="<<position.velocityX<< " Vy="<<position.velocityY<< " Vz="<<position.velocityZ<<std::endl;
+  returnString<< "Dx="<<direction.x<< " Dy="<<direction.y<< " Dz="<<direction.z<<std::endl;
 	return returnString.str();
 }
 

@@ -8,6 +8,7 @@ public DeadlyEntity
 public:
   Projectile(void);
   Projectile(Position r);
+  Projectile(Map* m);
   ~Projectile(void);
   void update(void);
   void setStrength(float a);

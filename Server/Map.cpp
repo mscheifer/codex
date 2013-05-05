@@ -29,7 +29,12 @@ std::vector<Entity *> Map::getEntity() {
  Projectile* Map::produceProjectile()
  {
    if(freeProjectiles.empty())
-     return NULL;
+   {
+     for(unsigned int i = 0; i < 20; i++)
+     {
+       freeProjectiles.push(new Projectile(this));
+     }
+   }
    Projectile* ret = freeProjectiles.top();
    freeProjectiles.pop();
    entities.push_back(ret);

@@ -1,5 +1,5 @@
 #pragma once
-#include "graphics\vector4.h"
+#include "graphics/vector4.h"
 
 class Rectangle{
 private:
