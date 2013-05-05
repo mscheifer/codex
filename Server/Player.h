@@ -60,4 +60,5 @@ private:
   void handleOtherAction(ClientGameTimeAction a);
   void attack(ClientGameTimeAction a);
   bool isPlayer(void) {return true;};
+  void init(Position x, Position y, Position z, int assigned_id);
 };
