@@ -9,6 +9,8 @@
 #include "Weapon.h"
 #include "WeaponFire.h"
 #include "ClientGameTimeAction.h"
+#include "boundingManager.h"
+#include "algorithm"
 
 
 #define MOVESCALE 100
@@ -19,6 +21,8 @@ const int MAXJUMP = 2;
 class Player: public Entity
 {
 public:
+  static const int sphereRadius = 33;
+
   bool dead; //might be private. should be determined in handleAction
   bool minotaur; //might be private
   int player_id;
@@ -32,7 +36,10 @@ public:
   bool moveTowardDirection(move_t degree);
   void jump();
   void handleAction(ClientGameTimeAction a);
-  void onCollision(Entity a);
+
+  void onCollision(Entity* a);
+  void updateBounds();
+
 private:
   float health;
   float maxHealth;

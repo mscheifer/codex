@@ -25,9 +25,10 @@ struct ClientGameTimeAction
   }
 
 	ClientGameTimeAction() : 
-    player_id(-1), weapon1(false), weapon2(false),
+    player_id(-1), movement(NULL_DIR),
     attackMelee(false),attackRange(false),
-    jump(false), facingDirection(), movement(NULL_DIR){};
+    weapon1(false), weapon2(false),
+    jump(false), facingDirection() {};
 
   void serialize(sf::Packet & packet){
     packet << player_id;

@@ -11,9 +11,7 @@
 #include "graphics/graphicsClient.h"
 #include "ServerGameTimeRespond.h"
 #include "ChatHandler.h"
-#include "boundingSphere.h"
 #include "Game.h"
-#include "Quadtree.h"
 
 class NetworkClient {
   ServerGameTimeRespond s;

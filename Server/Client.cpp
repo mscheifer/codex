@@ -1,32 +1,35 @@
 #include "Client.h"
 
 void NetworkClient::receiveMessages() {
-      //receive from server and process
-      sf::Packet packet;
-      if (netRecv.receiveMessage(packet)) {
-        ChatObject chatObj;
-        uint32_t packetType;
-        IdPacket newId(0);
-        packet >> packetType;
-        std::vector<std::pair<gx::vector3,int>> entities;
-        switch (packetType) {
-        case CHAT:
-          chatObj.deserialize(packet);
-          this->chat.addChat(chatObj.getChat());
-          break;
-        case SGTR:
-          s.deserialize(packet);
-          for(size_t i = 0; i < 4; i++) {
-            auto pos = s.players[i].getPosition();
-            entities.push_back(std::make_pair(gx::vector3(pos.x,pos.y,pos.z),0));
-			//std::cout << "recieved player at: " << gx::vector3(pos.x,pos.y,pos.z) << std::endl;
-          }
-          gxClient.updateEntities(entities);
-          if (s.players[id].dead) { /*render death everytime ? */} ;
-          //render WIN OR LOSE based on s.state
-          break;
+  //receive from server and process
+  sf::Packet packet;
+  if (netRecv.receiveMessage(packet)) {
+    ChatObject chatObj;
+    uint32_t packetType;
+    IdPacket newId(0);
+    packet >> packetType;
+    std::vector<std::pair<gx::vector3,int>> entities;
+    switch (packetType) {
+      case CHAT:
+        chatObj.deserialize(packet);
+        this->chat.addChat(chatObj.getChat());
+        break;
+      case SGTR:
+        s.deserialize(packet);
+        for(size_t i = 0; i < 4; i++) {
+          auto pos = s.players[i].getPosition();
+          entities.push_back(std::make_pair(
+                gx::vector3(static_cast<gx::vector3::elem_t>(pos.x),
+                            static_cast<gx::vector3::elem_t>(pos.y),
+                            static_cast<gx::vector3::elem_t>(pos.z)),0));
+          //std::cout << "recieved player at: " << gx::vector3(pos.x,pos.y,pos.z) << std::endl;
         }
-      }
+        gxClient.updateEntities(entities);
+        if (s.players[id].dead) { /*render death everytime ? */} ;
+        //render WIN OR LOSE based on s.state
+        break;
+    }
+  }
 }
 
 void NetworkClient::processInput(gx::userInput ui) {

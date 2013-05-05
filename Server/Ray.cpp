@@ -2,18 +2,18 @@
 #include "Quadtree.h"
 
 //TODO is this right? can only move in 1 direction
-void Ray::move(gx::vector3 v){
-  origin = origin + v;
-  getQtree()->remove(*this);
-  updateRect();
-  getQtree()->insert(*this);
-}
+//void Ray::move(gx::vector3 v){
+//  setOrigorigin + v;
+//  getQtree()->remove(this);
+//  updateRect();
+//  getQtree()->insert(this);
+//}
 
 void Ray::updateRect(){
-  gx::vector4 endpt = origin + direction;
+  gx::vector4 endpt = getOrigin() + direction;
   float minX, minY, maxX, maxY;
-  minX = maxX = origin.x;
-  minY = maxY = origin.y;
+  minX = maxX = getOrigin().x;
+  minY = maxY = getOrigin().y;
   if( endpt.x > maxX )
     maxX = endpt.x;
   if( endpt.x < minX )

@@ -35,7 +35,7 @@ void Weapon::handleAction(ClientGameTimeAction a){
 
 }
 
-void Weapon::onCollision(Entity e) {
+void Weapon::onCollision(Entity* e) {
 
 }
 

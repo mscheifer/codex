@@ -25,6 +25,7 @@ public:
   elem_t dot(const vector3&) const;
   void cross(const vector3&,const vector3&);
   elem_t magnitude() const;
+  elem_t magnitudesq() const;
   void normalize();
 
   std::array<elem_t,3> oglVec3() const;

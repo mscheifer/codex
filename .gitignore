@@ -32,7 +32,6 @@ $tf*/
 TestingProject.opensdf
 SFML-2.0/doc
 *.ipch
-*.ipch
 *.sdf
 ipch/*.ipch
 ipch/
