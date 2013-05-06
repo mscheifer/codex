@@ -11,8 +11,8 @@ sf::Vector2i mouseDiff;
 
 } //end unnamed namespace
 
-gx::userInput::userInput(move_t mv, vector3 d, bool jump, bool close, bool fire)
-  : move(mv), dir(d), jumped(jump), stopped(close) {}
+gx::userInput::userInput(move_t mv, vector3 d, bool jump, bool close, bool f)
+  : move(mv), dir(d), jumped(jump), stopped(close), fire(f) {}
 
 move_t gx::userInput::getMove() {
   return this->move;

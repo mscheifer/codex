@@ -131,10 +131,7 @@ gx::userInput gx::graphicsClient::handleInput() {
 	if(event.type == sf::Event::MouseButtonPressed) {
 		if(event.mouseButton.button == sf::Mouse::Left) {
 		}
-
-		fire = true;
 	}
-	fire = true;
 	
   }
 

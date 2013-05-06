@@ -30,9 +30,10 @@ int Game::join()
 ServerGameTimeRespond Game::evaluate(ClientGameTimeAction a) {
 	
 	ServerGameTimeRespond s;
-	
+	s.entities.clear();
 	std::vector<Player *> currentPlayers =  world.getPlayers();
 	std::vector<Entity *> currentEntities = world.getEntity();
+
 
 	for( unsigned int i = 0; i <  currentPlayers.size(); i++ ) {
 		 currentPlayers[i]->handleAction(a);

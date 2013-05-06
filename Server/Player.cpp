@@ -175,7 +175,7 @@ void Player::attack( ClientGameTimeAction a) {
 
 	if(a.attackRange)
 	{
-		if( !currentWeapon->canUseWeapon(true) || currentWeapon->getMpCost() > mana){
+                		if( !currentWeapon->canUseWeapon(true) || currentWeapon->getMpCost() > mana){
 			return;
 		}
 		mana -= currentWeapon->getMpCost();
