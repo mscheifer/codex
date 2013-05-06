@@ -88,7 +88,7 @@ unsigned int gx::input::windowHeight() {
 
 void gx::input::setUpMouse() {
   //somehow change this to set it to the center of the screen
-  mouseBasePosition = sf::Vector2i(200,200);
+  mouseBasePosition = sf::Vector2i(400,400);
   sf::Mouse::setPosition(mouseBasePosition);
 }
 
@@ -97,7 +97,7 @@ void gx::input::handle(sf::Window& window) {
   this->jumped  = false;
   this->resized = false;
   this->fired1  = false;
-  this->fired1  = false;
+  this->fired2  = false;
   sf::Event event;
   while (window.pollEvent(event)) {
     this->handleEvent(event);
@@ -117,10 +117,11 @@ void gx::input::handleEvent(const sf::Event& event) {
     } else if(event.key.code == sf::Keyboard::Space) {
       this->jumped = true;
     }
-  }
-	if(event.type == sf::Event::MouseButtonPressed) {
-		if(event.mouseButton.button == sf::Mouse::Left) {
-		  this->fired1 = true;
-		}
+  } else if(event.type == sf::Event::MouseButtonPressed) {
+	  if(event.mouseButton.button == sf::Mouse::Left) {
+      this->fired1 = true;
+	  } else if(event.mouseButton.button == sf::Mouse::Left) {
+      this->fired2 = true;
+    }
   }
 }
