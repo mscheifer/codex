@@ -138,6 +138,7 @@ void NetworkClient::doClient() {
   //temp code -----------------------------
   */
   //  main run loop
+  //for(int i = 0; i < 4; i++) {
   while(this->running) {
     //process input and send events
     this->processInput();
