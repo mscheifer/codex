@@ -11,8 +11,8 @@ Player::Player(Position x, Position y, Position z, int assigned_id, Map * m)
 
 void Player::init(Position x, Position y, Position z, int assigned_id, Map * m)
 {
-   minotaur = false;
-  dead = false;
+    minotaur = false;
+	dead = false;
 	player_id = assigned_id;
 	position.x = x;
 	position.y = y;
@@ -33,6 +33,8 @@ void Player::init(Position x, Position y, Position z, int assigned_id, Map * m)
 	current_weapon_selection = 1;
   BoundingSphere* b = new BoundingSphere(gx::vector4(x,y,z),sphereRadius);
   boundingObjs.push_back(b);
+  m->addToQtree(this);
+  updateBounds();
 
 }
 
@@ -134,6 +136,7 @@ void Player::handleSelfAction(ClientGameTimeAction a) {
 	//start of movement logic
 	direction = a.facingDirection;
 	moveTowardDirection(a.movement);
+	updateBoundsOnTree();
 
 	if(a.jump) {
 		jump();

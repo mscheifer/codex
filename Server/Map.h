@@ -26,6 +26,10 @@ public:
   void destroyProjectile(Projectile *);
   bool addPlayer(Player *);
   Quadtree* getQuadtreePtr(){ return &q; }
+  
+  void addToQtree(Entity* e);
+  
+  void removeFromQtree(Entity* e);
 
 private:
 	std::vector<Player *> players;
@@ -33,8 +37,6 @@ private:
 	std::stack<Projectile *>* freeProjectiles;
 	std::vector<Projectile *> liveProjectTile;
   Quadtree q;
-  void addToQtree(Entity* e);
-  void removeFromQtree(Entity* e);
   bool init;
 
 };

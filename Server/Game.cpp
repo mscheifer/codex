@@ -37,9 +37,16 @@ void Game::evaluate(ClientGameTimeAction a) {
 	}
 
 	for( unsigned int i = 0; i < currentEntities.size(); i++ ) {
-		 std::cout << " hello nigga" << std::endl;
+		 std::cout << " hello nigga, updating entities" << std::endl;
 		 currentEntities[i]->update();
 	}
+	for( unsigned int i = 0; i < currentEntities.size(); i++ ) {
+		currentEntities[i]->onCollision();
+	}
+
+	//run collision fix here
+
+
 	
 }
 
