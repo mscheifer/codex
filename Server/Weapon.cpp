@@ -1,13 +1,14 @@
 #include "Weapon.h"
 #include "Projectile.h"
 
-Weapon::Weapon()
+Weapon::Weapon(Map* m)
 {
 	Range_Cool_Down_Time = 0;
 	Melee_Cool_Down_Time = 0;
 	mpCost = 0;
 	Range_Cool_Down_Counter = sf::Clock();
 	Melee_Cool_Down_Counter = sf::Clock();
+	this->map = m;
 }
 
 
@@ -15,7 +16,7 @@ Weapon::~Weapon()
 {
 }
 
-Weapon::Weapon(float damage, float ran, Coordinate d, float mpcost)
+Weapon::Weapon(float damage, float ran, Coordinate d, float mpcost, Map* m)
 {
 	Range_Cool_Down_Time = 0;
 	Melee_Cool_Down_Time = 0;
@@ -28,6 +29,7 @@ Weapon::Weapon(float damage, float ran, Coordinate d, float mpcost)
 	projectileSpeed = 2.0; // pending removal
 	projectileRange = 300; //pending removal
 	projectileStrength = 1; //pending removal
+	this->map = m;
 }
 
 
@@ -62,6 +64,7 @@ bool Weapon::attackMelee()
 Projectile* Weapon::attackRange(Direction d , Coordinate c)
 {
 	Projectile* pj = map->produceProjectile();
+	//pj = Projectile(c,d);
 	c.velocityX = projectileSpeed;
 	c.velocityY = projectileSpeed;
 	c.velocityZ = projectileSpeed;
