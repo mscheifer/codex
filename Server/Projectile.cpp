@@ -1,18 +1,12 @@
 #include "Projectile.h"
 
 
-Projectile::Projectile(void)
-{
-}
 
-Projectile::Projectile(Position r)
+
+Projectile::Projectile( Map* m)
 {
-	range = r;
-	distanceLeftToTravel = r;
-}
-Projectile::Projectile(Map* m)
-{
-  this->map = m;
+
+	this->map = m;
 }
 
 
@@ -24,6 +18,7 @@ void Projectile::update(void) {
 
 	Coordinate nextPosition = ThreeDMovement(position, direction, 0);
 	distanceLeftToTravel -= calculateDistanceInBetween(position, nextPosition);	
+	position = nextPosition;
 	
 	//if it already traveled a its range
 	if(distanceLeftToTravel <= 0.0 ) {
@@ -59,4 +54,5 @@ void Projectile::setStrength(float f) {
 void Projectile::setRange(Position r) {
 
 	range = r;
+	distanceLeftToTravel = r;
 }

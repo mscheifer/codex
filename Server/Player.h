@@ -28,8 +28,8 @@ public:
   bool minotaur; //might be private
   int player_id;
   char name[20];
-  Player(void);
-  Player(Position x, Position y, Position z, int assigned_id);
+  Player();
+  Player(Position x, Position y, Position z, int assigned_id, Map *);
   ~Player(void);
   std::string getString();
   virtual bool attackBy(DeadlyEntity*);
@@ -72,5 +72,5 @@ private:
   void handleOtherAction(ClientGameTimeAction a);
   void attack(ClientGameTimeAction a);
   bool isPlayer(void) {return true;};
-  void init(Position x, Position y, Position z, int assigned_id);
+  void init(Position x, Position y, Position z, int assigned_id, Map * m);
 };

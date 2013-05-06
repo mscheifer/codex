@@ -1,16 +1,15 @@
 #include "Player.h"
-
-Player::Player(void)
+Player::Player()
 {
-  this->init(0,0,0,0);
+ this->init(0,0,0,0,NULL);
 }
 
-Player::Player(Position x, Position y, Position z, int assigned_id)
+Player::Player(Position x, Position y, Position z, int assigned_id, Map * m)
 {
- this->init(x, y, z, assigned_id);
+ this->init(x, y, z, assigned_id, m);
 }
 
-void Player::init(Position x, Position y, Position z, int assigned_id)
+void Player::init(Position x, Position y, Position z, int assigned_id, Map * m)
 {
    minotaur = false;
   dead = false;
@@ -28,12 +27,13 @@ void Player::init(Position x, Position y, Position z, int assigned_id)
 	mana = 100;
 	maxMana = 100;
 	castDownCounter = sf::Clock();
-
-  weapon[0] = new WeaponFist(position);
-	weapon[1] = new WeaponFire(position);
+	map = m;
+	weapon[0] = new WeaponFist(position, this->map);
+	weapon[1] = new WeaponFire(position, this->map);
 	current_weapon_selection = 1;
   BoundingSphere* b = new BoundingSphere(gx::vector4(x,y,z),sphereRadius);
   boundingObjs.push_back(b);
+
 }
 
 Player::~Player(void)

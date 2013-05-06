@@ -8,9 +8,9 @@ class Projectile;
 class Weapon : public DeadlyEntity
 {
 public:
-	Weapon(void);
+	Weapon(Map*);
 	~Weapon(void);
-	Weapon(float damage, float range, Coordinate d, float mpcost);
+	Weapon(float damage, float range, Coordinate d, float mpcost, Map*);
 	int getRange(void);
 	int getDamage(void);
 	Velocity projectileSpeed;

@@ -7,10 +7,11 @@ const float Map::Item_Pick_Up_Ranges = 1.0f;
 
 
 //TODO the rectangle should be the actual world bounds
-Map::Map(void):q(0,Rectangle(gx::vector4(0,0,0),1000,1000))
+Map::Map(void):q(0,Rectangle(gx::vector4(0,0,0),1000,1000)),freeProjectiles()
 {
 	map_size = 15;
-	
+	freeProjectiles = new std::stack<Projectile *>();
+	init = true;
 }
 
 
@@ -28,15 +29,15 @@ std::vector<Entity *> Map::getEntity() {
 
  Projectile* Map::produceProjectile()
  {
-   if(freeProjectiles.empty())
+   if(freeProjectiles->empty())
    {
      for(unsigned int i = 0; i < 20; i++)
      {
-       freeProjectiles.push(new Projectile(this));
+       freeProjectiles->push(new Projectile(this));
      }
    }
-   Projectile* ret = freeProjectiles.top();
-   freeProjectiles.pop();
+   Projectile* ret = freeProjectiles->top();
+   freeProjectiles->pop();
    entities.push_back(ret);
    return ret;
  }
@@ -44,7 +45,7 @@ std::vector<Entity *> Map::getEntity() {
  void Map::destroyProjectile(Projectile * proj)
  {
    proj->setOwner(NULL);
-   freeProjectiles.push(proj);
+   freeProjectiles->push(proj);
    // should probably use a hasmap soon
    for(unsigned int i = 0; i < entities.size(); i++) {
 	   if(entities.at(i) == proj) {

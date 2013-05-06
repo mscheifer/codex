@@ -3,7 +3,7 @@
 
 Game::Game(void)
 {
-
+	world = Map();
 }
 
 
@@ -21,7 +21,7 @@ void Game::chooseMinotaur()
 int Game::join()
 {
   unsigned int userID = world.getPlayers().size();
-  Player * newPlayer = new Player(0,0,0,0);
+  Player * newPlayer = new Player(0,0,0,0, &world);
   newPlayer->player_id = userID;
   world.addPlayer(newPlayer);
   return userID;
@@ -42,7 +42,7 @@ ServerGameTimeRespond Game::evaluate(ClientGameTimeAction a) {
 	for( unsigned int i = 0; i < currentEntities.size(); i++ ) {
 		 std::cout << " hello nigga" << std::endl;
 		 currentEntities[i]->update();
-		 s.entities[i] = currentEntities[i]; //add the player to the return struct
+		 s.entities.push_back(currentEntities[i]); //add the player to the return struct
 	}
   unsigned int deadPlayers = 0;
   bool minotaurLose  = false;
