@@ -30,10 +30,11 @@ public:
 private:
 	std::vector<Player *> players;
 	std::vector<Entity *> entities;
-	std::stack<Projectile *> freeProjectiles;
+	std::stack<Projectile *>* freeProjectiles;
 	std::vector<Projectile *> liveProjectTile;
   Quadtree q;
   void addToQtree(Entity* e);
   void removeFromQtree(Entity* e);
+  bool init;
 
 };

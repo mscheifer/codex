@@ -4,7 +4,7 @@ class WeaponFist :
   public Weapon
 {
 public:
-  WeaponFist(Coordinate);
+  WeaponFist(Coordinate, Map*);
   ~WeaponFist(void);
   bool attackMelee();
   Projectile* attackRange();

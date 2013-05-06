@@ -1,4 +1,4 @@
-NAME	   = drchao
+NAME	   = Server/drchao
 ECHO	   = @echo
 CC       = @g++
 WARNINGS = -Wall -Wextra -Wstrict-overflow=5 -Wshadow -Wconversion

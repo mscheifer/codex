@@ -27,7 +27,8 @@ std::string readFile(const std::string fileName) {
 std::vector<gx::drawSet::vaoData_t> entitiesData() {
     //setup drawing data
   std::vector<gx::drawSet::vaoData_t> entitiesData;
-  entitiesData.push_back(gx::loadCube());
+  auto cubes = gx::loadCube();
+  entitiesData.insert(entitiesData.end(),cubes.begin(),cubes.end());
   return entitiesData;
 }
 //must call after window is initialized
@@ -43,6 +44,15 @@ GLenum initGlew() {
 }
 } //end unnamed namespace
 
+const gx::vector3 gx::graphicsClient::upDirection(0.0, 0.0, 1.0);
+
+void gx::graphicsClient::setCamera() {
+  //add the direction vector to the player's position to get the position to look at
+  this->display.setView(playerPosition,
+                        playerDirection + playerPosition,
+                        upDirection);
+}
+
 void gx::graphicsClient::reshape(unsigned int w, unsigned int h) {
   typedef displaySet::elem_t elem_t;
   const elem_t fov       = 53.13f;
@@ -51,7 +61,7 @@ void gx::graphicsClient::reshape(unsigned int w, unsigned int h) {
   const elem_t farPlane  = 3000.0f;
   // adjust the viewport when the window is resized
   glViewport(0, 0, w, h);
-  gx::debugout << "glViewport(0, 0, w, h);" << gx::endl;
+  gx::debugout << "glViewport(0, 0, " << w << ", " << h << ");" << gx::endl;
   this->display.setProjection(fov,ratio,nearPlane,farPlane);
 }
 
@@ -68,11 +78,16 @@ gx::graphicsClient::graphicsClient():
     window(sf::VideoMode(defaultWindowWidth, defaultWindowHeight),
            "DrChao", sf::Style::Default),
     glewStatus(initGlew()), //glew needs to be called here, after window, before anything else
+    userInput(),
     light1(gx::vector4(1,1,1),0.5,0.5,0.05f),
     display(),
     entities(readFile("graphics/default.vert"),readFile("graphics/default.frag"),
                        entitiesData(),uniforms()),
-    fpsClock(), fpsFrames(0)                                                     {
+    playerDirection(0.0, 1.0,0.0),//change to result of init packet
+    playerStartDirection(0.0, 1.0,0.0),//change to result of init packet
+    playerStartRight(playerStartDirection.y,playerStartDirection.x,playerStartDirection.z),
+    playerPosition(0.0, 0.0, 0.0),//change to the result of init packet
+     fpsClock(), fpsFrames(0)                 {
   this->window.setVerticalSyncEnabled(false);
   this->window.setMouseCursorVisible(false);
   if(!this->window.setActive()) {
@@ -91,30 +106,19 @@ gx::graphicsClient::graphicsClient():
 
   light1.updatePosition(gx::vector4( 0, 5, -10));
 
-  setCamera(display);
-  setUpMouse();
+  this->setCamera();
+  this->userInput.setUpMouse();
   this->reshape(defaultWindowWidth, defaultWindowHeight);
 }
 
-gx::userInput gx::graphicsClient::handleInput() {
-  bool stopped = false;
-  bool jumped = false;
-  sf::Event event;
-  while (window.pollEvent(event)) {
-    if (event.type == sf::Event::Closed) {
-      stopped = true; // end the program
-    } else if (event.type == sf::Event::Resized) {
-      reshape(event.size.width, event.size.height);
-    } else if (event.type == sf::Event::KeyPressed) {
-      if(event.key.code == sf::Keyboard::Escape) {
-        stopped = true; // end the program
-	    } else if(event.key.code == sf::Keyboard::Space) {
-        jumped = true;
-	    }
-    }
+void gx::graphicsClient::handleInput() {
+  this->userInput.handle(this->window);
+  if(this->userInput.resizedWindow()) {
+    reshape(this->userInput.windowWidth(),this->userInput.windowHeight());
   }
-  userInput curInput(movePlayer(display),turnPlayer(display),jumped,stopped);
-  return curInput;
+  auto newdir = this->userInput.turnPlayer();
+  this->playerDirection = toBasis(playerStartRight,playerStartDirection,upDirection) * newdir;
+  this->setCamera(); //after setting new player position and direction
 }
 
 void gx::graphicsClient::draw() {
@@ -138,7 +142,11 @@ void gx::graphicsClient::draw() {
   }
 }
 
-void gx::graphicsClient::updateEntities(std::vector<std::pair<vector3,int>> data) {
+void gx::graphicsClient::updatePosition(vector4 pos) {
+  this->playerPosition = pos;
+}
+
+void gx::graphicsClient::updateEntities(std::vector<std::pair<vector4,int>> data) {
   this->entities.reset();
 
   for(auto entityP = data.begin(); entityP != data.end(); ++entityP) {

@@ -28,18 +28,29 @@ public:
   bool minotaur; //might be private
   int player_id;
   char name[20];
-  Player(void);
-  Player(Position x, Position y, Position z, int assigned_id);
+  Player();
+  Player(Position x, Position y, Position z, int assigned_id, Map *);
   ~Player(void);
   std::string getString();
   virtual bool attackBy(DeadlyEntity*);
-  float getHealth() { return health; }
+ 
   bool moveTowardDirection(move_t degree);
   void jump();
   void handleAction(ClientGameTimeAction a);
 
   void onCollision(Entity* a);
   void updateBounds();
+  
+  float getHealth() { return health; }
+  void setHealth(float);
+
+  float getMana() {return mana;}
+  void setMana(float);
+
+  float getSpeed(){ return speed;}
+  void setSpeed(float);
+
+
 
 private:
   float health;
@@ -53,7 +64,7 @@ private:
   int jumpCount;
   bool canJump;
   bool attacking;
-  Weapon weapon[MAXWEAPONS]; //0 bare hand, 1 fireball
+  Weapon* weapon[MAXWEAPONS]; //0 bare hand, 1 fireball
   int current_weapon_selection; //0 bare hand, 1 fireball
   bool damageBy(DeadlyEntity *);
   void fixPosition();
@@ -61,5 +72,5 @@ private:
   void handleOtherAction(ClientGameTimeAction a);
   void attack(ClientGameTimeAction a);
   bool isPlayer(void) {return true;};
-  void init(Position x, Position y, Position z, int assigned_id);
+  void init(Position x, Position y, Position z, int assigned_id, Map * m);
 };
