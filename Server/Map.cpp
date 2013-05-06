@@ -37,10 +37,11 @@ std::vector<Entity *> Map::getEntity() {
    }
    Projectile* ret = freeProjectiles.top();
    freeProjectiles.pop();
-   entities.push_back(ret);
+   entities.push_back(ret); //note shouldn't this be live projecties?
    return ret;
  }
 
+ //note should we just process all live projectiles, thenw e can remove
  void Map::destroyProjectile(Projectile * proj)
  {
    proj->setOwner(NULL);

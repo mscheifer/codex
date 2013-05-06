@@ -186,7 +186,7 @@ void Player::attack( ClientGameTimeAction a) {
 		if( !currentWeapon.canUseWeapon(false)){
 			return;
 		}
-		currentWeapon.attackMelee();
+		currentWeapon.attackMelee(); //doesnt do anything
 
 	}
 
