@@ -26,8 +26,9 @@ struct ServerGameTimeRespond
       players[i].deserialize(packet);
     }
 
-    unsigned int size = 0;
+    sf::Uint32 size = 0;
     packet >> size;
+    entities.clear();
     for(unsigned int i = 0; i < size; i++) {
       Entity* newEntity = new Entity();
       newEntity->deserialize(packet);

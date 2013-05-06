@@ -6,32 +6,34 @@
 #include "vertexAttrib.h"
 #include "vector4.h"
 
-gx::Mesh::MeshEntry::MeshEntry()
-{
-    //VB = INVALID_OGL_VALUE;
-    //IB = INVALID_OGL_VALUE;
-    NumIndices  = 0;
-    MaterialIndex = INVALID_MATERIAL;
-};
+gx::Mesh::MeshEntry::MeshEntry(const aiMesh* paiMesh)
+  : entitiesData(), MaterialIndex(paiMesh->mMaterialIndex) {
+  std::vector<Vertex> Vertices;
+  std::vector<unsigned int> Indices;
 
-gx::Mesh::MeshEntry::~MeshEntry()
-{
-	/*
-    if (VB != INVALID_OGL_VALUE)
-    {
-        //glDeleteBuffers(1, &VB);
-    }
+  const aiVector3D Zero3D(0.0f, 0.0f, 0.0f);
 
-    if (IB != INVALID_OGL_VALUE)
-    {
-        //glDeleteBuffers(1, &IB);
-    } */
-}
+  for (unsigned int i = 0 ; i < paiMesh->mNumVertices ; i++) {
+      const aiVector3D* pPos      = &(paiMesh->mVertices[i]);
+      const aiVector3D* pNormal   = &(paiMesh->mNormals[i]);
+      const aiVector3D* pTexCoord = paiMesh->HasTextureCoords(0) ? &(paiMesh->mTextureCoords[0][i]) : &Zero3D;
 
-void gx::Mesh::MeshEntry::Init(std::vector<Vertex>& Vertices,
-						   const std::vector<unsigned int>& Indices)
-{
-  NumIndices = Indices.size();
+      Vertex v(gx::vector4(pPos->x, pPos->y, pPos->z),
+                gx::vector3(pTexCoord->x, pTexCoord->y, 0),
+                gx::vector3(pNormal->x, pNormal->y, pNormal->z),
+				gx::vector4(1.0f, 0.2f, 0.0f));	// temporary color filler. 
+												// colors are stored in materials, not vertex
+
+      Vertices.push_back(v);
+  }
+
+  for (unsigned int i = 0 ; i < paiMesh->mNumFaces ; i++) {
+      const aiFace& Face = paiMesh->mFaces[i];
+      assert(Face.mNumIndices == 3);
+      Indices.push_back(Face.mIndices[0]);
+      Indices.push_back(Face.mIndices[1]);
+      Indices.push_back(Face.mIndices[2]);
+  }
 
   std::vector<GLfloat> positions;
 	for (auto v = Vertices.begin(); v != Vertices.end(); ++v) {
@@ -69,11 +71,14 @@ void gx::Mesh::MeshEntry::Init(std::vector<Vertex>& Vertices,
 	attribs.push_back(normalsAttrib);
 
 	this->entitiesData = std::make_pair(Indices,attribs);
-}
+};
+
+gx::Mesh::MeshEntry::MeshEntry(MeshEntry&& other)
+  : entitiesData (std::move(other.entitiesData)),
+    MaterialIndex(std::move(other.MaterialIndex)) {}
 
 gx::Mesh::Mesh()
-{
-}
+  : m_Entries(), m_Textures() {}
 
 
 gx::Mesh::~Mesh()
@@ -119,53 +124,15 @@ const aiScene* gx::Mesh::LoadMesh(const std::string& Filename)
 
 bool gx::Mesh::InitFromScene(const aiScene* pScene, const std::string& Filename)
 {  
-    m_Entries.resize(pScene->mNumMeshes);
     m_Textures.resize(pScene->mNumMaterials);
 
     // Initialize the meshes in the scene one by one
-    for (unsigned int i = 0 ; i < m_Entries.size() ; i++) {
+    for (unsigned int i = 0 ; i < pScene->mNumMeshes ; i++) {
         const aiMesh* paiMesh = pScene->mMeshes[i];
-        InitMesh(i, paiMesh);
+        m_Entries.push_back(MeshEntry(paiMesh));
     }
 
     return InitMaterials(pScene, Filename);
-}
-
-void gx::Mesh::InitMesh(unsigned int Index, const aiMesh* paiMesh)
-{
-    m_Entries[Index].MaterialIndex = paiMesh->mMaterialIndex;
-    
-    std::vector<Vertex> Vertices;
-    std::vector<unsigned int> Indices;
-
-    const aiVector3D Zero3D(0.0f, 0.0f, 0.0f);
-
-    for (unsigned int i = 0 ; i < paiMesh->mNumVertices ; i++) {
-        const aiVector3D* pPos      = &(paiMesh->mVertices[i]);
-        const aiVector3D* pNormal   = &(paiMesh->mNormals[i]);
-        const aiVector3D* pTexCoord = paiMesh->HasTextureCoords(0) ? &(paiMesh->mTextureCoords[0][i]) : &Zero3D;
-
-        Vertex v(gx::vector4(pPos->x, pPos->y, pPos->z),
-                 gx::vector3(pTexCoord->x, pTexCoord->y, 0),
-                 gx::vector3(pNormal->x, pNormal->y, pNormal->z),
-				 gx::vector4(1.0f, 0.2f, 0.0f));	// temporary color filler. 
-													// colors are stored in materials, not vertex
-
-        Vertices.push_back(v);
-    }
-
-    for (unsigned int i = 0 ; i < paiMesh->mNumFaces ; i++) {
-        const aiFace& Face = paiMesh->mFaces[i];
-        assert(Face.mNumIndices == 3);
-        Indices.push_back(Face.mIndices[0]);
-        Indices.push_back(Face.mIndices[1]);
-        Indices.push_back(Face.mIndices[2]);
-    }
-	
-	// init no longer makes opengl calls anymore.
-	// instead, it creates a list of vaoData_t which has all
-	// the vertex attribute properties.
-	m_Entries[Index].Init(Vertices, Indices);
 }
 
 bool gx::Mesh::InitMaterials(const aiScene* pScene, const std::string& Filename)

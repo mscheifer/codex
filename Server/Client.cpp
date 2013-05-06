@@ -41,6 +41,7 @@ void NetworkClient::receiveMessages() {
           static_cast<gx::vector3::elem_t>(pos.y),
           static_cast<gx::vector3::elem_t>(pos.z)));
         gxClient.updateEntities(entities);
+        //std::cout << "num entities received: " << entities.size() << std::endl;
         if (s.players[id].dead) { /*render death everytime ? */} ;
         //render WIN OR LOSE based on s.state
         break;

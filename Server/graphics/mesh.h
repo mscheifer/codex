@@ -40,7 +40,10 @@ class Mesh
 {
 public:
     Mesh();
-
+    Mesh(const Mesh&);// = delete; //don't copy
+    Mesh& operator=(const Mesh&);// = delete; //don't assign
+    Mesh(Mesh&&);// = delete; //define later
+    Mesh& operator=(Mesh&&);// = delete; //define later
     ~Mesh();
 
     const aiScene* LoadMesh(const std::string& Filename);
@@ -48,16 +51,14 @@ public:
     void Render();
 
     struct MeshEntry {
-        MeshEntry();
-
-        ~MeshEntry();
-
-		    void Init(std::vector<Vertex>& Vertices, 
-				    const std::vector<unsigned int>& Indices);
+        MeshEntry(const aiMesh*);
+        MeshEntry(const MeshEntry&);// = delete; //don't copy
+        MeshEntry& operator=(const MeshEntry&);// = delete; //don't assign
+        MeshEntry(MeshEntry&&);
+        MeshEntry& operator=(MeshEntry&&);// = delete; //define later
 
 		    drawSet::vaoData_t entitiesData;
 
-        unsigned int NumIndices;
         unsigned int MaterialIndex;
     };
 
@@ -67,13 +68,14 @@ public:
 
 private:
     bool InitFromScene(const aiScene* pScene, const std::string& Filename);
-    void InitMesh(unsigned int Index, const aiMesh* paiMesh);
     bool InitMaterials(const aiScene* pScene, const std::string& Filename);
     void Clear();
 
 #define INVALID_MATERIAL 0xFFFFFFFF
 
 };
+
+Mesh loadMeshFromFile(const std::string&);
 
 } //end namespace gx
 #endif	/* MESH_H */

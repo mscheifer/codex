@@ -48,10 +48,12 @@ std::vector<gx::drawSet::vaoData_t> loadModel(const std::string& ModelPath) {
 std::vector<gx::drawSet::vaoData_t> entitiesData() {
 	// MODEL LOADING
 	std::vector<gx::drawSet::vaoData_t> model_import = loadModel("models/weird_orange_thing.dae");
+  std::vector<gx::drawSet::vaoData_t> model_import2 = loadModel("models/Test.dae");
 
     //setup drawing data
   std::vector<gx::drawSet::vaoData_t> entitiesData;
   auto cubes = gx::loadCube();
+  entitiesData.insert(entitiesData.end(),model_import2.begin(),model_import2.end());
   entitiesData.insert(entitiesData.end(),model_import.begin(),model_import.end());
   entitiesData.insert(entitiesData.end(),cubes.begin(),cubes.end());
   return entitiesData;
