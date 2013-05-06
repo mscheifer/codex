@@ -7,16 +7,15 @@ namespace { //to not export
 void printShaderInfoLog(GLuint obj,const std::string name) {
   GLint   infoLogLength = 0;
   GLsizei charsWritten  = 0;
-  GLchar* infoLog;
 
   glGetShaderiv(obj, GL_INFO_LOG_LENGTH,&infoLogLength);
 
   if (infoLogLength > 1) {
-    infoLog = new GLchar[infoLogLength];
-    glGetShaderInfoLog(obj, infoLogLength, &charsWritten, infoLog);
-    std::cout << name << ": errors " << infoLogLength << std::endl;
-    std::cout << infoLog << std::endl;
-    delete[] infoLog;
+    std::vector<GLchar> infoLog;
+    infoLog.resize(infoLogLength);
+    glGetShaderInfoLog(obj, infoLogLength, &charsWritten, infoLog.data());
+    std::cout << name << ": compile output " << infoLogLength << std::endl;
+    std::cout << std::string(infoLog.begin(),infoLog.end()) << std::endl;
   }
 }
 
@@ -28,11 +27,11 @@ void printProgramInfoLog(GLuint obj) {
   glGetProgramiv(obj, GL_INFO_LOG_LENGTH,&infoLogLength);
 
   if (infoLogLength > 1) {
-    infoLog = new GLchar[infoLogLength];
-    glGetProgramInfoLog(obj, infoLogLength, &charsWritten, infoLog);
+    std::vector<GLchar> infoLog;
+    infoLog.resize(infoLogLength);
+    glGetProgramInfoLog(obj, infoLogLength, &charsWritten, infoLog.data());
     std::cout << "Program: errors" << std::endl;
-    std::cout << infoLog << std::endl;
-    delete[] infoLog;
+    std::cout << std::string(infoLog.begin(),infoLog.end()) << std::endl;
   }
 }
 
@@ -113,13 +112,14 @@ gx::shaderProgram::shaderProgram(   const std::string vsSource,
   debugout << &maxAttribNameLength << ");" << endl;
   debugout << "maxAttribNameLength = " << maxAttribNameLength << endl;
 
-  GLchar* attribName = new GLchar[maxAttribNameLength];
+  std::vector<GLchar> attribName;
+  attribName.resize(maxAttribNameLength);
 
   for(GLuint i = 0; i < GLuint(numAttribs); ++i) {
     GLint attribSize;
     GLenum attribType;
     glGetActiveAttrib(this->prog, i, maxAttribNameLength, nullptr, &attribSize,
-                      &attribType, attribName);
+                      &attribType, attribName.data());
     debugout << "glGetActiveAttrib(" << this->prog << ", " << i << ", ";
     debugout << maxAttribNameLength << ", nullptr, &attribSize@" << &attribSize;
     debugout << ", &attribType@" << &attribType << ", " << attribName << ");";
@@ -130,8 +130,6 @@ gx::shaderProgram::shaderProgram(   const std::string vsSource,
     vertexAttribSignature sig(attribType,attribLoc);
     attribSigs.insert(std::make_pair(attribName,sig));
   }
-
-  delete[] attribName;
 
   for(auto uniformp = uniforms.begin(); uniformp != uniforms.end(); ++uniformp){
     auto& unif = **uniformp;
