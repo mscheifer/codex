@@ -155,9 +155,9 @@
     <ClInclude Include="WeaponFist.h" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="graphics\default.frag" />
-    <None Include="graphics\default.vert" />
-    <None Include="graphics\Makefile" />
+    <None Include="..\Makefile" />
+    <None Include="shaders\default.frag" />
+    <None Include="shaders\default.vert" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

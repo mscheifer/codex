@@ -289,13 +289,13 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <None Include="graphics\Makefile">
+    <None Include="..\Makefile">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="shaders\default.frag">
       <Filter>Resource Files\graphics</Filter>
     </None>
-    <None Include="graphics\default.frag">
-      <Filter>Resource Files\graphics</Filter>
-    </None>
-    <None Include="graphics\default.vert">
+    <None Include="shaders\default.vert">
       <Filter>Resource Files\graphics</Filter>
     </None>
   </ItemGroup>
