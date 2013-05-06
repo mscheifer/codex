@@ -1,6 +1,7 @@
-#include "userInput.h"
+#include "input.h"
+#include <SFML/Window.hpp>
 #include "vector3.h"
-#include "displaySet.h"
+#include "matrix.h"
 
 namespace {
 const double mouseSensitivity = 0.001;
@@ -14,29 +15,20 @@ sf::Vector2i mouseDiff;
 gx::userInput::userInput(move_t mv, vector3 d, bool jump, bool close, bool f)
   : move(mv), dir(d), jumped(jump), stopped(close), fire(f) {}
 
-move_t gx::userInput::getMove() {
-  return this->move;
-}
-gx::vector3 gx::userInput::getDir() {
-  return this->dir;
-}
-bool gx::userInput::getJump() {
+bool gx::input::getJump() {
   return this->jumped;
 }
-bool gx::userInput::getStop() {
+bool gx::input::getStop() {
   return this->stopped;
 }
-  bool gx::userInput::getFire() {
-  return this->fire;
+bool gx::input::fire1() {
+  return this->fired1;
+}
+bool gx::input::fire2() {
+  return this->fired2;
 }
 
-void gx::setUpMouse() {
-  //somehow change this to set it to the center of the screen
-  mouseBasePosition = sf::Vector2i(200,200);
-  sf::Mouse::setPosition(mouseBasePosition);
-}
-
-move_t gx::movePlayer() {
+move_t gx::input::movePlayer() {
   move_t movement = NULL_DIR;
   if (sf::Keyboard::isKeyPressed(sf::Keyboard::W)) {
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::A)) {
@@ -64,7 +56,7 @@ move_t gx::movePlayer() {
   return movement;
 }
 
-gx::vector3 gx::turnPlayer() {
+gx::vector3 gx::input::turnPlayer() {
   //base direction needs to be looking forward because mouse movement needs to rotate
   //around the axis that are 90 degrees away from the base direction and its
   //easier if these are the x and z axis
@@ -80,4 +72,53 @@ gx::vector3 gx::turnPlayer() {
     sf::Mouse::setPosition(mouseBasePosition);
   }
   return mouseDirection;
+}
+
+bool gx::input::resizedWindow() {
+  return this->resized;
+}
+
+unsigned int gx::input::windowWidth() {
+  return this->width;
+}
+
+unsigned int gx::input::windowHeight() {
+  return this->height;
+}
+
+void gx::input::setUpMouse() {
+  //somehow change this to set it to the center of the screen
+  mouseBasePosition = sf::Vector2i(200,200);
+  sf::Mouse::setPosition(mouseBasePosition);
+}
+
+void gx::input::handle(sf::Window& window) {
+  this->stopped = false;
+  this->jumped  = false;
+  this->resized = false;
+  sf::Event event;
+  while (window.pollEvent(event)) {
+    this->handleEvent(event);
+  }
+}
+
+void gx::input::handleEvent(const sf::Event& event) {
+  if (event.type == sf::Event::Closed) {
+    this->stopped = true; // end the program
+  } else if (event.type == sf::Event::Resized) {
+    this->resized = true;
+    this->width  = event.size.width,
+    this->height = event.size.height;
+  } else if (event.type == sf::Event::KeyPressed) {
+    if(event.key.code == sf::Keyboard::Escape) {
+      this->stopped = true; // end the program
+    } else if(event.key.code == sf::Keyboard::Space) {
+      this->jumped = true;
+    }
+  }
+	if(event.type == sf::Event::MouseButtonPressed) {
+		if(event.mouseButton.button == sf::Mouse::Left) {
+		  this->fired1 = true;
+		}
+  }
 }

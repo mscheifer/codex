@@ -4,13 +4,14 @@
 #include "displaySet.h"
 #include "drawSet.h"
 #include "light.h"
-#include "userInput.h"
+#include "input.h"
 
 namespace gx {
 
 class graphicsClient {
     sf::Window window;
     GLenum     glewStatus;
+    input      userInput;
 
     //scene data
     light light1;
@@ -38,10 +39,18 @@ class graphicsClient {
     graphicsClient& operator=(const graphicsClient&);// = delete;
     graphicsClient(graphicsClient&&);// = delete;
     graphicsClient& operator=(graphicsClient&&);// = delete;
-    userInput handleInput();
+    void handleInput();
     void draw();
     void updatePosition(vector4);
     void updateEntities(std::vector<std::pair<vector4,int>>);
+
+    //input functions
+    bool closed()        { return this->userInput.getStop(); }
+    bool jumped()        { return this->userInput.getJump(); }
+    bool fire1 ()        { return this->userInput.fire1  (); }
+    bool fire2 ()        { return this->userInput.fire2  (); }
+    move_t getMovement() { return this->userInput.movePlayer(); }
+    vector3 getDir()     { return this->playerDirection; }
 };
 
 } //end namespace gx

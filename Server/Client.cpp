@@ -46,17 +46,20 @@ void NetworkClient::receiveMessages() {
   }
 }
 
-void NetworkClient::processInput(gx::userInput ui) {
-  if(ui.getStop()) {
+void NetworkClient::processInput() {
+  this->gxClient.handleInput();
+  if(this->gxClient.closed()) {
     this->running = false;
   }
   action.clear();
-  if(ui.getJump()) {
+  if(this->gxClient.jumped()) {
     action.jump = true;
   }
-  action.movement = ui.getMove();
-  action.facingDirection = Direction(ui.getDir().x, ui.getDir().y, ui.getDir().z);
-  action.attackRange = ui.getFire();
+  action.movement = this->gxClient.getMovement();
+  auto dir = this->gxClient.getDir();
+  action.facingDirection = Direction(dir.x, dir.y, dir.z);
+  action.attackMelee = this->gxClient.fire1();
+  action.attackRange = this->gxClient.fire2();
   this->sendPacket = true;
 }
 /*
@@ -135,7 +138,7 @@ void NetworkClient::doClient() {
   //  main run loop
   while(this->running){
     //process input and send events
-    this->processInput(this->gxClient.handleInput());
+    this->processInput();
     this->receiveMessages();
     this->gxClient.draw();
     if(this->sendPacket) {//if dead player still should be able to chat?

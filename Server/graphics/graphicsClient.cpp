@@ -78,6 +78,7 @@ gx::graphicsClient::graphicsClient():
     window(sf::VideoMode(defaultWindowWidth, defaultWindowHeight),
            "DrChao", sf::Style::Default),
     glewStatus(initGlew()), //glew needs to be called here, after window, before anything else
+    userInput(),
     light1(gx::vector4(1,1,1),0.5,0.5,0.05f),
     display(),
     entities(readFile("graphics/default.vert"),readFile("graphics/default.frag"),
@@ -106,42 +107,18 @@ gx::graphicsClient::graphicsClient():
   light1.updatePosition(gx::vector4( 0, 5, -10));
 
   this->setCamera();
-  setUpMouse();
+  this->userInput.setUpMouse();
   this->reshape(defaultWindowWidth, defaultWindowHeight);
 }
 
-gx::userInput gx::graphicsClient::handleInput() {
-  bool stopped = false;
-  bool jumped = false;
-  bool fire = false;
-  sf::Event event;
-  while (window.pollEvent(event)) {
-    if (event.type == sf::Event::Closed) {
-      stopped = true; // end the program
-    } else if (event.type == sf::Event::Resized) {
-      reshape(event.size.width, event.size.height);
-    } else if (event.type == sf::Event::KeyPressed) {
-      if(event.key.code == sf::Keyboard::Escape) {
-        stopped = true; // end the program
-	    } else if(event.key.code == sf::Keyboard::Space) {
-        jumped = true;
-		fire = true; // a hack now
-	    }
-	}
-	if(event.type == sf::Event::MouseButtonPressed) {
-		if(event.mouseButton.button == sf::Mouse::Left) {
-		}
-	}
-	
+void gx::graphicsClient::handleInput() {
+  this->userInput.handle(this->window);
+  if(this->userInput.resizedWindow()) {
+    reshape(this->userInput.windowWidth(),this->userInput.windowHeight());
   }
-
-  move_t movement = movePlayer();
-  vector3 newdir = turnPlayer();
+  auto newdir = this->userInput.turnPlayer();
   this->playerDirection = toBasis(playerStartRight,playerStartDirection,upDirection) * newdir;
   this->setCamera(); //after setting new player position and direction
-  userInput curInput(movement,newdir,jumped,stopped, fire);
-
-  return curInput;
 }
 
 void gx::graphicsClient::draw() {
