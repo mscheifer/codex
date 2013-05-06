@@ -147,6 +147,12 @@
     <ClCompile Include="graphics\uniformBlock.cpp">
       <Filter>Source Files\graphics</Filter>
     </ClCompile>
+    <ClCompile Include="graphics\mesh.cpp">
+      <Filter>Source Files\graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="graphics\texture.cpp">
+      <Filter>Source Files\graphics</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">
@@ -285,6 +291,12 @@
       <Filter>Header Files\graphics</Filter>
     </ClInclude>
     <ClInclude Include="graphics\basicUniform.h">
+      <Filter>Header Files\graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="graphics\mesh.h">
+      <Filter>Header Files\graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="graphics\texture.h">
       <Filter>Header Files\graphics</Filter>
     </ClInclude>
   </ItemGroup>

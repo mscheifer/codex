@@ -42,12 +42,12 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>$(ProjectDir);$(SolutionDir)SFML-2.0\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir);$(SolutionDir)SFML-2.0\include;$(SolutionDir)assimp\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>$(SolutionDir)SFML-2.0\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>opengl32.lib;glew32.lib;sfml-graphics-d.lib;sfml-network-d.lib;sfml-system-d.lib;sfml-window-d.lib;sfml-audio-d.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(SolutionDir)SFML-2.0\lib;$(SolutionDir)assimp\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>opengl32.lib;glew32.lib;sfml-graphics-d.lib;sfml-network-d.lib;sfml-system-d.lib;sfml-window-d.lib;sfml-audio-d.lib;assimp.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -82,8 +82,10 @@
     <ClCompile Include="graphics\graphicsClient.cpp" />
     <ClCompile Include="graphics\light.cpp" />
     <ClCompile Include="graphics\matrix.cpp" />
+    <ClCompile Include="graphics\mesh.cpp" />
     <ClCompile Include="graphics\oglUtil.cpp" />
     <ClCompile Include="graphics\shaderProgram.cpp" />
+    <ClCompile Include="graphics\texture.cpp" />
     <ClCompile Include="graphics\uniformBlock.cpp" />
     <ClCompile Include="graphics\input.cpp" />
     <ClCompile Include="graphics\vao.cpp" />
@@ -127,8 +129,10 @@
     <ClInclude Include="graphics\graphicsClient.h" />
     <ClInclude Include="graphics\light.h" />
     <ClInclude Include="graphics\matrix.h" />
+    <ClInclude Include="graphics\mesh.h" />
     <ClInclude Include="graphics\oglUtil.h" />
     <ClInclude Include="graphics\shaderProgram.h" />
+    <ClInclude Include="graphics\texture.h" />
     <ClInclude Include="graphics\uniformBlock.h" />
     <ClInclude Include="graphics\input.h" />
     <ClInclude Include="graphics\vao.h" />
