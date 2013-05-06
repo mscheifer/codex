@@ -27,25 +27,36 @@ int Game::join()
   return userID;
 }
 
-ServerGameTimeRespond Game::evaluate(ClientGameTimeAction a) {
-	
-	ServerGameTimeRespond s;
-	s.entities.clear();
+void Game::evaluate(ClientGameTimeAction a) {
 	std::vector<Player *> currentPlayers =  world.getPlayers();
 	std::vector<Entity *> currentEntities = world.getEntity();
-
+	
 
 	for( unsigned int i = 0; i <  currentPlayers.size(); i++ ) {
 		 currentPlayers[i]->handleAction(a);
-		 s.players[i] = *currentPlayers[i]; //add the player to the return struct
 	}
 
 	for( unsigned int i = 0; i < currentEntities.size(); i++ ) {
 		 std::cout << " hello nigga" << std::endl;
 		 currentEntities[i]->update();
-		 s.entities.push_back(currentEntities[i]); //add the player to the return struct
 	}
-  unsigned int deadPlayers = 0;
+	
+}
+
+ServerGameTimeRespond Game::prepResponse() {
+	ServerGameTimeRespond s;
+	s.entities.clear();
+	std::vector<Player *> currentPlayers =  world.getPlayers();
+	std::vector<Entity *> currentEntities = world.getEntity();
+	for( unsigned int i = 0; i <  currentPlayers.size(); i++ ) {
+		 s.players[i] = *currentPlayers[i]; //add the player to the return struct
+	}
+
+	for( unsigned int i = 0; i < currentEntities.size(); i++ ) {
+		s.entities.push_back(currentEntities[i]); //add the player to the return struct
+	}
+	  
+	unsigned int deadPlayers = 0;
   bool minotaurLose  = false;
   //determine who wins
   for (unsigned int i = 0; i< currentPlayers.size(); i++ ) {
@@ -57,12 +68,13 @@ ServerGameTimeRespond Game::evaluate(ClientGameTimeAction a) {
         minotaurLose = true;
      }
   }
-  if (minotaurLose) {
-    s.state = CIVILIAN_WIN; 
-  }
-  if (deadPlayers == currentPlayers.size()-1 ) {
-    s.state = MANOTAUR_WIN;
-  }
 
-	return s;
+	if (minotaurLose) {
+	  s.state = CIVILIAN_WIN; 
+	}
+	if (deadPlayers == currentPlayers.size()-1 ) {
+		s.state = MANOTAUR_WIN;
+	}
+
+  return s;
 }

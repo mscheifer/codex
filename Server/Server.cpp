@@ -22,10 +22,8 @@ void NetworkServer::receiveMessages(int i) {
       case CGTA:
         cgta.deserialize(packet);
         //cgta.print();
-        if(!this->server.sendPacketToAll<ServerGameTimeRespond>
-                                                     (game.evaluate(cgta))) {
-          std::cout << "Error sending cgta to everybody" << std::endl;
-        }
+		game.evaluate(cgta);
+       
         break;
       case CHAT:
         this->server.sendToAll(copy); //right now just echoing what received
@@ -70,6 +68,10 @@ void NetworkServer::doServer() {
     for(unsigned int i = 0; i < server.size(); i++){
       this->receiveMessages(i);
       /* maybe put this in a method just like in client*/
+    }
+
+	if(!this->server.sendPacketToAll<ServerGameTimeRespond>( game.prepResponse() ) ) {
+          std::cout << "Error sending cgta to everybody" << std::endl;
     }
     sf::sleep( sf::milliseconds( tick_length -
                                  clock.getElapsedTime().asMilliseconds()) );
