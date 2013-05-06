@@ -61,7 +61,7 @@ void gx::graphicsClient::reshape(unsigned int w, unsigned int h) {
   const elem_t farPlane  = 3000.0f;
   // adjust the viewport when the window is resized
   glViewport(0, 0, w, h);
-  gx::debugout << "glViewport(0, 0, w, h);" << gx::endl;
+  gx::debugout << "glViewport(0, 0, " << w << ", " << h << ");" << gx::endl;
   this->display.setProjection(fov,ratio,nearPlane,farPlane);
 }
 

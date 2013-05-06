@@ -96,6 +96,8 @@ void gx::input::handle(sf::Window& window) {
   this->stopped = false;
   this->jumped  = false;
   this->resized = false;
+  this->fired1  = false;
+  this->fired1  = false;
   sf::Event event;
   while (window.pollEvent(event)) {
     this->handleEvent(event);

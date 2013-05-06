@@ -108,9 +108,9 @@ void NetworkClient::doClient() {
   while(true) {
 	  sf::Packet initPacket;
     if (netRecv.receiveMessage(initPacket)) {
-      std::cout<<"received message"<<std::endl;
+      std::cout << "received message" << std::endl;
       uint32_t packetType;
-      initPacket >>packetType;
+      initPacket >> packetType;
       if (packetType == JOINID) {
         IdPacket newId(0);
         newId.deserialize(initPacket);
@@ -120,7 +120,7 @@ void NetworkClient::doClient() {
       } else if (packetType == INIT) break;
 	  }
   }
-  std::cout<<"game started"<<std::endl;
+  std::cout << "game started" << std::endl;
   /*
   //temp code ------------------------------
   s.players[0] =  Player(0,0,1,42);
@@ -136,7 +136,7 @@ void NetworkClient::doClient() {
   //temp code -----------------------------
   */
   //  main run loop
-  while(this->running){
+  while(this->running) {
     //process input and send events
     this->processInput();
     this->receiveMessages();
@@ -147,5 +147,4 @@ void NetworkClient::doClient() {
       this->sendPacket = false;
     }
   }
-  while(true){}
 }

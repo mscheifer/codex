@@ -85,7 +85,7 @@
     <ClCompile Include="graphics\oglUtil.cpp" />
     <ClCompile Include="graphics\shaderProgram.cpp" />
     <ClCompile Include="graphics\uniformBlock.cpp" />
-    <ClCompile Include="graphics\userInput.cpp" />
+    <ClCompile Include="graphics\input.cpp" />
     <ClCompile Include="graphics\vao.cpp" />
     <ClCompile Include="graphics\vector3.cpp" />
     <ClCompile Include="graphics\vector4.cpp" />
@@ -130,7 +130,7 @@
     <ClInclude Include="graphics\oglUtil.h" />
     <ClInclude Include="graphics\shaderProgram.h" />
     <ClInclude Include="graphics\uniformBlock.h" />
-    <ClInclude Include="graphics\userInput.h" />
+    <ClInclude Include="graphics\input.h" />
     <ClInclude Include="graphics\vao.h" />
     <ClInclude Include="graphics\vector3.h" />
     <ClInclude Include="graphics\vector4.h" />
