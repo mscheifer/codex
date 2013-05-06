@@ -26,6 +26,7 @@ bool gx::input::fire1() {
 }
 bool gx::input::fire2() {
   return this->fired2;
+}
 
 move_t gx::input::movePlayer() {
   move_t movement = NULL_DIR;
@@ -117,7 +118,7 @@ void gx::input::handleEvent(const sf::Event& event) {
   }
 	if(event.type == sf::Event::MouseButtonPressed) {
 		if(event.mouseButton.button == sf::Mouse::Left) {
-		  fire = true;
+		  this->fired1 = true;
 		}
   }
 }

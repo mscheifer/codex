@@ -1,4 +1,4 @@
-#include "Powerup.h"
+#include "PowerUp.h"
 
 PowerUp::PowerUp(void)
 {
