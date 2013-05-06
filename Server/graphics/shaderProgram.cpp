@@ -22,7 +22,6 @@ void printShaderInfoLog(GLuint obj,const std::string name) {
 void printProgramInfoLog(GLuint obj) {
   GLint   infoLogLength = 0;
   GLsizei charsWritten  = 0;
-  GLchar* infoLog;
 
   glGetProgramiv(obj, GL_INFO_LOG_LENGTH,&infoLogLength);
 
@@ -116,19 +115,20 @@ gx::shaderProgram::shaderProgram(   const std::string vsSource,
   attribName.resize(maxAttribNameLength);
 
   for(GLuint i = 0; i < GLuint(numAttribs); ++i) {
+    GLsizei writtenChars;
     GLint attribSize;
     GLenum attribType;
-    glGetActiveAttrib(this->prog, i, maxAttribNameLength, nullptr, &attribSize,
+    glGetActiveAttrib(this->prog, i, maxAttribNameLength, &writtenChars, &attribSize,
                       &attribType, attribName.data());
     debugout << "glGetActiveAttrib(" << this->prog << ", " << i << ", ";
     debugout << maxAttribNameLength << ", nullptr, &attribSize@" << &attribSize;
-    debugout << ", &attribType@" << &attribType << ", " << attribName << ");";
-    debugout << endl;
-    GLint attribLoc = glGetAttribLocation(this->prog, attribName);
+    debugout << ", &attribType@" << &attribType << ", ";
+    debugout << std::string(attribName.begin(), attribName.begin() + writtenChars) << ");" << endl;
+    GLint attribLoc = glGetAttribLocation(this->prog, attribName.data());
     debugout << attribLoc << " = glGetAttribLocation(" << this->prog << ", ";
-    debugout << attribName << ");" << endl;
+    debugout << std::string(attribName.begin(), attribName.begin() + writtenChars) << ");" << endl;
     vertexAttribSignature sig(attribType,attribLoc);
-    attribSigs.insert(std::make_pair(attribName,sig));
+    this->attribSigs.insert(std::make_pair(std::string(attribName.begin(),attribName.begin() + writtenChars),sig));
   }
 
   for(auto uniformp = uniforms.begin(); uniformp != uniforms.end(); ++uniformp){
