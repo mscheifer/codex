@@ -167,8 +167,7 @@ gx::vector3 gx::operator*(const matrix& left,const vector3& right) {
 
 gx::matrix gx::rotateX(double angle) {
   typedef gx::matrix::elem_t elem_t;
-  return matrix(
-                1,                 0,                  0,0,
+  return matrix(1,                 0,                  0,0,
                 0,elem_t(cos(angle)),elem_t(-sin(angle)),0,
                 0,elem_t(sin(angle)),elem_t( cos(angle)),0, 
                 0,                 0,                  0,1);
@@ -176,8 +175,7 @@ gx::matrix gx::rotateX(double angle) {
 
 gx::matrix gx::rotateY(double angle) {
   typedef gx::matrix::elem_t elem_t;
-  return matrix(
-                elem_t( cos(angle)),0,elem_t(sin(angle)),0,
+  return matrix(elem_t( cos(angle)),0,elem_t(sin(angle)),0,
                                   0,1,                 0,0,
                 elem_t(-sin(angle)),0,elem_t(cos(angle)),0, 
                                   0,0,                 0,1);
@@ -185,8 +183,7 @@ gx::matrix gx::rotateY(double angle) {
 
 gx::matrix gx::rotateZ(double angle) {
   typedef gx::matrix::elem_t elem_t;
-  return matrix(
-                elem_t(cos(angle)),elem_t(-sin(angle)),0,0,
+  return matrix(elem_t(cos(angle)),elem_t(-sin(angle)),0,0,
                 elem_t(sin(angle)),elem_t( cos(angle)),0,0, 
                 0,0,                                   1,0,
                 0,0,                                   0,1);
@@ -215,8 +212,7 @@ gx::matrix gx::rotateArbitrary(vector3 axis, double angle) {
 }
 
 gx::matrix gx::scaling(matrix::elem_t x, matrix::elem_t y, matrix::elem_t z) {
-  return matrix(
-                x,0,0,0,
+  return matrix(x,0,0,0,
                 0,y,0,0,
                 0,0,z,0,
                 0,0,0,1);
@@ -229,11 +225,17 @@ gx::matrix gx::scalingMatrix(matrix::elem_t x, matrix::elem_t y,
 
 gx::matrix gx::translation(matrix::elem_t x, matrix::elem_t y,
                                              matrix::elem_t z) {
-  return matrix(
-                1,0,0,x,
+  return matrix(1,0,0,x,
                 0,1,0,y,
                 0,0,1,z,
                 0,0,0,1);
+}
+
+gx::matrix gx::toBasis(vector3 x, vector3 y, vector3 z) {
+  return matrix(x.x, y.x, z.x, 0,
+                x.y, y.y, z.y, 0,
+                x.z, y.z, z.z, 0,
+                0,   0,   0,   1);
 }
 
 std::ostream& gx::operator<< (std::ostream& out, const matrix& m) {

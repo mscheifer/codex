@@ -1,12 +1,17 @@
 #include "Player.h"
-
-Player::Player(void)
+Player::Player()
 {
-  Player(0,0,0,0);
+ this->init(0,0,0,0,NULL);
 }
-Player::Player(Position x, Position y, Position z, int assigned_id)
+
+Player::Player(Position x, Position y, Position z, int assigned_id, Map * m)
 {
-  minotaur = false;
+ this->init(x, y, z, assigned_id, m);
+}
+
+void Player::init(Position x, Position y, Position z, int assigned_id, Map * m)
+{
+   minotaur = false;
   dead = false;
 	player_id = assigned_id;
 	position.x = x;
@@ -22,13 +27,14 @@ Player::Player(Position x, Position y, Position z, int assigned_id)
 	mana = 100;
 	maxMana = 100;
 	castDownCounter = sf::Clock();
-
-	weapon[1] = WeaponFire(Coordinate());
+	map = m;
+	weapon[0] = new WeaponFist(position, this->map);
+	weapon[1] = new WeaponFire(position, this->map);
 	current_weapon_selection = 1;
+  BoundingSphere* b = new BoundingSphere(gx::vector4(x,y,z),sphereRadius);
+  boundingObjs.push_back(b);
 
 }
-
-
 
 Player::~Player(void)
 {
@@ -151,36 +157,36 @@ void Player::handleOtherAction( ClientGameTimeAction a) {
 
 }
 
-void Player::onCollision(Entity e){
-	if ( e.isProjectile() ) {
+void Player::onCollision(Entity* e){
+	if ( e->isProjectile() ) {
 		// do some calculation and deduct health. Allen you should do this part since I don't know how did you organzie the attk calcualtion
-	} else if ( e.isWeapon() ){
+	} else if ( e->isWeapon() ){
 		//pickup the weapon                                              
-		weapon[1] = *(Weapon*)&e; // any better way to down cast?.. lol		                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    
+		weapon[1] = (Weapon*)e; // any better way to down cast?.. lol		                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    
 	} // take care of player case?
 }
 
 
 // this do substraction of stemina, respond to the user to render the attak animation  
 void Player::attack( ClientGameTimeAction a) {
-	Weapon currentWeapon = weapon[current_weapon_selection];
+	Weapon* currentWeapon = weapon[current_weapon_selection];
 
 
 
 	if(a.attackRange)
 	{
-		if( !currentWeapon.canUseWeapon(true) || currentWeapon.getMpCost() > mana){
+                		if( !currentWeapon->canUseWeapon(true) || currentWeapon->getMpCost() > mana){
 			return;
 		}
-		mana -= currentWeapon.getMpCost();
-		currentWeapon.attackRange(direction, position);
+		mana -= currentWeapon->getMpCost();
+		currentWeapon->attackRange(direction, position);
 	}
 	else if(a.attackMelee)
 	{
-		if( !currentWeapon.canUseWeapon(false)){
+		if( !currentWeapon->canUseWeapon(false)){
 			return;
 		}
-		currentWeapon.attackMelee();
+		currentWeapon->attackMelee();
 
 	}
 
@@ -192,9 +198,27 @@ void Player::attack( ClientGameTimeAction a) {
 
 std::string Player::getString()
 {
-
 	std::stringstream returnString;
 	returnString<<"ID:"<< player_id <<" x="<<position.x<< " y="<<position.y<< " z="<<position.z<<std::endl;
-	returnString<< " x="<<position.velocityX<< " y="<<position.velocityY<< " z="<<position.velocityZ<<std::endl;
+	returnString<< "Vx="<<position.velocityX<< " Vy="<<position.velocityY<< " Vz="<<position.velocityZ<<std::endl;
+  returnString<< "Dx="<<direction.x<< " Dy="<<direction.y<< " Dz="<<direction.z<<std::endl;
 	return returnString.str();
+}
+
+void Player::updateBounds(){
+  //update the bounding objects
+  boundingObjs[0]->setCenter(gx::vector4(position.x, position.y, position.z));
+}
+
+
+void Player::setHealth(float h) {
+	health = h;
+}
+
+void Player::setSpeed(float s) {
+	speed = s;
+}
+
+void Player::setMana(float m) {
+	mana = m;
 }

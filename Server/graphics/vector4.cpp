@@ -86,6 +86,11 @@ gx::vector3 gx::vector4::operator-(vector4 a) const {
   return vector3(r.x,r.y,r.z);
 }
 
+gx::vector4& gx::vector4::operator+=(const vector3& a) {
+  this->add(a);
+  return *this;
+}
+
 bool gx::vector4::operator==(const vector4& a) const {
   //think about a better way to do this with floating point types
   return this->x == a.x && this->y == a.y && this->z == a.z && this->w == a.w;

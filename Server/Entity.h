@@ -4,18 +4,33 @@
 #include "ClientGameTimeAction.h"
 #include "Physics.h"
 #include "Map.h"
+#include <vector>
+#include "boundingManager.h"
 
 class Entity{
+protected:
+  Coordinate position;
+  Direction direction;
+  Map* map;
+  std::vector<BoundingObj*> boundingObjs;
+  // Some kind of state {paralyzed, frozen, blah blah}
+  // Power ups {contains MULTIPLERS for health, defense/ elemental weapons}
+
 public:
   Entity() {}
   ~Entity() {}
   
   virtual void handleAction(ClientGameTimeAction){}
   virtual void update(){}
-  virtual void onCollision(Entity){}
+  virtual void onCollision(Entity*){}
   virtual bool isProjectile(void){ return false;}
   virtual bool isWeapon(void){ return false;}
   virtual bool isPlayer(void){ return false;}
+
+  void updateBoundsOnTree();
+  std::vector<std::pair<Entity*,gx::vector3>> detectCollision();
+  virtual void updateBounds(){}
+
   Coordinate getPosition(void){ return position; }
   Direction getDirection(void){ return direction; }
   void setDirection(Direction d) {
@@ -41,10 +56,11 @@ public:
     direction.deserialize(packet);
   }
 
-protected:
-  Coordinate position;
-  Direction direction;
-  Map* map;
-  // Some kind of state {paralyzed, frozen, blah blah}
-  // Power ups {contains MULTIPLERS for health, defense/ elemental weapons}
+  void setBoundingObjs(std::vector<BoundingObj*> b){
+    boundingObjs = b;
+  }
+
+  std::vector<BoundingObj*> getBoundingObjs(){
+    return boundingObjs;
+  }
 };

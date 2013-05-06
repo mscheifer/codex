@@ -6,6 +6,7 @@
 #include <array>
 
 namespace gx {
+class vector4;
 
 class vector3 {
 public:
@@ -25,6 +26,7 @@ public:
   elem_t dot(const vector3&) const;
   void cross(const vector3&,const vector3&);
   elem_t magnitude() const;
+  elem_t magnitudesq() const;
   void normalize();
 
   std::array<elem_t,3> oglVec3() const;
@@ -35,6 +37,7 @@ public:
   const elem_t& operator[](int) const;
   vector3  operator-() const;
   vector3  operator+(const vector3&) const;
+  vector4  operator+(const vector4&) const;
   vector3  operator-(const vector3&) const;
   vector3  operator*(const vector3&) const;
   vector3  operator*(elem_t f) const;

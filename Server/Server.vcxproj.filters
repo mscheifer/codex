@@ -102,7 +102,7 @@
     <ClCompile Include="graphics\shaderProgram.cpp">
       <Filter>Source Files\graphics</Filter>
     </ClCompile>
-    <ClCompile Include="graphics\userInput.cpp">
+    <ClCompile Include="graphics\input.cpp">
       <Filter>Source Files\graphics</Filter>
     </ClCompile>
     <ClCompile Include="graphics\vao.cpp">
@@ -233,7 +233,7 @@
     <ClInclude Include="graphics\shaderProgram.h">
       <Filter>Header Files\graphics</Filter>
     </ClInclude>
-    <ClInclude Include="graphics\userInput.h">
+    <ClInclude Include="graphics\input.h">
       <Filter>Header Files\graphics</Filter>
     </ClInclude>
     <ClInclude Include="graphics\vao.h">

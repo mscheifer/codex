@@ -17,7 +17,7 @@ struct ClientGameTimeAction
 	bool jump;
 	Direction facingDirection;
 
-  void clear(){
+  void clear() {
     movement = NULL_DIR;
     attackMelee = attackRange = weapon1 = weapon2 = jump = false;
     facingDirection.x = facingDirection.z = 0;
@@ -30,32 +30,35 @@ struct ClientGameTimeAction
     weapon1(false), weapon2(false),
     jump(false), facingDirection() {};
 
-  void serialize(sf::Packet & packet){
+  void serialize(sf::Packet & packet) {
     packet << player_id;
     packet << (int)movement;
     packet << attackMelee;
+	packet << attackRange;
     packet << weapon1;
     packet << weapon2;
     packet << jump;
     facingDirection.serialize(packet);
   }
 
-  void deserialize(sf::Packet & packet){
+  void deserialize(sf::Packet & packet) {
     packet >> player_id;
     int movementInt = 0;
     packet >> movementInt;
     movement = (move_t) movementInt; //change to static_cast?
     packet >> attackMelee;
+	packet >> attackRange;
     packet >> weapon1;
     packet >> weapon2;
     packet >> jump;
     facingDirection.deserialize(packet);
   }
 
-  void print(){
+  void print() {
     std::cout << "id " << player_id << std::endl
       << "mov " << movement << std::endl
       << "attackMelee " << attackMelee << std::endl
+	  << "range " << attackRange << std::endl
       << "weapon1 " << weapon1 << std::endl
       << "weapon2 " << weapon2 << std::endl
       << "jump " << jump << std::endl

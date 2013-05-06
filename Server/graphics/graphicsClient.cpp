@@ -2,6 +2,7 @@
 #include <fstream>
 #include "oglUtil.h"
 #include "mesh.h"
+#include "loadCube.h"
 
 namespace {
 const unsigned int defaultWindowWidth  = 800;
@@ -49,70 +50,10 @@ std::vector<gx::drawSet::vaoData_t> entitiesData() {
 	std::vector<gx::drawSet::vaoData_t> model_import = loadModel("models/weird_orange_thing.dae");
 
     //setup drawing data
-  std::array<GLfloat,8*4> posArray    = {{ 0.0f, 0.0f, 0.0f, 1.0f,
-                                           1.0f, 0.0f, 0.0f, 1.0f,
-                                           0.0f, 1.0f, 0.0f, 1.0f,
-                                           1.0f, 1.0f, 0.0f, 1.0f,
-                                           0.0f, 0.0f,-1.0f, 1.0f,
-                                           1.0f, 0.0f,-1.0f, 1.0f,
-                                           0.0f, 1.0f,-1.0f, 1.0f,
-                                           1.0f, 1.0f,-1.0f, 1.0f }};
-  std::array<GLfloat,8*4> colorsArray = {{ 0.0f, 0.0f, 1.0f, 1.0f,
-                                           0.0f, 0.0f, 1.0f, 1.0f,
-                                           0.0f, 0.0f, 1.0f, 1.0f,
-                                           0.0f, 0.0f, 1.0f, 1.0f,
-                                           0.0f, 0.0f, 1.0f, 1.0f,
-                                           0.0f, 0.0f, 1.0f, 1.0f,
-                                           0.0f, 0.0f, 1.0f, 1.0f,
-                                           0.0f, 0.0f, 1.0f, 1.0f }};
-  std::array<GLfloat,8*3> normalArray = {{-1.0f,-1.0f, 1.0f,
-                                           1.0f,-1.0f, 1.0f, 
-                                          -1.0f, 1.0f, 1.0f, 
-                                           1.0f, 1.0f, 1.0f, 
-                                          -1.0f,-1.0f,-1.0f, 
-                                           1.0f,-1.0f,-1.0f, 
-                                          -1.0f, 1.0f,-1.0f, 
-                                           1.0f, 1.0f,-1.0f }};
-  std::array<GLfloat,8> normDiffArray;
-  for(size_t i = 0; i < normalArray.size(); i += 3) {
-    gx::vector3 norm(normalArray[i],normalArray[i+1],normalArray[i+2]);
-    norm.normalize();
-    //normal diff calculatio is just a hack that works for this cube
-    normDiffArray[i/3] =((norm - gx::vector3(normalArray[i],  0,0)).magnitude()
-                       + (norm - gx::vector3(0,normalArray[i+1],0)).magnitude()
-                       + (norm - gx::vector3(0,0,normalArray[i+2])).magnitude())
-                       / 3;
-    normalArray[i]   = norm.x;
-    normalArray[i+1] = norm.y;
-    normalArray[i+2] = norm.z;
-  }
-  std::array<GLuint,6*6>  indicesArray = {{ 0, 1, 2, 1, 3, 2,
-                                            2, 3, 6, 3, 7, 6,
-                                            4, 0, 6, 0, 2, 6,
-                                            1, 5, 3, 5, 7, 3,
-                                            4, 5, 0, 5, 1, 0,
-                                            5, 4, 7, 4, 6, 7 }};
-
-  std::vector<GLfloat> positions(      posArray.begin(),       posArray.end());
-  std::vector<GLfloat> colors(      colorsArray.begin(),    colorsArray.end());
-  std::vector<GLfloat> normals(     normalArray.begin(),    normalArray.end());
-  std::vector<GLfloat> normDiffs( normDiffArray.begin(),  normDiffArray.end());
-  std::vector<GLuint>  indices(    indicesArray.begin(),   indicesArray.end());
-
-  gx::vertexAttrib* positionsAttrib = new gx::vertexAttrib("position",4,0,positions);
-  gx::vertexAttrib* colorsAttrib = new    gx::vertexAttrib("color"   ,4,0,colors);
-  gx::vertexAttrib* normalsAttrib = new   gx::vertexAttrib("normal"  ,3,0,normals);
-  gx::vertexAttrib* normDiffAttrib = new  gx::vertexAttrib("normDiff",1,0,normDiffs);
-
-  std::vector<const gx::vertexAttrib*> attribs;
-  attribs.push_back(positionsAttrib);
-  attribs.push_back(colorsAttrib);
-  attribs.push_back(normalsAttrib);
-  attribs.push_back(normDiffAttrib);
-
   std::vector<gx::drawSet::vaoData_t> entitiesData;
-  //entitiesData.push_back(std::make_pair(indices,attribs));
+  auto cubes = gx::loadCube();
   entitiesData.insert(entitiesData.end(),model_import.begin(),model_import.end());
+  entitiesData.insert(entitiesData.end(),cubes.begin(),cubes.end());
   return entitiesData;
 }
 //must call after window is initialized
@@ -127,6 +68,15 @@ GLenum initGlew() {
   return glewErr;
 }
 } //end unnamed namespace
+
+const gx::vector3 gx::graphicsClient::upDirection(0.0, 0.0, 1.0);
+
+void gx::graphicsClient::setCamera() {
+  //add the direction vector to the player's position to get the position to look at
+  this->display.setView(playerPosition,
+                        playerDirection + playerPosition,
+                        upDirection);
+}
 
 void gx::graphicsClient::reshape(unsigned int w, unsigned int h) {
   typedef displaySet::elem_t elem_t;
@@ -153,11 +103,16 @@ gx::graphicsClient::graphicsClient():
     window(sf::VideoMode(defaultWindowWidth, defaultWindowHeight),
            "DrChao", sf::Style::Default),
     glewStatus(initGlew()), //glew needs to be called here, after window, before anything else
+    userInput(),
     light1(gx::vector4(1,1,1),0.5,0.5,0.05f),
     display(),
     entities(readFile("shaders/default.vert"),readFile("shaders/default.frag"),
                        entitiesData(),uniforms()),
-    fpsClock(), fpsFrames(0)                                                     {
+    playerDirection(0.0, 1.0,0.0),//change to result of init packet
+    playerStartDirection(0.0, 1.0,0.0),//change to result of init packet
+    playerStartRight(playerStartDirection.y,playerStartDirection.x,playerStartDirection.z),
+    playerPosition(0.0, 0.0, 0.0),//change to the result of init packet
+     fpsClock(), fpsFrames(0)                 {
   this->window.setVerticalSyncEnabled(false);
   this->window.setMouseCursorVisible(false);
   if(!this->window.setActive()) {
@@ -176,30 +131,19 @@ gx::graphicsClient::graphicsClient():
 */
   light1.updatePosition(gx::vector4( 0, 5, -10));
 
-  setCamera(display);
-  setUpMouse();
+  this->setCamera();
+  this->userInput.setUpMouse();
   this->reshape(defaultWindowWidth, defaultWindowHeight);
 }
 
-gx::userInput gx::graphicsClient::handleInput() {
-  bool stopped = false;
-  bool jumped = false;
-  sf::Event event;
-  while (window.pollEvent(event)) {
-    if (event.type == sf::Event::Closed) {
-      stopped = true; // end the program
-    } else if (event.type == sf::Event::Resized) {
-      reshape(event.size.width, event.size.height);
-    } else if (event.type == sf::Event::KeyPressed) {
-      if(event.key.code == sf::Keyboard::Escape) {
-        stopped = true; // end the program
-	    } else if(event.key.code == sf::Keyboard::Space) {
-        jumped = true;
-	    }
-    }
+void gx::graphicsClient::handleInput() {
+  this->userInput.handle(this->window);
+  if(this->userInput.resizedWindow()) {
+    reshape(this->userInput.windowWidth(),this->userInput.windowHeight());
   }
-  userInput curInput(movePlayer(display),turnPlayer(display),jumped,stopped);
-  return curInput;
+  auto newdir = this->userInput.turnPlayer();
+  this->playerDirection = toBasis(playerStartRight,playerStartDirection,upDirection) * newdir;
+  this->setCamera(); //after setting new player position and direction
 }
 
 void gx::graphicsClient::draw() {
@@ -223,7 +167,12 @@ void gx::graphicsClient::draw() {
   }
 }
 
-void gx::graphicsClient::updateEntities(std::vector<std::pair<vector3,int>> data) {
+void gx::graphicsClient::updatePosition(vector4 pos) {
+  this->playerPosition = pos;
+  this->setCamera();
+}
+
+void gx::graphicsClient::updateEntities(std::vector<std::pair<vector4,int>> data) {
   this->entities.reset();
 
   for(auto entityP = data.begin(); entityP != data.end(); ++entityP) {

@@ -1,4 +1,4 @@
-NAME	   = drchao
+NAME	   = Server/drchao
 ECHO	   = @echo
 CC       = @g++
 WARNINGS = -Wall -Wextra -Wstrict-overflow=5 #-Wshadow -Wconversion
@@ -16,7 +16,7 @@ all: $(NAME)
 
 $(OBJS): $(OBJDIR)%.o: %.cpp $(HEADERS)
 	$(ECHO) "Compiling $<"
-#$(ECHO) $(CC) $(CPPFLAGS) -c -o $@ $<
+#	$(ECHO) $(CC) $(CPPFLAGS) -c -o $@ $<
 	$(CC) $(CPPFLAGS) -c -o $@ $<
 
 $(NAME): $(OBJS)

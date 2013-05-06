@@ -11,9 +11,7 @@
 #include "graphics/graphicsClient.h"
 #include "ServerGameTimeRespond.h"
 #include "ChatHandler.h"
-#include "boundingSphere.h"
 #include "Game.h"
-#include "Quadtree.h"
 
 class NetworkClient {
   ServerGameTimeRespond s;
@@ -25,14 +23,15 @@ class NetworkClient {
   bool sendPacket;
   bool running;
 
+  void processInput();
+  void receiveMessages();
 public:
-  NetworkClient(): s(), action(), netRecv(), chat(), gxClient(), id(-1), sendPacket(false), running(true) {}
+  NetworkClient(): s(), action(), netRecv(), chat(), gxClient(), id(-1),
+                   sendPacket(false), running(true) {}
   NetworkClient(const NetworkClient&);// = delete;
   NetworkClient& operator=(const NetworkClient&);// = delete;
   NetworkClient(NetworkClient&&);// = delete;
   NetworkClient& operator=(NetworkClient&&);// = delete;
-  void processInput(gx::userInput);
-  void receiveMessages();
   void doClient();
 };
 #endif //CLIENT_H

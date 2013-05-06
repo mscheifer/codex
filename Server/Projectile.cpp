@@ -1,14 +1,12 @@
 #include "Projectile.h"
 
 
-Projectile::Projectile(void)
-{
-}
 
-Projectile::Projectile(Position r)
+
+Projectile::Projectile( Map* m)
 {
-	range = r;
-	distanceLeftToTravel = r;
+
+	this->map = m;
 }
 
 
@@ -20,6 +18,7 @@ void Projectile::update(void) {
 
 	Coordinate nextPosition = ThreeDMovement(position, direction, 0);
 	distanceLeftToTravel -= calculateDistanceInBetween(position, nextPosition);	
+	position = nextPosition;
 	
 	//if it already traveled a its range
 	if(distanceLeftToTravel <= 0.0 ) {
@@ -31,7 +30,7 @@ void Projectile::update(void) {
 
 	if(/* colides with some entity*/ false) {
 		std::vector<Entity> entities;
-		for(int i = 0; i < entities.size() ; i++){
+		for(unsigned int i = 0; i < entities.size() ; i++){
 			if(entities[i].isPlayer()) {
 				// hits a player
 				Player unLuckyPerson = *(Player*)&entities[i];
@@ -55,4 +54,5 @@ void Projectile::setStrength(float f) {
 void Projectile::setRange(Position r) {
 
 	range = r;
+	distanceLeftToTravel = r;
 }

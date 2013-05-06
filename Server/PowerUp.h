@@ -1,9 +1,10 @@
 #pragma once
 #include "Entity.h"
+#include "Player.h"
 
 class PowerUp : Entity{
 public:
-  PowerUp() {}
+  PowerUp() ;
   ~PowerUp() {}
   
 
@@ -23,10 +24,19 @@ public:
     direction.deserialize(packet);
   }
 
+  void onCollision(Entity*);
+  void update();
+
 protected:
   Coordinate position; // place it will respown
   Direction direction;
   Map* map;
   sf::Clock Respown_Counter;
   int Respown_Time;
+
+private:
+	float healthMutiplyer;
+	float manaMutiplyer;
+	float speedMutiplyer;
+	bool active;
 };
