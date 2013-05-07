@@ -26,7 +26,7 @@ public:
 	 // std::cout<< "oh shit, collision" <<std::endl;
 	std::vector<std::pair<Entity*,gx::vector3>> entities =  detectCollision();
 	Coordinate c = getPosition() ;
-	for(int i = 0; i < entities.size() ; i ++) {
+	for(unsigned int i = 0; i < entities.size() ; i ++) {
     Entity* e = entities[i].first;
 		gx::vector3 fixShit = entities[i].second;
     std::cout<< "was at " << c.x << ","<< c.y << "," << c.z << std::endl;

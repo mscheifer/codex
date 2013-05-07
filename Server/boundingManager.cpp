@@ -229,7 +229,7 @@ std::pair<bool,gx::vector3> sphereRay(const BoundingSphere* s, const Ray* r){
 
   //calculate return vec
   gx::vector3 ret = r->getDirection();
-  ret.scale(1.0-t);
+  ret.scale(1.0f-t);
   //ret.scale(1.0-t);
   //ret.negate();
   return std::pair<bool, gx::vector3>(pq2<=r2, ret);
@@ -273,7 +273,7 @@ void boxTest(){
   BoundingBox b4(gx::vector4(7,0,0), 
     gx::vector3(1,1,0), gx::vector3(1,-1,0), gx::vector3(0,0,1),
     5,5,5);
-  BoundingBox b5(gx::vector4(14.3,0,0), 
+  BoundingBox b5(gx::vector4(14.3f,0,0), 
     gx::vector3(1,1,0), gx::vector3(1,-1,0), gx::vector3(0,0,1),
     5,5,5);
   std::cout << "1==" << collide(&b1,&b2).first << collide(&b2,&b1).first << std::endl;
