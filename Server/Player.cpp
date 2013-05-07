@@ -1,7 +1,7 @@
 #include "Player.h"
 Player::Player()
 {
- this->init(0,0,0,0,NULL);
+// this->init(0,0,0,0,NULL);
 }
 
 Player::Player(Position x, Position y, Position z, int assigned_id, Map * m)
