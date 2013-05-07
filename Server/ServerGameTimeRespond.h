@@ -25,6 +25,7 @@ struct ServerGameTimeRespond
     }
   }
 
+  //make sure to clear the packet's sizes
   void deserialize(sf::Packet & packet) {
 	  // TODO: Matt&Bowen is this correct??
     sf::Uint32 size = 0;
@@ -38,7 +39,7 @@ struct ServerGameTimeRespond
     size = 0;
     packet >> size;
     for(unsigned int i = 0; i < size; i++) {
-      Entity newEntity = Entity(); //TODO memory leak bro
+      Entity newEntity = Entity(); //TODO should we do it lke this?
       newEntity.deserialize(packet);
       entities.push_back(newEntity);
     }
