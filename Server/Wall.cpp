@@ -1,13 +1,15 @@
 #include "Wall.h"
 
 
-Wall::Wall(unsigned int w, unsigned int d, unsigned int h, Coordinate& sc):centerPositions()
+Wall::Wall(unsigned int w, unsigned int d, unsigned int h, Coordinate& sc, Direction direct):centerPositions()
 {
   width = w;
   depth = d;
   height = h;
   centerPositions.push_back(sc);
   currentCenter = 0;
+  position = sc;
+  direction = direct;
 }
 
 
@@ -23,9 +25,10 @@ void Wall::update()
   currentCenter++;
   if( currentCenter == centerPositions.size() )
     currentCenter = 0;
+  position = centerPositions[currentCenter];
 }
 
-void Wall::addNewCenter(Coordinate & center)
+void Wall::addNewCenter(Coordinate center)
 {
   centerPositions.push_back(center);
 }

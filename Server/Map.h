@@ -7,6 +7,7 @@
 #include <stdlib.h>
 #include <stack>
 #include "Quadtree.h"
+#include "Wall.h"
 
 class Entity;
 class Player;
@@ -37,6 +38,5 @@ private:
 	std::stack<Projectile *>* freeProjectiles;
 	std::vector<Projectile *> liveProjectTile;
   Quadtree q;
-  bool init;
-
+  void initWalls(void);
 };
