@@ -12,7 +12,7 @@ enum User_Movement {
 		NONE
 };
 
-enum Game_State {MANOTAUR_WIN, CIVILIAN_WIN, PLAYING}; 
+enum Game_State {INIT, MANOTAUR_WIN, CIVILIAN_WIN, PLAYING}; 
 
 //Networking enums
 enum Opcode {INIT,JOINID, CHAT , T1, T2, CGTA, SGTR, ERROR};
