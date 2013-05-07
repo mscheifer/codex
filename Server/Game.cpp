@@ -1,9 +1,8 @@
 #include "Game.h"
 
 
-Game::Game(void)
+Game::Game(void) : world()
 {
-	world = Map();
 }
 
 
@@ -15,6 +14,10 @@ void Game::chooseMinotaur()
 {
   srand(static_cast<unsigned int>(time(NULL)));
   int minotaur = rand() % NUM_PLAYERS;
+  if(NUM_PLAYERS==1)
+  {
+    minotaur=0;
+  }
   world.getPlayers()[minotaur]->minotaur=true;
 }
 

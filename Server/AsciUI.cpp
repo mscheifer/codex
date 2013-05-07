@@ -92,7 +92,7 @@ int AsciUI::render(Player* players, std::vector<Entity *> entities)
 
 }
 
-int AsciUI::update(Map* map)
+int AsciUI::update(Map*)
 {
 	system("cls");
 //	int layout[15][15];

@@ -42,6 +42,7 @@ void Player::init(Position x, Position y, Position z, int assigned_id, Map * m)
   m->addToQtree(this);
   updateBounds();
 
+
 }
 
 Player::~Player(void)
