@@ -7,7 +7,7 @@ const float Map::Item_Pick_Up_Ranges = 1.0f;
 
 
 //TODO the rectangle should be the actual world bounds
-Map::Map(void):q(0,Rectangle(gx::vector4(0,0,0),1000,1000)),freeProjectiles()
+Map::Map(void): freeProjectiles(),q(0,Rectangle(gx::vector4(0,0,0),1000,1000))
 {
 	map_size = 15;
 	freeProjectiles = new std::stack<Projectile *>();

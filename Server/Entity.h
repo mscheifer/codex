@@ -26,7 +26,7 @@ public:
 	  
 	std::vector<std::pair<Entity*,gx::vector3>> entities =  detectCollision();
 	Coordinate c = getPosition() ;
-	for(int i = 0; i < entities.size() ; i ++) {
+	for(unsigned int i = 0; i < entities.size() ; i ++) {
 		gx::vector3 fixShit = entities[i].second;
 		c.x = fixShit.x;
 		c.y = fixShit.y;
