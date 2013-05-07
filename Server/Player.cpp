@@ -15,7 +15,7 @@ Player::Player(Position x, Position y, Position z, int assigned_id, Map * m)
 
 void Player::init(Position x, Position y, Position z, int assigned_id, Map * m)
 {
-    minotaur = false;
+  minotaur = false;
 	dead = false;
 	player_id = assigned_id;
 	position.x = x;

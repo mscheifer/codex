@@ -15,9 +15,12 @@ void NetworkClient::receiveMessages() {
         this->chat.addChat(chatObj.getChat());
         break;
       case SGTR:
+        s.entities.clear();
+        s.players.clear();
         s.deserialize(packet);
-        for(size_t i = 0; i < 4; i++) {
-          auto pos = s.players[i].getPosition();
+
+        for(auto playerP = s.players.begin(); playerP != s.players.end(); playerP++) {
+          auto pos = (*playerP).getPosition();
           entities.push_back(std::make_pair(
                 gx::vector4(static_cast<gx::vector3::elem_t>(pos.x),
                             static_cast<gx::vector3::elem_t>(pos.y),
@@ -26,7 +29,7 @@ void NetworkClient::receiveMessages() {
         //std::cout << std::endl;
         }
         for(auto entP = s.entities.begin(); entP != s.entities.end(); entP++) {
-          auto pos = (*entP)->getPosition();
+          auto pos = (*entP).getPosition();
           entities.push_back(std::make_pair(
                 gx::vector4(static_cast<gx::vector3::elem_t>(pos.x),
                             static_cast<gx::vector3::elem_t>(pos.y),
