@@ -104,6 +104,10 @@ std::pair<bool,gx::vector3> boxBox(const BoundingBox* a,const  BoundingBox * b){
 
   //the vector between the centers
   gx::vector3 t = a->getCenter() - b->getCenter(); //NOT SURE ON ORDER
+    //TODO fix this, if the centers are the same how to displace?
+  if(t.x == 0 && t.y == 0 && t.z == 0){
+    t = gx::vector3(1,0,0);
+  }
 
   axbx.cross(ax,bx);
   axby.cross(ax,by);
@@ -135,7 +139,7 @@ std::pair<bool,gx::vector3> boxBox(const BoundingBox* a,const  BoundingBox * b){
 
     //init min
     if( firstTime ){
-      min = notSeparatedByAxis(a,t,axes[i],b);
+      min = notSeparatedByAxis(a,t,axes[i],b); //need to make sure the bool is true
       firstTime = false;
       continue;
     }
