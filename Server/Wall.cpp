@@ -13,12 +13,13 @@ Wall::Wall(unsigned int w, unsigned int d, unsigned int h, Coordinate& sc, Direc
   direction = direct;
 
   BoundingBox* b = new BoundingBox(gx::vector4(direct.x,direct.y,direct.z),gx::vector3(1,0,0),gx::vector3(0,1,0),gx::vector3(0,0,1),
-    sphereRadius,sphereRadius,sphereRadius);
+    4,1,0.25f);
   //BoundingSphere* b = new BoundingSphere(gx::vector4(x,y,z),sphereRadius);
   boundingObjs.push_back(b);
   m->addToQtree(this);
-  this->map = m;
   updateBounds();
+  this->map = m;
+
 }
 
 
