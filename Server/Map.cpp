@@ -14,7 +14,6 @@ Map::Map(void):q(0,Rectangle(gx::vector4(0,0,0),1000,1000)),freeProjectiles()
 	init = true;
 }
 
-l: add me to the call
 Map::~Map(void)
 {
 }

@@ -119,8 +119,14 @@ bool Player::moveTowardDirection(move_t dir)
 	DirectionValue newX = (DirectionValue)(direction.x * cos(movementAngles[dir]) - direction.y * sin(movementAngles[dir]));
 	DirectionValue newY = (DirectionValue)(direction.x * sin(movementAngles[dir]) + direction.y * cos(movementAngles[dir]));
 	double length = sqrt(newX *newX + newY * newY);
-	position.velocityX = newX/length * MOVESCALE * speed;
-	position.velocityY = newY/length * MOVESCALE * speed;
+  if(length == 0 ){
+	  position.velocityX = newX * MOVESCALE * speed;
+	  position.velocityY = newY * MOVESCALE * speed;
+  }
+  else{
+	  position.velocityX = newX/length * MOVESCALE * speed;
+	  position.velocityY = newY/length * MOVESCALE * speed;
+  }
 	position = ThreeDMovement(position, Direction(newX, newY, direction.z), GRAVITY);
 	fixPosition();
 	return true;

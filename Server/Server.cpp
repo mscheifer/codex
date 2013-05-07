@@ -22,6 +22,7 @@ void NetworkServer::receiveMessages(int i) {
       case CGTA:
         cgta.deserialize(packet);
         //cgta.print();
+        ConfigManager::log(cgta.toString(),ConfigManager::DEBUG2);
         if(!this->server.sendPacketToAll<ServerGameTimeRespond>
                                                      (game.evaluate(cgta))) {
           std::cout << "Error sending cgta to everybody" << std::endl;
@@ -38,6 +39,7 @@ void NetworkServer::receiveMessages(int i) {
 }
 
 void NetworkServer::doServer() {
+  ConfigManager::setupLog("server");
   sf::IpAddress myIpAddress = sf::IpAddress::getLocalAddress();
   std::cout << "Server Ip Address: " << myIpAddress.toString() << std::endl;
   const int tickspersecond = 30;
