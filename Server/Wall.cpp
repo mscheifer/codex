@@ -24,3 +24,14 @@ void Wall::update()
   if( currentCenter == centerPositions.size() )
     currentCenter = 0;
 }
+
+void Wall::addNewCenter(Coordinate & center)
+{
+  centerPositions.push_back(center);
+}
+
+void Wall::addNewCenters(std::vector<Coordinate>& centers)
+{
+  for(unsigned i = 0; i < centers.size(); i++)
+    centerPositions.push_back(centers[i]);
+}

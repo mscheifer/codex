@@ -103,6 +103,7 @@
     <ClCompile Include="ray.cpp" />
     <ClCompile Include="Server.cpp" />
     <ClCompile Include="ServerGameTimeRespond.h" />
+    <ClCompile Include="Wall.cpp" />
     <ClCompile Include="Weapon.cpp" />
     <ClCompile Include="WeaponFire.cpp" />
     <ClCompile Include="WeaponFist.cpp" />
@@ -151,6 +152,7 @@
     <ClInclude Include="Server.h" />
     <ClInclude Include="StaticEnums.h" />
     <ClInclude Include="AudioManager.h" />
+    <ClInclude Include="Wall.h" />
     <ClInclude Include="Weapon.h" />
     <ClInclude Include="WeaponFire.h" />
     <ClInclude Include="WeaponFist.h" />
