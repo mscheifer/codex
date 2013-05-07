@@ -7,11 +7,11 @@
 #include <stdlib.h>
 #include <stack>
 #include "Quadtree.h"
-#include "Wall.h"
 
 class Entity;
 class Player;
 class Projectile;
+class Wall;
 
 class Map
 {
