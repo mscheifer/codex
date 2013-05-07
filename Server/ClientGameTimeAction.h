@@ -8,7 +8,6 @@
 struct ClientGameTimeAction
 {
   static const int packetType = CGTA;  //might be a BUG
-
 	int player_id;
 	move_t movement;
 	bool attackMelee; // Can use ranged weapons to melee attack
@@ -16,6 +15,7 @@ struct ClientGameTimeAction
   bool weapon1; // Used for switching weapon
   bool weapon2; // Used for switching weapon
 	bool jump;
+  bool updated;
 	Direction facingDirection;
   
   bool operator==(const ClientGameTimeAction & other) const{
@@ -37,13 +37,14 @@ struct ClientGameTimeAction
     attackMelee = attackRange = weapon1 = weapon2 = jump = false;
     facingDirection.x = facingDirection.z = 0;
     facingDirection.y = -1;
+    updated = false;
   }
 
 	ClientGameTimeAction() : 
     player_id(-1), movement(NULL_DIR),
     attackMelee(false),attackRange(false),
     weapon1(false), weapon2(false),
-    jump(false), facingDirection() {};
+    jump(false), updated(false), facingDirection() {};
 
   void serialize(sf::Packet & packet) {
     packet << player_id;

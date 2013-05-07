@@ -13,8 +13,11 @@ sf::Vector2i mouseDiff;
 } //end unnamed namespace
 
 gx::input::input()
-  : jumped(false), stopped(false), fired1(false), fired2(false) {}
+  : updated(false), jumped(false), stopped(false), fired1(false), fired2(false) {}
 
+bool gx::input::getUpdated() {
+  return this->updated;
+}
 bool gx::input::getJump() {
   return this->jumped;
 }
@@ -31,6 +34,7 @@ bool gx::input::fire2() {
 move_t gx::input::movePlayer() {
   move_t movement = NULL_DIR;
   if (sf::Keyboard::isKeyPressed(sf::Keyboard::W)) {
+    this->updated = true;
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::A)) {
       movement = FORWARD_LEFT;
     } else if (sf::Keyboard::isKeyPressed(sf::Keyboard::D)) {
@@ -39,18 +43,21 @@ move_t gx::input::movePlayer() {
       movement = FORWARD;
     }
   } else if (sf::Keyboard::isKeyPressed(sf::Keyboard::A)) {
+    this->updated = true;
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::S)) {
       movement = BACKWARD_LEFT;
     } else {
       movement = LEFT;
     }
   } else if (sf::Keyboard::isKeyPressed(sf::Keyboard::D)) {
+    this->updated = true;
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::S)) {
       movement = BACKWARD_RIGHT;
     } else {
       movement = RIGHT;
     }
   } else if (sf::Keyboard::isKeyPressed(sf::Keyboard::S)) {
+    this->updated = true;
     movement = BACKWARD;
   }
   return movement;
@@ -64,6 +71,7 @@ gx::vector3 gx::input::turnPlayer() {
 
   sf::Vector2i curPosition = sf::Mouse::getPosition();
   if(curPosition != mouseBasePosition) {
+    this->updated = true;
     sf::Vector2i newDiff = curPosition - mouseBasePosition;
     mouseDiff += newDiff;
     mouseDirection = rotateZ(-mouseDiff.x * mouseSensitivity) * 
@@ -93,6 +101,7 @@ void gx::input::setUpMouse() {
 }
 
 void gx::input::handle(sf::Window& window) {
+  this->updated = false;
   this->stopped = false;
   this->jumped  = false;
   this->resized = false;
@@ -112,12 +121,14 @@ void gx::input::handleEvent(const sf::Event& event) {
     this->width  = event.size.width,
     this->height = event.size.height;
   } else if (event.type == sf::Event::KeyPressed) {
+    this->updated = true;
     if(event.key.code == sf::Keyboard::Escape) {
       this->stopped = true; // end the program
     } else if(event.key.code == sf::Keyboard::Space) {
       this->jumped = true;
     }
   } else if(event.type == sf::Event::MouseButtonPressed) {
+    this->updated = true;
 	  if(event.mouseButton.button == sf::Mouse::Left) {
       this->fired1 = true;
 	  } else if(event.mouseButton.button == sf::Mouse::Right) {

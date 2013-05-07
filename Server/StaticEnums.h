@@ -2,7 +2,7 @@
 #define _USE_MATH_DEFINES
 #include <math.h>
 
-#define NUM_PLAYERS 2
+#define NUM_PLAYERS 1
 
 enum move_t {
   FORWARD = 0,
@@ -27,7 +27,7 @@ const double movementAngles[8] = {
   -M_PI_4,
 };
 
-enum Game_State {INIT, MANOTAUR_WIN, CIVILIAN_WIN, PLAYING}; 
+enum Game_State {MANOTAUR_WIN, CIVILIAN_WIN, PLAYING}; 
 
 //Networking enums
 enum Opcode {INIT,JOINID, CHAT , T1, T2, CGTA, SGTR, ERROR};

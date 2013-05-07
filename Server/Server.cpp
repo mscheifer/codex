@@ -7,7 +7,6 @@ void NetworkServer::receiveMessages(int i) {
       ClientGameTimeAction cgta;
       uint32_t packetType;
       packet >> packetType;
-      
       switch (packetType) {
         case CGTA:
           cgta.deserialize(packet);
@@ -16,9 +15,9 @@ void NetworkServer::receiveMessages(int i) {
           else 
              pPacket = cgta;
           game.evaluate(cgta);
-          //cgta.print();
+          cgta.print();
         break;
-        case CHAT: //chat should be fine 
+        case CHAT: //chat should be part of CGTA  
         this->server.sendToAll(copy); //right now just echoing what received
         break;
       default:
@@ -26,6 +25,7 @@ void NetworkServer::receiveMessages(int i) {
         break;
     }
   }
+  pPacket.clear();
 }
 
 void NetworkServer::doServer() {
