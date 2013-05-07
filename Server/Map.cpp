@@ -19,22 +19,23 @@ void Map::initWalls(void)
 {
   Direction facingEast = Direction(1,0,0);
   Direction facingNorth = Direction(0,1,0);
-  unsigned int width = 100;
-  unsigned int height = 40; 
-  unsigned int depth = 10;
-  unsigned int wallX = 15;
-  unsigned int wallY = 15;
+  int width = 10;
+  int height = 4; 
+  int depth = 1;
 
-  unsigned int centerX = 0;
-  unsigned int centerY = 0;
-  unsigned int i;
+  int wallX = 7;
+  int wallY = 7;
+
+  int centerX = 0;
+  int centerY = 0;
+  int i;
   int startingX;
   int startingY;
   int startingZ = height/2;
   // Create the top and bottom perimeter from left to right.
   for( i = 0,
     startingX = ((wallX*width)/-2)+(width/2)+centerX,
-    startingY = ((wallY*width)/2)+(width/2)+centerY;
+    startingY = ((wallY*width)/-2)+centerY;
     i < wallX; i++, startingX += width )
   {
     Wall* topWall = new Wall(width, depth, height, Coordinate(startingX,startingY, startingZ, 0,0,0), facingNorth);
@@ -44,7 +45,7 @@ void Map::initWalls(void)
   }
   // Create the left and right perimeter from bottom up
   for( i = 0,
-    startingX = ((wallX*width)/2)+(width/2)+centerX,
+    startingX = ((wallX*width)/-2)+centerX,
     startingY = ((wallY*width)/-2)+(width/2)+centerY;
     i < wallY; i++, startingY += width )
   {
