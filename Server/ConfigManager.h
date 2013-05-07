@@ -30,7 +30,7 @@ public:
   static void log( std::string str, LogLevels l);
   
   //setup the logfile
-  static void setupLog();
+  static void setupLog(std::string str = "");
 
   //convert the log level to it's string value
   static std::string levelToString(LogLevels level){

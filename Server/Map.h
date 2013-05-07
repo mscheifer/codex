@@ -11,6 +11,7 @@
 class Entity;
 class Player;
 class Projectile;
+class Wall;
 
 class Map
 {
@@ -37,6 +38,5 @@ private:
 	std::stack<Projectile *>* freeProjectiles;
 	std::vector<Projectile *> liveProjectTile;
   Quadtree q;
-  bool init;
-
+  void initWalls(void);
 };

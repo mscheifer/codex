@@ -36,6 +36,7 @@ void NetworkServer::receiveMessages(int i) {
 }
 
 void NetworkServer::doServer() {
+  ConfigManager::setupLog("server");
   sf::IpAddress myIpAddress = sf::IpAddress::getLocalAddress();
   std::cout << "Server Ip Address: " << myIpAddress.toString() << std::endl;
   const int tickspersecond = 30;

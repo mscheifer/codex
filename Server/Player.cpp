@@ -1,4 +1,8 @@
 #include "Player.h"
+#include "Projectile.h"
+
+const float Player::sphereRadius = 5.0f;
+
 Player::Player()
 {
 // this->init(0,0,0,0,NULL);
@@ -11,7 +15,7 @@ Player::Player(Position x, Position y, Position z, int assigned_id, Map * m)
 
 void Player::init(Position x, Position y, Position z, int assigned_id, Map * m)
 {
-    minotaur = false;
+  minotaur = false;
 	dead = false;
 	player_id = assigned_id;
 	position.x = x;
@@ -31,7 +35,9 @@ void Player::init(Position x, Position y, Position z, int assigned_id, Map * m)
 	weapon[0] = new WeaponFist(position, this->map);
 	weapon[1] = new WeaponFire(position, this->map);
 	current_weapon_selection = 1;
-  BoundingSphere* b = new BoundingSphere(gx::vector4(x,y,z),sphereRadius);
+  BoundingBox* b = new BoundingBox(gx::vector4(x,y,z),gx::vector3(1,0,0),gx::vector3(0,1,0),gx::vector3(0,0,1),
+    sphereRadius,sphereRadius,sphereRadius);
+  //BoundingSphere* b = new BoundingSphere(gx::vector4(x,y,z),sphereRadius);
   boundingObjs.push_back(b);
   m->addToQtree(this);
   updateBounds();
@@ -121,8 +127,14 @@ bool Player::moveTowardDirection(move_t dir)
 	DirectionValue newX = (DirectionValue)(direction.x * cos(movementAngles[dir]) - direction.y * sin(movementAngles[dir]));
 	DirectionValue newY = (DirectionValue)(direction.x * sin(movementAngles[dir]) + direction.y * cos(movementAngles[dir]));
 	double length = sqrt(newX *newX + newY * newY);
-	position.velocityX = newX/length * MOVESCALE * speed;
-	position.velocityY = newY/length * MOVESCALE * speed;
+  if(length == 0 ){
+	  position.velocityX = newX * MOVESCALE * speed;
+	  position.velocityY = newY * MOVESCALE * speed;
+  }
+  else{
+	  position.velocityX = newX/length * MOVESCALE * speed;
+	  position.velocityY = newY/length * MOVESCALE * speed;
+  }
 	position = ThreeDMovement(position, Direction(newX, newY, direction.z), GRAVITY);
 	fixPosition();
 	return true;
@@ -159,7 +171,7 @@ void Player::handleOtherAction( ClientGameTimeAction a) {
 	//since we are modeling projectiles, we are just gonna check for melee
 
 }
-
+/*
 void Player::onCollision(Entity* e){
 	if ( e->isProjectile() ) {
 		// do some calculation and deduct health. Allen you should do this part since I don't know how did you organzie the attk calcualtion
@@ -168,7 +180,7 @@ void Player::onCollision(Entity* e){
 		weapon[1] = (Weapon*)e; // any better way to down cast?.. lol		                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    
 	} // take care of player case?
 }
-
+*/
 
 // this do substraction of stemina, respond to the user to render the attak animation  
 void Player::attack( ClientGameTimeAction a) {
@@ -178,11 +190,12 @@ void Player::attack( ClientGameTimeAction a) {
 
 	if(a.attackRange)
 	{
-                		if( !currentWeapon->canUseWeapon(true) || currentWeapon->getMpCost() > mana){
+    if( !currentWeapon->canUseWeapon(true) || currentWeapon->getMpCost() > mana){
 			return;
 		}
 		mana -= currentWeapon->getMpCost();
-		currentWeapon->attackRange(direction, position);
+		Projectile* proj = currentWeapon->attackRange(direction, position);
+    proj->setOwner(this);
 	}
 	else if(a.attackMelee)
 	{

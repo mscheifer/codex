@@ -2,6 +2,7 @@
 #include "directionalVector.h"
 #include "StaticEnums.h"
 #include <iostream>
+#include <sstream>
 #include "SFML/Network/Packet.hpp"
 
 struct ClientGameTimeAction
@@ -58,10 +59,23 @@ struct ClientGameTimeAction
     std::cout << "id " << player_id << std::endl
       << "mov " << movement << std::endl
       << "attackMelee " << attackMelee << std::endl
-	  << "range " << attackRange << std::endl
+	    << "range " << attackRange << std::endl
       << "weapon1 " << weapon1 << std::endl
       << "weapon2 " << weapon2 << std::endl
       << "jump " << jump << std::endl
       << "facingDirection " << facingDirection.x << " "<< facingDirection.y << " " << facingDirection.z << std::endl; 
+  }
+
+  std::string toString(){
+    std::stringstream ss;
+    ss << "id " << player_id << std::endl
+      << "mov " << movement << std::endl
+      << "attackMelee " << attackMelee << std::endl
+	    << "range " << attackRange << std::endl
+      << "weapon1 " << weapon1 << std::endl
+      << "weapon2 " << weapon2 << std::endl
+      << "jump " << jump << std::endl
+      << "facingDirection " << facingDirection.x << " "<< facingDirection.y << " " << facingDirection.z << std::endl << std::endl; \
+    return ss.str();
   }
 };
