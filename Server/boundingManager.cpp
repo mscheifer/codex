@@ -103,7 +103,7 @@ std::pair<bool,gx::vector3> boxBox(const BoundingBox* a,const  BoundingBox * b){
     bz = b->getAz();
 
   //the vector between the centers
-  gx::vector3 t = b->getCenter() - a->getCenter();
+  gx::vector3 t = a->getCenter() - b->getCenter(); //NOT SURE ON ORDER
 
   axbx.cross(ax,bx);
   axby.cross(ax,by);
@@ -190,12 +190,17 @@ std::pair<bool,gx::vector3> boxRay(const BoundingBox* b,const Ray* r){
 }
 
 std::pair<bool,gx::vector3> sphereSphere(const BoundingSphere* o, const BoundingSphere* t){
-  gx::vector3 v3 = t->getCenter() - o->getCenter();
+  gx::vector3 v3 = o->getCenter() - t->getCenter();
+
+  //TODO fix this, if the centers are the same how to displace?
+  if(v3.x == 0 && v3.y == 0 && v3.z == 0){
+    v3 = gx::vector3(1,0,0);
+  }
   
   BoundingObj::unit_t mag = v3.magnitude();
   BoundingObj::unit_t radSum = o->getRadius() + t->getRadius();
   v3.normalize();
-  v3.scale( radSum - mag );
+  v3.scale( (radSum - mag) ); //TODO float errro?
 
   return std::pair<bool, gx::vector3>( mag < radSum, v3);
 }
