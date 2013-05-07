@@ -11,7 +11,7 @@
 
 class Quadtree{
 private:
-  static const int maxObjects = 1; //TODO this needs to not be 1
+  static const int maxObjects = 10; //TODO this needs to not be 1
   static const int maxLevels = 5;
   int level;
   std::list<BoundingObj*> objects;
