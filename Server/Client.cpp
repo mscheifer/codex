@@ -15,8 +15,6 @@ void NetworkClient::receiveMessages() {
         this->chat.addChat(chatObj.getChat());
         break;
       case SGTR:
-        s.entities.clear();
-        s.players.clear();
         s.deserialize(packet);
 
         for(auto playerP = s.players.begin(); playerP != s.players.end(); playerP++) {
@@ -63,7 +61,7 @@ void NetworkClient::processInput() {
   action.facingDirection = Direction(dir.x, dir.y, dir.z);
   action.attackMelee = this->gxClient.fire1();
   action.attackRange = this->gxClient.fire2();
-  this->sendPacket = true;
+  this->sendPacket = true; //TODO if nothing chnages dont send a packet
 }
 /*
 void NetworkClient::processInput(){

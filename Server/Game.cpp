@@ -58,7 +58,6 @@ ServerGameTimeRespond Game::prepResponse() {
 	for( unsigned int i = 0; i < currentPlayers.size(); i++ ) {
 		 s.players.push_back(*currentPlayers[i]); //add the player to the return struct
 	}
-  s.players.push_back(Player());
 
 	for( unsigned int i = 0; i < currentEntities.size(); i++ ) {
 		s.entities.push_back(*currentEntities[i]); //add the player to the return struct
