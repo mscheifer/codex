@@ -1,45 +1,43 @@
 #include "shaderProgram.h"
 #include <array>
 #include <iostream>
-#include "uniform.h"
+#include "uniformBlock.h"
 
 namespace { //to not export
 void printShaderInfoLog(GLuint obj,const std::string name) {
   GLint   infoLogLength = 0;
   GLsizei charsWritten  = 0;
-  GLchar* infoLog;
 
   glGetShaderiv(obj, GL_INFO_LOG_LENGTH,&infoLogLength);
 
   if (infoLogLength > 1) {
-    infoLog = new GLchar[infoLogLength];
-    glGetShaderInfoLog(obj, infoLogLength, &charsWritten, infoLog);
-    std::cout << name << ": errors " << infoLogLength << std::endl;
-    std::cout << infoLog << std::endl;
-    delete[] infoLog;
+    std::vector<GLchar> infoLog;
+    infoLog.resize(infoLogLength);
+    glGetShaderInfoLog(obj, infoLogLength, &charsWritten, infoLog.data());
+    std::cout << name << ": compile output " << infoLogLength << std::endl;
+    std::cout << std::string(infoLog.begin(),infoLog.end()) << std::endl;
   }
 }
 
 void printProgramInfoLog(GLuint obj) {
   GLint   infoLogLength = 0;
   GLsizei charsWritten  = 0;
-  GLchar* infoLog;
 
   glGetProgramiv(obj, GL_INFO_LOG_LENGTH,&infoLogLength);
 
   if (infoLogLength > 1) {
-    infoLog = new GLchar[infoLogLength];
-    glGetProgramInfoLog(obj, infoLogLength, &charsWritten, infoLog);
+    std::vector<GLchar> infoLog;
+    infoLog.resize(infoLogLength);
+    glGetProgramInfoLog(obj, infoLogLength, &charsWritten, infoLog.data());
     std::cout << "Program: errors" << std::endl;
-    std::cout << infoLog << std::endl;
-    delete[] infoLog;
+    std::cout << std::string(infoLog.begin(),infoLog.end()) << std::endl;
   }
 }
 
 } //end unnamed namespace
 
 gx::shaderProgram::shaderProgram(   const std::string vsSource,
-        const std::string fsSource, const std::vector<const uniform*> uniforms)
+        const std::string fsSource, const std::vector<uniform::block*> uniforms)
                  : prog(glCreateProgram()), attribSigs() {
   debugout << prog << " = glCreateProgram()" << endl;
   const std::string shader_output_name("outputF");
@@ -51,11 +49,16 @@ gx::shaderProgram::shaderProgram(   const std::string vsSource,
   fragShader = glCreateShader(GL_FRAGMENT_SHADER);
   debugout << fragShader << " = glCreateShader(GL_FRAGMENT_SHADER);" << endl;
 
+  std::string uniformDecl = "";
+  for(auto uniformp = uniforms.begin(); uniformp != uniforms.end(); ++uniformp){
+    uniformDecl += (*uniformp)->declaration();
+  }
+
   //include version string and stuff
-  std::array<const GLchar*,2> fullSourceV =
-    {{ shaderHeader.c_str(), vsSource.c_str() }};
-  std::array<const GLchar*,2> fullSourceF =
-    {{ shaderHeader.c_str(), fsSource.c_str() }};
+  std::array<const GLchar*,3> fullSourceV =
+    {{ shaderHeader.c_str(), uniformDecl.c_str(), vsSource.c_str() }};
+  std::array<const GLchar*,3> fullSourceF =
+    {{ shaderHeader.c_str(), uniformDecl.c_str(), fsSource.c_str() }};
 
   glShaderSource(vertShader, GLsizei(fullSourceV.size()), fullSourceV.data(),
                                                                     nullptr);
@@ -108,45 +111,29 @@ gx::shaderProgram::shaderProgram(   const std::string vsSource,
   debugout << &maxAttribNameLength << ");" << endl;
   debugout << "maxAttribNameLength = " << maxAttribNameLength << endl;
 
-  GLchar* attribName = new GLchar[maxAttribNameLength];
+  std::vector<GLchar> attribName;
+  attribName.resize(maxAttribNameLength);
 
   for(GLuint i = 0; i < GLuint(numAttribs); ++i) {
+    GLsizei writtenChars;
     GLint attribSize;
     GLenum attribType;
-    glGetActiveAttrib(this->prog, i, maxAttribNameLength, nullptr, &attribSize,
-                      &attribType, attribName);
+    glGetActiveAttrib(this->prog, i, maxAttribNameLength, &writtenChars, &attribSize,
+                      &attribType, attribName.data());
     debugout << "glGetActiveAttrib(" << this->prog << ", " << i << ", ";
     debugout << maxAttribNameLength << ", nullptr, &attribSize@" << &attribSize;
-    debugout << ", &attribType@" << &attribType << ", " << attribName << ");";
-    debugout << endl;
-    GLint attribLoc = glGetAttribLocation(this->prog, attribName);
+    debugout << ", &attribType@" << &attribType << ", ";
+    debugout << std::string(attribName.begin(), attribName.begin() + writtenChars) << ");" << endl;
+    GLint attribLoc = glGetAttribLocation(this->prog, attribName.data());
     debugout << attribLoc << " = glGetAttribLocation(" << this->prog << ", ";
-    debugout << attribName << ");" << endl;
+    debugout << std::string(attribName.begin(), attribName.begin() + writtenChars) << ");" << endl;
     vertexAttribSignature sig(attribType,attribLoc);
-    attribSigs.insert(std::make_pair(attribName,sig));
+    this->attribSigs.insert(std::make_pair(std::string(attribName.begin(),attribName.begin() + writtenChars),sig));
   }
 
-  delete[] attribName;
-
-   //cant use range based for here because of visual c++
   for(auto uniformp = uniforms.begin(); uniformp != uniforms.end(); ++uniformp){
-    const auto& unif = **uniformp;
-    //uniform.first is the block name, second is the block binding id
-    GLuint localIndex = glGetUniformBlockIndex(this->prog,unif.name().c_str());
-    debugout << localIndex << " = glGetUniformBlockIndex(" << this->prog;
-    debugout << ", \"" << unif.name().c_str() << "\");" << endl;
-    if(localIndex == GL_INVALID_INDEX) {
-      std::cout << unif.name() << ": doesn't exist in shader" << endl;
-    }
-
-    glUniformBlockBinding(this->prog,localIndex,unif.bindPoint());
-    debugout << "glUniformBlockBinding(" << this->prog << ", " << localIndex;
-    debugout << ", " << unif.bindPoint() << ");" << endl;
-
-    int sz;
-    glGetActiveUniformBlockiv(this->prog, localIndex,
-                              GL_UNIFORM_BLOCK_DATA_SIZE, &sz);
-    debugout << "uniform size: " << sz << endl;
+    auto& unif = **uniformp;
+    unif.addShaderBindings(this);
   }
 }
 
@@ -176,4 +163,8 @@ std::map<std::string,gx::vertexAttribSignature> gx::shaderProgram::vars() const{
 
 GLint gx::shaderProgram::uniformLoc(const std::string name) const {
   return glGetUniformLocation(this->prog, name.c_str());
+}
+
+GLuint gx::shaderProgram::progNum() const {
+  return this->prog;
 }

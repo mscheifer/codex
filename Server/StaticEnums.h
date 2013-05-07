@@ -1,15 +1,30 @@
 #pragma once
-#define NUM_PLAYERS 1
-enum User_Movement {
-		FORWARD=0,
-		BACKWARD=180,
-		LEFT=-90,
-		RIGHT=90,
-		FORWARD_LEFT=-45,
-		FORWARD_RIGHT=45,
-		BACKWARD_LEFT=-135,
-		BACKWARD_RIGHT=135,
-		NONE
+#define _USE_MATH_DEFINES
+#include <math.h>
+
+#define NUM_PLAYERS 2
+
+enum move_t {
+  FORWARD = 0,
+  FORWARD_LEFT,
+  LEFT,
+  BACKWARD_LEFT,
+  BACKWARD,
+  BACKWARD_RIGHT,
+  RIGHT,
+  FORWARD_RIGHT,
+  NULL_DIR
+};
+
+const double movementAngles[8] = {
+  0.0,
+  M_PI_4,
+  M_PI_2,
+  M_PI_2 + M_PI_4,
+  M_PI,
+  -(M_PI_2 + M_PI_4),
+  -M_PI_2,
+  -M_PI_4,
 };
 
 enum Game_State {INIT, MANOTAUR_WIN, CIVILIAN_WIN, PLAYING}; 

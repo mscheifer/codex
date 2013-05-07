@@ -1,11 +1,10 @@
 #pragma once
-#include "weapon.h"
+#include "Weapon.h"
 class WeaponFire :
 	public Weapon
 {
 public:
-	WeaponFire(void);
-	WeaponFire(Coordinate c);
+	WeaponFire(Coordinate c, Map *);
 	~WeaponFire(void);
 };
 

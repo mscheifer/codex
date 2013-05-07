@@ -42,11 +42,11 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>..\SFML-2.0\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir);$(SolutionDir)SFML-2.0\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>..\SFML-2.0\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(SolutionDir)SFML-2.0\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>opengl32.lib;glew32.lib;sfml-graphics-d.lib;sfml-network-d.lib;sfml-system-d.lib;sfml-window-d.lib;sfml-audio-d.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
@@ -69,11 +69,14 @@
     <ClCompile Include="AsciUI.cpp" />
     <ClCompile Include="AudioManager.cpp" />
     <ClCompile Include="boundingBox.cpp" />
+    <ClCompile Include="boundingManager.cpp" />
+    <ClCompile Include="boundingObj.cpp" />
     <ClCompile Include="boundingSphere.cpp" />
     <ClCompile Include="ChatHandler.cpp" />
     <ClCompile Include="Client.cpp" />
     <ClCompile Include="ConfigManager.cpp" />
     <ClCompile Include="DeadlyEntity.cpp" />
+    <ClCompile Include="Entity.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="graphics\displaySet.cpp" />
     <ClCompile Include="graphics\drawSet.cpp" />
@@ -82,8 +85,8 @@
     <ClCompile Include="graphics\matrix.cpp" />
     <ClCompile Include="graphics\oglUtil.cpp" />
     <ClCompile Include="graphics\shaderProgram.cpp" />
-    <ClCompile Include="graphics\uniform.cpp" />
-    <ClCompile Include="graphics\userInput.cpp" />
+    <ClCompile Include="graphics\uniformBlock.cpp" />
+    <ClCompile Include="graphics\input.cpp" />
     <ClCompile Include="graphics\vao.cpp" />
     <ClCompile Include="graphics\vector3.cpp" />
     <ClCompile Include="graphics\vector4.cpp" />
@@ -97,8 +100,10 @@
     <ClCompile Include="PowerUp.cpp" />
     <ClCompile Include="Projectile.cpp" />
     <ClCompile Include="Quadtree.cpp" />
+    <ClCompile Include="ray.cpp" />
     <ClCompile Include="Server.cpp" />
     <ClCompile Include="ServerGameTimeRespond.h" />
+    <ClCompile Include="Wall.cpp" />
     <ClCompile Include="Weapon.cpp" />
     <ClCompile Include="WeaponFire.cpp" />
     <ClCompile Include="WeaponFist.cpp" />
@@ -107,6 +112,8 @@
     <ClInclude Include="3DCoordinate.h" />
     <ClInclude Include="AsciUI.h" />
     <ClInclude Include="boundingBox.h" />
+    <ClInclude Include="boundingManager.h" />
+    <ClInclude Include="boundingObj.h" />
     <ClInclude Include="boundingSphere.h" />
     <ClInclude Include="ChatHandler.h" />
     <ClInclude Include="Client.h" />
@@ -116,6 +123,7 @@
     <ClInclude Include="directionalVector.h" />
     <ClInclude Include="Entity.h" />
     <ClInclude Include="Game.h" />
+    <ClInclude Include="graphics\basicUniform.h" />
     <ClInclude Include="graphics\displaySet.h" />
     <ClInclude Include="graphics\drawSet.h" />
     <ClInclude Include="graphics\graphicsClient.h" />
@@ -123,8 +131,8 @@
     <ClInclude Include="graphics\matrix.h" />
     <ClInclude Include="graphics\oglUtil.h" />
     <ClInclude Include="graphics\shaderProgram.h" />
-    <ClInclude Include="graphics\uniform.h" />
-    <ClInclude Include="graphics\userInput.h" />
+    <ClInclude Include="graphics\uniformBlock.h" />
+    <ClInclude Include="graphics\input.h" />
     <ClInclude Include="graphics\vao.h" />
     <ClInclude Include="graphics\vector3.h" />
     <ClInclude Include="graphics\vector4.h" />
@@ -144,6 +152,7 @@
     <ClInclude Include="Server.h" />
     <ClInclude Include="StaticEnums.h" />
     <ClInclude Include="AudioManager.h" />
+    <ClInclude Include="Wall.h" />
     <ClInclude Include="Weapon.h" />
     <ClInclude Include="WeaponFire.h" />
     <ClInclude Include="WeaponFist.h" />

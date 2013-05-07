@@ -1,4 +1,5 @@
 #include "vector3.h"
+#include "vector4.h"
 
 gx::vector3::vector3(): x(0.0), y(0.0), z(0.0) {}
 
@@ -72,6 +73,10 @@ gx::vector3::elem_t gx::vector3::magnitude() const {
   return elem_t(sqrt(x*x + y*y + z*z));
 }
 
+gx::vector3::elem_t gx::vector3::magnitudesq() const {
+  return elem_t(x*x + y*y + z*z);
+}
+
 void gx::vector3::normalize() {
   if(magnitude() > 0) {
     scale(elem_t(1.0)/magnitude());
@@ -109,6 +114,10 @@ gx::vector3 gx::vector3::operator+(const vector3 &a) const {
   vector3 r;
   r.add(*this,a);
   return r;
+}
+
+gx::vector4 gx::vector3::operator+(const vector4 &a) const {
+  return a + *this;
 }
 
 gx::vector3 gx::vector3::operator-(const vector3 &a) const {

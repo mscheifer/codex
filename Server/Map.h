@@ -6,11 +6,12 @@
 #include <vector>
 #include <stdlib.h>
 #include <stack>
+#include "Quadtree.h"
 
 class Entity;
 class Player;
 class Projectile;
-
+class Wall;
 
 class Map
 {
@@ -25,10 +26,17 @@ public:
   Projectile* produceProjectile(void);
   void destroyProjectile(Projectile *);
   bool addPlayer(Player *);
+  Quadtree* getQuadtreePtr(){ return &q; }
+  
+  void addToQtree(Entity* e);
+  
+  void removeFromQtree(Entity* e);
+
 private:
 	std::vector<Player *> players;
 	std::vector<Entity *> entities;
-	std::stack<Projectile *> freeProjectiles;
+	std::stack<Projectile *>* freeProjectiles;
 	std::vector<Projectile *> liveProjectTile;
-
+  Quadtree q;
+  void initWalls(void);
 };

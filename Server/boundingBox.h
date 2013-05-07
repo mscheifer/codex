@@ -2,36 +2,42 @@
 #include "graphics/vector4.h"
 #include "graphics/vector3.h"
 #include "Ray.h"
+#include "boundingObj.h"
 #include <math.h>
 #include <iostream>
 
-class BoundingBox{
+class BoundingBox : public BoundingObj{
 private:
-  gx::vector4 center;
   //these vectors should be normalized
   gx::vector3 ax;
   gx::vector3 ay;
   gx::vector3 az;
-  float hw;  //half width ax
-  float hh;  //half height ay
-  float hd;  //half depth az
+  unit_t hw;  //half width ax
+  unit_t hh;  //half height ay
+  unit_t hd;  //half depth az
 
-  //true if they are separated by the axis axis
-  bool separatedByAxis(const gx::vector3 t, const gx::vector3 axis, const BoundingBox & b);
-  bool raySlab(float start, float dir, float min, float max, float& tfirst, float& tlast);
+  void updateRect();
 
 public:
   BoundingBox(gx::vector4 c, gx::vector3 x, gx::vector3 y, gx::vector3 z,
-    float width, float height, float depth) : 
-    center(c), ax(x), ay(y),az(z),hw(width),hh(height),hd(depth){
+    unit_t width, unit_t height, unit_t depth) : 
+    BoundingObj(c), ax(x), ay(y),az(z),hw(width),hh(height),hd(depth){
       ax.normalize();
       ay.normalize();
       az.normalize();
-  }
+      updateRect();
+  } 
 
-  bool collideWith(const BoundingBox & b);
-  bool collideWith(const Ray & r);
+  bool isBox() const{return true;}
 
+  gx::vector3 getAx() const{ return ax; }
+  gx::vector3 getAy() const{ return ay; }
+  gx::vector3 getAz() const{ return az; }
+  unit_t getHw() const{ return hw; }
+  unit_t getHh() const{ return hh; }
+  unit_t getHd() const{ return hd; }
+
+  /*
   static void test(){
     BoundingBox b1(gx::vector4(0,0,0), 
       gx::vector3(1,0,0), gx::vector3(0,1,0), gx::vector3(0,0,1),
@@ -59,4 +65,5 @@ public:
     std::cout << "true " << b3.collideWith(r1) << std::endl;
     std::cout << "false: " << b5.collideWith(r2) << std::endl;
   }
+  */
 };
