@@ -26,6 +26,8 @@ void Projectile::update(void) {
 		map->destroyProjectile(this);
 		return;
 	}
+
+	updateBoundsOnTree();
 	// some collision detection
 
 	if(/* colides with some entity*/ false) {
