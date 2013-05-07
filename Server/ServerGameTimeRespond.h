@@ -27,7 +27,9 @@ struct ServerGameTimeRespond
 
   //make sure to clear the packet's sizes
   void deserialize(sf::Packet & packet) {
-	  // TODO: Matt&Bowen is this correct??
+	  entities.clear();
+    players.clear();
+    
     sf::Uint32 size = 0;
     packet >> size;
     for (int i=0; i<size; i++) {
