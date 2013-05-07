@@ -22,7 +22,7 @@ const int MAXJUMP = 2;
 class Player: public Entity
 {
 public:
-  static const int sphereRadius = 33;
+  static const float sphereRadius;
 
   bool dead; //might be private. should be determined in handleAction
   bool minotaur; //might be private
@@ -38,7 +38,6 @@ public:
   void jump();
   void handleAction(ClientGameTimeAction a);
 
-  void onCollision(Entity* a);
   void updateBounds();
   
   float getHealth() { return health; }

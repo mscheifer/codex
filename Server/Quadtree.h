@@ -11,7 +11,7 @@
 
 class Quadtree{
 private:
-  static const int maxObjects = 1; //TODO this needs to not be 1
+  static const int maxObjects = 10; //TODO this needs to not be 1
   static const int maxLevels = 5;
   int level;
   std::list<BoundingObj*> objects;
@@ -95,7 +95,7 @@ public:
     BoundingBox b4(gx::vector4(27,20,0), 
       gx::vector3(1,1,0), gx::vector3(1,-1,0), gx::vector3(0,0,1),
       5,5,5);
-    BoundingBox b5(gx::vector4(34.3,20,0), 
+    BoundingBox b5(gx::vector4(34.3f,20,0), 
       gx::vector3(1,1,0), gx::vector3(1,-1,0), gx::vector3(0,0,1),
       5,5,5);
     q.insert(&b3);

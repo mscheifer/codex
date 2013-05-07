@@ -15,13 +15,13 @@ void ConfigManager::log(std::string str, ConfigManager::LogLevels level){
   }
 }
 
-void ConfigManager::setupLog(){
+void ConfigManager::setupLog(std::string str){
   time_t timer;
   timer = time(NULL);
   struct tm * currTime = localtime(&timer);
   
   std::stringstream fname;
-  fname << "LOG" << currTime->tm_mon+1 << "_" << currTime->tm_mday << "_" <<
+  fname << str << "LOG" << currTime->tm_mon+1 << "_" << currTime->tm_mday << "_" <<
     currTime->tm_hour << "_" << currTime->tm_min << "_" << currTime->tm_sec << ".txt";
   
   ConfigManager::logfile.open(fname.str());

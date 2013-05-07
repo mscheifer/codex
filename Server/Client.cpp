@@ -16,19 +16,19 @@ void NetworkClient::receiveMessages() {
         break;
       case SGTR:
         s.deserialize(packet);
-        for(size_t i = 0; i < 4; i++) {
+        for(auto playerP = s.players.begin(); playerP != s.players.end(); playerP++) {
           if(i != this->id) {
-            auto pos = s.players[i].getPosition();
-            entities.push_back(std::make_pair(
-                  gx::vector4(static_cast<gx::vector3::elem_t>(pos.x),
-                              static_cast<gx::vector3::elem_t>(pos.y),
-                              static_cast<gx::vector3::elem_t>(pos.z)),0));
-          //std::cout << "recieved player at: " << gx::vector3(pos.x,pos.y,pos.z);
-          //std::cout << std::endl;
+          auto pos = (*playerP).getPosition();
+          entities.push_back(std::make_pair(
+                gx::vector4(static_cast<gx::vector3::elem_t>(pos.x),
+                            static_cast<gx::vector3::elem_t>(pos.y),
+                            static_cast<gx::vector3::elem_t>(pos.z)),0));
+        //std::cout << "recieved player at: " << gx::vector3(pos.x,pos.y,pos.z);
+        //std::cout << std::endl;
           }
         }
         for(auto entP = s.entities.begin(); entP != s.entities.end(); entP++) {
-          auto pos = (*entP)->getPosition();
+          auto pos = (*entP).getPosition();
           entities.push_back(std::make_pair(
                 gx::vector4(static_cast<gx::vector3::elem_t>(pos.x),
                             static_cast<gx::vector3::elem_t>(pos.y),
@@ -63,7 +63,7 @@ void NetworkClient::processInput() {
   action.facingDirection = Direction(dir.x, dir.y, dir.z);
   action.attackMelee = this->gxClient.fire1();
   action.attackRange = this->gxClient.fire2();
-  this->sendPacket = true;
+  this->sendPacket = true; //TODO if nothing chnages dont send a packet
 }
 /*
 void NetworkClient::processInput(){
