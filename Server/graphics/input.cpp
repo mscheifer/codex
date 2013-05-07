@@ -120,7 +120,7 @@ void gx::input::handleEvent(const sf::Event& event) {
   } else if(event.type == sf::Event::MouseButtonPressed) {
 	  if(event.mouseButton.button == sf::Mouse::Left) {
       this->fired1 = true;
-	  } else if(event.mouseButton.button == sf::Mouse::Left) {
+	  } else if(event.mouseButton.button == sf::Mouse::Right) {
       this->fired2 = true;
     }
   }

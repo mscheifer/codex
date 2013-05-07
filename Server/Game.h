@@ -34,7 +34,8 @@ class Game
 public:
 	Game(void);
 	Game(Map m);
-	ServerGameTimeRespond evaluate(ClientGameTimeAction a);
+	void evaluate(ClientGameTimeAction a);
+	ServerGameTimeRespond prepResponse(void);
 	~Game(void);
   int join();
   void chooseMinotaur();

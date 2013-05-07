@@ -60,14 +60,16 @@ std::vector<Entity *> Map::getEntity() {
    return true;
  }
 
- void Map::addToQtree(Entity* e){
-   for( auto it = e->getBoundingObjs().begin(); it != e->getBoundingObjs().end(); it++){
-       q.insert(*it);
-   }
- }
+void Map::addToQtree(Entity* e){
+  std::vector<BoundingObj*> vec = e->getBoundingObjs();
+  for( auto it = vec.begin(); it != vec.end(); ++it){
+	  q.insert(*it);
+  }
+}
  
- void Map::removeFromQtree(Entity* e){
-   for(auto it = e->getBoundingObjs().begin(); it != e->getBoundingObjs().end(); it++){
-       q.remove(*it);
-   }
- }
+void Map::removeFromQtree(Entity* e){
+  std::vector<BoundingObj*> vec = e->getBoundingObjs();
+  for( auto it = vec.begin(); it != vec.end(); ++it){
+      q.remove(*it);
+  }
+}

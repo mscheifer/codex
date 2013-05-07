@@ -7,7 +7,8 @@ std::vector<std::pair<Entity*,gx::vector3>> Entity::detectCollision(){
   res.clear();
 
   //all of my bounding objs
-  for(auto it = getBoundingObjs().begin(); it != getBoundingObjs().end(); it++){
+  std::vector<BoundingObj*> vec = getBoundingObjs();
+  for(auto it = vec.begin(); it != vec.end(); it++){
     map->getQuadtreePtr()->retrieve(potentialCollisions, *it);
 
     //all potential collisions with bounding obj[i]
@@ -41,7 +42,8 @@ void Entity::updateBoundsOnTree(){
   updateBounds();
 
   //update all of them on the tree
-  for(auto it = getBoundingObjs().begin(); it != getBoundingObjs().end(); it++){
+  std::vector<BoundingObj*> vec = getBoundingObjs();
+  for(auto it = vec.begin(); it != vec.end(); it++){
       (*it)->updateOnTree();
   }
 }

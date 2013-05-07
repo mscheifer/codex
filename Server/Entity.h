@@ -22,7 +22,19 @@ public:
   
   virtual void handleAction(ClientGameTimeAction){}
   virtual void update(){}
-  virtual void onCollision(Entity*){}
+  virtual void onCollision(){  
+	  
+	std::vector<std::pair<Entity*,gx::vector3>> entities =  detectCollision();
+	Coordinate c = getPosition() ;
+	for(int i = 0; i < entities.size() ; i ++) {
+		gx::vector3 fixShit = entities[i].second;
+		c.x = fixShit.x;
+		c.y = fixShit.y;
+		c.z = fixShit.z;
+	}
+	setPosition(c);
+  
+  }
   virtual bool isProjectile(void){ return false;}
   virtual bool isWeapon(void){ return false;}
   virtual bool isPlayer(void){ return false;}
