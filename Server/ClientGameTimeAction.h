@@ -16,6 +16,20 @@ struct ClientGameTimeAction
   bool weapon2; // Used for switching weapon
 	bool jump;
 	Direction facingDirection;
+  
+  bool operator==(const ClientGameTimeAction & other) const{
+    if (this->player_id != other.player_id) return false; 
+    if (this->movement != other.movement) return false; 
+    if (this->attackMelee != other.attackMelee) return false; 
+    if (this->weapon1 != other.weapon1) return false; 
+    if (this->weapon2 != other.weapon2) return false; 
+    if (this->jump != other.jump) return false; 
+    if (this->facingDirection != other.facingDirection) return false; 
+    return true;
+  }
+  bool operator!=(const ClientGameTimeAction & other) const{
+    return !(*this==other);
+  }
 
   void clear(){
     movement = NONE;
