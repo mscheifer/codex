@@ -1,5 +1,21 @@
 #include "Client.h"
 
+namespace {
+  gx::graphicEntity toGentity(const Entity& ent) {            
+    auto pos = ent.getPosition();
+    auto dir = ent.getDirection();
+    gx::graphicEntity gentity;
+    gentity.position =  gx::vector4(static_cast<gx::vector4::elem_t>(pos.x),
+                                    static_cast<gx::vector4::elem_t>(pos.y),
+                                    static_cast<gx::vector4::elem_t>(pos.z));
+    gentity.direction = gx::vector3(static_cast<gx::vector3::elem_t>(dir.x),
+                                    static_cast<gx::vector3::elem_t>(dir.y),
+                                    static_cast<gx::vector3::elem_t>(dir.z));
+    gentity.type = 0;
+    return gentity;
+  }
+} //end nunnamed namespace
+
 void NetworkClient::receiveMessages() {
   //receive from server and process
   sf::Packet packet;
@@ -8,7 +24,7 @@ void NetworkClient::receiveMessages() {
     uint32_t packetType;
     IdPacket newId(0);
     packet >> packetType;
-    std::vector<std::pair<gx::vector4,int>> entities;
+    std::vector<gx::graphicEntity> entities;
     switch (packetType) {
       case CHAT:
         chatObj.deserialize(packet);
@@ -17,29 +33,27 @@ void NetworkClient::receiveMessages() {
       case SGTR:
         s.deserialize(packet);
         for(auto playerP = s.players.begin(); playerP != s.players.end(); playerP++) {
-          if(i != this->id) {
-          auto pos = (*playerP).getPosition();
-          entities.push_back(std::make_pair(
-                gx::vector4(static_cast<gx::vector3::elem_t>(pos.x),
-                            static_cast<gx::vector3::elem_t>(pos.y),
-                            static_cast<gx::vector3::elem_t>(pos.z)),0));
-        //std::cout << "recieved player at: " << gx::vector3(pos.x,pos.y,pos.z);
-        //std::cout << std::endl;
+          if(playerP->player_id != this->id) {
+            auto gentity = toGentity(*playerP);
+            gentity.type = 0;
+            entities.push_back(gentity);
           }
         }
         for(auto entP = s.entities.begin(); entP != s.entities.end(); entP++) {
-          auto pos = (*entP).getPosition();
-          entities.push_back(std::make_pair(
-                gx::vector4(static_cast<gx::vector3::elem_t>(pos.x),
-                            static_cast<gx::vector3::elem_t>(pos.y),
-                            static_cast<gx::vector3::elem_t>(pos.z)),1));
-          
+            auto gentity = toGentity(*entP);
+            gentity.type = 1;
+            entities.push_back(gentity);
         }
         auto pos = s.players[this->id].getPosition();
         gxClient.updatePosition(gx::vector4(
           static_cast<gx::vector3::elem_t>(pos.x),
           static_cast<gx::vector3::elem_t>(pos.y),
           static_cast<gx::vector3::elem_t>(pos.z)));
+        gx::graphicEntity gentity;
+        gentity.position  = gx::vector4(0,0,0);
+        gentity.direction = gx::vector3(0,1,0);
+        gentity.type = 4;
+        entities.push_back(gentity); //add skybox
         gxClient.updateEntities(entities);
         //std::cout << "num entities received: " << entities.size() << std::endl;
         if (s.players[id].dead) { /*render death everytime ? */} ;
@@ -151,4 +165,5 @@ void NetworkClient::doClient() {
       this->sendPacket = false;
     }
   }
+  while(true) {}
 }

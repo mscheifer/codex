@@ -3,7 +3,7 @@
 gx::vao::vao(const std::vector<GLuint>                   indices,
              const std::vector<const vertexAttrib*>      attribs,
              std::map<std::string,vertexAttribSignature> sigs)
-       : id(), numIndices(GLsizei(indices.size())), ibo() {
+       : id(), numIndices(static_cast<GLsizei>(indices.size())), ibo() {
   glGenVertexArrays(1, &(this->id));
   debugout << "glGenVertexArrays(1, &(this->id));" << endl;
   glBindVertexArray(this->id);

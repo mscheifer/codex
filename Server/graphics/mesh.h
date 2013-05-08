@@ -14,30 +14,9 @@
 #include "texture.h"
 
 namespace gx {
- 
-enum VertComponentType {
-	POSITION, 
-	TEXTURE, 
-	NORMAL, 
-	COLOR
-}; 
 
-struct Vertex
-{
-  vector4 m_pos;
-  vector3 m_tex;
-  vector3 m_normal;
-  vector4 m_color;
-
-  Vertex() {}
-
-  Vertex(vector4 pos, vector3 tex, vector3 normal, vector4 color)
-       : m_pos(pos), m_tex(tex), m_normal(normal), m_color(color) {}
-};
-
-
-class Mesh
-{
+class Mesh {
+  #define INVALID_MATERIAL 0xFFFFFFFF
 public:
     Mesh();
     Mesh(const Mesh&);// = delete; //don't copy
@@ -47,8 +26,6 @@ public:
     ~Mesh();
 
     const aiScene* LoadMesh(const std::string& Filename);
-
-    void Render();
 
     struct MeshEntry {
         MeshEntry(const aiMesh*);
@@ -65,14 +42,10 @@ public:
     std::vector<MeshEntry> m_Entries;
     std::vector<Texture*> m_Textures;
 
-
 private:
     bool InitFromScene(const aiScene* pScene, const std::string& Filename);
     bool InitMaterials(const aiScene* pScene, const std::string& Filename);
     void Clear();
-
-#define INVALID_MATERIAL 0xFFFFFFFF
-
 };
 
 Mesh loadMeshFromFile(const std::string&);

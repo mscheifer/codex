@@ -22,7 +22,7 @@ void NetworkServer::receiveMessages(int i) {
       case CGTA:
         cgta.deserialize(packet);
         //cgta.print();
-		game.evaluate(cgta);
+		    game.evaluate(cgta);
        
         break;
       case CHAT:
@@ -49,9 +49,9 @@ void NetworkServer::doServer() {
       IdPacket newPacket = IdPacket(game.join());
       if(!server.sendPacket<IdPacket>(newPacket,server.size() - 1)) {
         std::cout << "Error sending game join packet" << std::endl;
-	  }
-	  else
-	    std::cout << "I sent the id " << std::endl;
+	    } else {
+	      std::cout << "I sent the id " << std::endl;
+      }
     }
   }
   //choose minotaur

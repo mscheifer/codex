@@ -8,6 +8,12 @@
 
 namespace gx {
 
+struct graphicEntity {
+  unsigned int type;
+  vector4 position;
+  vector3 direction;
+};
+
 class graphicsClient {
     sf::Window window;
     GLenum     glewStatus;
@@ -42,7 +48,7 @@ class graphicsClient {
     void handleInput();
     void draw();
     void updatePosition(vector4);
-    void updateEntities(std::vector<std::pair<vector4,int>>);
+    void updateEntities(std::vector<graphicEntity>);
 
     //input functions
     bool closed()        { return this->userInput.getStop(); }

@@ -79,7 +79,7 @@ gx::vector3::elem_t gx::vector3::magnitudesq() const {
 
 void gx::vector3::normalize() {
   if(magnitude() > 0) {
-    scale(elem_t(1.0)/magnitude());
+    scale(static_cast<elem_t>(1.0)/magnitude());
   }
 }
 

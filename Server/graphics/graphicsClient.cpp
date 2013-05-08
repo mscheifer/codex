@@ -35,7 +35,7 @@ std::vector<gx::drawSet::vaoData_t> loadModel(const std::string& ModelPath) {
 	// if model fails to load, exit
 	if (!scene) {
 		gx::debugout << "Assimp failed to load model.\n";
-		throw;
+		exit(1);
 	}
 
 	std::vector<gx::drawSet::vaoData_t> entities;
@@ -48,7 +48,7 @@ std::vector<gx::drawSet::vaoData_t> loadModel(const std::string& ModelPath) {
 std::vector<gx::drawSet::vaoData_t> entitiesData() {
 	// MODEL LOADING
 	std::vector<gx::drawSet::vaoData_t> model_import = loadModel("models/weird_orange_thing.dae");
-  std::vector<gx::drawSet::vaoData_t> model_import2 = loadModel("models/Test.dae");
+  std::vector<gx::drawSet::vaoData_t> model_import2 = loadModel("models/Model_rotate.dae");
 
     //setup drawing data
   std::vector<gx::drawSet::vaoData_t> entitiesData;
@@ -126,11 +126,11 @@ gx::graphicsClient::graphicsClient():
   glClearColor(1.0,1.0,1.0,1.0); //start with a white screen
   glClearDepth(1.f);
   glDepthFunc(GL_LEQUAL);
-/*
+
   glEnable(GL_CULL_FACE);
   glCullFace(GL_BACK);
   glFrontFace(GL_CCW);
-*/
+
   light1.updatePosition(gx::vector4( 0, 5, -10));
 
   this->setCamera();
@@ -174,11 +174,11 @@ void gx::graphicsClient::updatePosition(vector4 pos) {
   this->setCamera();
 }
 
-void gx::graphicsClient::updateEntities(std::vector<std::pair<vector4,int>> data) {
+void gx::graphicsClient::updateEntities(std::vector<graphicEntity> data) {
   this->entities.reset();
 
   for(auto entityP = data.begin(); entityP != data.end(); ++entityP) {
     const auto& entity = *entityP;
-    entities.addEntity(entity.first, entity.second);
+    entities.addEntity(entity.position, entity.direction, entity.type);
   }
 }

@@ -130,6 +130,7 @@
     <ClInclude Include="graphics\drawSet.h" />
     <ClInclude Include="graphics\graphicsClient.h" />
     <ClInclude Include="graphics\light.h" />
+    <ClInclude Include="graphics\loadCube.h" />
     <ClInclude Include="graphics\matrix.h" />
     <ClInclude Include="graphics\mesh.h" />
     <ClInclude Include="graphics\oglUtil.h" />

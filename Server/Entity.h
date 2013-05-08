@@ -49,8 +49,8 @@ public:
   std::vector<std::pair<Entity*,gx::vector3>> detectCollision();
   virtual void updateBounds(){}
 
-  Coordinate getPosition(void){ return position; }
-  Direction getDirection(void){ return direction; }
+  Coordinate getPosition(void) const { return position; }
+  Direction getDirection(void) const { return direction; }
   void setDirection(Direction d) {
 	  direction = d;
   }
