@@ -2,7 +2,7 @@
 #define _USE_MATH_DEFINES
 #include <math.h>
 
-#define NUM_PLAYERS 2
+#define NUM_PLAYERS 1
 
 enum move_t {
   FORWARD = 0,

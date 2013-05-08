@@ -5,6 +5,7 @@
 #include "drawSet.h"
 #include "light.h"
 #include "input.h"
+#include "ClientGameTimeAction.h" 
 
 namespace gx {
 
@@ -18,7 +19,6 @@ class graphicsClient {
     sf::Window window;
     GLenum     glewStatus;
     input      userInput;
-
     //scene data
     light light1;
     displaySet display;
@@ -33,6 +33,9 @@ class graphicsClient {
     vector3 playerStartRight;
     vector4 playerPosition;
 
+    //packet info
+    ClientGameTimeAction action;
+
     sf::Clock fpsClock;
     int fpsFrames;
 
@@ -45,7 +48,7 @@ class graphicsClient {
     graphicsClient& operator=(const graphicsClient&);// = delete;
     graphicsClient(graphicsClient&&);// = delete;
     graphicsClient& operator=(graphicsClient&&);// = delete;
-    void handleInput();
+    ClientGameTimeAction handleInput();
     void draw();
     void updatePosition(vector4);
     void updateEntities(std::vector<graphicEntity>);

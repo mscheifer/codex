@@ -2,30 +2,22 @@
 
 void NetworkServer::receiveMessages(int i) {
   sf::Packet packet;
-  sf::Packet oldPacket;
-  bool recv = false;
-    
-  while(this->server.receiveMessage(packet,i)){
-    oldPacket = packet;
-    recv = true;
-  }
-
-  packet = oldPacket;
-
-  if(recv) {
-    sf::Packet copy = packet; //TODO: maybe we don't need this. fix later
-    ClientGameTimeAction cgta;
-    uint32_t packetType;
-    packet >> packetType;
-      
-    switch (packetType) {
-      case CGTA:
-        cgta.deserialize(packet);
-        //cgta.print();
-		    game.evaluate(cgta);
-       
+    while(this->server.receiveMessage(packet,i)) {
+      sf::Packet copy = packet; //TODO: maybe we don't need this. fix later
+      ClientGameTimeAction cgta;
+      uint32_t packetType;
+      packet >> packetType;
+      switch (packetType) {
+        case CGTA:
+          cgta.deserialize(packet);
+          if (cgta == pPacket) 
+            continue; 
+          else 
+             pPacket = cgta;
+          game.evaluate(cgta);
+          //cgta.print();
         break;
-      case CHAT:
+        case CHAT: //chat should be part of CGTA  
         this->server.sendToAll(copy); //right now just echoing what received
         break;
       default:
@@ -33,6 +25,7 @@ void NetworkServer::receiveMessages(int i) {
         break;
     }
   }
+  pPacket.clear();
 }
 
 void NetworkServer::doServer() {
@@ -66,14 +59,26 @@ void NetworkServer::doServer() {
 
   while(true) {
     clock.restart();
+    
+    // don't fuck with this order here
+
+    //1. handle incoming packet
     for(unsigned int i = 0; i < server.size(); i++){
       this->receiveMessages(i);
       /* maybe put this in a method just like in client*/
     }
 
-	if(!this->server.sendPacketToAll<ServerGameTimeRespond>( game.prepResponse() ) ) {
+    //2. update all entities and resolve collision
+
+    game.updateAndResolveCollision();
+
+
+    //3. prep and send response to everyone
+	  if(!this->server.sendPacketToAll<ServerGameTimeRespond>( game.prepResponse() ) ) {
           std::cout << "Error sending cgta to everybody" << std::endl;
     }
+
+    //4. go back to sleep slave.
     sf::sleep( sf::milliseconds( tick_length -
                                  clock.getElapsedTime().asMilliseconds()) );
   }
