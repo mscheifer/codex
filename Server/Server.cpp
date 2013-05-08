@@ -2,30 +2,22 @@
 
 void NetworkServer::receiveMessages(int i) {
   sf::Packet packet;
-  sf::Packet oldPacket;
-  bool recv = false;
-    
-  while(this->server.receiveMessage(packet,i)){
-    oldPacket = packet;
-    recv = true;
-  }
-
-  packet = oldPacket;
-
-  if(recv) {
-    sf::Packet copy = packet; //TODO: maybe we don't need this. fix later
-    ClientGameTimeAction cgta;
-    uint32_t packetType;
-    packet >> packetType;
-      
-    switch (packetType) {
-      case CGTA:
-        cgta.deserialize(packet);
-        //cgta.print();
-		game.evaluate(cgta);
-       
+    while(this->server.receiveMessage(packet,i)) {
+      sf::Packet copy = packet; //TODO: maybe we don't need this. fix later
+      ClientGameTimeAction cgta;
+      uint32_t packetType;
+      packet >> packetType;
+      switch (packetType) {
+        case CGTA:
+          cgta.deserialize(packet);
+          if (cgta == pPacket) 
+            continue; 
+          else 
+             pPacket = cgta;
+          game.evaluate(cgta);
+          cgta.print();
         break;
-      case CHAT:
+        case CHAT: //chat should be part of CGTA  
         this->server.sendToAll(copy); //right now just echoing what received
         break;
       default:
@@ -33,9 +25,11 @@ void NetworkServer::receiveMessages(int i) {
         break;
     }
   }
+  pPacket.clear();
 }
 
 void NetworkServer::doServer() {
+  ConfigManager::setupLog("server");
   sf::IpAddress myIpAddress = sf::IpAddress::getLocalAddress();
   std::cout << "Server Ip Address: " << myIpAddress.toString() << std::endl;
   const int tickspersecond = 30;

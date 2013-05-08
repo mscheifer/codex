@@ -23,7 +23,7 @@ public:
   //BoundingObj():rect(nullptr),qtree(nullptr){
   //  rect = new Rectangle();
   //}
-  BoundingObj(gx::vector4 cen):center(cen),qtree(nullptr){
+  BoundingObj(gx::vector4 cen): qtree(nullptr),center(cen) {
     rect = new Rectangle();
   }
   ~BoundingObj();

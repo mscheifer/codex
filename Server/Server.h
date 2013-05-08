@@ -16,6 +16,7 @@ class NetworkServer{
 public:
   ServerServices server;
   Game game;
+  ClientGameTimeAction pPacket;
 
   NetworkServer(): server() {}
 

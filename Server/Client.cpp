@@ -16,8 +16,9 @@ void NetworkClient::receiveMessages() {
         break;
       case SGTR:
         s.deserialize(packet);
-        for(size_t i = 0; i < 4; i++) {
-          auto pos = s.players[i].getPosition();
+
+        for(auto playerP = s.players.begin(); playerP != s.players.end(); playerP++) {
+          auto pos = (*playerP).getPosition();
           entities.push_back(std::make_pair(
                 gx::vector4(static_cast<gx::vector3::elem_t>(pos.x),
                             static_cast<gx::vector3::elem_t>(pos.y),
@@ -26,7 +27,7 @@ void NetworkClient::receiveMessages() {
         //std::cout << std::endl;
         }
         for(auto entP = s.entities.begin(); entP != s.entities.end(); entP++) {
-          auto pos = (*entP)->getPosition();
+          auto pos = (*entP).getPosition();
           entities.push_back(std::make_pair(
                 gx::vector4(static_cast<gx::vector3::elem_t>(pos.x),
                             static_cast<gx::vector3::elem_t>(pos.y),
@@ -47,20 +48,14 @@ void NetworkClient::receiveMessages() {
 }
 
 void NetworkClient::processInput() {
-  this->gxClient.handleInput();
-  if(this->gxClient.closed()) {
+  action = this->gxClient.handleInput();
+  if(this->gxClient.closed()) { //add running  in ClientGameTimeAction ?
     this->running = false;
   }
-  action.clear();
-  if(this->gxClient.jumped()) {
-    action.jump = true;
+  if (action.updated) {
+    action.player_id = id;
+    this->sendPacket = true; //TODO if nothing chnages dont send a packet
   }
-  action.movement = this->gxClient.getMovement();
-  auto dir = this->gxClient.getDir();
-  action.facingDirection = Direction(dir.x, dir.y, dir.z);
-  action.attackMelee = this->gxClient.fire1();
-  action.attackRange = this->gxClient.fire2();
-  this->sendPacket = true;
 }
 /*
 void NetworkClient::processInput(){

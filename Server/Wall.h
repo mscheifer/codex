@@ -5,10 +5,11 @@ class Wall :
   public Entity
 {
 public:
-  Wall(unsigned int width, unsigned int depth, unsigned int height, Coordinate& startingCoordinate);
+  static const float sphereRadius;
+  Wall(unsigned int width, unsigned int depth, unsigned int height, Coordinate& startingCoordinate, Direction direct, Map*);
   ~Wall(void);
   void update(void);
-  void addNewCenter(Coordinate &);
+  void addNewCenter(Coordinate);
   void addNewCenters(std::vector<Coordinate>&);
 private:
   // A vector of POSSIBLE positions
@@ -17,5 +18,6 @@ private:
   unsigned int width;
   unsigned int depth;
   unsigned int height;
+  void updateBounds();
 };
 

@@ -1,9 +1,8 @@
 #include "Game.h"
 
 
-Game::Game(void)
+Game::Game(void) : world()
 {
-	world = Map();
 }
 
 
@@ -15,6 +14,10 @@ void Game::chooseMinotaur()
 {
   srand(static_cast<unsigned int>(time(NULL)));
   int minotaur = rand() % NUM_PLAYERS;
+  if(NUM_PLAYERS==1)
+  {
+    minotaur=0;
+  }
   world.getPlayers()[minotaur]->minotaur=true;
 }
 
@@ -31,41 +34,36 @@ void Game::evaluate(ClientGameTimeAction a) {
 	std::vector<Player *> currentPlayers =  world.getPlayers();
 	std::vector<Entity *> currentEntities = world.getEntity();
 	
-
 	for( unsigned int i = 0; i <  currentPlayers.size(); i++ ) {
 		 currentPlayers[i]->handleAction(a);
 	}
 
 	for( unsigned int i = 0; i < currentEntities.size(); i++ ) {
-		 std::cout << " hello nigga, updating entities" << std::endl;
+		 //std::cout << " hello nigga, updating entities" << std::endl;
 		 currentEntities[i]->update();
 	}
 
   	//run collision fix here
-
   for( unsigned int i = 0; i <  currentPlayers.size(); i++ ) {
       currentPlayers[i]->onCollision();
 	}
 	for( unsigned int i = 0; i < currentEntities.size(); i++ ) {
 		currentEntities[i]->onCollision();
 	}
-
-
-
-	
 }
 
 ServerGameTimeRespond Game::prepResponse() {
 	ServerGameTimeRespond s;
 	s.entities.clear();
-	std::vector<Player *> currentPlayers =  world.getPlayers();
-	std::vector<Entity *> currentEntities = world.getEntity();
-	for( unsigned int i = 0; i <  currentPlayers.size(); i++ ) {
-		 s.players[i] = *currentPlayers[i]; //add the player to the return struct
+  s.players.clear();
+	std::vector<Player*> currentPlayers =  world.getPlayers();
+	std::vector<Entity*> currentEntities = world.getEntity();
+	for( unsigned int i = 0; i < currentPlayers.size(); i++ ) {
+		 s.players.push_back(*currentPlayers[i]); //add the player to the return struct
 	}
 
 	for( unsigned int i = 0; i < currentEntities.size(); i++ ) {
-		s.entities.push_back(currentEntities[i]); //add the player to the return struct
+		s.entities.push_back(*currentEntities[i]); //add the player to the return struct
 	}
 	  
 	unsigned int deadPlayers = 0;

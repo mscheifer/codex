@@ -1,4 +1,5 @@
 #include "Player.h"
+#include "Projectile.h"
 
 const float Player::sphereRadius = 5.0f;
 
@@ -14,7 +15,7 @@ Player::Player(Position x, Position y, Position z, int assigned_id, Map * m)
 
 void Player::init(Position x, Position y, Position z, int assigned_id, Map * m)
 {
-    minotaur = false;
+  minotaur = false;
 	dead = false;
 	player_id = assigned_id;
 	position.x = x;
@@ -40,6 +41,7 @@ void Player::init(Position x, Position y, Position z, int assigned_id, Map * m)
   boundingObjs.push_back(b);
   m->addToQtree(this);
   updateBounds();
+
 
 }
 
@@ -126,8 +128,14 @@ bool Player::moveTowardDirection(move_t dir)
 	DirectionValue newX = (DirectionValue)(direction.x * cos(movementAngles[dir]) - direction.y * sin(movementAngles[dir]));
 	DirectionValue newY = (DirectionValue)(direction.x * sin(movementAngles[dir]) + direction.y * cos(movementAngles[dir]));
 	double length = sqrt(newX *newX + newY * newY);
-	position.velocityX = newX/length * MOVESCALE * speed;
-	position.velocityY = newY/length * MOVESCALE * speed;
+  if(length == 0 ){
+	  position.velocityX = newX * MOVESCALE * speed;
+	  position.velocityY = newY * MOVESCALE * speed;
+  }
+  else{
+	  position.velocityX = newX/length * MOVESCALE * speed;
+	  position.velocityY = newY/length * MOVESCALE * speed;
+  }
 	position = ThreeDMovement(position, Direction(newX, newY, direction.z), GRAVITY);
 	fixPosition();
 	return true;
@@ -183,11 +191,12 @@ void Player::attack( ClientGameTimeAction a) {
 
 	if(a.attackRange)
 	{
-                		if( !currentWeapon->canUseWeapon(true) || currentWeapon->getMpCost() > mana){
+    if( !currentWeapon->canUseWeapon(true) || currentWeapon->getMpCost() > mana){
 			return;
 		}
 		mana -= currentWeapon->getMpCost();
-		currentWeapon->attackRange(direction, position);
+		Projectile* proj = currentWeapon->attackRange(direction, position);
+    proj->setOwner(this);
 	}
 	else if(a.attackMelee)
 	{
