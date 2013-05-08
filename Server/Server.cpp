@@ -13,7 +13,7 @@ void NetworkServer::receiveMessages(int i) {
           if (cgta == pPacket) 
             continue; 
           else 
-             pPacket = cgta;
+            pPacket = cgta;
           game.evaluate(cgta);
           cgta.print();
         break;
@@ -42,19 +42,24 @@ void NetworkServer::doServer() {
       IdPacket newPacket = IdPacket(game.join());
       if(!server.sendPacket<IdPacket>(newPacket,server.size() - 1)) {
         std::cout << "Error sending game join packet" << std::endl;
-	  }
-	  else
-	    std::cout << "I sent the id " << std::endl;
+	    }
+	    else
+	      std::cout << "I sent the id " << std::endl;
     }
   }
   //choose minotaur
   game.chooseMinotaur();
 
-  sf::Packet initPacket;
-  initPacket << INIT;
-  if(!server.sendToAll(initPacket)) {
-	  std::cout << "Error sending game start packet" << std::endl;
+  for(unsigned int i = 0; i < server.size(); i++){
+    //TODO this relies on server i to match the player_id
+    if(!server.sendPacket<InitPacket>(game.getInitPacket(i),i)) {
+        std::cout << "Error sending game join packet" << std::endl;
+	    }
   }
+
+  //if(!server.sendToAll(initPacket)) {
+	//  std::cout << "Error sending game start packet" << std::endl;
+  //}
   std::cout << "server start game" << std::endl;
 
   while(true) {

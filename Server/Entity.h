@@ -62,6 +62,7 @@ public:
   void setPosition(Coordinate c) {
 	  position = c;
   }
+
   void serialize(sf::Packet& packet) const
   {
     position.serialize(packet);
