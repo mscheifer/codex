@@ -10,7 +10,7 @@
 //}
 
 void Ray::updateRect(){
-  gx::vector4 endpt = getOrigin() + direction;
+  vec4_t endpt = getOrigin() + direction;
   float minX, minY, maxX, maxY;
   minX = maxX = getOrigin().x;
   minY = maxY = getOrigin().y;
@@ -23,7 +23,7 @@ void Ray::updateRect(){
   if( endpt.y < minY )
     minY = endpt.y;
 
-  getRect()->setCenter(gx::vector4((minX+maxX)/2,(minY+maxY)/2,0));
+  getRect()->setCenter(vec4_t((minX+maxX)/2,(minY+maxY)/2,0));
   getRect()->setHalfWidth((maxX-minX)/2);
   getRect()->setHalfHeight((maxY-minY)/2);
 }

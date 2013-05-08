@@ -2,8 +2,8 @@
 #include "Quadtree.h"
 
 void BoundingBox::updateRect(){
-  gx::vector4 c[8]; //8 corners
-  gx::vector3 up, down, left, right, in, out;
+  vec4_t c[8]; //8 corners
+  vec3_t up, down, left, right, in, out;
   c[1] = c[2] = c[3] = c[4] = c[5] = c[6] = c[7] = c[0] = center;
   up = az;
   up.scale(hd);
@@ -50,7 +50,7 @@ void BoundingBox::updateRect(){
     //  minZ = c[i].z;
   }
 
-  getRect()->setCenter(gx::vector4((minX+maxX)/2,(minY+maxY)/2,0));
+  getRect()->setCenter(BoundingObj::vec4_t((minX+maxX)/2,(minY+maxY)/2,0));
   getRect()->setHalfWidth((maxX-minX)/2);
   getRect()->setHalfHeight((maxY-minY)/2);
 }

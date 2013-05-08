@@ -9,7 +9,7 @@ private:
   unit_t radius; //TODO: change to glfloat
 
 public:
-  BoundingSphere(gx::vector4 cen, float r) : BoundingObj(cen), radius(r) {
+  BoundingSphere(vec4_t cen, float r) : BoundingObj(cen), radius(r) {
     updateRect();
   }
   ~BoundingSphere(void);

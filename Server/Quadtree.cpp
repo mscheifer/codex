@@ -30,16 +30,16 @@ void Quadtree::split(){
    float x = bounds.getCenter().x;
    float y = bounds.getCenter().y;
    //Q1
-   nodes[0] = new Quadtree(level+1, Rectangle(gx::vector4(x+subWidth,y-subHeight,0),
+   nodes[0] = new Quadtree(level+1, Rectangle(BoundingObj::vec4_t(x+subWidth,y-subHeight,0),
      subWidth, subHeight));
    //Q2
-   nodes[1] = new Quadtree(level+1, Rectangle(gx::vector4(x-subWidth,y-subHeight,0),
+   nodes[1] = new Quadtree(level+1, Rectangle(BoundingObj::vec4_t(x-subWidth,y-subHeight,0),
      subWidth, subHeight));
    //Q3
-   nodes[2] = new Quadtree(level+1, Rectangle(gx::vector4(x-subWidth,y+subHeight,0),
+   nodes[2] = new Quadtree(level+1, Rectangle(BoundingObj::vec4_t(x-subWidth,y+subHeight,0),
      subWidth, subHeight));
    //Q4
-   nodes[3] = new Quadtree(level+1, Rectangle(gx::vector4(x+subWidth,y+subHeight,0),
+   nodes[3] = new Quadtree(level+1, Rectangle(BoundingObj::vec4_t(x+subWidth,y+subHeight,0),
      subWidth, subHeight));
 }
 
@@ -94,6 +94,8 @@ void Quadtree::insert(BoundingObj* o){
  
   objects.push_front(o);
  
+  //std::cout << "max Objs" << maxObjects << std::endl;
+  //std::cout << "maxLevels" << maxLevels << std::endl;
   if (objects.size() > maxObjects && level < maxLevels) {
     if (nodes[0] == nullptr) {
         split();
