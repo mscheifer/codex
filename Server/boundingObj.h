@@ -10,20 +10,24 @@ class BoundingBox;
 class Ray;
 
 class BoundingObj{
+public:
+  typedef float unit_t;
+  typedef gx::vector3 vec3_t; //TODO use ints!!!
+  typedef gx::vector4 vec4_t;
+
 private:
   Quadtree* qtree;
   Entity* entity;
   
 protected:
   Rectangle* rect;
-  gx::vector4 center;
+  vec4_t center;
 
 public:
-  typedef float unit_t;
   //BoundingObj():rect(nullptr),qtree(nullptr){
   //  rect = new Rectangle();
   //}
-  BoundingObj(gx::vector4 cen): qtree(nullptr),center(cen) {
+  BoundingObj(vec4_t cen):qtree(nullptr),center(cen){
     rect = new Rectangle();
   }
   ~BoundingObj();
@@ -31,7 +35,7 @@ public:
   //functions for qtree
   virtual void updateRect(){}
   void updateOnTree();
-  virtual void move(const gx::vector3 & v){
+  virtual void move(const vec3_t & v){
     center = center+v;
     updateOnTree();
   }
@@ -55,8 +59,8 @@ public:
   void setQuadtree(Quadtree* q){qtree=q;}
   Rectangle* getRect()const{return rect;}
   //void setRect(Rectangle* r){rect = r;}
-  gx::vector4 getCenter() const{return center;}
-  void setCenter(gx::vector4 cen){  
+  vec4_t getCenter() const{return center;}
+  void setCenter(vec4_t cen){  
     center = cen;
     updateOnTree();
   }

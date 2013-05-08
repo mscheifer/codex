@@ -9,9 +9,9 @@
 class BoundingBox : public BoundingObj{
 private:
   //these vectors should be normalized
-  gx::vector3 ax;
-  gx::vector3 ay;
-  gx::vector3 az;
+  vec3_t ax;
+  vec3_t ay;
+  vec3_t az;
   unit_t hw;  //half width ax
   unit_t hh;  //half height ay
   unit_t hd;  //half depth az
@@ -19,7 +19,7 @@ private:
   void updateRect();
 
 public:
-  BoundingBox(gx::vector4 c, gx::vector3 x, gx::vector3 y, gx::vector3 z,
+  BoundingBox(vec4_t c, vec3_t x, vec3_t y, vec3_t z,
     unit_t width, unit_t height, unit_t depth) : 
     BoundingObj(c), ax(x), ay(y),az(z),hw(width),hh(height),hd(depth){
       ax.normalize();
@@ -30,9 +30,9 @@ public:
 
   bool isBox() const{return true;}
 
-  gx::vector3 getAx() const{ return ax; }
-  gx::vector3 getAy() const{ return ay; }
-  gx::vector3 getAz() const{ return az; }
+  vec3_t getAx() const{ return ax; }
+  vec3_t getAy() const{ return ay; }
+  vec3_t getAz() const{ return az; }
   unit_t getHw() const{ return hw; }
   unit_t getHh() const{ return hh; }
   unit_t getHd() const{ return hd; }

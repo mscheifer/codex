@@ -5,17 +5,17 @@
 class Ray: public BoundingObj{
 private:
   //gx::vector4 origin;// Center == origin
-  gx::vector3 direction;
+  BoundingObj::vec3_t direction;
 
 public:
-  Ray(gx::vector4 o, gx::vector3 d) : BoundingObj(o), direction(d){
+  Ray(BoundingObj::vec4_t o, vec3_t d) : BoundingObj(o), direction(d){
     //origin = center;
     updateRect();
   }
   void updateRect();
   bool isRay() const{return true;}
 
-  gx::vector3 getDirection() const {return direction;}
-  gx::vector4 getOrigin() const {return getCenter();}
-  void setOrigin(gx::vector4 o) {center = o;}
+  vec3_t getDirection() const {return direction;}
+  vec4_t getOrigin() const {return getCenter();}
+  void setOrigin(vec4_t o) {center = o;}
 };

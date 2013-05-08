@@ -17,8 +17,8 @@
 class ConfigManager{
 public:
 
-  enum LogLevels {DEBUG1=1, DEBUG2=2, NOTE=3};
-  static const LogLevels level = ConfigManager::DEBUG2;
+  enum LogLevels {DEBUG1=1, DEBUG2=2, NOTE=3}; //in order of decreasing scope (lower will show more)
+  static const LogLevels level = ConfigManager::DEBUG1; //Change this to access more/less
   static std::ofstream logfile;
 
   typedef std::map<std::string, std::string> configMap_t;
@@ -27,7 +27,7 @@ public:
   static void readConfig();
   
   //log str with given log level
-  static void log( std::string str, LogLevels l);
+  static void log( std::string str, LogLevels l=DEBUG1);
   
   //setup the logfile
   static void setupLog(std::string str = "");

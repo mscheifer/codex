@@ -49,12 +49,12 @@ public:
   
   
   static void test(){
-    Rectangle worldBounds(gx::vector4(0,0,0),1000,1000);
+    Rectangle worldBounds(BoundingObj::vec4_t(0,0,0),1000,1000);
     Quadtree q(0, worldBounds);
-    BoundingSphere r1(gx::vector4(53,101,0),50);
-    BoundingSphere r1_2(gx::vector4(53,101,0),50);
-    BoundingSphere r2(gx::vector4(53,150,0),50);
-    BoundingSphere r3(gx::vector4(-400,-400,0),1);
+    BoundingSphere r1(BoundingObj::vec4_t(53,101,0),50);
+    BoundingSphere r1_2(BoundingObj::vec4_t(53,101,0),50);
+    BoundingSphere r2(BoundingObj::vec4_t(53,150,0),50);
+    BoundingSphere r3(BoundingObj::vec4_t(-400,-400,0),1);
     std::vector<BoundingObj*> l;
     
     //THESE TESTS only work if maxobjects == 1
@@ -76,7 +76,7 @@ public:
     q.retrieve(l,&r1);
     std::cout << l.size() << "==1 r1 cw: r1_2. r2 removed" << std::endl;
     //q.clear();
-    r1.move(gx::vector3(-104,0,0));
+    r1.move(BoundingObj::vec3_t(-104,0,0));
     l.clear();
     q.retrieve(l,&r1);
     std::cout << l.size() << "==0 r1 cw:. r1 moved" << std::endl;
@@ -89,14 +89,28 @@ public:
     //bounding box test
     q.clear();
     l.clear();
-    BoundingBox b3(gx::vector4(20,20,0), 
-      gx::vector3(1,1,0), gx::vector3(1,-1,0), gx::vector3(0,0,1),
+    BoundingBox b6(BoundingObj::vec4_t(0,0,-1000), 
+      BoundingObj::vec3_t(1,1,0), BoundingObj::vec3_t(1,-1,0), BoundingObj::vec3_t(0,0,1),
+      1000,1000,1000);
+    BoundingBox b7(BoundingObj::vec4_t(7,7,-20), 
+      BoundingObj::vec3_t(1,1,0), BoundingObj::vec3_t(1,-1,0), BoundingObj::vec3_t(0,0,1),
       5,5,5);
-    BoundingBox b4(gx::vector4(27,20,0), 
-      gx::vector3(1,1,0), gx::vector3(1,-1,0), gx::vector3(0,0,1),
+    q.insert(&b6);
+    q.insert(&b7);
+    q.retrieve(l,&b6);
+    std::cout << l.size() << "==1 b6 cw: b7. THIS" << std::endl;
+    
+    q.clear();
+    l.clear();
+
+    BoundingBox b3(BoundingObj::vec4_t(20,20,0), 
+      BoundingObj::vec3_t(1,1,0), BoundingObj::vec3_t(1,-1,0), BoundingObj::vec3_t(0,0,1),
       5,5,5);
-    BoundingBox b5(gx::vector4(34.3f,20,0), 
-      gx::vector3(1,1,0), gx::vector3(1,-1,0), gx::vector3(0,0,1),
+    BoundingBox b4(BoundingObj::vec4_t(27,20,0), 
+      BoundingObj::vec3_t(1,1,0), BoundingObj::vec3_t(1,-1,0), BoundingObj::vec3_t(0,0,1),
+      5,5,5);
+    BoundingBox b5(BoundingObj::vec4_t(34.3f,20,0), 
+      BoundingObj::vec3_t(1,1,0), BoundingObj::vec3_t(1,-1,0), BoundingObj::vec3_t(0,0,1),
       5,5,5);
     q.insert(&b3);
     q.insert(&b4);
@@ -108,22 +122,22 @@ public:
     l.clear();
     q.retrieve(l,&b3);
     std::cout << l.size() << "==1 b3 cw: b5." << std::endl;
-    b5.move(gx::vector3(-100,-100,1));
+    b5.move(BoundingObj::vec3_t(-100,-100,1));
 
     l.clear();
     q.retrieve(l,&b3);
     std::cout << l.size() << "==0 b3 cw:. b5 moved" << std::endl;
 
     //all test
-    Ray ray1(gx::vector4(20,20,0),gx::vector3(1,1,1));
-    BoundingSphere s1(gx::vector4(20,20,0),1);
+    Ray ray1(BoundingObj::vec4_t(20,20,0),BoundingObj::vec3_t(1,1,1));
+    BoundingSphere s1(BoundingObj::vec4_t(20,20,0),1);
     q.insert(&ray1);
     q.insert(&s1);
 
     l.clear();
     q.retrieve(l,&b3);
     std::cout << l.size() << "==2 b3 cw: ray1, s1." << std::endl;
-    ray1.move(gx::vector3(-100,-100,1));
+    ray1.move(BoundingObj::vec3_t(-100,-100,1));
 
     l.clear();
     q.retrieve(l,&b3);

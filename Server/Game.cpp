@@ -97,3 +97,17 @@ ServerGameTimeRespond Game::prepResponse() {
 
   return s;
 }
+
+InitPacket Game::getInitPacket(int playerId){
+  Player* player = nullptr;
+  std::vector<Player*> players = world.getPlayers();
+  for( int i = 0; i < players.size(); i++){
+    if( players[i]->player_id == playerId ){
+      player = players[i];
+      return InitPacket(player->player_id, player->getPosition(), player->getDirection());
+    }
+  }
+
+  //TODO THIS SHOULD NEVER HAPPEn
+  return InitPacket(player->player_id, player->getPosition(), player->getDirection());
+}
