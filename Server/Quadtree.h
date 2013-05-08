@@ -89,6 +89,20 @@ public:
     //bounding box test
     q.clear();
     l.clear();
+    BoundingBox b6(BoundingObj::vec4_t(0,0,-1000), 
+      BoundingObj::vec3_t(1,1,0), BoundingObj::vec3_t(1,-1,0), BoundingObj::vec3_t(0,0,1),
+      1000,1000,1000);
+    BoundingBox b7(BoundingObj::vec4_t(7,7,-20), 
+      BoundingObj::vec3_t(1,1,0), BoundingObj::vec3_t(1,-1,0), BoundingObj::vec3_t(0,0,1),
+      5,5,5);
+    q.insert(&b6);
+    q.insert(&b7);
+    q.retrieve(l,&b6);
+    std::cout << l.size() << "==1 b6 cw: b7. THIS" << std::endl;
+    
+    q.clear();
+    l.clear();
+
     BoundingBox b3(BoundingObj::vec4_t(20,20,0), 
       BoundingObj::vec3_t(1,1,0), BoundingObj::vec3_t(1,-1,0), BoundingObj::vec3_t(0,0,1),
       5,5,5);

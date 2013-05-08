@@ -155,7 +155,7 @@ std::pair<bool,BoundingObj::vec3_t> boxBox(const BoundingBox* a,const  BoundingB
         min.second = ret.second;
     }
   }
-  return ret;
+  return min;
 }
 
 std::pair<bool,BoundingObj::vec3_t> boxRay(const BoundingBox* b,const Ray* r){
@@ -282,6 +282,15 @@ void boxTest(){
     std::cout << "" << collide(&b3,&b4).second << collide(&b4,&b3).second << std::endl;
   std::cout << "0==" << collide(&b3,&b5).first << collide(&b5,&b3).first << std::endl;
     std::cout << "" << collide(&b3,&b5).second << collide(&b5,&b3).second << std::endl;
+
+  BoundingBox b6(BoundingObj::vec4_t(0,0,-1000), 
+    BoundingObj::vec3_t(1,1,0), BoundingObj::vec3_t(1,-1,0), BoundingObj::vec3_t(0,0,1),
+    1000,1000,1000);
+  BoundingBox b7(BoundingObj::vec4_t(0,0,0), 
+    BoundingObj::vec3_t(1,1,0), BoundingObj::vec3_t(1,-1,0), BoundingObj::vec3_t(0,0,1),
+    5,5,5);
+  std::cout << "asdf1=" << collide(&b6,&b7).first << collide(&b7,&b6).first << std::endl;
+  std::cout << "" << collide(&b6,&b7).second << collide(&b7,&b6).second << std::endl;
 
   Ray r1(BoundingObj::vec4_t(-50,0,0), BoundingObj::vec3_t(100,0,0));
   Ray r2(BoundingObj::vec4_t(0,0,0), BoundingObj::vec3_t(1000,1000,0));
