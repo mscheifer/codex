@@ -12,6 +12,16 @@ struct Direction
   Direction(DirectionValue a, DirectionValue b, DirectionValue c) :
     x(a), y(b), z(c){}
 
+  bool operator==(const Direction & other) const {
+    if (this->x!=other.x) return false;
+    if (this->y!=other.y) return false;
+    if (this->z!=other.z) return false;
+    return true;
+  }
+  
+  bool operator!=(const Direction & other) const {
+    return !(*this==other) ;
+  }
   void serialize(sf::Packet & packet) const {
     packet << x;
     packet << y;

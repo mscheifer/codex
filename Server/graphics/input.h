@@ -9,6 +9,7 @@ namespace gx {
 class vector3;
 
 class input {
+    bool   updated;
     bool   jumped;
     bool   stopped;
     bool   fired1;
@@ -18,6 +19,7 @@ class input {
     bool resized;
   public:
     input();
+    bool    getUpdated();
     bool       getJump();
     bool       getStop();
     bool         fire1();

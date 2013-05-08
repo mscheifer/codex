@@ -8,7 +8,7 @@ const float Map::Item_Pick_Up_Ranges = 1.0f;
 
 
 //TODO the rectangle should be the actual world bounds
-Map::Map(void):q(0,Rectangle(gx::vector4(0,0,0),1000,1000)),freeProjectiles()
+Map::Map(void): freeProjectiles(),q(0,Rectangle(gx::vector4(0,0,0),1000,1000))
 {
 	map_size = 15;
 	freeProjectiles = new std::stack<Projectile *>();
@@ -38,8 +38,8 @@ void Map::initWalls(void)
     startingY = ((wallY*width)/-2)+centerY;
     i < wallX; i++, startingX += width )
   {
-    Wall* topWall = new Wall(width, depth, height, Coordinate(startingX,startingY, startingZ, 0,0,0), facingNorth);
-    Wall* bottomWall = new Wall(width, depth, height, Coordinate(startingX,-startingY, startingZ, 0,0,0), facingNorth);
+    Wall* topWall = new Wall(width, depth, height, Coordinate(startingX,startingY, startingZ, 0,0,0), facingNorth, this);
+    Wall* bottomWall = new Wall(width, depth, height, Coordinate(startingX,-startingY, startingZ, 0,0,0), facingNorth, this);
     this->entities.push_back(topWall);
     this->entities.push_back(bottomWall);
   }
@@ -49,8 +49,8 @@ void Map::initWalls(void)
     startingY = ((wallY*width)/-2)+(width/2)+centerY;
     i < wallY; i++, startingY += width )
   {
-    Wall* leftWall = new Wall(width, depth, height, Coordinate(startingX,startingY, startingZ, 0,0,0), facingEast);
-    Wall* rightWall = new Wall(width, depth, height, Coordinate(-startingX,startingY, startingZ, 0,0,0), facingEast);
+    Wall* leftWall = new Wall(width, depth, height, Coordinate(startingX,startingY, startingZ, 0,0,0), facingEast, this);
+    Wall* rightWall = new Wall(width, depth, height, Coordinate(-startingX,startingY, startingZ, 0,0,0), facingEast, this);
     this->entities.push_back(leftWall);
     this->entities.push_back(rightWall);
   }

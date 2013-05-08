@@ -111,14 +111,25 @@ gx::graphicsClient::graphicsClient():
   this->reshape(defaultWindowWidth, defaultWindowHeight);
 }
 
-void gx::graphicsClient::handleInput() {
+ClientGameTimeAction gx::graphicsClient::handleInput() {
+  action.clear();
   this->userInput.handle(this->window);
+  action.updated = this->userInput.getUpdated();
   if(this->userInput.resizedWindow()) {
     reshape(this->userInput.windowWidth(),this->userInput.windowHeight());
   }
   auto newdir = this->userInput.turnPlayer();
   this->playerDirection = toBasis(playerStartRight,playerStartDirection,upDirection) * newdir;
   this->setCamera(); //after setting new player position and direction
+  if(jumped()) {
+    action.jump = true;
+  }
+  action.movement = getMovement();
+  auto dir = getDir();
+  action.facingDirection = Direction(dir.x, dir.y, dir.z);
+  action.attackMelee = fire1();
+  action.attackRange = fire2();
+  return action;
 }
 
 void gx::graphicsClient::draw() {

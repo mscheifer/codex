@@ -95,7 +95,7 @@ public:
     BoundingBox b4(BoundingObj::vec4_t(27,20,0), 
       BoundingObj::vec3_t(1,1,0), BoundingObj::vec3_t(1,-1,0), BoundingObj::vec3_t(0,0,1),
       5,5,5);
-    BoundingBox b5(BoundingObj::vec4_t(34.3,20,0), 
+    BoundingBox b5(BoundingObj::vec4_t(34.3f,20,0), 
       BoundingObj::vec3_t(1,1,0), BoundingObj::vec3_t(1,-1,0), BoundingObj::vec3_t(0,0,1),
       5,5,5);
     q.insert(&b3);

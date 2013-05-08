@@ -1,7 +1,7 @@
 #include "Quadtree.h"
 
 Quadtree::Quadtree(int pLevel, Rectangle pBounds):
-level(pLevel),bounds(pBounds){
+level(pLevel),objects(),bounds(pBounds){
   for( unsigned int i = 0; i < nodes.size(); i++){
     nodes[i] = nullptr;
   }
@@ -121,7 +121,7 @@ void Quadtree::remove(BoundingObj* o){
     nodes[index]->remove(o);
     return;
   }
-  else
+  else if ( index == -1 )
     objects.remove(o);
 }
 
