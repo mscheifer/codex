@@ -14,7 +14,7 @@ struct ServerGameTimeRespond
   void serialize(sf::Packet & packet) const {
     sf::Uint32 size = static_cast<sf::Uint32>(players.size());
     packet << size;
-    for (int i = 0; i < players.size();i++) { 
+    for (unsigned int i = 0; i < players.size();i++) { 
       players[i].serialize(packet);
     }
 
@@ -32,7 +32,7 @@ struct ServerGameTimeRespond
     
     sf::Uint32 size = 0;
     packet >> size;
-    for (int i=0; i<size; i++) {
+    for (unsigned int i=0; i<size; i++) {
       Player p = Player();
       p.deserialize(packet);
       players.push_back(p);

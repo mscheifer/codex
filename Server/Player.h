@@ -37,8 +37,6 @@ public:
   bool moveTowardDirection(move_t degree);
   void jump();
   void handleAction(ClientGameTimeAction a);
-
-  void updateBounds();
   
   float getHealth() { return health; }
   void setHealth(float);
@@ -48,8 +46,8 @@ public:
 
   float getSpeed(){ return speed;}
   void setSpeed(float);
-
-
+    
+  void updateBounds();
 
 private:
   float health;

@@ -40,9 +40,6 @@ void Player::init(Position x, Position y, Position z, int assigned_id, Map * m)
   //BoundingSphere* b = new BoundingSphere(gx::vector4(x,y,z),sphereRadius);
   boundingObjs.push_back(b);
   m->addToQtree(this);
-  updateBounds();
-
-
 }
 
 Player::~Player(void)
@@ -149,7 +146,7 @@ void Player::handleSelfAction(ClientGameTimeAction a) {
 	//start of movement logic
 	direction = a.facingDirection;
 	moveTowardDirection(a.movement);
-	updateBoundsOnTree();
+	updateBounds();
 
 	if(a.jump) {
 		jump();

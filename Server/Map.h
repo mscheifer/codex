@@ -28,8 +28,9 @@ public:
   bool addPlayer(Player *);
   Quadtree* getQuadtreePtr(){ return &q; }
   
+  //add this entity to the quadtree, should only be called in a constructor
+  //of an entity
   void addToQtree(Entity* e);
-  
   void removeFromQtree(Entity* e);
 
 private:
