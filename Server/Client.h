@@ -12,6 +12,7 @@
 #include "ServerGameTimeRespond.h"
 #include "ChatHandler.h"
 #include "Game.h"
+#include "ConfigManager.h"
 
 class NetworkClient {
   ServerGameTimeRespond s;

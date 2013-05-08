@@ -21,7 +21,7 @@ void ConfigManager::setupLog(std::string str){
   struct tm * currTime = localtime(&timer);
   
   std::stringstream fname;
-  fname << str << "LOG" << currTime->tm_mon+1 << "_" << currTime->tm_mday << "_" <<
+  fname << "logs/" << str << "LOG" << currTime->tm_mon+1 << "_" << currTime->tm_mday << "_" <<
     currTime->tm_hour << "_" << currTime->tm_min << "_" << currTime->tm_sec << ".txt";
   
   ConfigManager::logfile.open(fname.str());
