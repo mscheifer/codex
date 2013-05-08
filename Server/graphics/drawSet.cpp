@@ -52,7 +52,7 @@ void gx::drawSet::addEntity(vector4 pos,vector3 dirY,unsigned int type) {
   vector3 dirZ(-dirY.x, dirY.z, dirY.y);
   */
   vector3 dirX( dirY.y, dirY.x, 0);
-  dirY = vector3( dirY.z, dirY.y, 0);
+  dirY = vector3( dirY.x, dirY.y, 0);
   dirX.normalize();
   dirY.normalize();
   vector3 dirZ(0,0,1);
