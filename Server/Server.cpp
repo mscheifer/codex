@@ -59,14 +59,26 @@ void NetworkServer::doServer() {
 
   while(true) {
     clock.restart();
+    
+    // don't fuck with this order here
+
+    //1. handle incoming packet
     for(unsigned int i = 0; i < server.size(); i++){
       this->receiveMessages(i);
       /* maybe put this in a method just like in client*/
     }
 
-	if(!this->server.sendPacketToAll<ServerGameTimeRespond>( game.prepResponse() ) ) {
+    //2. update all entities and resolve collision
+
+    game.updateAndResolveCollision();
+
+
+    //3. prep and send response to everyone
+	  if(!this->server.sendPacketToAll<ServerGameTimeRespond>( game.prepResponse() ) ) {
           std::cout << "Error sending cgta to everybody" << std::endl;
     }
+
+    //4. go back to sleep slave.
     sf::sleep( sf::milliseconds( tick_length -
                                  clock.getElapsedTime().asMilliseconds()) );
   }

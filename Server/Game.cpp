@@ -38,14 +38,23 @@ void Game::evaluate(ClientGameTimeAction a) {
 		 currentPlayers[i]->handleAction(a);
 	}
 
-	for( unsigned int i = 0; i < currentEntities.size(); i++ ) {
+
+
+}
+
+/* updates & resolve collision for each clock tick */
+void Game::updateAndResolveCollision() {
+
+  std::vector<Player *> currentPlayers =  world.getPlayers();
+	std::vector<Entity *> currentEntities = world.getEntity();
+
+  for( unsigned int i = 0; i < currentEntities.size(); i++ ) {
 		 //std::cout << " hello nigga, updating entities" << std::endl;
 		 currentEntities[i]->update();
 	}
-
-  	//run collision fix here
+  //run collision fix here
   for( unsigned int i = 0; i <  currentPlayers.size(); i++ ) {
-      currentPlayers[i]->onCollision();
+    currentPlayers[i]->onCollision();
 	}
 	for( unsigned int i = 0; i < currentEntities.size(); i++ ) {
 		currentEntities[i]->onCollision();
