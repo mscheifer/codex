@@ -64,6 +64,7 @@ public:
 	Game(Map m);
 	void evaluate(ClientGameTimeAction a);
 	ServerGameTimeRespond prepResponse(void);
+  void updateAndResolveCollision(void);
 	~Game(void);
   int join();
   void chooseMinotaur();
