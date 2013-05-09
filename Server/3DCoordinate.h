@@ -31,7 +31,7 @@ struct Coordinate
 
   friend std::ostream& operator<<(std::ostream& os, const Coordinate& t)
   {
-    os << t.x << ', ' << t.y << ', ' << t.z;
+    os << t.x << ", " << t.y << ", " << t.z;
     return os;
   }
 };

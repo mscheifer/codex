@@ -6,6 +6,7 @@
 #include "vector4.h"
 
 namespace gx {
+template<typename T>
 class vector4;
 
 template<typename T>
@@ -43,7 +44,7 @@ class vector3 {
     const elem_t& operator[](int) const;
     vector3<T> operator-() const;
     vector3<T> operator+(const vector3<T>&) const;
-    vector4 operator+(const vector4&) const;
+    vector4<T> operator+(const vector4<T>&) const;
     vector3<T> operator-(const vector3<T>&) const;
     vector3<T> operator*(const vector3<T>&) const;
     vector3<T> operator*(elem_t) const;
@@ -60,6 +61,7 @@ template<typename T>
 std::ostream& operator<< (std::ostream& out, const vector3<T>& v);
 
 typedef vector3<GLfloat> vector3f;
+//typedef vector3<double> vector3d;
 
 } //end namespace gx
 #endif

@@ -1,8 +1,9 @@
 #include "WeaponFist.h"
 
 
-WeaponFist::WeaponFist(Coordinate position, Map * m):Weapon(10, 1, position, 0, m)
+WeaponFist::WeaponFist(Coordinate pos, Map * m):Weapon(10, 1, pos, 0, m)
 { // Will inherit weapon's default constructor
+  // will it? --Matt
 }
 
 

@@ -95,7 +95,7 @@ unsigned int gx::input::windowHeight() {
 
 void gx::input::setUpMouse() {
   //somehow change this to set it to the center of the screen
-  mouseBasePosition = sf::Vector2i(400,400);
+  mouseBasePosition = sf::Vector2i(450,400);
   sf::Mouse::setPosition(mouseBasePosition);
 }
 

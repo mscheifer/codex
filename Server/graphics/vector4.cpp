@@ -1,115 +1,145 @@
 #include "vector4.h"
 #include "vector3.h"
 
-gx::vector4::vector4(): x(0.0), y(0.0), z(0.0), w(1) {}
-
-gx::vector4::vector4(elem_t x0,elem_t y0,elem_t z0): x(x0), y(y0), z(z0), w(1){}
-
-gx::vector4::vector4(const std::initializer_list<elem_t> l)
-           : x(l.begin()   != l.end() ? *(l.begin())   : 0),
-             y(l.begin()+1 != l.end() ? *(l.begin()+1) : 0),
-             z(l.begin()+2 != l.end() ? *(l.begin()+2) : 0),
-             w(1) {}
-
-void gx::vector4::set(elem_t x0,elem_t y0,elem_t z0,elem_t w0) {
+template<typename T>
+gx::vector4<T>::vector4(): x(elems[0]), y(elems[1]), z(elems[2]), w(elems[3]) {
+  this->elems[0] = 0; this->elems[1] = 0; this->elems[2] = 0; this->elems[3] = 1;
+}
+template<typename T>
+gx::vector4<T>::vector4(const vector4<T>& other): x(elems[0]), y(elems[1]), z(elems[2]), w(elems[3]) {
+  this->elems = other.elems;
+}
+template<typename T>
+gx::vector4<T>::vector4(vector4<T>&& other): x(elems[0]), y(elems[1]), z(elems[2]), w(elems[3]) {
+  this->elems = std::move(other.elems);
+}
+template<typename T>
+gx::vector4<T>& gx::vector4<T>::operator=(const vector4<T>& other) {
+  this->elems = other.elems;
+  return *this;
+}
+template<typename T>
+gx::vector4<T>& gx::vector4<T>::operator=(vector4<T>&& other) {
+  this->elems = std::move(other.elems);
+  return *this;
+}
+template<typename T>
+gx::vector4<T>::vector4(elem_t x0, elem_t y0, elem_t z0): x(elems[0]), y(elems[1]), z(elems[2]), w(elems[3]) {
+  this->elems[0] = x0; this->elems[1] = y0; this->elems[2] = z0; this->elems[3] = 1;
+}
+template<typename T>
+gx::vector4<T>::vector4(const std::initializer_list<elem_t> l)
+  : x(elems[0]), y(elems[1]), z(elems[2]), w(elems[3]) {
+  auto it = elems.begin();
+  for(auto itl = l.begin(); it != elems.end() && itl != l.end(); it++, itl++) {
+    *it = *itl;
+  }
+}
+template<typename T>
+void gx::vector4<T>::set(elem_t x0, elem_t y0, elem_t z0, elem_t w0) {
   this->x = x0;
   this->y = y0;
   this->z = z0;
   this->w = w0;
 }
-
-void gx::vector4::add(const vector3f &a) {
+template<typename T>
+void gx::vector4<T>::add(const vector3<T>& a) {
   this->x += a.x;
   this->y += a.y;
   this->z += a.z;
 }
-
-void gx::vector4::add(const vector4 &a,const vector3f &b) {
+template<typename T>
+void gx::vector4<T>::add(const vector4<T>& a,const vector3<T>& b) {
   this->x = a.x + b.x;
   this->y = a.y + b.y;
   this->z = a.z + b.z;
   this->w = 1;
 }
-
-void gx::vector4::subtract(vector4 &a) {
+template<typename T>
+void gx::vector4<T>::subtract(const vector3<T>& a) {
   this->x -= a.x;
   this->y -= a.y;
   this->z -= a.z;
-  this->w -= a.w;
 }
-
-void gx::vector4::subtract(vector4 &a,vector4 &b) {
+template<typename T>
+void gx::vector4<T>::subtract(const vector4<T>& a,const vector3<T>& b) {
   this->x = a.x - b.x;
   this->y = a.y - b.y;
   this->z = a.z - b.z;
-  this->w = a.w - b.w;
+  this->w = a.w;
 }
-
-void gx::vector4::dehomogenize() {
-  this->x = x / w;
-  this->y = y / w;
-  this->z = z / w;
+template<typename T>
+void gx::vector4<T>::dehomogenize() {
+  this->x = this->x / this->w;
+  this->y = this->y / this->w;
+  this->z = this->z / this->w;
   this->w = 1;
 }
-
-gx::vector4::elem_t& gx::vector4::get(int i) {
-  return vector4::index<elem_t>(*this,i);
+template<typename T>
+typename gx::vector4<T>::elem_t& gx::vector4<T>::get(int i) {
+  return this->elems[i];
 }  
-
-const gx::vector4::elem_t& gx::vector4::get(int i) const {
-  return vector4::index<const elem_t>(*this,i);
-}
-
-gx::vector4::elem_t& gx::vector4::operator[](int i) {
+template<typename T>
+const typename gx::vector4<T>::elem_t& gx::vector4<T>::get(int i) const {
   return this->get(i);
 }
-
-const gx::vector4::elem_t& gx::vector4::operator[](int i) const {
+template<typename T>
+typename gx::vector4<T>::elem_t& gx::vector4<T>::operator[](int i) {
   return this->get(i);
 }
-
-gx::vector4 gx::dehomogenize(gx::vector4 a) {
-  a.dehomogenize();
-  return a;
+template<typename T>
+const typename gx::vector4<T>::elem_t& gx::vector4<T>::operator[](int i) const {
+  return this->get(i);
 }
-
-gx::vector4 gx::vector4::operator+(const vector3f& a) const {
+template<typename T>
+gx::vector4<T> gx::vector4<T>::operator+(const vector3<T>& a) const {
   vector4 r;
   r.add(*this,a);
   return r;
 }
-
-gx::vector3f gx::vector4::operator-(vector4 a) const {
-  vector4 r = *this;
-  r.dehomogenize();
+template<typename T>
+gx::vector3<T> gx::vector4<T>::operator-(vector4<T> a) const {
   a.dehomogenize();
-  r.subtract(a);
-  return vector3f(r.x,r.y,r.z);
+  vector4<T> r = *this;
+  r.dehomogenize();
+  r.subtract(vector3<T>(a.x,a.y,a.z));
+  return vector3<T>(r.x,r.y,r.z);
 }
-
-gx::vector4& gx::vector4::operator+=(const vector3f& a) {
+template<typename T>
+gx::vector4<T>& gx::vector4<T>::operator+=(const vector3<T>& a) {
   this->add(a);
   return *this;
 }
-
-bool gx::vector4::operator==(const vector4& a) const {
+template<typename T>
+bool gx::vector4<T>::operator==(const vector4<T>& a) const {
   //think about a better way to do this with floating point types
   return this->x == a.x && this->y == a.y && this->z == a.z && this->w == a.w;
 }
-
-bool gx::vector4::operator!=(const vector4& a) const {
+template<typename T>
+bool gx::vector4<T>::operator!=(const vector4<T>& a) const {
   return !(*this == a);
 }
-
-void gx::vector4::print(std::ostream& o) const {
+template<typename T>
+void gx::vector4<T>::print(std::ostream& o) const {
   o << this->x << " " << this->y << " " << this->z  << " " << this->w;
 }
-
-void gx::vector4::print() const {
+template<typename T>
+void gx::vector4<T>::print() const {
   this->print(std::cout);
 }
 
-std::ostream& gx::operator<< (std::ostream& out, const vector4& v) {
+template<typename T>
+gx::vector4<T> gx::dehomogenize(gx::vector4<T> a) {
+  a.dehomogenize();
+  return a;
+}
+
+template<typename T>
+std::ostream& gx::operator<< (std::ostream& out, const vector4<T>& v) {
   v.print(out);
   return out;
 }
+
+template class gx::vector4<GLfloat>;
+template gx::vector4<GLfloat> gx::dehomogenize<GLfloat>(vector4<GLfloat>);
+template std::ostream& gx::operator<<<GLfloat> (std::ostream&, const vector4<GLfloat>&);

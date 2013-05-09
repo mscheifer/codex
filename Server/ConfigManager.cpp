@@ -3,7 +3,10 @@
 ConfigManager::configMap_t ConfigManager::configMap;
 std::ofstream ConfigManager::logfile;
 
-void ConfigManager::log(std::string str, ConfigManager::LogLevels level) {
+void ConfigManager::log(std::string str, ConfigManager::LogLevels level){
+  if( StringToNumber<int>(ConfigManager::configMap["log"]) == 0 ) 
+    return;
+
   time_t timer;
   timer = time(nullptr);
   struct tm * currTime = localtime(&timer);
@@ -15,7 +18,10 @@ void ConfigManager::log(std::string str, ConfigManager::LogLevels level) {
   }
 }
 
-void ConfigManager::setupLog(std::string str) {
+void ConfigManager::setupLog(std::string str){
+  if( StringToNumber<int>(ConfigManager::configMap["log"]) == 0 ) 
+    return;
+
   time_t timer;
   timer = time(nullptr);
   struct tm * currTime = localtime(&timer);
@@ -33,18 +39,9 @@ void ConfigManager::readConfig() {
   std::string line;
 
   //no config file exists
-  if(!configFile) {
-    std::ofstream newConfigFile("config.txt");
+  if(!configFile){
     configFile.open("masterConfig.txt");
-    while( configFile >> line ) {
-      newConfigFile << line << std::endl;
-    }
-    configFile.close();
-    newConfigFile.close();
-    configFile.clear();
-    configFile.open("config.txt");
-      
-    std::cout << "no config file exists, generating" << std::endl;
+    std::cout << "no config detected, reading master" << std::endl;
   }
 
   size_t ind = 0;

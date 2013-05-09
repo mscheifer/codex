@@ -53,7 +53,7 @@ std::pair<bool,BoundingObj::vec3_t> notSeparatedByAxis(const BoundingBox* a, con
   axis2.scale(b->getHd());
   sumDist += abs(axis2.dot(axis));
 
-  bool retBool = !(centerDist > sumDist);
+  bool retBool = !(centerDist >= sumDist);
   BoundingObj::vec3_t ret = axis;
   if(retBool){
     //calculate the return vec
@@ -69,6 +69,7 @@ std::pair<bool,BoundingObj::vec3_t> notSeparatedByAxis(const BoundingBox* a, con
 
 bool raySlab(const BoundingBox* a, float start, float dir,
   float min, float max, float& tfirst, float& tlast){
+  //why is a unused?
 
   if (fabs(dir) < 1.0E-8)
   {
@@ -128,7 +129,7 @@ std::pair<bool,BoundingObj::vec3_t> boxBox(const BoundingBox* a,const  BoundingB
   axes[9] = aybx; axes[10] = ayby; axes[11] = aybz;
   axes[12] = azbx; axes[13] = azby; axes[14] = azbz;
 
-  std::pair<bool, BoundingObj::vec3_t> min;
+  std::pair<bool, BoundingObj::vec3_t> min = std::pair<bool,BoundingObj::vec3_t>(false,BoundingObj::vec3_t());
   std::pair<bool, BoundingObj::vec3_t> ret;
   bool firstTime = true;
 
@@ -140,7 +141,8 @@ std::pair<bool,BoundingObj::vec3_t> boxBox(const BoundingBox* a,const  BoundingB
     //init min
     if( firstTime ){
       min = notSeparatedByAxis(a,t,axes[i],b); //need to make sure the bool is true
-      firstTime = false;
+      if( min.first )
+        firstTime = false;
       continue;
     }
     else{

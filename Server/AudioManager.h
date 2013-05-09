@@ -1,10 +1,12 @@
 #pragma once
 #include <SFML/Audio.hpp>
 #include <map>
-#define NUM_SOUNDS 5
+#include "ConfigManager.h"
+
 
 class AudioManager{
 private:
+  static const int NUM_SOUNDS = 5;
   static std::map<std::string, sf::SoundBuffer*> soundBuffers;
   static std::map<std::string, std::string> musics;
   static sf::Sound sounds[NUM_SOUNDS];

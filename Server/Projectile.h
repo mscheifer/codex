@@ -15,6 +15,7 @@ public:
   Position distanceLeftToTravel;
   bool isProjectile(){return true;}
   void setOwner(Player *);
+  void updateBounds();
 private:
   Player * owner;
 };

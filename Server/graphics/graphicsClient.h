@@ -10,7 +10,7 @@
 namespace gx {
 
 struct graphicEntity {
-  vector4 position;
+  vector4f position;
   vector3f direction;
   unsigned int type;
 };
@@ -31,7 +31,7 @@ class graphicsClient {
     vector3f playerDirection;
     vector3f playerStartDirection;
     vector3f playerStartRight;
-    vector4 playerPosition;
+    vector4f playerPosition;
 
     //packet info
     ClientGameTimeAction action;
@@ -50,7 +50,7 @@ class graphicsClient {
     graphicsClient& operator=(graphicsClient&&);// = delete;
     ClientGameTimeAction handleInput();
     void draw();
-    void updatePosition(vector4);
+    void updatePosition(vector4f);
     void updateEntities(std::vector<graphicEntity>);
 
     //input functions

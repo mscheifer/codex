@@ -8,7 +8,7 @@ const float Map::Item_Pick_Up_Ranges = 1.0f;
 
 
 //TODO the rectangle should be the actual world bounds
-Map::Map(void): freeProjectiles(),q(0,Rectangle(gx::vector4(0,0,0),1000,1000))
+Map::Map(void): freeProjectiles(),q(0,Rectangle(BoundingObj::vec4_t(0,0,0),1000,1000))
 {
 	map_size = 15;
 	freeProjectiles = new std::stack<Projectile *>();
@@ -35,6 +35,7 @@ void Map::initWalls(void)
   int startingYNeg;
   int startingZ = height/2;
 
+  
   // Create the top and bottom perimeter from left to right.
   for( i = 0,
     startingX = ((wallX*width)/-2)+(width/2)+centerX,
@@ -59,6 +60,10 @@ void Map::initWalls(void)
     this->entities.push_back(leftWall);
     this->entities.push_back(rightWall);
   }
+  
+
+  Wall * floor = new Wall(10, 1, 1, Coordinate(0,0,0,0,0,0), facingEast, this);
+  this->entities.push_back(floor);
 
   //Wall * floor = new Wall(100, 100, 100, Coordinate(100,100,-20, 0,0,0), facingEast, this);
   //this->entities.push_back(floor);
@@ -88,6 +93,7 @@ std::vector<Entity *> Map::getEntity() {
    Projectile* ret = freeProjectiles->top();
    freeProjectiles->pop();
    entities.push_back(ret); //note shouldn't this be live projecties?
+   addToQtree(ret);
    return ret;
  }
 
