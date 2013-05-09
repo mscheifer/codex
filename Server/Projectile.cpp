@@ -27,7 +27,7 @@ void Projectile::update(void) {
 		return;
 	}
 
-	updateBoundsOnTree();
+	updateBounds();
 	// some collision detection
 
 	if(/* colides with some entity*/ false) {

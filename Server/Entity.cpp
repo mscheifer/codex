@@ -36,7 +36,7 @@ std::vector<std::pair<Entity*,BoundingObj::vec3_t>> Entity::detectCollision(){
 
   return res;
 }
-
+/*
 void Entity::updateBoundsOnTree(){
   //update the bounding objects
   updateBounds();
@@ -47,3 +47,4 @@ void Entity::updateBoundsOnTree(){
       (*it)->updateOnTree();
   }
 }
+*/
