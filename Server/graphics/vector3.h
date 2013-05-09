@@ -61,6 +61,7 @@ template<typename T>
 std::ostream& operator<< (std::ostream& out, const vector3<T>& v);
 
 typedef vector3<GLfloat> vector3f;
+//typedef vector3<double> vector3d;
 
 } //end namespace gx
 #endif

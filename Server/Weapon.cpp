@@ -65,9 +65,13 @@ Projectile* Weapon::attackRange(Direction d , Coordinate c)
 {
 	Projectile* pj = map->produceProjectile();
 	//pj = Projectile(c,d);
-	c.velocityX = projectileSpeed;
-	c.velocityY = projectileSpeed;
-	c.velocityZ = projectileSpeed;
+  //TODO is the direction normalized?
+  c.velocityX = d.x*projectileSpeed;
+  c.velocityY = d.y*projectileSpeed;
+  c.velocityZ = d.z*projectileSpeed;
+	//c.velocityX = projectileSpeed;
+	//c.velocityY = projectileSpeed;
+	//c.velocityZ = projectileSpeed;
 	
 	pj->setPosition(c);
 	pj->setDirection(d);
