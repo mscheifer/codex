@@ -69,6 +69,7 @@ std::pair<bool,BoundingObj::vec3_t> notSeparatedByAxis(const BoundingBox* a, con
 
 bool raySlab(const BoundingBox* a, float start, float dir,
   float min, float max, float& tfirst, float& tlast){
+  //why is a unused?
 
   if (fabs(dir) < 1.0E-8)
   {

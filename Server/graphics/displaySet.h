@@ -12,14 +12,14 @@ namespace gx {
 class displaySet {
   	matrix         view;
     matrix         projection;
-    vector4        cameraPos;
+    vector4f       cameraPos;
     uniform::block unif;
   public:
     typedef matrix::elem_t elem_t;
     displaySet();
     void setProjection(elem_t fov, elem_t ratio, elem_t nearP, elem_t farP);
     //camera position, camera look at, up vector
-    void setView(const vector4&, const vector4&, const vector3f&);
+    void setView(const vector4f&, const vector4f&, const vector3f&);
     void addView(const vector3f&, const vector3f&, const vector3f&);
     uniform::block& storage();
 };

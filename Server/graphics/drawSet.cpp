@@ -46,7 +46,7 @@ void gx::drawSet::reset() {
   }
 }
 
-void gx::drawSet::addEntity(vector4 pos,vector3f dirY,unsigned int type) {
+void gx::drawSet::addEntity(vector4f pos,vector3f dirY,unsigned int type) {
   /* if we need to use Z positions then we'll use this
   vector3f dirX( dirY.y, dirY.x,-dirY.z);
   vector3f dirZ(-dirY.x, dirY.z, dirY.y);

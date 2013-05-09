@@ -33,10 +33,10 @@ public:
 
 //note mathematical ordering
 matrix multiply(const matrix& left,const matrix& right);
-vector4 multiply(const matrix& left,const vector4& right);
+vector4f multiply(const matrix& left,const vector4f& right);
 vector3f multiply(const matrix& left,const vector3f& right);
 matrix operator*(const matrix& left,const matrix& right);
-vector4 operator*(const matrix& left,const vector4& right);
+vector4f operator*(const matrix& left,const vector4f& right);
 vector3f operator*(const matrix& left,const vector3f& right);
 
 matrix rotateX(double angle);
