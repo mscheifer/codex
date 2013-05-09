@@ -106,7 +106,7 @@ gx::graphicsClient::graphicsClient():
            "DrChao", sf::Style::Default),
     glewStatus(initGlew()), //glew needs to be called here, after window, before anything else
     userInput(),
-    light1(gx::vector4(1,1,1),0.5,0.5,0.05f),
+    light1(gx::vector4f(1,1,1),0.5,0.5,0.05f),
     display(),
     entities(readFile("shaders/default.vert"),readFile("shaders/default.frag"),
                        entitiesData(),uniforms()),
@@ -131,7 +131,7 @@ gx::graphicsClient::graphicsClient():
   glCullFace(GL_BACK);
   glFrontFace(GL_CCW);
 
-  light1.updatePosition(gx::vector4( 0, 5, -10));
+  light1.updatePosition(gx::vector4f( 0, 5, -10));
 
   this->setCamera();
   this->userInput.setUpMouse();
@@ -180,7 +180,7 @@ void gx::graphicsClient::draw() {
   }
 }
 
-void gx::graphicsClient::updatePosition(vector4 pos) {
+void gx::graphicsClient::updatePosition(vector4f pos) {
   this->playerPosition = pos;
   this->setCamera();
 }

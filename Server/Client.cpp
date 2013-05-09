@@ -5,9 +5,9 @@ namespace {
     auto pos = ent.getPosition();
     auto dir = ent.getDirection();
     gx::graphicEntity gentity;
-    gentity.position =  gx::vector4(static_cast<gx::vector4::elem_t>(pos.x),
-                                    static_cast<gx::vector4::elem_t>(pos.y),
-                                    static_cast<gx::vector4::elem_t>(pos.z));
+    gentity.position =  gx::vector4f(static_cast<gx::vector4f::elem_t>(pos.x),
+                                    static_cast<gx::vector4f::elem_t>(pos.y),
+                                    static_cast<gx::vector4f::elem_t>(pos.z));
     gentity.direction = gx::vector3f(static_cast<gx::vector3f::elem_t>(dir.x),
                                      static_cast<gx::vector3f::elem_t>(dir.y),
                                      static_cast<gx::vector3f::elem_t>(dir.z));
@@ -45,12 +45,12 @@ void NetworkClient::receiveMessages() {
             entities.push_back(gentity);
         }
         auto pos = s.players[this->id].getPosition();
-        gxClient.updatePosition(gx::vector4(
+        gxClient.updatePosition(gx::vector4f(
           static_cast<gx::vector3f::elem_t>(pos.x),
           static_cast<gx::vector3f::elem_t>(pos.y),
           static_cast<gx::vector3f::elem_t>(pos.z)));
         gx::graphicEntity gentity;
-        gentity.position  = gx::vector4(0,0,0);
+        gentity.position  = gx::vector4f(0,0,0);
         gentity.direction = gx::vector3f(0,1,0);
         gentity.type = 3;
         entities.push_back(gentity); //add skybox

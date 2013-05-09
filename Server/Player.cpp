@@ -35,7 +35,7 @@ void Player::init(Position x, Position y, Position z, int assigned_id, Map * m)
 	weapon[0] = new WeaponFist(position, this->map);
 	weapon[1] = new WeaponFire(position, this->map);
 	current_weapon_selection = 1;
-  BoundingBox* b = new BoundingBox(gx::vector4(x,y,z),BoundingObj::vec3_t(1,0,0),BoundingObj::vec3_t(0,1,0),BoundingObj::vec3_t(0,0,1),
+  BoundingBox* b = new BoundingBox(BoundingObj::vec4_t(x,y,z),BoundingObj::vec3_t(1,0,0),BoundingObj::vec3_t(0,1,0),BoundingObj::vec3_t(0,0,1),
     sphereRadius,sphereRadius,sphereRadius);
   //BoundingSphere* b = new BoundingSphere(gx::vector4(x,y,z),sphereRadius);
   boundingObjs.push_back(b);
@@ -220,7 +220,7 @@ std::string Player::getString()
 
 void Player::updateBounds(){
   //update the bounding objects
-  boundingObjs[0]->setCenter(gx::vector4(position.x, position.y, position.z));
+  boundingObjs[0]->setCenter(BoundingObj::vec4_t(position.x, position.y, position.z));
 }
 
 

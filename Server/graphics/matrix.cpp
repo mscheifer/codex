@@ -135,8 +135,8 @@ gx::matrix gx::multiply(const matrix& left,const matrix& right) {
   return result;
 }
 
-gx::vector4 gx::multiply(const matrix& left,const vector4& right) {
-  vector4 result = vector4(); //0 init
+gx::vector4f gx::multiply(const matrix& left,const vector4f& right) {
+  vector4f result = vector4f(); //0 init
   result.w = 0;
   for(int i = 0; i < 4; i++) {
     for(int j = 0; j < 4; j++) {
@@ -147,7 +147,7 @@ gx::vector4 gx::multiply(const matrix& left,const vector4& right) {
 }
 
 gx::vector3f gx::multiply(const matrix& left,const vector3f& right) {
-  vector4 temp(right[0],right[1],right[2]);
+  vector4f temp(right[0],right[1],right[2]);
   temp[3] = 0;
   temp = left * temp;
   return vector3f(temp[0],temp[1],temp[2]);
@@ -157,7 +157,7 @@ gx::matrix gx::operator*(const matrix& left,const matrix& right) {
   return multiply(left,right);
 }
 
-gx::vector4 gx::operator*(const matrix& left,const vector4& right) {
+gx::vector4f gx::operator*(const matrix& left,const vector4f& right) {
   return multiply(left,right);
 }
 

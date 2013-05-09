@@ -142,7 +142,7 @@ gx::vector3<T> gx::vector3<T>::operator+(const vector3<T> &a) const {
   return r;
 }
 template<typename T>
-gx::vector4 gx::vector3<T>::operator+(const vector4 &a) const {
+gx::vector4<T> gx::vector3<T>::operator+(const vector4<T> &a) const {
   return a + *this;
 }
 template<typename T>
@@ -201,4 +201,4 @@ std::ostream& gx::operator<< (std::ostream& out, const gx::vector3<T>& v) {
 
 template class gx::vector3<GLfloat>;
 template gx::vector3<GLfloat> gx::operator*<GLfloat>(vector3<GLfloat>::elem_t, const vector3<GLfloat>&);
-template std::ostream& gx::operator<<<GLfloat> (std::ostream& out, const vector3<GLfloat>& v);
+template std::ostream& gx::operator<<<GLfloat> (std::ostream&, const vector3<GLfloat>&);
