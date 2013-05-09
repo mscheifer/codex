@@ -108,9 +108,6 @@
     <ClCompile Include="graphics\vao.cpp">
       <Filter>Source Files\graphics</Filter>
     </ClCompile>
-    <ClCompile Include="graphics\vector3.cpp">
-      <Filter>Source Files\graphics</Filter>
-    </ClCompile>
     <ClCompile Include="graphics\vector4.cpp">
       <Filter>Source Files\graphics</Filter>
     </ClCompile>
@@ -147,11 +144,20 @@
     <ClCompile Include="graphics\uniformBlock.cpp">
       <Filter>Source Files\graphics</Filter>
     </ClCompile>
+    <ClCompile Include="graphics\mesh.cpp">
+      <Filter>Source Files\graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="graphics\texture.cpp">
+      <Filter>Source Files\graphics</Filter>
+    </ClCompile>
     <ClCompile Include="Entity.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Wall.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="graphics\vector3.cpp">
+      <Filter>Source Files\graphics</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -293,18 +299,27 @@
     <ClInclude Include="graphics\basicUniform.h">
       <Filter>Header Files\graphics</Filter>
     </ClInclude>
+    <ClInclude Include="graphics\mesh.h">
+      <Filter>Header Files\graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="graphics\texture.h">
+      <Filter>Header Files\graphics</Filter>
+    </ClInclude>
     <ClInclude Include="Wall.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="graphics\loadCube.h">
+      <Filter>Header Files\graphics</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <None Include="graphics\Makefile">
+    <None Include="..\Makefile">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="shaders\default.frag">
       <Filter>Resource Files\graphics</Filter>
     </None>
-    <None Include="graphics\default.frag">
-      <Filter>Resource Files\graphics</Filter>
-    </None>
-    <None Include="graphics\default.vert">
+    <None Include="shaders\default.vert">
       <Filter>Resource Files\graphics</Filter>
     </None>
   </ItemGroup>

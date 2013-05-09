@@ -1,172 +1,204 @@
 #include "vector3.h"
-#include "vector4.h"
+#include <cmath>
 
-gx::vector3::vector3(): x(0.0), y(0.0), z(0.0) {}
-
-gx::vector3::vector3(elem_t x0,elem_t y0,elem_t z0): x(x0), y(y0), z(z0) {}
-
-void gx::vector3::set(elem_t x0,elem_t y0,elem_t z0) {
+template<typename T>
+gx::vector3<T>::vector3()
+  : x(elems[0]), y(elems[1]), z(elems[2]) {
+  elems[0] = 0; elems[1] = 0; elems[2] = 0;
+}
+template<typename T>
+gx::vector3<T>::vector3(elem_t x0, elem_t y0, elem_t z0)
+  : x(elems[0]), y(elems[1]), z(elems[2]) {
   this->x = x0;
   this->y = y0;
   this->z = z0;
 }
+template<typename T>
+gx::vector3<T>::vector3(const vector3<T>& other)
+  : elems(other.elems), x(elems[0]), y(elems[1]), z(elems[2]) {}
 
-void gx::vector3::add(const vector3 &a) {
+template<typename T>
+gx::vector3<T>::vector3(vector3<T>&& other)
+  : elems(std::move(other.elems)), x(elems[0]), y(elems[1]), z(elems[2]) {}
+
+template<typename T>
+gx::vector3<T>& gx::vector3<T>::operator=(vector3<T>&& other) {
+  this->elems = std::move(other.elems);
+  return *this;
+}
+template<typename T>
+gx::vector3<T>& gx::vector3<T>::operator=(const vector3<T>& other) {
+  this->elems = other.elems;
+  return *this;
+}
+template<typename T>
+void gx::vector3<T>::set(elem_t x0, elem_t y0, elem_t z0) {
+  this->x = x0;
+  this->y = y0;
+  this->z = z0;
+}
+template<typename T>
+void gx::vector3<T>::add(const vector3<T> &a) {
   this->x += a.x;
   this->y += a.y;
   this->z += a.z;
 }
-
-void gx::vector3::add(const vector3 &a,const vector3 &b) {
+template<typename T>
+void gx::vector3<T>::add(const vector3<T>& a, const vector3<T>& b) {
   this->x = a.x + b.x;
   this->y = a.y + b.y;
   this->z = a.z + b.z;
 }
-
-void gx::vector3::subtract(const vector3 &a) {
+template<typename T>
+void gx::vector3<T>::subtract(const vector3<T> &a) {
   this->x -= a.x;
   this->y -= a.y;
   this->z -= a.z;
 }
-
-void gx::vector3::subtract(const vector3 &a,const vector3 &b) {
+template<typename T>
+void gx::vector3<T>::subtract(const vector3<T> &a,const vector3<T> &b) {
   this->x = a.x - b.x;
   this->y = a.y - b.y;
   this->z = a.z - b.z;
 }
-
-void gx::vector3::negate() {
+template<typename T>
+void gx::vector3<T>::negate() {
   this->x = -x;
   this->y = -y;
   this->z = -z;
 }
-
-void gx::vector3::negate(const vector3 &a) {
+template<typename T>
+void gx::vector3<T>::negate(const vector3<T> &a) {
   this->x = -a.x;
   this->y = -a.y;
   this->z = -a.z;
 }
-
-void gx::vector3::scale(elem_t s) {
+template<typename T>
+void gx::vector3<T>::scale(elem_t s) {
   this->x *= s;
   this->y *= s;
   this->z *= s;
 }
-
-void gx::vector3::scale(elem_t s,const vector3 &a) {
+template<typename T>
+void gx::vector3<T>::scale(elem_t s,const vector3<T> &a) {
   this->x = s * a.x;
   this->y = s * a.y;
   this->z = s * a.z;
 }
-
-gx::vector3::elem_t gx::vector3::dot(const vector3 &a) const {
-  return x * a.x + y * a.y + z * a.z;
+template<typename T>
+typename gx::vector3<T>::elem_t gx::vector3<T>::dot(const vector3<T> &a) const {
+  return this->x * a.x + this->y * a.y + this->z * a.z;
 }
-
-void gx::vector3::cross(const vector3 &a,const vector3 &b) {
+template<typename T>
+void gx::vector3<T>::cross(const vector3<T> &a,const vector3<T> &b) {
   this->x = a.y * b.z - a.z * b.y;
   this->y = a.z * b.x - a.x * b.z;
   this->z = a.x * b.y - a.y * b.x;
 }
-
-gx::vector3::elem_t gx::vector3::magnitude() const {
-  return elem_t(sqrt(x*x + y*y + z*z));
+template<typename T>
+typename gx::vector3<T>::elem_t gx::vector3<T>::magnitudesq() const {
+  return x*x + y*y + z*z;
 }
-
-gx::vector3::elem_t gx::vector3::magnitudesq() const {
-  return elem_t(x*x + y*y + z*z);
+template<typename T>
+typename gx::vector3<T>::elem_t gx::vector3<T>::magnitude() const {
+  return static_cast<elem_t>(sqrt(this->magnitudesq()));
 }
-
-void gx::vector3::normalize() {
-  if(magnitude() > 0) {
-    scale(elem_t(1.0)/magnitude());
+template<typename T>
+void gx::vector3<T>::normalize() {
+  if(this->magnitude() > 0) {
+    this->scale(static_cast<elem_t>(1)/this->magnitude());
   }
 }
-
-std::array<gx::vector3::elem_t,3> gx::vector3::oglVec3() const {
-  std::array<gx::vector3::elem_t,3> ret = {{ this->x, this->y, this->z }};
-  return ret;
+template<typename T>
+std::array<typename gx::vector3<T>::elem_t,3> gx::vector3<T>::oglVec3() const {
+  return elems;
 }
-
-gx::vector3::elem_t& gx::vector3::get(int i) {
-  return (i == 0) ? x : (i == 1) ? y : z;
+template<typename T>
+typename gx::vector3<T>::elem_t& gx::vector3<T>::get(int i) {
+  return elems[i];
 }
-
-const gx::vector3::elem_t& gx::vector3::get(int i) const {
-  return (i == 0) ? x : (i == 1) ? y : z;
+template<typename T>
+const typename gx::vector3<T>::elem_t& gx::vector3<T>::get(int i) const {
+  return elems[i];
 }
-
-gx::vector3::elem_t& gx::vector3::operator[](int i) {
+template<typename T>
+typename gx::vector3<T>::elem_t& gx::vector3<T>::operator[](int i) {
   return get(i);
 }
-
-const gx::vector3::elem_t& gx::vector3::operator[](int i) const {
+template<typename T>
+const typename gx::vector3<T>::elem_t& gx::vector3<T>::operator[](int i) const {
   return get(i);
 }
-
-gx::vector3 gx::vector3::operator-() const {
-  vector3 r; 
+template<typename T>
+gx::vector3<T> gx::vector3<T>::operator-() const {
+  vector3<T> r; 
   r.negate(*this);
   return r;
 }
-
-gx::vector3 gx::vector3::operator+(const vector3 &a) const {
-  vector3 r;
+template<typename T>
+gx::vector3<T> gx::vector3<T>::operator+(const vector3<T> &a) const {
+  vector3<T> r;
   r.add(*this,a);
   return r;
 }
-
-gx::vector4 gx::vector3::operator+(const vector4 &a) const {
+template<typename T>
+gx::vector4 gx::vector3<T>::operator+(const vector4 &a) const {
   return a + *this;
 }
-
-gx::vector3 gx::vector3::operator-(const vector3 &a) const {
-  vector3 r;
+template<typename T>
+gx::vector3<T> gx::vector3<T>::operator-(const vector3<T>& a) const {
+  vector3<T> r;
   r.subtract(*this,a);
   return r;
 }
-
-gx::vector3 gx::vector3::operator*(const vector3 &a) const {
-  vector3 r;
+template<typename T>
+gx::vector3<T> gx::vector3<T>::operator*(const vector3<T> &a) const {
+  vector3<T> r;
   r.cross(*this,a);
   return r;
 }
-
-gx::vector3 gx::vector3::operator*(elem_t f) const {
-  vector3 r;
+template<typename T>
+gx::vector3<T> gx::vector3<T>::operator*(elem_t f) const {
+  vector3<T> r;
   r.scale(f,*this);
   return r;
 }
-
-gx::vector3& gx::vector3::operator+=(const vector3& o) {
+template<typename T>
+gx::vector3<T>& gx::vector3<T>::operator+=(const vector3<T>& o) {
   this->x = this->x + o.x;
   this->y = this->y + o.y;
   this->z = this->z + o.z;
   return *this;
 }
-
-void gx::vector3::print(std::ostream& o) const {
+template<typename T>
+void gx::vector3<T>::print(std::ostream& o) const {
   o << this->x << " " << this->y << " " << this->z;
 }
-
-void gx::vector3::print() const {
+template<typename T>
+void gx::vector3<T>::print() const {
   this->print(std::cout);
 }
-
-bool gx::vector3::operator==(const vector3& o) const {
+template<typename T>
+bool gx::vector3<T>::operator==(const vector3<T>& o) const {
   return this->get(0) == o.get(0) && this->get(1) == o.get(1) &&
          this->get(2) == o.get(2);
 }
-
-bool gx::vector3::operator!=(const vector3& o) const {
+template<typename T>
+bool gx::vector3<T>::operator!=(const vector3<T>& o) const {
   return !((*this)==o);
 }
 
-gx::vector3 gx::operator*(gx::vector3::elem_t f, const gx::vector3& v) {
+template<typename T>
+gx::vector3<T> gx::operator*(typename gx::vector3<T>::elem_t f, const gx::vector3<T>& v) {
   return v * f;
 }
 
-std::ostream& gx::operator<< (std::ostream& out, const gx::vector3& v) {
+template<typename T>
+std::ostream& gx::operator<< (std::ostream& out, const gx::vector3<T>& v) {
   v.print(out);
   return out;
 }
+
+template class gx::vector3<GLfloat>;
+template gx::vector3<GLfloat> gx::operator*<GLfloat>(vector3<GLfloat>::elem_t, const vector3<GLfloat>&);
+template std::ostream& gx::operator<<<GLfloat> (std::ostream& out, const vector3<GLfloat>& v);

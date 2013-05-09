@@ -33,11 +33,11 @@ Weapon::Weapon(float damage, float ran, Coordinate d, float mpcost, Map* m)
 }
 
 
-void Weapon::handleAction(ClientGameTimeAction a){
+void Weapon::handleAction(ClientGameTimeAction){
 
 }
 
-void Weapon::onCollision(Entity* e) {
+void Weapon::onCollision(Entity*) {
 
 }
 

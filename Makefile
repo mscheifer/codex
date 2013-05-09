@@ -1,9 +1,11 @@
 NAME	   = Server/drchao
 ECHO	   = @echo
 CC       = @g++
-WARNINGS = -Wall -Wextra -Wstrict-overflow=5 -Wshadow -Wconversion
-CPPFLAGS = -O3 $(WARNINGS) -IServer/ -ISFML-2.0/include -std=c++11
-LDFLAGS  = -lsfml-window -lsfml-system -lsfml-audio -lsfml-network -lsfml-graphics -lGL -lGLEW
+WARNINGS = -Wall -Wextra -Wstrict-overflow=5 -Wshadow #-Wconversion
+INCLUDE  = -IServer/ #-ISFML-2.0/include -Iassimp/include
+CCFLAGS  = -g $(WARNINGS) $(INCLUDE) -std=c++11
+LDSFML = -lsfml-window -lsfml-system -lsfml-audio -lsfml-network -lsfml-graphics
+LDFLAGS  = $(CCFLAGS) $(LDSFML) -lGL -lGLEW -lassimp
 OBJDIR   = obj/
 SRCDIRS  = Server/ Server/graphics/
 HEADERS  = $(foreach dir, $(SRCDIRS), $(wildcard $(dir)*.h))
@@ -15,7 +17,7 @@ all: $(NAME)
 $(OBJS): $(OBJDIR)%.o: %.cpp $(HEADERS)
 	$(ECHO) "Compiling $<"
 #	$(ECHO) $(CC) $(CPPFLAGS) -c -o $@ $<
-	$(CC) $(CPPFLAGS) -c -o $@ $<
+	$(CC) $(CCFLAGS) -c -o $@ $<
 
 $(NAME): $(OBJS)
 	$(ECHO) "Linking $@..."

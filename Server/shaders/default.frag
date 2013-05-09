@@ -7,7 +7,7 @@ in vec3  light1Dir; //direction of light in world space
 
 out vec4 outputF;
 
-const float outlineThickness = 0.01f;
+const float outlineThickness = 0.2f;
  
 void main() {
   //because the position is in eye space, it's the same as the view direction
@@ -23,7 +23,7 @@ void main() {
                att * light1color * max(dot(normal,normalize(light1Dir)),0);
 
   if(dot(viewDirection, normal) < outlineThickness) {
-    //color = vec4(0.0,0.0,0.0,1.0); //disable until better models
+    color = vec4(0.0,0.0,0.0,1.0);
   }
   if(interpNormDiff > 3) {
     //color = vec4(0.0,0.0,0.0,1.0); //disable until better models

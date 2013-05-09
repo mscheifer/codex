@@ -166,7 +166,7 @@ std::pair<bool,BoundingObj::vec3_t> boxRay(const BoundingBox* b,const Ray* r){
     hh = b->getHh(),
     hd = b->getHd();
 
-  float t = 0;
+  float t = 0; //why unused?
   float tfirst = 0.0f, tlast = 1.0f;
 
   //convert origin to vector3

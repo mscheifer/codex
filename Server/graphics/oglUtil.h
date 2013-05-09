@@ -30,7 +30,7 @@ struct debugStream {
   }
 };
 
-constexpr debugStream debugout;
+constexpr debugStream debugout = {};
 
 const std::string endl = "\n";
 

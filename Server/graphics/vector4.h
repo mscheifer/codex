@@ -1,10 +1,13 @@
 #ifndef VECTOR4_H
 #define VECTOR4_H
 #include <iostream>
-#include "vector3.h"
 #include "oglUtil.h"
 
 namespace gx {
+template<typename T>
+class vector3;
+
+typedef vector3<GLfloat> vector3f;
 
 class vector4 {
   template<class Ret, class C>
@@ -17,8 +20,8 @@ public:
   vector4(elem_t,elem_t,elem_t);
   vector4(const std::initializer_list<elem_t>);
   void set(elem_t,elem_t,elem_t,elem_t);
-  void add(const vector3&);
-  void add(const vector4&,const vector3&);
+  void add(const vector3f&);
+  void add(const vector4&,const vector3f&);
   void subtract(vector4&);
   void subtract(vector4&,vector4&);
   void dehomogenize();
@@ -27,9 +30,9 @@ public:
   const elem_t& get(int i) const;
   elem_t& operator[](int i); 
   const elem_t& operator[](int i) const;
-  vector4 operator+(const vector3&) const;
-  vector3 operator-(vector4) const;      
-  vector4& operator+=(const vector3&);
+  vector4 operator+(const vector3f&) const;
+  vector3f operator-(vector4) const;      
+  vector4& operator+=(const vector3f&);
   bool operator==(const vector4&) const;
   bool operator!=(const vector4&) const;
   void print(std::ostream&) const;

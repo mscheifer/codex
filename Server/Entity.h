@@ -24,18 +24,19 @@ public:
   virtual void update(){}
   virtual void onCollision(){  
 	   // std::cout<< "oh shit, collision" <<std::endl;
-	  std::vector<std::pair<Entity*,gx::vector3>> entities =  detectCollision();
+	  std::vector<std::pair<Entity*,gx::vector3f>> entities =  detectCollision();
 	  Coordinate c = getPosition() ;
 	  for(unsigned int i = 0; i < entities.size() ; i ++) {
       Entity* e = entities[i].first;
-		  gx::vector3 fixShit = entities[i].second;
-      std::cout << "collided fuck" <<std::endl;
-      std::cout<< "was at " << c.x << ","<< c.y << "," << c.z << std::endl;
+		  gx::vector3f fixShit = entities[i].second;
+      //std::cout<< "was at " << c.x << ","<< c.y << "," << c.z << std::endl;
+      //why the fuck does commenting out the below line break everything?
       std::cout<< "fix at " << fixShit.x << ","<< fixShit.y << "," << fixShit.z << "mag: " << fixShit.magnitude() << std::endl;
 		  c.x += fixShit.x;
 		  c.y += fixShit.y;
 		  c.z += fixShit.z;
-      std::cout<< "now at " << c.x << ","<< c.y << "," << c.z << std::endl;
+      //std::cout << "collided fuck" <<std::endl;
+      //std::cout<< "now at " << c.x << ","<< c.y << "," << c.z << std::endl;
 	  }
 	  setPosition(c);
     updateBounds();
@@ -47,10 +48,10 @@ public:
   //update the bounding objects
   //the bounding objects should automatically update thier position on the tree
   virtual void updateBounds(){}
-  std::vector<std::pair<Entity*,gx::vector3>> detectCollision();
+  std::vector<std::pair<Entity*,gx::vector3f>> detectCollision();
 
-  Coordinate getPosition(void){ return position; }
-  Direction getDirection(void){ return direction; }
+  Coordinate getPosition(void) const { return position; }
+  Direction getDirection(void) const { return direction; }
   void setDirection(Direction d) {
 	  direction = d;
   }

@@ -1,3 +1,4 @@
+#include <GL/glew.h>
 #include "StaticEnums.h"
 
 namespace sf {
@@ -6,7 +7,10 @@ class Event;
 };
 
 namespace gx {
+template<typename T>
 class vector3;
+
+typedef vector3<GLfloat> vector3f;
 
 class input {
     bool   updated;
@@ -25,7 +29,7 @@ class input {
     bool         fire1();
     bool         fire2();
     move_t  movePlayer();
-    vector3 turnPlayer();
+    vector3f turnPlayer();
 
     bool resizedWindow();
     unsigned int windowWidth();

@@ -80,9 +80,10 @@ int Quadtree::getIndex(BoundingObj* o){
 }
 
 void Quadtree::insert(BoundingObj* o){
-  Rectangle pRect = *(o->getRect());
-  if(level == 0)
+  Rectangle pRect = *(o->getRect()); //why unused?
+  if(level == 0) {
     o->setQuadtree(this);
+  }
   if (nodes[0] != nullptr) {
     int index = getIndex(o);
  
@@ -101,28 +102,26 @@ void Quadtree::insert(BoundingObj* o){
         split();
     }
  
-    unsigned int i = 0;
-
-    for( auto it = objects.begin(); it != objects.end(); ){
+    for(auto it = objects.begin(); it != objects.end(); ){
       int index = getIndex(*it);
       if( index != -1 ){
         nodes[index]->insert(*it);
         it = objects.erase(it);
-      }
-      else
+      } else {
         it++;
+      }
     }
   }
 }
 
-void Quadtree::remove(BoundingObj* o){
+void Quadtree::remove(BoundingObj* o) {
   int index = getIndex(o);
-  if( index != -1 && nodes[0] != nullptr){
+  if( index != -1 && nodes[0] != nullptr) {
     nodes[index]->remove(o);
     return;
-  }
-  else if ( index == -1 )
+  } else if ( index == -1 ) {
     objects.remove(o);
+  }
 }
 
 std::vector<BoundingObj*> & Quadtree::retrieve(std::vector<BoundingObj*> & returnObjects, BoundingObj* pRect){

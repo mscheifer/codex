@@ -1,6 +1,7 @@
 #include "graphicsClient.h"
 #include <fstream>
 #include "oglUtil.h"
+#include "mesh.h"
 #include "loadCube.h"
 
 namespace {
@@ -24,10 +25,36 @@ std::string readFile(const std::string fileName) {
   return fullSource;
 }
 
+std::vector<gx::drawSet::vaoData_t> loadModel(const std::string& ModelPath) {
+	gx::Mesh model;
+
+	// we may need the information from this aiScene for later.
+	// Contains all the information on the ModelPath
+	const aiScene* scene = model.LoadMesh(ModelPath);
+
+	// if model fails to load, exit
+	if (!scene) {
+		gx::debugout << "Assimp failed to load model.\n";
+		exit(1);
+	}
+
+	std::vector<gx::drawSet::vaoData_t> entities;
+  //just do the first one until we get loading working
+  entities.push_back(model.m_Entries[0].entitiesData);
+
+	return entities;
+}
+
 std::vector<gx::drawSet::vaoData_t> entitiesData() {
+	// MODEL LOADING
+	std::vector<gx::drawSet::vaoData_t> model_import = loadModel("models/weird_orange_thing.dae");
+  std::vector<gx::drawSet::vaoData_t> model_import2 = loadModel("models/Model_rotate.dae");
+
     //setup drawing data
   std::vector<gx::drawSet::vaoData_t> entitiesData;
   auto cubes = gx::loadCube();
+  entitiesData.insert(entitiesData.end(),model_import2.begin(),model_import2.end());
+  //entitiesData.insert(entitiesData.end(),model_import.begin(),model_import.end());
   entitiesData.insert(entitiesData.end(),cubes.begin(),cubes.end());
   return entitiesData;
 }
@@ -44,7 +71,7 @@ GLenum initGlew() {
 }
 } //end unnamed namespace
 
-const gx::vector3 gx::graphicsClient::upDirection(0.0, 0.0, 1.0);
+const gx::vector3f gx::graphicsClient::upDirection(0.0, 0.0, 1.0);
 
 void gx::graphicsClient::setCamera() {
   //add the direction vector to the player's position to get the position to look at
@@ -81,7 +108,7 @@ gx::graphicsClient::graphicsClient():
     userInput(),
     light1(gx::vector4(1,1,1),0.5,0.5,0.05f),
     display(),
-    entities(readFile("graphics/default.vert"),readFile("graphics/default.frag"),
+    entities(readFile("shaders/default.vert"),readFile("shaders/default.frag"),
                        entitiesData(),uniforms()),
     playerDirection(0.0, 1.0,0.0),//change to result of init packet
     playerStartDirection(0.0, 1.0,0.0),//change to result of init packet
@@ -155,13 +182,14 @@ void gx::graphicsClient::draw() {
 
 void gx::graphicsClient::updatePosition(vector4 pos) {
   this->playerPosition = pos;
+  this->setCamera();
 }
 
-void gx::graphicsClient::updateEntities(std::vector<std::pair<vector4,int>> data) {
+void gx::graphicsClient::updateEntities(std::vector<graphicEntity> data) {
   this->entities.reset();
 
   for(auto entityP = data.begin(); entityP != data.end(); ++entityP) {
     const auto& entity = *entityP;
-    entities.addEntity(entity.first, entity.second);
+    entities.addEntity(entity.position, entity.direction, entity.type);
   }
 }

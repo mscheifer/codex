@@ -3,7 +3,7 @@
 gx::vao::vao(const std::vector<GLuint>                   indices,
              const std::vector<const vertexAttrib*>      attribs,
              std::map<std::string,vertexAttribSignature> sigs)
-       : id(), numIndices(GLsizei(indices.size())), ibo() {
+       : id(), numIndices(static_cast<GLsizei>(indices.size())), ibo() {
   glGenVertexArrays(1, &(this->id));
   debugout << "glGenVertexArrays(1, &(this->id));" << endl;
   glBindVertexArray(this->id);
@@ -19,7 +19,6 @@ gx::vao::vao(const std::vector<GLuint>                   indices,
   debugout << indices.size() * sizeof(GLuint);
   debugout << ", indices.data(), GL_STATIC_DRAW);" << endl;
 
-  //cant use range based for here because of visual c++
   for(auto attribp = attribs.begin() ; attribp != attribs.end() ; ++attribp) {
     const auto& attrib = **attribp;
     auto itPos = sigs.find(attrib.name());
@@ -36,8 +35,8 @@ gx::vao::vao(const std::vector<GLuint>                   indices,
   }
   if(!sigs.empty()) {
     std::cout << "Error: no data for shader variables: " << std::endl;
-	for(auto sigp = sigs.begin(); sigp != sigs.end(); ++sigp){
-	  const auto& s = *sigp;
+    for(auto sigp = sigs.begin(); sigp != sigs.end(); ++sigp) {
+      const auto& s = *sigp;
       std::cout << s.first << std::endl;
     }
   }

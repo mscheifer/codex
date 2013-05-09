@@ -46,6 +46,16 @@ public:
 
   float getSpeed(){ return speed;}
   void setSpeed(float);
+
+  void serialize(sf::Packet& packet) const {
+    Entity::serialize(packet);
+    packet << this->player_id;
+  }
+
+  void deserialize(sf::Packet& packet) {
+    Entity::deserialize(packet);
+    packet >> this->player_id;
+  }
     
   void updateBounds();
 
