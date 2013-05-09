@@ -3,9 +3,13 @@
 #include <GL/glew.h>
 #include <iostream>
 #include <string>
+#include "ConfigManager.h"
 #include "windowsHacks.h"
+#include "util.h"
 
 namespace gx {
+
+//both these bools and the ConfigManager values need to be set to enable
 
 //don't set to true or it will break on Matt, Alvin and Bowen's machines
 constexpr bool sharedUniformsOn = false;
@@ -21,9 +25,10 @@ const std::string shaderHeader =
 struct debugStream {
   template<typename T>
   const debugStream& operator<<(const T& a) const {
-    if(debugOn) std::cout << a;
+    bool userDebugOn = StringToBool(ConfigManager::configMap["graphicsDebug"]);
+    if(debugOn && userDebugOn) std::cout << a;
     GLenum err;
-    while(gx::debugOn && (err = glGetError())) {
+    while(gx::debugOn && userDebugOn && (err = glGetError())) {
       std::cout << "OpenGL error: " << err << std::endl;
     }
     return *this;

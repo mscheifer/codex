@@ -7,7 +7,7 @@
 #include <vector>
 #include "boundingManager.h"
 
-class Entity{
+class Entity {
 protected:
   Coordinate position;
   Direction direction;

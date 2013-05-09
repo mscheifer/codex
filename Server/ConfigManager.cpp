@@ -1,4 +1,21 @@
 #include "ConfigManager.h"
+#include <iostream>
+#include <time.h>
+#include "util.h"
+
+  //convert the log level to it's string value
+std::string ConfigManager::levelToString(LogLevels level) {
+  switch(level) {
+  case DEBUG1:
+    return "DEBUG1";
+  case DEBUG2:
+    return "DEBUG2";
+  case NOTE:
+    return "NOTE";
+  default:
+    return "UNK";
+  }
+}
 
 ConfigManager::configMap_t ConfigManager::configMap;
 std::ofstream ConfigManager::logfile;
@@ -51,7 +68,4 @@ void ConfigManager::readConfig() {
     ConfigManager::configMap.insert(s);
     //std::cout << line.substr(0,ind) << " = " << line.substr(ind+1) << std::endl;
   }
-  //std::cout << "a" << configMap["a"] << std::endl;
-  //std::cout << "j" << configMap["j"] << std::endl;
-  //std::cout << "x" << configMap["x"] << std::endl;
 }
