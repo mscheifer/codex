@@ -47,10 +47,10 @@ void Game::updateAndResolveCollision() {
 	}
   //run collision fix here
   for( unsigned int i = 0; i <  currentPlayers.size(); i++ ) {
-    currentPlayers[i]->onCollision();
+    currentPlayers[i]->handleCollisions();
 	}
 	for( unsigned int i = 0; i < currentEntities.size(); i++ ) {
-		currentEntities[i]->onCollision();
+		currentEntities[i]->handleCollisions();
 	}
 }
 

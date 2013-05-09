@@ -13,7 +13,6 @@ public:
   void setRange(Position r);
   Position range;
   Position distanceLeftToTravel;
-  bool isProjectile(){return true;}
   void setOwner(Player *);
   void updateBounds();
 private:
