@@ -3,9 +3,9 @@
 ConfigManager::configMap_t ConfigManager::configMap;
 std::ofstream ConfigManager::logfile;
 
-void ConfigManager::log(std::string str, ConfigManager::LogLevels level){
+void ConfigManager::log(std::string str, ConfigManager::LogLevels level) {
   time_t timer;
-  timer = time(NULL);
+  timer = time(nullptr);
   struct tm * currTime = localtime(&timer);
   
   if( ConfigManager::level <= level ){
@@ -15,9 +15,9 @@ void ConfigManager::log(std::string str, ConfigManager::LogLevels level){
   }
 }
 
-void ConfigManager::setupLog(std::string str){
+void ConfigManager::setupLog(std::string str) {
   time_t timer;
-  timer = time(NULL);
+  timer = time(nullptr);
   struct tm * currTime = localtime(&timer);
   
   std::stringstream fname;
@@ -25,20 +25,18 @@ void ConfigManager::setupLog(std::string str){
     currTime->tm_hour << "_" << currTime->tm_min << "_" << currTime->tm_sec << ".txt";
   
   ConfigManager::logfile.open(fname.str());
-
-  //std::string fname = "" + currTime.tm_mon + "_" + currTime.tm_mday + currTime.tm_hour + currTime.tm_min + currTime.tm_sec;
 }
 
-void ConfigManager::readConfig(){
+void ConfigManager::readConfig() {
   std::ifstream configFile;
   configFile.open("config.txt");
   std::string line;
 
   //no config file exists
-  if(!configFile){
+  if(!configFile) {
     std::ofstream newConfigFile("config.txt");
     configFile.open("masterConfig.txt");
-    while( configFile >> line ){
+    while( configFile >> line ) {
       newConfigFile << line << std::endl;
     }
     configFile.close();
