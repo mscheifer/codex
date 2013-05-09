@@ -52,7 +52,7 @@ void NetworkClient::receiveMessages() {
         gx::graphicEntity gentity;
         gentity.position  = gx::vector4(0,0,0);
         gentity.direction = gx::vector3f(0,1,0);
-        gentity.type = 3;
+        gentity.type = 4;
         entities.push_back(gentity); //add skybox
         gxClient.updateEntities(entities);
         //std::cout << "num entities received: " << entities.size() << std::endl;
