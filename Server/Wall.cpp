@@ -20,7 +20,6 @@ Wall::Wall(unsigned int w, unsigned int d, unsigned int h, Coordinate sc, Direct
   this->map = m;
 }
 
-
 Wall::~Wall(void)
 {
 }

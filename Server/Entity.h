@@ -22,8 +22,7 @@ public:
   
   virtual void handleAction(ClientGameTimeAction){}
   virtual void update(){}
-  virtual void onCollision(){  
-	   // std::cout<< "oh shit, collision" <<std::endl;
+  virtual void onCollision(){
 	  std::vector<std::pair<Entity*,gx::vector3f>> entities =  detectCollision();
 	  Coordinate c = getPosition() ;
 	  for(unsigned int i = 0; i < entities.size() ; i ++) {
