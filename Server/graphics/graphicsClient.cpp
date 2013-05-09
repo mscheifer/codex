@@ -54,7 +54,7 @@ std::vector<gx::drawSet::vaoData_t> entitiesData() {
   std::vector<gx::drawSet::vaoData_t> entitiesData;
   auto cubes = gx::loadCube();
   entitiesData.insert(entitiesData.end(),model_import2.begin(),model_import2.end());
-  entitiesData.insert(entitiesData.end(),model_import.begin(),model_import.end());
+  //entitiesData.insert(entitiesData.end(),model_import.begin(),model_import.end());
   entitiesData.insert(entitiesData.end(),cubes.begin(),cubes.end());
   return entitiesData;
 }
