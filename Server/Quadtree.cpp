@@ -80,7 +80,6 @@ int Quadtree::getIndex(BoundingObj* o){
 }
 
 void Quadtree::insert(BoundingObj* o){
-  Rectangle pRect = *(o->getRect()); //why unused?
   if(level == 0) {
     o->setQuadtree(this);
   }

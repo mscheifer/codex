@@ -36,4 +36,3 @@ std::vector<std::pair<Entity*,BoundingObj::vec3_t>> Entity::detectCollision(){
 
   return res;
 }
-*/

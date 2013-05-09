@@ -31,7 +31,7 @@ public:
 		  gx::vector3f fixShit = entities[i].second;
       //std::cout<< "was at " << c.x << ","<< c.y << "," << c.z << std::endl;
       //why the fuck does commenting out the below line break everything?
-      std::cout<< "fix at " << fixShit.x << ","<< fixShit.y << "," << fixShit.z << "mag: " << fixShit.magnitude() << std::endl;
+      //std::cout<< "fix at " << fixShit.x << ","<< fixShit.y << "," << fixShit.z << "mag: " << fixShit.magnitude() << std::endl;
 		  c.x += fixShit.x;
 		  c.y += fixShit.y;
 		  c.z += fixShit.z;

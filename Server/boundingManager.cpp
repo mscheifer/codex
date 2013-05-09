@@ -186,7 +186,7 @@ std::pair<bool,BoundingObj::vec3_t> boxRay(const BoundingBox* b,const Ray* r){
   //the time it hit
   t = tfirst;
   BoundingObj::vec3_t ret = r->getDirection();
-  ret.scale(1.0-tfirst);
+  ret.scale(1.0-t);
   //ret.scale(1.0-tfirst);
   //ret.negate();
 
