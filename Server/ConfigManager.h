@@ -7,12 +7,12 @@
 #include <stdlib.h>
 #include <sstream>
   
-  template <typename T>
-  T StringToNumber (const std::string &Text ){
-    std::istringstream ss(Text);
-    T result;
-    return ss >> result ? result : 0;
-  }
+template <typename T>
+T StringToNumber (const std::string &Text ){
+  std::istringstream ss(Text);
+  T result;
+  return ss >> result ? result : 0;
+}
 
 class ConfigManager{
 public:

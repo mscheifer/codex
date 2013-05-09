@@ -59,6 +59,9 @@ std::map<std::string, std::string> AudioManager::musics;
 */
 
 void AudioManager::loadSound(std::string key, std::string sound){
+  if( StringToNumber<int>(ConfigManager::configMap["sound"]) == 0 ) 
+    return;
+
   sf::SoundBuffer *buffer = new sf::SoundBuffer;
   buffer->loadFromFile(sound);
   soundBuffers.insert(std::pair<std::string,sf::SoundBuffer*>
@@ -66,6 +69,9 @@ void AudioManager::loadSound(std::string key, std::string sound){
 }
 
 void AudioManager::loadSounds(){
+  if( StringToNumber<int>(ConfigManager::configMap["sound"]) == 0 ) 
+    return;
+
   loadSound("s1", "sound_1.wav");
   loadSound("s2", "sound_2.wav");
   loadSound("s3", "sound_3.wav");
@@ -77,6 +83,8 @@ void AudioManager::loadSounds(){
 }
 
 void AudioManager::playSound(std::string key, float x, float y, float z){
+  if( StringToNumber<int>(ConfigManager::configMap["sound"]) == 0 ) 
+    return;
   std::map<std::string,sf::SoundBuffer*>::iterator it;
   it = soundBuffers.find(key);
 
@@ -93,8 +101,10 @@ void AudioManager::playSound(std::string key, float x, float y, float z){
 }
 
 void AudioManager::playMusic(std::string musicN){
-    if (music.openFromFile(musics[musicN]))
-    {
-      music.play();
-    }
+  if( StringToNumber<int>(ConfigManager::configMap["sound"]) == 0 ) 
+    return;
+  if (music.openFromFile(musics[musicN]))
+  {
+    music.play();
+  }
 }

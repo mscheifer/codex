@@ -4,6 +4,9 @@ ConfigManager::configMap_t ConfigManager::configMap;
 std::ofstream ConfigManager::logfile;
 
 void ConfigManager::log(std::string str, ConfigManager::LogLevels level){
+  if( StringToNumber<int>(ConfigManager::configMap["log"]) == 0 ) 
+    return;
+
   time_t timer;
   timer = time(NULL);
   struct tm * currTime = localtime(&timer);
@@ -16,6 +19,9 @@ void ConfigManager::log(std::string str, ConfigManager::LogLevels level){
 }
 
 void ConfigManager::setupLog(std::string str){
+  if( StringToNumber<int>(ConfigManager::configMap["log"]) == 0 ) 
+    return;
+
   time_t timer;
   timer = time(NULL);
   struct tm * currTime = localtime(&timer);
