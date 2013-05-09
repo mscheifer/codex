@@ -42,17 +42,8 @@ void ConfigManager::readConfig(){
 
   //no config file exists
   if(!configFile){
-    std::ofstream newConfigFile("config.txt");
     configFile.open("masterConfig.txt");
-    while( configFile >> line ){
-      newConfigFile << line << std::endl;
-    }
-    configFile.close();
-    newConfigFile.close();
-    configFile.clear();
-    configFile.open("config.txt");
-      
-    std::cout << "no config file exists, generating" << std::endl;
+    std::cout << "no config detected, reading master" << std::endl;
   }
 
   size_t ind = 0;

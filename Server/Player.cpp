@@ -190,7 +190,6 @@ void Player::attack( ClientGameTimeAction a) {
 			return;
 		}
 		mana -= currentWeapon->getMpCost();
-    std::cout << "dir " << direction << " pos " << position << std::endl;
 		Projectile* proj = currentWeapon->attackRange(direction, position);
     proj->setOwner(this);
 	}

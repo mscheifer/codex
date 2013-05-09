@@ -35,6 +35,7 @@ void Map::initWalls(void)
   int startingYNeg;
   int startingZ = height/2;
 
+  
   // Create the top and bottom perimeter from left to right.
   for( i = 0,
     startingX = ((wallX*width)/-2)+(width/2)+centerX,
@@ -59,6 +60,10 @@ void Map::initWalls(void)
     this->entities.push_back(leftWall);
     this->entities.push_back(rightWall);
   }
+  
+
+  Wall * floor = new Wall(1, 1, 1, Coordinate(0,0,0, 0,0,0), facingEast, this);
+  this->entities.push_back(floor);
 
   //Wall * floor = new Wall(100, 100, 100, Coordinate(100,100,-20, 0,0,0), facingEast, this);
   //this->entities.push_back(floor);

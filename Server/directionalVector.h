@@ -37,7 +37,7 @@ struct Direction
 
   friend std::ostream& operator<<(std::ostream& os, const Direction& t)
   {
-    os << t.x << ', ' << t.y << ', ' << t.z;
+    os << t.x << ", " << t.y << ", " << t.z;
     return os;
   }
 };
