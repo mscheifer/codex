@@ -71,7 +71,7 @@ GLenum initGlew() {
 }
 } //end unnamed namespace
 
-const gx::vector3 gx::graphicsClient::upDirection(0.0, 0.0, 1.0);
+const gx::vector3f gx::graphicsClient::upDirection(0.0, 0.0, 1.0);
 
 void gx::graphicsClient::setCamera() {
   //add the direction vector to the player's position to get the position to look at

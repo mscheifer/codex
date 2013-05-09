@@ -19,8 +19,8 @@ class displaySet {
     displaySet();
     void setProjection(elem_t fov, elem_t ratio, elem_t nearP, elem_t farP);
     //camera position, camera look at, up vector
-    void setView(const vector4&, const vector4&, const vector3&);
-    void addView(const vector3&, const vector3&, const vector3&);
+    void setView(const vector4&, const vector4&, const vector3f&);
+    void addView(const vector3f&, const vector3f&, const vector3f&);
     uniform::block& storage();
 };
 

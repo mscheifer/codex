@@ -36,12 +36,12 @@ std::vector<gx::drawSet::vaoData_t> loadCube() {
                                            1.0f, 1.0f,-1.0f }};
   std::array<GLfloat,8> normDiffArray;
   for(size_t i = 0; i < normalArray.size(); i += 3) {
-    gx::vector3 norm(normalArray[i],normalArray[i+1],normalArray[i+2]);
+    gx::vector3f norm(normalArray[i],normalArray[i+1],normalArray[i+2]);
     norm.normalize();
     //normal diff calculatio is just a hack that works for this cube
-    normDiffArray[i/3] =((norm - gx::vector3(normalArray[i],  0,0)).magnitude()
-                       + (norm - gx::vector3(0,normalArray[i+1],0)).magnitude()
-                       + (norm - gx::vector3(0,0,normalArray[i+2])).magnitude())
+    normDiffArray[i/3] =((norm - gx::vector3f(normalArray[i],  0,0)).magnitude()
+                       + (norm - gx::vector3f(0,normalArray[i+1],0)).magnitude()
+                       + (norm - gx::vector3f(0,0,normalArray[i+2])).magnitude())
                        / 3;
     normalArray[i]   = norm.x;
     normalArray[i+1] = norm.y;
@@ -114,7 +114,7 @@ std::vector<gx::drawSet::vaoData_t> loadCube() {
                                                 0.4f, 0.4f, 1.0f, 1.0f,
                                                 0.4f, 0.4f, 1.0f, 1.0f }};
   for(size_t i = 0; i < skyboxNormA.size(); i += 3) {
-    gx::vector3 norm(skyboxNormA[i],skyboxNormA[i+1],skyboxNormA[i+2]);
+    gx::vector3f norm(skyboxNormA[i],skyboxNormA[i+1],skyboxNormA[i+2]);
     norm.normalize();
     skyboxNormA[i]   = norm.x;
     skyboxNormA[i+1] = norm.y;

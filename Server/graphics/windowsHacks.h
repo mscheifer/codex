@@ -1,5 +1,6 @@
 #ifdef _WIN32
 #define constexpr const
+#define noexcept
 
 namespace std { //initializer_list hack
 	//dont actually use initialzer lists but we can leave the method there with this

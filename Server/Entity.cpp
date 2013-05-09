@@ -1,7 +1,7 @@
 #include "Entity.h"
 
-std::vector<std::pair<Entity*,gx::vector3>> Entity::detectCollision(){
-  std::vector<std::pair<Entity*,gx::vector3>> res;
+std::vector<std::pair<Entity*,BoundingObj::vec3_t>> Entity::detectCollision(){
+  std::vector<std::pair<Entity*,BoundingObj::vec3_t>> res;
   std::vector<BoundingObj*> potentialCollisions;
   potentialCollisions.clear();
   res.clear();
@@ -22,10 +22,10 @@ std::vector<std::pair<Entity*,gx::vector3>> Entity::detectCollision(){
           break;
       }
       if( finder == res.end() ){
-        std::pair<bool,gx::vector3> collRes = collide(*it,*it2);
+        std::pair<bool,BoundingObj::vec3_t> collRes = collide(*it,*it2);
         //try collide
         if(collRes.first){
-          res.push_back(std::pair<Entity*,gx::vector3>((*it2)->getEntity(),collRes.second));
+          res.push_back(std::pair<Entity*,BoundingObj::vec3_t>((*it2)->getEntity(),collRes.second));
         }
       }
     }

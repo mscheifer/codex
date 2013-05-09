@@ -5,7 +5,7 @@ WARNINGS = -Wall -Wextra -Wstrict-overflow=5 #-Wshadow -Wconversion
 INCLUDE  = -IServer/ #-ISFML-2.0/include -Iassimp/include
 CPPFLAGS = -O3 $(WARNINGS) $(INCLUDE) -std=c++11
 LDSFML = -lsfml-window -lsfml-system -lsfml-audio -lsfml-network -lsfml-graphics
-LDFLAGS  = $(LDSFML) -lGL -lGLEW -lassimp
+LDFLAGS  = -v $(LDSFML) -lGL -lGLEW -lassimp
 OBJDIR   = obj/
 SRCDIRS  = Server/ Server/graphics/
 HEADERS  = $(foreach dir, $(SRCDIRS), $(wildcard $(dir)*.h))

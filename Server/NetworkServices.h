@@ -49,7 +49,7 @@ public:
    }
    
    template <typename Data>
-   bool sendPacket(Data & data, unsigned int i) {
+   bool sendPacket(const Data& data, unsigned int i) {
      sf::Packet packet;
      packet.clear();
      packet << Data::packetType;

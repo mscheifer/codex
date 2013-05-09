@@ -58,7 +58,7 @@ gx::Mesh::MeshEntry::MeshEntry(const aiMesh* paiMesh)
 	this->entitiesData = std::make_pair(Indices,attribs);
 };
 
-gx::Mesh::MeshEntry::MeshEntry(MeshEntry&& other)
+gx::Mesh::MeshEntry::MeshEntry(MeshEntry&& other) noexcept
   : entitiesData (std::move(other.entitiesData)),
     MaterialIndex(std::move(other.MaterialIndex)) {}
 
@@ -113,7 +113,7 @@ bool gx::Mesh::InitFromScene(const aiScene* pScene, const std::string& Filename)
     // Initialize the meshes in the scene one by one
     for (unsigned int i = 0 ; i < pScene->mNumMeshes ; i++) {
         const aiMesh* paiMesh = pScene->mMeshes[i];
-        m_Entries.push_back(MeshEntry(paiMesh));
+        this->m_Entries.push_back(MeshEntry(paiMesh));
     }
 
     return InitMaterials(pScene, Filename);

@@ -146,11 +146,11 @@ gx::vector4 gx::multiply(const matrix& left,const vector4& right) {
   return result;
 }
 
-gx::vector3 gx::multiply(const matrix& left,const vector3& right) {
+gx::vector3f gx::multiply(const matrix& left,const vector3f& right) {
   vector4 temp(right[0],right[1],right[2]);
   temp[3] = 0;
   temp = left * temp;
-  return vector3(temp[0],temp[1],temp[2]);
+  return vector3f(temp[0],temp[1],temp[2]);
 }
 
 gx::matrix gx::operator*(const matrix& left,const matrix& right) {
@@ -161,7 +161,7 @@ gx::vector4 gx::operator*(const matrix& left,const vector4& right) {
   return multiply(left,right);
 }
 
-gx::vector3 gx::operator*(const matrix& left,const vector3& right) {
+gx::vector3f gx::operator*(const matrix& left,const vector3f& right) {
   return multiply(left,right);
 }
 
@@ -189,7 +189,7 @@ gx::matrix gx::rotateZ(double angle) {
                 0,0,                                   0,1);
 }
 
-gx::matrix gx::rotateArbitrary(vector3 axis, double angle) {
+gx::matrix gx::rotateArbitrary(vector3f axis, double angle) {
   typedef gx::matrix::elem_t elem_t;
   axis.normalize();
   return matrix(
@@ -231,7 +231,7 @@ gx::matrix gx::translation(matrix::elem_t x, matrix::elem_t y,
                 0,0,0,1);
 }
 
-gx::matrix gx::toBasis(vector3 x, vector3 y, vector3 z) {
+gx::matrix gx::toBasis(vector3f x, vector3f y, vector3f z) {
   return matrix(x.x, y.x, z.x, 0,
                 x.y, y.y, z.y, 0,
                 x.z, y.z, z.z, 0,

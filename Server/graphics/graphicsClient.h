@@ -12,7 +12,7 @@ namespace gx {
 struct graphicEntity {
   unsigned int type;
   vector4 position;
-  vector3 direction;
+  vector3f direction;
 };
 
 class graphicsClient {
@@ -26,11 +26,11 @@ class graphicsClient {
     drawSet entities;
 
     //player info
-    static const vector3 upDirection;
+    static const vector3f upDirection;
 
-    vector3 playerDirection;
-    vector3 playerStartDirection;
-    vector3 playerStartRight;
+    vector3f playerDirection;
+    vector3f playerStartDirection;
+    vector3f playerStartRight;
     vector4 playerPosition;
 
     //packet info
@@ -59,7 +59,7 @@ class graphicsClient {
     bool fire1 ()        { return this->userInput.fire1  (); }
     bool fire2 ()        { return this->userInput.fire2  (); }
     move_t getMovement() { return this->userInput.movePlayer(); }
-    vector3 getDir()     { return this->playerDirection; }
+    vector3f getDir()     { return this->playerDirection; }
 };
 
 } //end namespace gx

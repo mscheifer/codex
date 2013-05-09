@@ -34,21 +34,21 @@ public:
 //note mathematical ordering
 matrix multiply(const matrix& left,const matrix& right);
 vector4 multiply(const matrix& left,const vector4& right);
-vector3 multiply(const matrix& left,const vector3& right);
+vector3f multiply(const matrix& left,const vector3f& right);
 matrix operator*(const matrix& left,const matrix& right);
 vector4 operator*(const matrix& left,const vector4& right);
-vector3 operator*(const matrix& left,const vector3& right);
+vector3f operator*(const matrix& left,const vector3f& right);
 
 matrix rotateX(double angle);
 matrix rotateY(double angle);
 matrix rotateZ(double angle);
-matrix rotateArbitrary(vector3 axis, double angle);
+matrix rotateArbitrary(vector3f axis, double angle);
 matrix scaling(matrix::elem_t x, matrix::elem_t y, matrix::elem_t z);
 matrix scalingMatrix(matrix::elem_t x, matrix::elem_t y, matrix::elem_t z);
 matrix translation(matrix::elem_t x, matrix::elem_t y, matrix::elem_t z);
 //converts a vector from the standard basis to the supplied basis
 //params: x y and z vectors
-matrix toBasis(vector3,vector3,vector3);
+matrix toBasis(vector3f,vector3f,vector3f);
 
 const matrix identity = matrix(1, 0, 0, 0,
                                0, 1, 0, 0,

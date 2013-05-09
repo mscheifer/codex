@@ -8,9 +8,9 @@ namespace {
     gentity.position =  gx::vector4(static_cast<gx::vector4::elem_t>(pos.x),
                                     static_cast<gx::vector4::elem_t>(pos.y),
                                     static_cast<gx::vector4::elem_t>(pos.z));
-    gentity.direction = gx::vector3(static_cast<gx::vector3::elem_t>(dir.x),
-                                    static_cast<gx::vector3::elem_t>(dir.y),
-                                    static_cast<gx::vector3::elem_t>(dir.z));
+    gentity.direction = gx::vector3f(static_cast<gx::vector3f::elem_t>(dir.x),
+                                    static_cast<gx::vector3f::elem_t>(dir.y),
+                                    static_cast<gx::vector3f::elem_t>(dir.z));
     gentity.type = 0;
     return gentity;
   }
@@ -46,12 +46,12 @@ void NetworkClient::receiveMessages() {
         }
         auto pos = s.players[this->id].getPosition();
         gxClient.updatePosition(gx::vector4(
-          static_cast<gx::vector3::elem_t>(pos.x),
-          static_cast<gx::vector3::elem_t>(pos.y),
-          static_cast<gx::vector3::elem_t>(pos.z)));
+          static_cast<gx::vector3f::elem_t>(pos.x),
+          static_cast<gx::vector3f::elem_t>(pos.y),
+          static_cast<gx::vector3f::elem_t>(pos.z)));
         gx::graphicEntity gentity;
         gentity.position  = gx::vector4(0,0,0);
-        gentity.direction = gx::vector3(0,1,0);
+        gentity.direction = gx::vector3f(0,1,0);
         gentity.type = 4;
         entities.push_back(gentity); //add skybox
         gxClient.updateEntities(entities);
@@ -132,20 +132,6 @@ void NetworkClient::doClient() {
 	  }
   }
   std::cout << "game started" << std::endl;
-  /*
-  //temp code ------------------------------
-  s.players[0] =  Player(0,0,1,42);
-	s.players[1] = Player(2,3,1,43);
-	s.players[2] =  Player(7,2,1,44);
-	s.players[3] = Player(4,6,1,45);
-  std::vector<std::pair<gx::vector3,int>> entities;
-  for(size_t i = 0; i < 4; i++) {
-    auto pos = s.players[i].getPosition();
-    entities.push_back(std::make_pair(gx::vector3(pos.x,pos.y,pos.z),0));
-  }
-  gxClient.updateEntities(entities);
-  //temp code -----------------------------
-  */
   //  main run loop
   //for(int i = 0; i < 4; i++) {
   while(this->running) {

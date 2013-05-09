@@ -28,8 +28,8 @@ void gx::displaySet::setProjection(elem_t fov, elem_t ratio, elem_t nearP,
 }
 //e is camera position and d is look at point
 void gx::displaySet::setView(const vector4& e, const vector4& d, 
-                             const vector3& up) {
-  vector3 zc, xc, yc;
+                             const vector3f& up) {
+  vector3f zc, xc, yc;
   zc = e - d;
   zc.normalize();
   xc.cross(up,zc);

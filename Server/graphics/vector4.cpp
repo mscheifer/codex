@@ -1,4 +1,5 @@
 #include "vector4.h"
+#include "vector3.h"
 
 gx::vector4::vector4(): x(0.0), y(0.0), z(0.0), w(1) {}
 
@@ -17,13 +18,13 @@ void gx::vector4::set(elem_t x0,elem_t y0,elem_t z0,elem_t w0) {
   this->w = w0;
 }
 
-void gx::vector4::add(const vector3 &a) {
+void gx::vector4::add(const vector3f &a) {
   this->x += a.x;
   this->y += a.y;
   this->z += a.z;
 }
 
-void gx::vector4::add(const vector4 &a,const vector3 &b) {
+void gx::vector4::add(const vector4 &a,const vector3f &b) {
   this->x = a.x + b.x;
   this->y = a.y + b.y;
   this->z = a.z + b.z;
@@ -72,21 +73,21 @@ gx::vector4 gx::dehomogenize(gx::vector4 a) {
   return a;
 }
 
-gx::vector4 gx::vector4::operator+(const vector3& a) const {
+gx::vector4 gx::vector4::operator+(const vector3f& a) const {
   vector4 r;
   r.add(*this,a);
   return r;
 }
 
-gx::vector3 gx::vector4::operator-(vector4 a) const {
+gx::vector3f gx::vector4::operator-(vector4 a) const {
   vector4 r = *this;
   r.dehomogenize();
   a.dehomogenize();
   r.subtract(a);
-  return vector3(r.x,r.y,r.z);
+  return vector3f(r.x,r.y,r.z);
 }
 
-gx::vector4& gx::vector4::operator+=(const vector3& a) {
+gx::vector4& gx::vector4::operator+=(const vector3f& a) {
   this->add(a);
   return *this;
 }

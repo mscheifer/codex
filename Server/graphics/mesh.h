@@ -31,7 +31,7 @@ public:
         MeshEntry(const aiMesh*);
         MeshEntry(const MeshEntry&);// = delete; //don't copy
         MeshEntry& operator=(const MeshEntry&);// = delete; //don't assign
-        MeshEntry(MeshEntry&&);
+        MeshEntry(MeshEntry&&) noexcept;
         MeshEntry& operator=(MeshEntry&&);// = delete; //define later
 
 		    drawSet::vaoData_t entitiesData;

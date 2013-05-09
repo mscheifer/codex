@@ -1,12 +1,11 @@
 #include "input.h"
 #include <SFML/Window.hpp>
-#include "vector3.h"
 #include "matrix.h"
 
 namespace {
 const double mouseSensitivity = 0.001;
 
-gx::vector3  mouseDirection;
+gx::vector3f  mouseDirection;
 sf::Vector2i mouseBasePosition;
 sf::Vector2i mouseDiff;
 
@@ -63,11 +62,11 @@ move_t gx::input::movePlayer() {
   return movement;
 }
 
-gx::vector3 gx::input::turnPlayer() {
+gx::vector3f gx::input::turnPlayer() {
   //base direction needs to be looking forward because mouse movement needs to rotate
   //around the axis that are 90 degrees away from the base direction and its
   //easier if these are the x and z axis
-  const vector3 basePlayerDirection = gx::vector3( 0.0, 1.0, 0.0);
+  const vector3f basePlayerDirection = gx::vector3f( 0.0, 1.0, 0.0);
 
   sf::Vector2i curPosition = sf::Mouse::getPosition();
   if(curPosition != mouseBasePosition) {
