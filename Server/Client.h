@@ -3,6 +3,7 @@
 #include <SFML/Network.hpp>
 #include <SFML/Window.hpp>
 #include <SFML/Graphics.hpp>
+#include <SFML/Audio.hpp>
 #include "Weapon.h"
 #include <iostream>
 #include <string>
@@ -13,6 +14,7 @@
 #include "ChatHandler.h"
 #include "Game.h"
 #include "ConfigManager.h"
+#include "AudioManager.h"
 
 class NetworkClient {
   ServerGameTimeRespond s;

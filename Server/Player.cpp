@@ -184,14 +184,13 @@ void Player::onCollision(Entity* e){
 void Player::attack( ClientGameTimeAction a) {
 	Weapon* currentWeapon = weapon[current_weapon_selection];
 
-
-
 	if(a.attackRange)
 	{
     if( !currentWeapon->canUseWeapon(true) || currentWeapon->getMpCost() > mana){
 			return;
 		}
 		mana -= currentWeapon->getMpCost();
+    std::cout << "dir " << direction << " pos " << position << std::endl;
 		Projectile* proj = currentWeapon->attackRange(direction, position);
     proj->setOwner(this);
 	}

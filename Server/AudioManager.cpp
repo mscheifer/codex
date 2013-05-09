@@ -66,9 +66,10 @@ void AudioManager::loadSound(std::string key, std::string sound){
 }
 
 void AudioManager::loadSounds(){
-  loadSound("s1", "sound_1Mono.wav");
-  loadSound("s2", "sound_2Mono.wav");
-  loadSound("s3", "sound_3Mono.wav");
+  loadSound("s1", "sound_1.wav");
+  loadSound("s2", "sound_2.wav");
+  loadSound("s3", "sound_3.wav");
+    loadSound("m1", "music_mono.wav");
   //loadSound("s4", "sound_4.wav");
   //loadSound("s5", "sound_5.wav");
 

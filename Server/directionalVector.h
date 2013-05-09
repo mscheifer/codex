@@ -1,5 +1,6 @@
 #pragma once
 #include "SFML/Network/Packet.hpp"
+#include <iostream>
 
 typedef float DirectionValue;
 struct Direction
@@ -32,5 +33,11 @@ struct Direction
     packet >> x;
     packet >> y;
     packet >> z;
+  }
+
+  friend std::ostream& operator<<(std::ostream& os, const Direction& t)
+  {
+    os << t.x << ', ' << t.y << ', ' << t.z;
+    return os;
   }
 };

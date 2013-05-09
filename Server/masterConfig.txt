@@ -1,4 +1,2 @@
-a=0
-j=1
-asdf=1
-x=00
+log=0
+sound=1

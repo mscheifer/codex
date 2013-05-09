@@ -42,6 +42,8 @@ void NetworkClient::receiveMessages() {
         gxClient.updateEntities(entities);
         if (s.players[id].dead) { /*render death everytime ? */} ;
         //render WIN OR LOSE based on s.state
+        //std::cout << pos.x << "," << pos.y << "," << pos.z << std::endl;
+        sf::Listener::setPosition(pos.x, pos.y, pos.z);
         break;
     }
   }
@@ -99,6 +101,12 @@ void NetworkClient::processInput(){
 }
 */
 void NetworkClient::doClient() {
+  ConfigManager::setupLog("client");
+  sf::Listener::setDirection(1.f, 0.f, 0.f);
+  AudioManager::loadSounds();
+  AudioManager::playSound("m1",0,0,0);
+  //AudioManager::playMusic("m1");
+
   std::cout << "Waiting for other players to join" << std::endl;
   while(true) {
 	  sf::Packet initPacket;

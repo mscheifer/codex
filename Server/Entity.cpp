@@ -36,14 +36,3 @@ std::vector<std::pair<Entity*,gx::vector3>> Entity::detectCollision(){
 
   return res;
 }
-
-void Entity::updateBoundsOnTree(){
-  //update the bounding objects
-  updateBounds();
-
-  //update all of them on the tree
-  std::vector<BoundingObj*> vec = getBoundingObjs();
-  for(auto it = vec.begin(); it != vec.end(); it++){
-      (*it)->updateOnTree();
-  }
-}

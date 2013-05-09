@@ -23,11 +23,11 @@ void Map::initWalls(void)
   int height = 4; 
   int depth = 1;
 
-  int wallX = 1;
-  int wallY = 1;
+  int wallX = 7;
+  int wallY = 7;
 
-  int centerX = 100;
-  int centerY = 100;
+  int centerX = 0;
+  int centerY = 0;
   int i;
   int startingX;
   int startingXNeg;
@@ -60,8 +60,8 @@ void Map::initWalls(void)
     this->entities.push_back(rightWall);
   }
 
-  Wall * floor = new Wall(100, 100, 100, Coordinate(100,100,-20, 0,0,0), facingEast, this);
-  this->entities.push_back(floor);
+  //Wall * floor = new Wall(100, 100, 100, Coordinate(100,100,-20, 0,0,0), facingEast, this);
+  //this->entities.push_back(floor);
 }
 
 Map::~Map(void)

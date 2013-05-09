@@ -28,4 +28,10 @@ struct Coordinate
      packet>>y;
      packet>>z;
   }
+
+  friend std::ostream& operator<<(std::ostream& os, const Coordinate& t)
+  {
+    os << t.x << ', ' << t.y << ', ' << t.z;
+    return os;
+  }
 };
