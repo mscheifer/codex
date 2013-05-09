@@ -9,8 +9,8 @@ namespace {
                                     static_cast<gx::vector4::elem_t>(pos.y),
                                     static_cast<gx::vector4::elem_t>(pos.z));
     gentity.direction = gx::vector3f(static_cast<gx::vector3f::elem_t>(dir.x),
-                                    static_cast<gx::vector3f::elem_t>(dir.y),
-                                    static_cast<gx::vector3f::elem_t>(dir.z));
+                                     static_cast<gx::vector3f::elem_t>(dir.y),
+                                     static_cast<gx::vector3f::elem_t>(dir.z));
     gentity.type = 0;
     return gentity;
   }
@@ -56,7 +56,7 @@ void NetworkClient::receiveMessages() {
         entities.push_back(gentity); //add skybox
         gxClient.updateEntities(entities);
         //std::cout << "num entities received: " << entities.size() << std::endl;
-        if (s.players[id].dead) { /*render death everytime ? */} ;
+        if (s.players[id].dead) { /*render death everytime ? */}
         //render WIN OR LOSE based on s.state
         break;
     }

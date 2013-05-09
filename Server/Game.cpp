@@ -80,10 +80,10 @@ ServerGameTimeRespond Game::prepResponse() {
   //determine who wins
   for (unsigned int i = 0; i< currentPlayers.size(); i++ ) {
      if (!currentPlayers[i]->minotaur) {
-        if (currentPlayers[i]->dead) 
+        if (currentPlayers[i]->dead) {
           deadPlayers++;
-     }
-     else if (currentPlayers[i]->dead) {
+        }
+     } else if (currentPlayers[i]->dead) {
         minotaurLose = true;
      }
   }

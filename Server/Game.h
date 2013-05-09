@@ -44,14 +44,14 @@ public:
 
   void serialize(sf::Packet& packet) const
   {
-    packet<<id;
+    packet << id;
     position.serialize(packet);
     direction.serialize(packet);
   }
 
   void deserialize(sf::Packet& packet)
   {
-    packet>>id;
+    packet >> id;
     position.deserialize(packet);
     direction.deserialize(packet);
   }

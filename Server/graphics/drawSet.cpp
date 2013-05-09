@@ -51,12 +51,11 @@ void gx::drawSet::addEntity(vector4 pos,vector3f dirY,unsigned int type) {
   vector3f dirX( dirY.y, dirY.x,-dirY.z);
   vector3f dirZ(-dirY.x, dirY.z, dirY.y);
   */
-  vector3f dirX( dirY.y, dirY.x, 0);
-  dirY = vector3f( dirY.x, dirY.y, 0);
+  vector3f dirX( dirY.y,-dirY.x, 0);
+  dirY = vector3f(dirY.x, dirY.y, 0);
   dirX.normalize();
   dirY.normalize();
   vector3f dirZ(0,0,1);
-  //std::cout << "dirx: " << dirX <<  " diry: " << dirY << std::endl;
-  matrix rotAndTrans = translation(pos.x,pos.y,pos.z);// * toBasis(dirX,dirY,dirZ);
+  matrix rotAndTrans = translation(pos.x,pos.y,pos.z) * toBasis(dirX,dirY,dirZ);
   this->entityClasses[type].positions.push_back(rotAndTrans);
 }

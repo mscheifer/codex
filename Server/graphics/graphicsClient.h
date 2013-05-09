@@ -10,9 +10,9 @@
 namespace gx {
 
 struct graphicEntity {
-  unsigned int type;
   vector4 position;
   vector3f direction;
+  unsigned int type;
 };
 
 class graphicsClient {

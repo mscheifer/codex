@@ -185,8 +185,8 @@ gx::matrix gx::rotateZ(double angle) {
   typedef gx::matrix::elem_t elem_t;
   return matrix(elem_t(cos(angle)),elem_t(-sin(angle)),0,0,
                 elem_t(sin(angle)),elem_t( cos(angle)),0,0, 
-                0,0,                                   1,0,
-                0,0,                                   0,1);
+                0,               0,                    1,0,
+                0,               0,                    0,1);
 }
 
 gx::matrix gx::rotateArbitrary(vector3f axis, double angle) {

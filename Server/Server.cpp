@@ -33,8 +33,8 @@ void NetworkServer::doServer() {
   ConfigManager::setupLog("server");
   sf::IpAddress myIpAddress = sf::IpAddress::getLocalAddress();
   std::cout << "Server Ip Address: " << myIpAddress.toString() << std::endl;
-  const int tickspersecond = 30;
-  const int tick_length = 1000 / tickspersecond;
+  const int ticksPerSecond = 30;
+  const int tickLength = 1000 / ticksPerSecond;
   sf::Clock clock;
   
   while (server.size() < NUM_PLAYERS) {
@@ -81,11 +81,11 @@ void NetworkServer::doServer() {
 
     //3. prep and send response to everyone
 	  if(!this->server.sendPacketToAll<ServerGameTimeRespond>( game.prepResponse() ) ) {
-          std::cout << "Error sending cgta to everybody" << std::endl;
+      std::cout << "Error sending cgta to everybody" << std::endl;
     }
 
     //4. go back to sleep slave.
-    sf::sleep( sf::milliseconds( tick_length -
+    sf::sleep( sf::milliseconds( tickLength -
                                  clock.getElapsedTime().asMilliseconds()) );
   }
 } 
