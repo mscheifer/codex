@@ -200,5 +200,5 @@ std::ostream& gx::operator<< (std::ostream& out, const gx::vector3<T>& v) {
 }
 
 template class gx::vector3<GLfloat>;
-template gx::vector3<GLfloat> gx::operator*<GLfloat>(typename vector3<GLfloat>::elem_t, const vector3<GLfloat>&);
+template gx::vector3<GLfloat> gx::operator*<GLfloat>(vector3<GLfloat>::elem_t, const vector3<GLfloat>&);
 template std::ostream& gx::operator<<<GLfloat> (std::ostream& out, const vector3<GLfloat>& v);

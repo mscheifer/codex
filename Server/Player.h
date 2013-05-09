@@ -47,12 +47,12 @@ public:
   float getSpeed(){ return speed;}
   void setSpeed(float);
 
-  virtual void serialize(sf::Packet& packet) const {
+  void serialize(sf::Packet& packet) const {
     Entity::serialize(packet);
     packet << this->player_id;
   }
 
-  virtual void deserialize(sf::Packet& packet) {
+  void deserialize(sf::Packet& packet) {
     Entity::deserialize(packet);
     packet >> this->player_id;
   }
