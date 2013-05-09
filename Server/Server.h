@@ -21,6 +21,7 @@ public:
 
   ~NetworkServer() {}
   
+  void combinePackets(ClientGameTimeAction & a);
   void receiveMessages(int i);  
   void doServer();
 };
