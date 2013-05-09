@@ -10,10 +10,11 @@ void NetworkServer::receiveMessages(int i) {
       switch (packetType) {
         case CGTA:
           cgta.deserialize(packet);
-          if (cgta == pPacket) 
+          if (cgta == pPacket) {
             continue; 
-          else 
+          } else {
             pPacket = cgta;
+          }
           game.evaluate(cgta);
           //cgta.print();
         break;

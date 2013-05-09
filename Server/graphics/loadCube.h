@@ -104,7 +104,7 @@ std::vector<gx::drawSet::vaoData_t> loadCube() {
                                           -1.0f,-1.0f, 0.0f, 
                                            1.0f,-1.0f, 0.0f, 
                                            1.0f, 1.0f, 0.0f, 
-                                           1.0f,-1.0f, 0.0f }};
+                                          -1.0f, 1.0f, 0.0f }};
   std::array<GLfloat,8*4> lightblueArray   = {{ 0.4f, 0.4f, 1.0f, 1.0f,
                                                 0.4f, 0.4f, 1.0f, 1.0f,
                                                 0.4f, 0.4f, 1.0f, 1.0f,

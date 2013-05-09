@@ -90,7 +90,6 @@
     <ClCompile Include="graphics\uniformBlock.cpp" />
     <ClCompile Include="graphics\input.cpp" />
     <ClCompile Include="graphics\vao.cpp" />
-    <ClCompile Include="graphics\vector3.cpp" />
     <ClCompile Include="graphics\vector4.cpp" />
     <ClCompile Include="graphics\vertexAttrib.cpp" />
     <ClCompile Include="graphics\vertexAttribSignature.cpp" />

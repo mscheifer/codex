@@ -108,9 +108,6 @@
     <ClCompile Include="graphics\vao.cpp">
       <Filter>Source Files\graphics</Filter>
     </ClCompile>
-    <ClCompile Include="graphics\vector3.cpp">
-      <Filter>Source Files\graphics</Filter>
-    </ClCompile>
     <ClCompile Include="graphics\vector4.cpp">
       <Filter>Source Files\graphics</Filter>
     </ClCompile>

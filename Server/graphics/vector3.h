@@ -16,8 +16,14 @@ class vector3 {
     elem_t& x;
     elem_t& y;
     elem_t& z;
-    vector3(): elems{{ 0, 0, 0 }}, x(elems[0]), y(elems[1]), z(elems[2]) {}
-    vector3(elem_t x0,elem_t y0,elem_t z0): elems{{ x0, y0, z0 }}, x(elems[0]), y(elems[1]), z(elems[2]) {}
+    vector3(): x(elems[0]), y(elems[1]), z(elems[2]) {
+      elems[0] = 0; elems[1] = 0; elems[2] = 0;
+	}
+    vector3(elem_t x0,elem_t y0,elem_t z0): x(elems[0]), y(elems[1]), z(elems[2]) {
+      this->x = x0;
+      this->y = y0;
+      this->z = z0;
+	}
     vector3<T>& operator=(const vector3<T>& other) {
       this->elems = other.elems;
       return *this;
