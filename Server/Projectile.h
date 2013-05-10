@@ -14,6 +14,7 @@ public:
   Position range;
   Position distanceLeftToTravel;
   void setOwner(Player *);
+  Player* getOwner(){return owner;}
   void updateBounds();
   void updateBoundsSoft();
 private:
