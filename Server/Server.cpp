@@ -72,7 +72,6 @@ void NetworkServer::doServer() {
 	//  std::cout << "Error sending game start packet" << std::endl;
   //}
   std::cout << "server start game" << std::endl;
-  int i = 0;
   while(true) {
     clock.restart();
     

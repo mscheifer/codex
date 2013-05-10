@@ -18,8 +18,8 @@ public:
   //read and initialize the config file
   static void readConfig();
 
-  static int numPlayers(){
-    return StringToNumber<int>(ConfigManager::configMap["players"]);
+  static unsigned int numPlayers(){
+    return StringToNumber<unsigned int>(ConfigManager::configMap["players"]);
   }
   
   //log str with given log level
