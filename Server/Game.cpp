@@ -40,11 +40,13 @@ void Game::updateAndResolveCollision() {
 
   std::vector<Player *> currentPlayers =  world.getPlayers();
 	std::vector<Entity *> currentEntities = world.getEntity();
-  for( unsigned int i = 0; i < currentEntities.size(); i++ ) {
+  for( unsigned int i = 0; i < currentPlayers.size(); i++ ) {
 		 //std::cout << " hello nigga, updating entities" << std::endl;
+		 currentPlayers[i]->update();
+	}
+  for( unsigned int i = 0; i < currentEntities.size(); i++ ) {
 		 currentEntities[i]->update();
 	}
-
   //run collision fix here
   for( unsigned int i = 0; i <  currentPlayers.size(); i++ ) {
     currentPlayers[i]->handleCollisions();

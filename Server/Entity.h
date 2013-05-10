@@ -36,39 +36,23 @@ public:
 
   Coordinate getPosition(void) const { return position; }
   Direction getDirection(void) const { return direction; }
-  void setDirection(Direction d) {
-	  direction = d;
-  }
-
-  void setMap(Map* m) {
-	  map = m;
-  }
-
-  void setPosition(Coordinate c) {
-	  position = c;
-  }
-
+  void setDirection(Direction d) { direction = d; }
+  void setMap(Map* m) { map = m; }
+  void setPosition(Coordinate c) { position = c;}
+  void setBoundingObjs(std::vector<BoundingObj*> b){ boundingObjs = b; }
+  std::vector<BoundingObj*> getBoundingObjs(){ return boundingObjs; }
+  Entity_Type getType(){ return type; }
+  
   virtual void serialize(sf::Packet& packet) const
   {
-
     position.serialize(packet);
     direction.serialize(packet);
   }
 
   virtual void deserialize(sf::Packet& packet)
   {    
-
     position.deserialize(packet);
     direction.deserialize(packet);
   }
-
-  void setBoundingObjs(std::vector<BoundingObj*> b){
-    boundingObjs = b;
-  }
-
-  std::vector<BoundingObj*> getBoundingObjs(){
-    return boundingObjs;
-  }
-
   virtual Entity_Type getType(){ return type; }
 };
