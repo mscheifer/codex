@@ -1,5 +1,15 @@
 #include "Server.h"
 
+void NetworkServer::combinePackets(ClientGameTimeAction & a) {
+  pPacket.player_id = a.player_id;
+  pPacket.movement = a.movement;
+  pPacket.attackMelee |= a.attackMelee;
+	pPacket.attackRange |= a.attackRange;
+	pPacket.weapon1 |= a.weapon1;
+	pPacket.weapon2 |= a.weapon2;
+	pPacket.jump |= a.jump;
+	pPacket.facingDirection = a.facingDirection;
+}
 void NetworkServer::receiveMessages(int i) {
   sf::Packet packet;
     while(this->server.receiveMessage(packet,i)) {
@@ -10,12 +20,7 @@ void NetworkServer::receiveMessages(int i) {
       switch (packetType) {
         case CGTA:
           cgta.deserialize(packet);
-          if (cgta == pPacket) {
-            continue; 
-          } else {
-            pPacket = cgta;
-          }
-          game.evaluate(cgta);
+          combinePackets(cgta);
           //cgta.print();
         break;
         case CHAT: //chat should be part of CGTA  
@@ -26,6 +31,8 @@ void NetworkServer::receiveMessages(int i) {
         break;
     }
   }
+  ConfigManager::log(pPacket.toString()); 
+  game.evaluate(pPacket);
   pPacket.clear();
 }
 

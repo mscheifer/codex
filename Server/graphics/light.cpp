@@ -11,7 +11,7 @@ namespace { //to not export
  }};
 } //end unnamed namespace
 
-gx::light::light(vector4 co, GLfloat ca, GLfloat la, GLfloat qa)
+gx::light::light(vector4f co, GLfloat ca, GLfloat la, GLfloat qa)
          : data(), unif(uniformName,std::map<std::string,GLenum>(uniformVars.begin(),uniformVars.end())) {
     //have to initialize here instead of initialization list because of visual studio
     this->data.constantAttenuation = ca;
@@ -29,7 +29,7 @@ gx::light::light(vector4 co, GLfloat ca, GLfloat la, GLfloat qa)
     //this->unif.writeBufferStruct(0,data); TODO: uncomment and renenable
   }
 
-void gx::light::updatePosition(vector4 pos) {
+void gx::light::updatePosition(vector4f pos) {
   std::array<GLfloat,4> newpos = {{ pos.x, pos.y, pos.z, pos.w }};
   this->data.position = newpos;
   this->unif.write(uniformVars[0].first, data.position);

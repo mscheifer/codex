@@ -13,7 +13,7 @@ class BoundingObj{
 public:
   typedef float unit_t;
   typedef gx::vector3f vec3_t; //TODO use ints!!!
-  typedef gx::vector4 vec4_t;
+  typedef gx::vector4f vec4_t;
 
 private:
   Quadtree* qtree;

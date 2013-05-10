@@ -47,14 +47,16 @@ std::vector<gx::drawSet::vaoData_t> loadModel(const std::string& ModelPath) {
 
 std::vector<gx::drawSet::vaoData_t> entitiesData() {
 	// MODEL LOADING
-	std::vector<gx::drawSet::vaoData_t> model_import = loadModel("models/weird_orange_thing.dae");
+  std::vector<gx::drawSet::vaoData_t> model_import  = loadModel("models/weird_orange_thing.dae");
   std::vector<gx::drawSet::vaoData_t> model_import2 = loadModel("models/Model_rotate.dae");
+  std::vector<gx::drawSet::vaoData_t> wallImport    = loadModel("models/wall.dae");
 
     //setup drawing data
   std::vector<gx::drawSet::vaoData_t> entitiesData;
   auto cubes = gx::loadCube();
   entitiesData.insert(entitiesData.end(),model_import2.begin(),model_import2.end());
   //entitiesData.insert(entitiesData.end(),model_import.begin(),model_import.end());
+  entitiesData.insert(entitiesData.end(),wallImport.begin(),wallImport.end());
   entitiesData.insert(entitiesData.end(),cubes.begin(),cubes.end());
   return entitiesData;
 }
@@ -106,7 +108,7 @@ gx::graphicsClient::graphicsClient():
            "DrChao", sf::Style::Default),
     glewStatus(initGlew()), //glew needs to be called here, after window, before anything else
     userInput(),
-    light1(gx::vector4(1,1,1),0.5,0.5,0.05f),
+    light1(gx::vector4f(1,1,1),0.5,0.5,0.05f),
     display(),
     entities(readFile("shaders/default.vert"),readFile("shaders/default.frag"),
                        entitiesData(),uniforms()),
@@ -131,7 +133,7 @@ gx::graphicsClient::graphicsClient():
   glCullFace(GL_BACK);
   glFrontFace(GL_CCW);
 
-  light1.updatePosition(gx::vector4( 0, 5, -10));
+  light1.updatePosition(gx::vector4f( 0, 5, -10));
 
   this->setCamera();
   this->userInput.setUpMouse();
@@ -180,7 +182,7 @@ void gx::graphicsClient::draw() {
   }
 }
 
-void gx::graphicsClient::updatePosition(vector4 pos) {
+void gx::graphicsClient::updatePosition(vector4f pos) {
   this->playerPosition = pos;
   this->setCamera();
 }

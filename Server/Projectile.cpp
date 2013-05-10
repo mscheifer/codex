@@ -67,5 +67,5 @@ void Projectile::updateBounds(){
 
 void Projectile::updateBoundsSoft(){
   //update the bounding objects
-  boundingObjs[0]->setCenter(gx::vector4(position.x, position.y, position.z));
+  boundingObjs[0]->setCenter(BoundingObj::vec4_t(position.x, position.y, position.z));
 }

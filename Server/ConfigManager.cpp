@@ -1,4 +1,21 @@
 #include "ConfigManager.h"
+#include <iostream>
+#include <time.h>
+#include "util.h"
+
+  //convert the log level to it's string value
+std::string ConfigManager::levelToString(LogLevels level) {
+  switch(level) {
+  case DEBUG1:
+    return "DEBUG1";
+  case DEBUG2:
+    return "DEBUG2";
+  case NOTE:
+    return "NOTE";
+  default:
+    return "UNK";
+  }
+}
 
 ConfigManager::configMap_t ConfigManager::configMap;
 std::ofstream ConfigManager::logfile;
@@ -8,7 +25,7 @@ void ConfigManager::log(std::string str, ConfigManager::LogLevels level){
     return;
 
   time_t timer;
-  timer = time(NULL);
+  timer = time(nullptr);
   struct tm * currTime = localtime(&timer);
   
   if( ConfigManager::level <= level ){
@@ -23,7 +40,7 @@ void ConfigManager::setupLog(std::string str){
     return;
 
   time_t timer;
-  timer = time(NULL);
+  timer = time(nullptr);
   struct tm * currTime = localtime(&timer);
   
   std::stringstream fname;
@@ -31,11 +48,9 @@ void ConfigManager::setupLog(std::string str){
     currTime->tm_hour << "_" << currTime->tm_min << "_" << currTime->tm_sec << ".txt";
   
   ConfigManager::logfile.open(fname.str());
-
-  //std::string fname = "" + currTime.tm_mon + "_" + currTime.tm_mday + currTime.tm_hour + currTime.tm_min + currTime.tm_sec;
 }
 
-void ConfigManager::readConfig(){
+void ConfigManager::readConfig() {
   std::ifstream configFile;
   configFile.open("config.txt");
   std::string line;
@@ -53,7 +68,4 @@ void ConfigManager::readConfig(){
     ConfigManager::configMap.insert(s);
     //std::cout << line.substr(0,ind) << " = " << line.substr(ind+1) << std::endl;
   }
-  //std::cout << "a" << configMap["a"] << std::endl;
-  //std::cout << "j" << configMap["j"] << std::endl;
-  //std::cout << "x" << configMap["x"] << std::endl;
 }

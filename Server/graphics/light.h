@@ -15,8 +15,8 @@ class light {
     } data;
     uniform::block unif;
   public:
-    light(vector4,GLfloat,GLfloat,GLfloat);
-    void updatePosition(vector4);
+    light(vector4f,GLfloat,GLfloat,GLfloat);
+    void updatePosition(vector4f);
     uniform::block& storage();
 };
 

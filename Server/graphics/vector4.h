@@ -1,47 +1,56 @@
 #ifndef VECTOR4_H
 #define VECTOR4_H
 #include <iostream>
+#include <array>
 #include "oglUtil.h"
 
 namespace gx {
 template<typename T>
 class vector3;
 
-typedef vector3<GLfloat> vector3f;
-
+template<typename T>
 class vector4 {
-  template<class Ret, class C>
-  static Ret& index(C& a, int i)
-          {return (i == 0) ? a.x : (i == 1) ? a.y : (i == 2) ? a.z : a.w;}
+  std::array<T,4> elems;
 public:
-  typedef float elem_t;
-  elem_t x,y,z,w;
+  typedef T elem_t;
+  elem_t& x;
+  elem_t& y;
+  elem_t& z;
+  elem_t& w;
   vector4();
+  vector4(vector4<T> const&);
+  vector4(vector4<T>&&);
+  vector4<T>& operator=(vector4<T> const&);
+  vector4<T>& operator=(vector4<T>&&);
   vector4(elem_t,elem_t,elem_t);
   vector4(const std::initializer_list<elem_t>);
   void set(elem_t,elem_t,elem_t,elem_t);
-  void add(const vector3f&);
-  void add(const vector4&,const vector3f&);
-  void subtract(vector4&);
-  void subtract(vector4&,vector4&);
+  void add(const vector3<T>&);
+  void add(const vector4<T>&,const vector3<T>&);
+  void subtract(const vector3<T>&);
+  void subtract(const vector4<T>&,const vector3<T>&);
   void dehomogenize();
 
   elem_t& get(int);
   const elem_t& get(int i) const;
   elem_t& operator[](int i); 
   const elem_t& operator[](int i) const;
-  vector4 operator+(const vector3f&) const;
-  vector3f operator-(vector4) const;      
-  vector4& operator+=(const vector3f&);
-  bool operator==(const vector4&) const;
-  bool operator!=(const vector4&) const;
+  vector4<T> operator+(const vector3<T>&) const;
+  vector3<T> operator-(vector4<T>) const;      
+  vector4<T>& operator+=(const vector3<T>&);
+  bool operator==(const vector4<T>&) const;
+  bool operator!=(const vector4<T>&) const;
   void print(std::ostream&) const;
   void print() const;
 };
 
-vector4 dehomogenize(vector4);
+template<typename T>
+vector4<T> dehomogenize(vector4<T>);
 
-std::ostream& operator<< (std::ostream& out, const vector4& v);
+template<typename T>
+std::ostream& operator<< (std::ostream& out, const vector4<T>& v);
+
+typedef vector4<GLfloat> vector4f;
 
 } //end namespace gx
 #endif

@@ -308,6 +308,9 @@
     <ClInclude Include="graphics\loadCube.h">
       <Filter>Header Files\graphics</Filter>
     </ClInclude>
+    <ClInclude Include="util.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\Makefile">
@@ -318,6 +321,9 @@
     </None>
     <None Include="shaders\default.vert">
       <Filter>Resource Files\graphics</Filter>
+    </None>
+    <None Include="masterConfig.txt">
+      <Filter>Resource Files</Filter>
     </None>
   </ItemGroup>
 </Project>

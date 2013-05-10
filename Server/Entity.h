@@ -8,7 +8,7 @@
 #include <stdint.h> //uint32_t
 #include "boundingManager.h"
 
-class Entity{
+class Entity {
 public:
   enum Entity_Type {UNDEFINED, PROJECTILE, PLAYER, WEAPON, WALL};
 
