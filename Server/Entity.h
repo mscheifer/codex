@@ -63,13 +63,13 @@ public:
 	  position = c;
   }
 
-  void serialize(sf::Packet& packet) const
+  virtual void serialize(sf::Packet& packet) const
   {
     position.serialize(packet);
     direction.serialize(packet);
   }
 
-  void deserialize(sf::Packet& packet)
+  virtual void deserialize(sf::Packet& packet)
   {
     position.deserialize(packet);
     direction.deserialize(packet);

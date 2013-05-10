@@ -6,7 +6,7 @@ struct ServerGameTimeRespond
 {
   static const int packetType = SGTR;
   std::vector<Player> players;
-  std::vector<Entity> entities;
+  std::vector<Entity*> entities;
   Game_State state;
   ServerGameTimeRespond():state(PLAYING) {}
 
@@ -20,7 +20,7 @@ struct ServerGameTimeRespond
     size = static_cast<sf::Uint32>(entities.size());
     packet << size;
     for(unsigned int i = 0; i < size; i++) {
-      entities[i].serialize(packet);
+      entities[i]->serialize(packet);
     }
   }
 

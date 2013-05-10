@@ -136,7 +136,10 @@ void NetworkClient::doClient() {
         this->id = newId.id;
         std::cout << "USERID: " << this->id << std::endl;
         this->action.player_id = id;
-      } else if (packetType == INIT) break;
+      } else if (packetType == INIT) {
+         //TODO: init the position
+        break;
+      }
 	  }
   }
   std::cout << "game started" << std::endl;
