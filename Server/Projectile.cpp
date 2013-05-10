@@ -3,7 +3,6 @@
 Projectile::Projectile(Map* m)
 {
 	this->map = m;
-  type = PROJECTILE;
 
   BoundingBox* b = new BoundingBox(BoundingObj::vec4_t(0,0,0),BoundingObj::vec3_t(1,0,0),BoundingObj::vec3_t(0,1,0),BoundingObj::vec3_t(0,0,1),
   5,5,5);

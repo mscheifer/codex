@@ -23,7 +23,7 @@ class Player: public Entity
 {
 public:
   static const float sphereRadius;
-
+  static const Entity_Type type = PLAYER;
   bool dead; //might be private. should be determined in handleAction
   bool minotaur; //might be private
   int player_id;
@@ -58,6 +58,10 @@ public:
   void deserialize(sf::Packet& packet) {
     Entity::deserialize(packet);
     packet >> this->player_id;
+  }
+
+  Entity_Type getType() {
+    return type;
   }
 
 private:

@@ -26,6 +26,9 @@ struct ServerGameTimeRespond
 
   //make sure to clear the packet's sizes
   void deserialize(sf::Packet & packet) {
+    for (auto ent= entities.begin(); ent!=entities.end();ent++ ) {
+      delete *ent;
+    }
 	  entities.clear();
     players.clear();
     
@@ -36,12 +39,11 @@ struct ServerGameTimeRespond
       p.deserialize(packet);
       players.push_back(p);
     }
-
-    packet >> size;
     entities.clear();
+    packet >> size;
     for(unsigned int i = 0; i < size; i++) {
-      Entity newEntity = Entity(); //TODO should we do it lke this?
-      newEntity.deserialize(packet);
+      Entity* newEntity = new Entity(); //TODO should we do it lke this?
+      newEntity->deserialize(packet);
       entities.push_back(newEntity);
     }
   }

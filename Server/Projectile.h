@@ -6,6 +6,7 @@ class Projectile :
 public DeadlyEntity
 {
 public:
+  static const Entity_Type type =PROJECTILE;
   Projectile(Map* m);
   ~Projectile(void);
   void update(void);
@@ -16,6 +17,9 @@ public:
   void setOwner(Player *);
   void updateBounds();
   void updateBoundsSoft();
+  Entity_Type getType() {
+    return type;
+  }
 private:
   Player * owner;
 };

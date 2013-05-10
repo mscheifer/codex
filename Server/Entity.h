@@ -10,19 +10,17 @@
 
 class Entity {
 public:
-  enum Entity_Type {UNDEFINED, PROJECTILE, PLAYER, WEAPON, WALL};
-
+  static const Entity_Type type = UNDEFINED;
 protected:
   Coordinate position;
   Direction direction;
   Map* map;
   std::vector<BoundingObj*> boundingObjs;
-  Entity_Type type;
   // Some kind of state {paralyzed, frozen, blah blah}
   // Power ups {contains MULTIPLERS for health, defense/ elemental weapons}
 
 public:
-  Entity() {type = UNDEFINED;}
+  Entity() {}
   ~Entity() {}
   
   virtual void handleAction(ClientGameTimeAction){}
@@ -55,7 +53,6 @@ public:
 
     position.serialize(packet);
     direction.serialize(packet);
-        packet << static_cast<uint32_t>(type);
   }
 
   virtual void deserialize(sf::Packet& packet)
@@ -63,9 +60,6 @@ public:
 
     position.deserialize(packet);
     direction.deserialize(packet);
-        uint32_t entType;
-    packet >> entType;
-    type = static_cast<Entity_Type>(entType);
   }
 
   void setBoundingObjs(std::vector<BoundingObj*> b){
@@ -76,5 +70,5 @@ public:
     return boundingObjs;
   }
 
-  Entity_Type getType(){ return type; }
+  virtual Entity_Type getType(){ return type; }
 };
