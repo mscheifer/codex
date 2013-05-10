@@ -36,7 +36,7 @@ struct ClientGameTimeAction
     movement = NULL_DIR;
     attackMelee = attackRange = weapon1 = weapon2 = jump = false;
     facingDirection.x = facingDirection.z = 0;
-    facingDirection.y = -1;
+    facingDirection.y = 0;
     updated = false;
   }
 

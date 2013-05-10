@@ -150,7 +150,6 @@ gx::graphicsClient::graphicsClient():
 ClientGameTimeAction gx::graphicsClient::handleInput() {
   action.clear();
   this->userInput.handle(this->window);
-  action.updated = this->userInput.getUpdated();
   if(this->userInput.resizedWindow()) {
     reshape(this->userInput.windowWidth(),this->userInput.windowHeight());
   }
@@ -162,6 +161,7 @@ ClientGameTimeAction gx::graphicsClient::handleInput() {
   }
   action.movement = getMovement();
   auto dir = getDir();
+  action.updated = this->userInput.getUpdated();
   action.facingDirection = Direction(dir.x, dir.y, dir.z);
   action.attackMelee = fire1();
   action.attackRange = fire2();
