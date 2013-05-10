@@ -11,7 +11,6 @@ Wall::Wall(unsigned int w, unsigned int d, unsigned int h, Coordinate sc, Direct
   currentCenter = 0;
   position = sc;
   direction = direct;
-  type = WALL;
   map = m;
 
   BoundingBox* b = new BoundingBox(BoundingObj::vec4_t(direct.x,direct.y,direct.z),BoundingObj::vec3_t(1,0,0),BoundingObj::vec3_t(0,1,0),BoundingObj::vec3_t(0,0,1),

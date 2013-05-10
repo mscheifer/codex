@@ -8,6 +8,7 @@ class Projectile;
 class Weapon : public DeadlyEntity
 {
 public:
+  static const Entity_Type type = WEAPON;
 	Weapon(Map*);
 	~Weapon(void);
 	Weapon(float damage, float range, Coordinate d, float mpcost, Map*);
@@ -24,6 +25,9 @@ public:
 	virtual Projectile* attackRange(Direction d, Coordinate c);
   virtual bool pickUp(){ return false; };
   virtual bool dropDown(Coordinate dropPosition){ position = dropPosition; return false; };
+  Entity_Type getType() {
+    return type;
+  }
 
 protected:
 	int Range_Cool_Down_Time; //cool down time between uses in milliseconds

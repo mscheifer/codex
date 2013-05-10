@@ -31,3 +31,5 @@ enum Game_State {MANOTAUR_WIN, CIVILIAN_WIN, PLAYING};
 
 //Networking enums
 enum Opcode {INIT,JOINID, CHAT, T1, T2, CGTA, SGTR, ERROR};
+
+enum Entity_Type {UNDEFINED, PROJECTILE, PLAYER, WEAPON, WALL};

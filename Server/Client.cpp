@@ -40,7 +40,7 @@ void NetworkClient::receiveMessages() {
           }
         }
         for(auto entP = s.entities.begin(); entP != s.entities.end(); entP++) {
-            auto gentity = toGentity(*entP);
+            auto gentity = toGentity(**entP);
             gentity.type = 3;
             entities.push_back(gentity);
         }
@@ -136,7 +136,10 @@ void NetworkClient::doClient() {
         this->id = newId.id;
         std::cout << "USERID: " << this->id << std::endl;
         this->action.player_id = id;
-      } else if (packetType == INIT) break;
+      } else if (packetType == INIT) {
+         //TODO: init the position
+        break;
+      }
 	  }
   }
   std::cout << "game started" << std::endl;

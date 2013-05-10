@@ -69,7 +69,7 @@ ServerGameTimeRespond Game::prepResponse() {
 	}
 
 	for( unsigned int i = 0; i < currentEntities.size(); i++ ) {
-		s.entities.push_back(*currentEntities[i]); //add the player to the return struct
+		s.entities.push_back(currentEntities[i]); //add the player to the return struct
 	}
 	  
 	unsigned int deadPlayers = 0;

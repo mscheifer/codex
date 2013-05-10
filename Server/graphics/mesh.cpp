@@ -1,10 +1,14 @@
 #include <assert.h>
 #include <GL/glew.h>
+#include <assimp/cimport.h>
 #include <string>
 
 #include "mesh.h"
 #include "vertexAttrib.h"
 #include "vector4.h"
+
+#define findMin(x,y) (x < y ? x : y)
+#define findMax(x,y) (x > y ? x : y)
 
 gx::Mesh::MeshEntry::MeshEntry(const aiMesh* paiMesh)
   : entitiesData(), MaterialIndex(paiMesh->mMaterialIndex) {
@@ -63,7 +67,7 @@ gx::Mesh::MeshEntry::MeshEntry(MeshEntry&& other) noexcept
     MaterialIndex(std::move(other.MaterialIndex)) {}
 
 gx::Mesh::Mesh()
-  : m_Entries(), m_Textures() {}
+	: m_Entries(), m_Textures() {}
 
 
 gx::Mesh::~Mesh()
@@ -95,6 +99,10 @@ const aiScene* gx::Mesh::LoadMesh(const std::string& Filename)
     
   if (pScene) {
       Ret = InitFromScene(pScene, Filename);
+
+	  // get bounding box
+	  //CalcBoundBox(pScene);
+
   } else {
       std::cout << "Error parsing '" <<  Filename.c_str() << "': '" << Importer.GetErrorString() << "'\n" << std::endl;
   }
@@ -170,3 +178,49 @@ bool gx::Mesh::InitMaterials(const aiScene* pScene, const std::string& Filename)
     return Ret;
 }
 
+void gx::Mesh::CalcBoundBox(const aiScene* scene) {
+
+	// using aiMatrix4x4 instead of gx::matrix since there's more operations defined for it.
+	// for now, we prolly don't need to use it. Read the comment below for
+	// the aiTransformVecByMatrix4 function for further explanation
+	//aiMatrix4x4* transform = &(scene->mRootNode->mTransformation);
+
+	// default values for min/max for instantiation
+	float min_f =  1e10f;
+	float max_f = -1e10f;
+
+	gx::vector3f min(min_f, min_f, min_f);
+	gx::vector3f max(max_f, max_f, max_f);
+
+	// only calculate the first mesh because our models only has one
+	const aiMesh* mesh = scene->mMeshes[0];
+
+	// find the min/max coord of every vertices in our mesh
+	for (int t = 0; t < mesh->mNumVertices; t++) {
+
+		aiVector3D foo = mesh->mVertices[t];
+
+		// transform the vertex based on the node's transformation matrix.
+		// we prolly don't have to do this for now since currently we don't
+		// apply the transformation on our model before drawing.
+		//aiTransformVecByMatrix4(&foo, transform);
+
+		min.x = findMin(min.x, foo.x);
+		min.y = findMin(min.y, foo.y);
+		min.z = findMin(min.z, foo.z);
+
+		max.x = findMax(max.x, foo.x);
+		max.y = findMax(max.y, foo.y);
+		max.z = findMax(max.z, foo.z);
+	}
+
+	// calc boundary center pos & length info
+	this->m_boundary.center.set(
+		(min.x + max.x) / 2.0f,		// x position
+		(min.y + max.y) / 2.0f,		// y position
+		(min.z + max.z) / 2.0f);	// z position
+
+	this->m_boundary.width = max.x - min.x;
+	this->m_boundary.height = max.y - min.y;
+	this->m_boundary.depth = max.z - min.z;
+}

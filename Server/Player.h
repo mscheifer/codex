@@ -21,7 +21,7 @@ class Player: public Entity
 {
 public:
   static const float sphereRadius;
-
+  static const Entity_Type type = PLAYER;
   v3_t acceleration;
   v3_t velocity;
   v3_t oldJumpVelocity;
@@ -60,6 +60,10 @@ public:
   void deserialize(sf::Packet& packet) {
     Entity::deserialize(packet);
     packet >> this->player_id;
+  }
+
+  Entity_Type getType() {
+    return type;
   }
 
 private:
