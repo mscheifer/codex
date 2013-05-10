@@ -43,6 +43,7 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <AdditionalIncludeDirectories>$(ProjectDir);$(SolutionDir)SFML-2.0\include;$(SolutionDir)assimp\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>_MBCS;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -146,7 +147,6 @@
     <ClInclude Include="graphics\windowsHacks.h" />
     <ClInclude Include="Map.h" />
     <ClInclude Include="NetworkServices.h" />
-    <ClInclude Include="NetworkData.h" />
     <ClInclude Include="Physics.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="PowerUp.h" />
@@ -157,6 +157,7 @@
     <ClInclude Include="Server.h" />
     <ClInclude Include="StaticEnums.h" />
     <ClInclude Include="AudioManager.h" />
+    <ClInclude Include="util.h" />
     <ClInclude Include="Wall.h" />
     <ClInclude Include="Weapon.h" />
     <ClInclude Include="WeaponFire.h" />
@@ -164,6 +165,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="..\Makefile" />
+    <None Include="masterConfig.txt" />
     <None Include="shaders\default.frag" />
     <None Include="shaders\default.vert" />
   </ItemGroup>

@@ -55,13 +55,17 @@ public:
 
   //setters and getters
   Entity* getEntity() const{return entity;}
+  void setEntity(Entity* e){entity = e;}
   Quadtree* getQtree()const{return qtree;}
   void setQuadtree(Quadtree* q){qtree=q;}
   Rectangle* getRect()const{return rect;}
   //void setRect(Rectangle* r){rect = r;}
   vec4_t getCenter() const{return center;}
-  void setCenter(vec4_t cen){  
+  void setCenter(vec4_t cen){
     center = cen;
+  }
+  void setCenterOnTree(vec4_t cen){
+    setCenter(cen);
     updateOnTree();
   }
 };

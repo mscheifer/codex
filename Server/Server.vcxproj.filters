@@ -167,9 +167,6 @@
     <ClInclude Include="Server.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="NetworkData.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Player.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -311,6 +308,9 @@
     <ClInclude Include="graphics\loadCube.h">
       <Filter>Header Files\graphics</Filter>
     </ClInclude>
+    <ClInclude Include="util.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\Makefile">
@@ -321,6 +321,9 @@
     </None>
     <None Include="shaders\default.vert">
       <Filter>Resource Files\graphics</Filter>
+    </None>
+    <None Include="masterConfig.txt">
+      <Filter>Resource Files</Filter>
     </None>
   </ItemGroup>
 </Project>

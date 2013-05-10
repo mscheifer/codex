@@ -12,6 +12,7 @@ public:
   void addNewCenter(Coordinate);
   void addNewCenters(std::vector<Coordinate>&);
   void updateBounds();
+  void updateBoundsSoft(); 
 private:
   // A vector of POSSIBLE positions
   std::vector<Coordinate> centerPositions;

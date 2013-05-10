@@ -35,11 +35,18 @@ void Player::init(Position x, Position y, Position z, int assigned_id, Map * m)
 	weapon[0] = new WeaponFist(position, this->map);
 	weapon[1] = new WeaponFire(position, this->map);
 	current_weapon_selection = 1;
+  
+  generateBounds(x,y,z);
+  m->addToQtree(this);
+}
+
+void Player::generateBounds(Position x,Position y,Position z){
+  //init the bounding objects
+  //BoundingSphere* b = new BoundingSphere(gx::vector4(x,y,z),sphereRadius);
   BoundingBox* b = new BoundingBox(BoundingObj::vec4_t(x,y,z),BoundingObj::vec3_t(1,0,0),BoundingObj::vec3_t(0,1,0),BoundingObj::vec3_t(0,0,1),
     sphereRadius,sphereRadius,sphereRadius);
-  //BoundingSphere* b = new BoundingSphere(gx::vector4(x,y,z),sphereRadius);
+  b->setEntity(this);
   boundingObjs.push_back(b);
-  m->addToQtree(this);
 }
 
 Player::~Player(void)
@@ -199,7 +206,6 @@ void Player::attack( ClientGameTimeAction a) {
 			return;
 		}
 		currentWeapon->attackMelee();
-
 	}
 
 	attacking = true;
@@ -219,9 +225,69 @@ std::string Player::getString()
 
 void Player::updateBounds(){
   //update the bounding objects
-  boundingObjs[0]->setCenter(BoundingObj::vec4_t(position.x, position.y, position.z));
+  boundingObjs[0]->setCenterOnTree(BoundingObj::vec4_t(position.x, position.y, position.z));
 }
 
+void Player::updateBoundsSoft(){
+  //update the bounding objects
+}
+
+void Player::handleCollisions(){
+  std::vector<std::pair<Entity*,BoundingObj::vec3_t>> entities =  detectCollision();
+  bool restart = false;
+
+  for( auto it = entities.begin(); it != entities.end(); ){
+    Entity * e = it->first;
+    switch( e->getType() ){
+    case WALL:
+      restart = collideWall(*it);
+      break;
+    case PLAYER:
+      restart = collideWall(*it);
+      break;
+    case PROJECTILE:
+      restart = collideProjectile(*it);
+      it++;
+      break;
+    default:
+      break;
+    }
+
+    //different position now, needs to see what it hit
+    //TODO this could cause an infinite loop
+    if(restart){
+      restart = false;
+      entities = detectCollision();
+      it = entities.begin();
+    }
+  }
+}
+
+bool Player::collideWall(std::pair<Entity*,BoundingObj::vec3_t>& p){
+  Coordinate c = getPosition();
+  BoundingObj::vec3_t fixShit = p.second;
+	c.x += fixShit.x;
+	c.y += fixShit.y;
+	c.z += fixShit.z;
+  setPosition(c);
+  updateBounds();
+  return true;
+}
+
+bool Player::collidePlayer(std::pair<Entity*,BoundingObj::vec3_t>& p){
+  Coordinate c = getPosition();
+  BoundingObj::vec3_t fixShit = p.second;
+	c.x += fixShit.x;
+	c.y += fixShit.y;
+	c.z += fixShit.z;
+  setPosition(c);
+  updateBounds();
+  return true;
+}
+
+bool Player::collideProjectile(std::pair<Entity*,BoundingObj::vec3_t>& p){
+  return false;
+}
 
 void Player::setHealth(float h) {
 	health = h;
@@ -234,3 +300,4 @@ void Player::setSpeed(float s) {
 void Player::setMana(float m) {
 	mana = m;
 }
+
