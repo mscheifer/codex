@@ -47,7 +47,7 @@ std::vector<gx::drawSet::vaoData_t> loadModel(const std::string& ModelPath) {
 
 
 	// if we're done with the aiScene, reclaim memory
-	aiReleaseImport(scene);
+//	aiReleaseImport(scene);
 
 	return entities;
 }

@@ -101,7 +101,7 @@ const aiScene* gx::Mesh::LoadMesh(const std::string& Filename)
       Ret = InitFromScene(pScene, Filename);
 
 	  // get bounding box
-	  CalcBoundBox(pScene);
+	  //CalcBoundBox(pScene);
 
   } else {
       std::cout << "Error parsing '" <<  Filename.c_str() << "': '" << Importer.GetErrorString() << "'\n" << std::endl;
