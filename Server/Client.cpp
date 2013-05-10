@@ -41,7 +41,7 @@ void NetworkClient::receiveMessages() {
         }
         for(auto entP = s.entities.begin(); entP != s.entities.end(); entP++) {
             auto gentity = toGentity(*entP);
-            gentity.type = 1;
+            gentity.type = 3;
             entities.push_back(gentity);
         }
         auto pos = s.players[this->id].getPosition();
