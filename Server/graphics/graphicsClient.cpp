@@ -1,8 +1,5 @@
 #include "graphicsClient.h"
 #include <fstream>
-#include "oglUtil.h"
-#include "mesh.h"
-#include "loadCube.h"
 
 namespace {
 const unsigned int defaultWindowWidth  = 800;
@@ -39,9 +36,12 @@ std::vector<gx::drawSet::vaoData_t> loadModel(const std::string& ModelPath) {
 	}
 
 	std::vector<gx::drawSet::vaoData_t> entities;
-  //just do the first one until we get loading working
-  entities.push_back(model.m_Entries[0].entitiesData);
+	//just do the first one until we get loading working
+	entities.push_back(model.m_Entries[0].entitiesData);
 
+	// reclaim memory from the aiScene object once we're done with it
+	aiReleaseImport(scene);
+	
 	return entities;
 }
 

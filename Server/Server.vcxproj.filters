@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <Filter Include="Source Files">
@@ -312,6 +312,9 @@
     </None>
     <None Include="shaders\default.vert">
       <Filter>Resource Files\graphics</Filter>
+    </None>
+    <None Include="masterConfig.txt">
+      <Filter>Resource Files</Filter>
     </None>
   </ItemGroup>
 </Project>

@@ -1,10 +1,15 @@
 #ifndef GRAPHICS_CLIENT_H
 #define GRAPHICS_CLEINT_H
 #include <SFML/Window.hpp>
+#include <assimp/cimport.h>
+
 #include "displaySet.h"
 #include "drawSet.h"
 #include "light.h"
 #include "input.h"
+#include "oglUtil.h"
+#include "mesh.h"
+#include "loadCube.h"
 
 namespace gx {
 
