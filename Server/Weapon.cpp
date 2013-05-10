@@ -9,6 +9,7 @@ Weapon::Weapon(Map* m)
 	Range_Cool_Down_Counter = sf::Clock();
 	Melee_Cool_Down_Counter = sf::Clock();
 	this->map = m;
+  type = WEAPON;
 }
 
 

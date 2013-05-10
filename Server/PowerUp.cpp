@@ -13,7 +13,7 @@ void PowerUp::onCollision(Entity* entity) {
 		return ;
 	
 	//if a player hits a powerup	
-	if(entity->isPlayer()) {
+	if(entity->getType() == PLAYER) {
 		Player luckyGuy = *(Player*)entity;
 		luckyGuy.setHealth(luckyGuy.getHealth() + healthMutiplyer);
 		luckyGuy.setSpeed(luckyGuy.getSpeed() + speedMutiplyer);

@@ -33,6 +33,9 @@ public:
   ~Player(void);
   std::string getString();
   virtual bool attackBy(DeadlyEntity*);
+  void handleCollisions();  
+  void updateBounds();  
+  void updateBoundsSoft(); 
  
   bool moveTowardDirection(move_t degree);
   void jump();
@@ -56,8 +59,6 @@ public:
     Entity::deserialize(packet);
     packet >> this->player_id;
   }
-    
-  void updateBounds();
 
 private:
   float health;
@@ -78,6 +79,11 @@ private:
   void handleSelfAction(ClientGameTimeAction a);
   void handleOtherAction(ClientGameTimeAction a);
   void attack(ClientGameTimeAction a);
-  bool isPlayer(void) {return true;};
   void init(Position x, Position y, Position z, int assigned_id, Map * m);
+  void generateBounds(Position x,Position y,Position z);
+
+  //helper functions for collisions
+  bool collideWall(std::pair<Entity*,BoundingObj::vec3_t>& p);
+  bool collidePlayer(std::pair<Entity*,BoundingObj::vec3_t>& p);
+  bool collideProjectile(std::pair<Entity*,BoundingObj::vec3_t>& p);
 };

@@ -1,3 +1,4 @@
 log=0
-sound=1
+sound=0
 graphicsDebug=false
+players=1

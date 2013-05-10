@@ -13,7 +13,8 @@ Game::~Game(void)
 void Game::chooseMinotaur() 
 {
   srand(static_cast<unsigned int>(time(NULL)));
-  int minotaur = rand() % NUM_PLAYERS;
+  int s = ConfigManager::numPlayers();
+  int minotaur = rand() % ConfigManager::numPlayers();
   world.getPlayers()[minotaur]->minotaur=true;
 }
 
@@ -40,17 +41,18 @@ void Game::updateAndResolveCollision() {
 
   std::vector<Player *> currentPlayers =  world.getPlayers();
 	std::vector<Entity *> currentEntities = world.getEntity();
-
   for( unsigned int i = 0; i < currentEntities.size(); i++ ) {
 		 //std::cout << " hello nigga, updating entities" << std::endl;
 		 currentEntities[i]->update();
 	}
+
   //run collision fix here
   for( unsigned int i = 0; i <  currentPlayers.size(); i++ ) {
-    currentPlayers[i]->onCollision();
+    currentPlayers[i]->handleCollisions();
 	}
+
 	for( unsigned int i = 0; i < currentEntities.size(); i++ ) {
-		currentEntities[i]->onCollision();
+		currentEntities[i]->handleCollisions();
 	}
 }
 

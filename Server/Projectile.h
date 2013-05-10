@@ -13,9 +13,10 @@ public:
   void setRange(Position r);
   Position range;
   Position distanceLeftToTravel;
-  bool isProjectile(){return true;}
   void setOwner(Player *);
+  Player* getOwner(){return owner;}
   void updateBounds();
+  void updateBoundsSoft();
 private:
   Player * owner;
 };
