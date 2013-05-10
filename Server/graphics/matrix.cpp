@@ -251,7 +251,6 @@ gx::matrix gx::toRightHandBasisFromY(const vector3f& dirY) {
   } else {
     dirZ = vector3f(0,0,1);
   }
-  std::cout << "dirX: " << dirX << " dirY: " <<  dirY << " dirZ: " << dirZ << std::endl;
   return toBasis(dirX,dirY,dirZ);
 }
 

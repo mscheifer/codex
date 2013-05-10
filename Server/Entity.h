@@ -41,7 +41,6 @@ public:
   void setPosition(Coordinate c) { position = c;}
   void setBoundingObjs(std::vector<BoundingObj*> b){ boundingObjs = b; }
   std::vector<BoundingObj*> getBoundingObjs(){ return boundingObjs; }
-  Entity_Type getType(){ return type; }
   
   virtual void serialize(sf::Packet& packet) const
   {
