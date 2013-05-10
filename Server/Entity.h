@@ -23,7 +23,7 @@ protected:
 
 public:
   Entity() {type = UNDEFINED;}
-  ~Entity() {}
+  virtual ~Entity() {}
   
   virtual void handleAction(ClientGameTimeAction){}
   virtual void update(){}
@@ -38,43 +38,26 @@ public:
 
   Coordinate getPosition(void) const { return position; }
   Direction getDirection(void) const { return direction; }
-  void setDirection(Direction d) {
-	  direction = d;
-  }
-
-  void setMap(Map* m) {
-	  map = m;
-  }
-
-  void setPosition(Coordinate c) {
-	  position = c;
-  }
-
+  void setDirection(Direction d) { direction = d; }
+  void setMap(Map* m) { map = m; }
+  void setPosition(Coordinate c) { position = c;}
+  void setBoundingObjs(std::vector<BoundingObj*> b){ boundingObjs = b; }
+  std::vector<BoundingObj*> getBoundingObjs(){ return boundingObjs; }
+  Entity_Type getType(){ return type; }
+  
   void serialize(sf::Packet& packet) const
   {
-
     position.serialize(packet);
     direction.serialize(packet);
-        packet << static_cast<uint32_t>(type);
+    packet << static_cast<uint32_t>(type);
   }
 
   void deserialize(sf::Packet& packet)
   {    
-
     position.deserialize(packet);
     direction.deserialize(packet);
-        uint32_t entType;
+    uint32_t entType;
     packet >> entType;
     type = static_cast<Entity_Type>(entType);
   }
-
-  void setBoundingObjs(std::vector<BoundingObj*> b){
-    boundingObjs = b;
-  }
-
-  std::vector<BoundingObj*> getBoundingObjs(){
-    return boundingObjs;
-  }
-
-  Entity_Type getType(){ return type; }
 };

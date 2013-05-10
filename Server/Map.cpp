@@ -62,8 +62,8 @@ void Map::initWalls(void)
   }
   
 
-  Wall * floor = new Wall(10, 1, 1, Coordinate(0,0,0,0,0,0), facingEast, this);
-  this->entities.push_back(floor);
+  //Wall * floor = new Wall(10, 1, 1, Coordinate(0,0,0,0,0,0), facingEast, this);
+  //this->entities.push_back(floor);
 
   //Wall * floor = new Wall(100, 100, 100, Coordinate(100,100,-20, 0,0,0), facingEast, this);
   //this->entities.push_back(floor);

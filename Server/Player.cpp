@@ -15,6 +15,9 @@ Player::Player(Position x, Position y, Position z, int assigned_id, Map * m)
 
 void Player::init(Position x, Position y, Position z, int assigned_id, Map * m)
 {
+  velocity = v3_t(0,0,0);
+  acceleration = v3_t(0,0,0);
+  oldJumpVelocity = v3_t(0,0,0);
   minotaur = false;
 	dead = false;
 	player_id = assigned_id;
@@ -91,6 +94,8 @@ void Player::fixPosition()
 
 void Player::jump()
 {
+
+  /*
 	if(getTerrainHeight(position.x, position.y) == position.z)
 	{
 		canJump = true;
@@ -110,6 +115,7 @@ void Player::jump()
 		position = ThreeDMovement(position, direction, 10000); // TODO: Value needs to be modified
 		fixPosition();
 	}
+  */
 }
 
 void Player::handleAction(ClientGameTimeAction a) {
@@ -122,13 +128,38 @@ void Player::handleAction(ClientGameTimeAction a) {
 
 }
 
-bool Player::moveTowardDirection(move_t dir)
+bool Player::moveTowardDirection(move_t inputDir, bool jump)
 {
-	if(dir == NULL_DIR) {
+  std::cout << "moveTowardDir" << std::endl;
+	if(inputDir == NULL_DIR) {
 		return true;
 	}
-	// x' = xcos@ - ysin@
+	//get movement direction
+  // x' = xcos@ - ysin@
 	// y' = xsin@ + ycos@ 
+  length_t xp = direction.x * cos(movementAngles[inputDir]) - direction.y * sin(movementAngles[inputDir]);
+  length_t yp = direction.x * sin(movementAngles[inputDir]) + direction.y * cos(movementAngles[inputDir]);
+  v3_t movementDirection(xp,yp,0);
+  movementDirection.normalize();
+
+  //if jump add jump velocity
+  if(jump){
+    int jumpSpeed = 7;
+    v3_t jumpDir = movementDirection;
+    jumpDir.z = 1;
+    jumpDir.scale(jumpSpeed);
+    oldJumpVelocity = jumpDir;
+    velocity += jumpDir;
+  }
+  
+  //move
+  movementDirection.scale(speed * MOVESCALE);
+  //pos += movementDirection;
+  position.x += movementDirection.x;
+  position.y += movementDirection.y;
+  //position.z += movementDirection.z;
+  
+  /*
 	DirectionValue newX = (DirectionValue)(direction.x * cos(movementAngles[dir]) - direction.y * sin(movementAngles[dir]));
 	DirectionValue newY = (DirectionValue)(direction.x * sin(movementAngles[dir]) + direction.y * cos(movementAngles[dir]));
 	double length = sqrt(newX *newX + newY * newY);
@@ -142,7 +173,29 @@ bool Player::moveTowardDirection(move_t dir)
   }
 	position = ThreeDMovement(position, Direction(newX, newY, direction.z), GRAVITY);
 	fixPosition();
+  */
 	return true;
+}
+
+void Player::update(){
+  acceleration = gravity;
+  velocity += acceleration*SERVERCLOCK;
+  v3_t pos(position.x, position.y, position.z);
+  pos += velocity*SERVERCLOCK;
+  
+  //TODO this is temporary, just add teh velocity of the fixit vector on collisions
+  //also on collision subtract your jump velocity;
+  if( pos.z < 0 ){
+    velocity.z = 0;
+    oldJumpVelocity.z = 0;
+    velocity = velocity - oldJumpVelocity;
+    oldJumpVelocity.x = oldJumpVelocity.y = 0;
+    pos.z = 0;
+  }
+  
+  position.x = pos.x;
+  position.y = pos.y;
+  position.z = pos.z;
 }
 
 void Player::handleSelfAction(ClientGameTimeAction a) {
@@ -152,16 +205,19 @@ void Player::handleSelfAction(ClientGameTimeAction a) {
 		return;
 	//start of movement logic
 	direction = a.facingDirection;
-	moveTowardDirection(a.movement);
+	moveTowardDirection(a.movement, a.jump);
 	updateBounds();
 
+ /* 
 	if(a.jump) {
-		jump();
-	} else {
+		jump(a.movement);
+	}
+  else {
 		// Do not allow double jumps
 		//@alvin can someone tell me how does prevent double jumps? i see this logic as "if the user didn't press jump, then the user cannot jump in the future"
 		canJump = false;
 	}
+  */
 
 
 	//end of calculating movement

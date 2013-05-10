@@ -13,9 +13,7 @@
 #include "boundingManager.h"
 #include "algorithm"
 
-
-#define MOVESCALE 100
-#define PI 3.1415926535897932384626433832795
+const int MOVESCALE = 3;
 
 #define MAXWEAPONS 2
 const int MAXJUMP = 2;
@@ -24,6 +22,9 @@ class Player: public Entity
 public:
   static const float sphereRadius;
 
+  v3_t acceleration;
+  v3_t velocity;
+  v3_t oldJumpVelocity;
   bool dead; //might be private. should be determined in handleAction
   bool minotaur; //might be private
   int player_id;
@@ -33,11 +34,12 @@ public:
   ~Player(void);
   std::string getString();
   virtual bool attackBy(DeadlyEntity*);
+  void update();
   void handleCollisions();  
   void updateBounds();  
   void updateBoundsSoft(); 
  
-  bool moveTowardDirection(move_t degree);
+  bool moveTowardDirection(move_t degree, bool jump);
   void jump();
   void handleAction(ClientGameTimeAction a);
   
