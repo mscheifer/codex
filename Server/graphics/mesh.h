@@ -39,13 +39,26 @@ public:
         unsigned int MaterialIndex;
     };
 
+	struct BoundParam {
+		vector3f center;	// center coord of model
+		unsigned int width;	// width (along x axis)
+		unsigned int height;	// height (along y axis)
+		unsigned int depth;	// width (along z axis)
+	} m_boundary;
+
     std::vector<MeshEntry> m_Entries;
     std::vector<Texture*> m_Textures;
+
+	// bounding information
+
 
 private:
     bool InitFromScene(const aiScene* pScene, const std::string& Filename);
     bool InitMaterials(const aiScene* pScene, const std::string& Filename);
     void Clear();
+
+	// fill in our m_boundary object with the boundary info
+	void CalcBoundBox(const aiScene* scene);
 };
 
 Mesh loadMeshFromFile(const std::string&);

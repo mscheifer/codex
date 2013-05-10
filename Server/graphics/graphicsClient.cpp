@@ -1,5 +1,9 @@
 #include "graphicsClient.h"
 #include <fstream>
+#include <assimp/cimport.h> 
+#include "oglUtil.h"
+#include "mesh.h"
+#include "loadCube.h"
 
 namespace {
 const unsigned int defaultWindowWidth  = 800;
@@ -39,9 +43,12 @@ std::vector<gx::drawSet::vaoData_t> loadModel(const std::string& ModelPath) {
 	//just do the first one until we get loading working
 	entities.push_back(model.m_Entries[0].entitiesData);
 
-	// reclaim memory from the aiScene object once we're done with it
+	//TODO: the bounding info is contained inside the model mesh.
+
+
+	// if we're done with the aiScene, reclaim memory
 	aiReleaseImport(scene);
-	
+
 	return entities;
 }
 
