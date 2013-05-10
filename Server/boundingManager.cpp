@@ -67,9 +67,8 @@ std::pair<bool,BoundingObj::vec3_t> notSeparatedByAxis(const BoundingBox* a, con
   return std::pair<bool,BoundingObj::vec3_t>(retBool, ret);
 }
 
-bool raySlab(const BoundingBox* a, float start, float dir,
-  float min, float max, float& tfirst, float& tlast){
-  //why is a unused?
+bool raySlab(float start, float dir,
+  float min, float max, float& tfirst, float& tlast) {
 
   if (fabs(dir) < 1.0E-8)
   {
@@ -168,20 +167,20 @@ std::pair<bool,BoundingObj::vec3_t> boxRay(const BoundingBox* b,const Ray* r){
     hh = b->getHh(),
     hd = b->getHd();
 
-  float t = 0; //why unused?
+  float t = 0;
   float tfirst = 0.0f, tlast = 1.0f;
 
   //convert origin to vector3
   BoundingObj::vec3_t origin(r->getOrigin().x,r->getOrigin().y,r->getOrigin().z);
   BoundingObj::vec3_t centerBox(b->getCenter().x, b->getCenter().y, b->getCenter().z);
 
-  if (!raySlab(b,origin.dot(ax), r->getDirection().dot(ax), 
+  if (!raySlab(origin.dot(ax), r->getDirection().dot(ax), 
     centerBox.dot(ax) - hw, centerBox.dot(ax) + hw, tfirst, tlast)) 
     return std::pair<bool,BoundingObj::vec3_t>(false,BoundingObj::vec3_t());
-  if (!raySlab(b,origin.dot(ay), r->getDirection().dot(ay), 
+  if (!raySlab(origin.dot(ay), r->getDirection().dot(ay), 
     centerBox.dot(ay) - hh, centerBox.dot(ay) + hh, tfirst, tlast))
     return std::pair<bool,BoundingObj::vec3_t>(false,BoundingObj::vec3_t());
-  if (!raySlab(b,origin.dot(az), r->getDirection().dot(az), 
+  if (!raySlab(origin.dot(az), r->getDirection().dot(az), 
     centerBox.dot(az) - hd, centerBox.dot(az) + hd, tfirst, tlast))
     return std::pair<bool,BoundingObj::vec3_t>(false,BoundingObj::vec3_t());
 

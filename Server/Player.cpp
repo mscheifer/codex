@@ -250,6 +250,7 @@ void Player::handleCollisions(){
       it++;
       break;
     default:
+      it++;
       break;
     }
 
@@ -280,12 +281,15 @@ bool Player::collidePlayer(std::pair<Entity*,BoundingObj::vec3_t>& p){
 	c.x += fixShit.x;
 	c.y += fixShit.y;
 	c.z += fixShit.z;
+  std::cout << "move " << fixShit << std::endl;
   setPosition(c);
   updateBounds();
   return true;
 }
 
 bool Player::collideProjectile(std::pair<Entity*,BoundingObj::vec3_t>& p){
+  if(((Projectile *)p.first)->getOwner() != this)
+    std::cout << "OW hit "<< player_id << std::endl;
   return false;
 }
 
