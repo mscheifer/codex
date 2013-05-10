@@ -2,9 +2,9 @@
 #include "Quadtree.h"
 
 void BoundingObj::updateOnTree(){ 
-  getQtree()->remove(this);
+  qtree->remove(this);
   updateRect();
-  getQtree()->insert(this);
+  qtree->insert(this);
 }
 
 BoundingObj::~BoundingObj(){

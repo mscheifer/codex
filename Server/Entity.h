@@ -5,11 +5,12 @@
 #include "Physics.h"
 #include "Map.h"
 #include <vector>
+#include <stdint.h> //uint32_t
 #include "boundingManager.h"
 
 class Entity{
 public:
-  enum Entity_Type {UNDEFINED, PROJECTILE, PLAYER, WEAPON};
+  enum Entity_Type {UNDEFINED, PROJECTILE, PLAYER, WEAPON, WALL};
 
 protected:
   Coordinate position;
@@ -31,6 +32,8 @@ public:
   //update the bounding objects
   //the bounding objects should automatically update thier position on the tree
   virtual void updateBounds(){}
+  //this is only for showing collision boxes on client, should never be called
+  virtual void updateBoundsSoft(){}
   std::vector<std::pair<Entity*,gx::vector3f>> detectCollision();
 
   Coordinate getPosition(void) const { return position; }
@@ -49,14 +52,20 @@ public:
 
   void serialize(sf::Packet& packet) const
   {
+
     position.serialize(packet);
     direction.serialize(packet);
+        packet << static_cast<uint32_t>(type);
   }
 
   void deserialize(sf::Packet& packet)
-  {
+  {    
+
     position.deserialize(packet);
     direction.deserialize(packet);
+        uint32_t entType;
+    packet >> entType;
+    type = static_cast<Entity_Type>(entType);
   }
 
   void setBoundingObjs(std::vector<BoundingObj*> b){

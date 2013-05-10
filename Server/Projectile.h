@@ -15,6 +15,7 @@ public:
   Position distanceLeftToTravel;
   void setOwner(Player *);
   void updateBounds();
+  void updateBoundsSoft();
 private:
   Player * owner;
 };
