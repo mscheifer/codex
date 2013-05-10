@@ -225,7 +225,7 @@ std::string Player::getString()
 
 void Player::updateBounds(){
   //update the bounding objects
-  boundingObjs[0]->setCenterOnTree(gx::vector4(position.x, position.y, position.z));
+  boundingObjs[0]->setCenterOnTree(BoundingObj::vec4_t(position.x, position.y, position.z));
 }
 
 void Player::updateBoundsSoft(){
@@ -233,7 +233,7 @@ void Player::updateBoundsSoft(){
 }
 
 void Player::handleCollisions(){
-  std::vector<std::pair<Entity*,gx::vector3f>> entities =  detectCollision();
+  std::vector<std::pair<Entity*,BoundingObj::vec3_t>> entities =  detectCollision();
   bool restart = false;
 
   for( auto it = entities.begin(); it != entities.end(); ){
