@@ -45,7 +45,8 @@ void NetworkServer::doServer() {
   const int tickLength = 1000 / ticksPerSecond;
   sf::Clock clock;
   
-  while (server.size() < NUM_PLAYERS) {
+  //send id to to the player
+  while (server.size() < ConfigManager::numPlayers()) {
     if(server.getNewClient())
     {
       IdPacket newPacket = IdPacket(game.join());
@@ -59,10 +60,11 @@ void NetworkServer::doServer() {
   //choose minotaur
   game.chooseMinotaur();
 
+  //send init packet to the players
   for(unsigned int i = 0; i < server.size(); i++){
     //TODO this relies on server i to match the player_id
     if(!server.sendPacket<InitPacket>(game.getInitPacket(i),i)) {
-        std::cout << "Error sending game join packet" << std::endl;
+        std::cout << "Error sending init packet" << std::endl;
 	    }
   }
 
@@ -70,7 +72,7 @@ void NetworkServer::doServer() {
 	//  std::cout << "Error sending game start packet" << std::endl;
   //}
   std::cout << "server start game" << std::endl;
-
+  int i = 0;
   while(true) {
     clock.restart();
     
@@ -83,13 +85,12 @@ void NetworkServer::doServer() {
     }
 
     //2. update all entities and resolve collision
-
     game.updateAndResolveCollision();
 
 
     //3. prep and send response to everyone
 	  if(!this->server.sendPacketToAll<ServerGameTimeRespond>( game.prepResponse() ) ) {
-      std::cout << "Error sending cgta to everybody" << std::endl;
+      std::cout << "Error sending sgtr to everybody" << std::endl;
     }
 
     //4. go back to sleep slave.
