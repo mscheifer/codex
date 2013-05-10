@@ -231,11 +231,28 @@ gx::matrix gx::translation(matrix::elem_t x, matrix::elem_t y,
                 0,0,0,1);
 }
 
-gx::matrix gx::toBasis(vector3f x, vector3f y, vector3f z) {
+gx::matrix gx::toBasis(const vector3f& x,const vector3f& y,const vector3f& z) {
   return matrix(x.x, y.x, z.x, 0,
                 x.y, y.y, z.y, 0,
                 x.z, y.z, z.z, 0,
                 0,   0,   0,   1);
+}
+
+gx::matrix gx::toRightHandBasisFromY(const vector3f& dirY) {
+  vector3f dirX( dirY.y,-dirY.x,      0);
+  if(dirX.magnitude() > 0) {
+    dirX.scale(dirY.magnitude() / dirX.magnitude());
+  } else {
+    dirX = vector3f(1,0,0);
+  }
+  vector3f dirZ(      0,-dirY.z, dirY.y);
+  if(dirZ.magnitude() > 0) {
+    dirZ.scale(dirY.magnitude() / dirZ.magnitude());
+  } else {
+    dirZ = vector3f(0,0,1);
+  }
+  std::cout << "dirX: " << dirX << " dirY: " <<  dirY << " dirZ: " << dirZ << std::endl;
+  return toBasis(dirX,dirY,dirZ);
 }
 
 std::ostream& gx::operator<< (std::ostream& out, const matrix& m) {

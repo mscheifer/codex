@@ -21,7 +21,7 @@ protected:
 
 public:
   Entity() {}
-  ~Entity() {}
+  virtual ~Entity() {}
   
   virtual void handleAction(ClientGameTimeAction){}
   virtual void update(){}
