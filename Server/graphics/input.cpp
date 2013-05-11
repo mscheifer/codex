@@ -4,10 +4,10 @@
 
 namespace {
 const double mouseSensitivity = 0.001;
-
-gx::vector3f  mouseDirection;
+ 
+gx::vector3f mouseDirection = gx::vector3f( 0.0, 1.0, 0.0);
 sf::Vector2i mouseBasePosition;
-sf::Vector2i mouseDiff;
+sf::Vector2i mouseDiff = sf::Vector2i(0,0);
 
 } //end unnamed namespace
 
@@ -67,8 +67,9 @@ gx::vector3f gx::input::turnPlayer() {
   //around the axis that are 90 degrees away from the base direction and its
   //easier if these are the x and z axis
   const vector3f basePlayerDirection = gx::vector3f( 0.0, 1.0, 0.0);
-
   sf::Vector2i curPosition = sf::Mouse::getPosition();
+  //gx::vector3f mouseDirection = basePlayerDirection;
+  //@matt this is not working
   if(curPosition != mouseBasePosition) {
     this->updated = true;
     sf::Vector2i newDiff = curPosition - mouseBasePosition;
@@ -120,10 +121,10 @@ void gx::input::handleEvent(const sf::Event& event) {
     this->width  = event.size.width,
     this->height = event.size.height;
   } else if (event.type == sf::Event::KeyPressed) {
-    this->updated = true;
     if(event.key.code == sf::Keyboard::Escape) {
       this->stopped = true; // end the program
     } else if(event.key.code == sf::Keyboard::Space) {
+      this->updated = true;
       this->jumped = true;
     }
   } else if(event.type == sf::Event::MouseButtonPressed) {

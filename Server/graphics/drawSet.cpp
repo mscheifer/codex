@@ -47,15 +47,14 @@ void gx::drawSet::reset() {
 }
 
 void gx::drawSet::addEntity(vector4f pos,vector3f dirY,unsigned int type) {
-  /* if we need to use Z positions then we'll use this
-  vector3f dirX( dirY.y, dirY.x,-dirY.z);
-  vector3f dirZ(-dirY.x, dirY.z, dirY.y);
-  */
-  vector3f dirX( dirY.y,-dirY.x, 0);
-  dirY = vector3f(dirY.x, dirY.y, 0);
-  dirX.normalize();
+  /*
+  vector3f dirX(dirY.y, -dirY.x, 0);
   dirY.normalize();
-  vector3f dirZ(0,0,1);
-  matrix rotAndTrans = translation(pos.x,pos.y,pos.z) * toBasis(dirX,dirY,dirZ);
+  dirX.normalize();
+  matrix rotAndTrans = translation(pos.x,pos.y,pos.z) * toBasis(dirX,dirY,vector3f(0,0,1));
+  */
+  dirY.z = 0;
+  dirY.normalize();
+  matrix rotAndTrans = translation(pos.x,pos.y,pos.z) * toRightHandBasisFromY(dirY);
   this->entityClasses[type].positions.push_back(rotAndTrans);
 }

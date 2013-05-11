@@ -1,6 +1,6 @@
 NAME	   = Server/drchao
 ECHO	   = @echo
-CC       = @g++
+CC       = @clang++
 WARNINGS = -Wall -Wextra -Wstrict-overflow=5 -Wshadow #-Wconversion
 INCLUDE  = -IServer/ #-ISFML-2.0/include -Iassimp/include
 CCFLAGS  = -g $(WARNINGS) $(INCLUDE) -std=c++11

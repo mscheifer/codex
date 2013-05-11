@@ -93,12 +93,13 @@ bool Player::moveTowardDirection(move_t inputDir, bool jump)
 {
   v3_t movementDirection;
   //get movement direction
-	if(inputDir != NULL_DIR) {
+  if(inputDir != NULL_DIR) {
     // x' = xcos@ - ysin@
-	  // y' = xsin@ + ycos@ 
+    // y' = xsin@ + ycos@ 
     length_t xp = direction.x * cos(movementAngles[inputDir]) - direction.y * sin(movementAngles[inputDir]);
     length_t yp = direction.x * sin(movementAngles[inputDir]) + direction.y * cos(movementAngles[inputDir]);
     movementDirection = v3_t(xp,yp,0);
+  }
     movementDirection.normalize();
   }
 

@@ -4,23 +4,23 @@
 #include "util.h"
 
   //convert the log level to it's string value
-std::string ConfigManager::levelToString(LogLevels level) {
-  switch(level) {
-  case DEBUG1:
-    return "DEBUG1";
-  case DEBUG2:
-    return "DEBUG2";
-  case NOTE:
-    return "NOTE";
-  default:
-    return "UNK";
+std::string ConfigManager::levelToString(LogLevels lev) {
+  switch(lev) {
+    case DEBUG1:
+      return "DEBUG1";
+    case DEBUG2:
+      return "DEBUG2";
+    case NOTE:
+      return "NOTE";
+    default:
+      return "UNK";
   }
 }
 
 ConfigManager::configMap_t ConfigManager::configMap;
 std::ofstream ConfigManager::logfile;
 
-void ConfigManager::log(std::string str, ConfigManager::LogLevels level){
+void ConfigManager::log(std::string str, ConfigManager::LogLevels lev){
   if( StringToNumber<int>(ConfigManager::configMap["log"]) == 0 ) 
     return;
 
@@ -28,8 +28,8 @@ void ConfigManager::log(std::string str, ConfigManager::LogLevels level){
   timer = time(nullptr);
   struct tm * currTime = localtime(&timer);
   
-  if( ConfigManager::level <= level ){
-    ConfigManager::logfile << "[" << ConfigManager::levelToString(level) << ":" <<
+  if( ConfigManager::level <= lev){
+    ConfigManager::logfile << "[" << ConfigManager::levelToString(lev) << ":" <<
       currTime->tm_hour << ":" << currTime->tm_min << ":" << currTime->tm_sec <<
       "]" << str << std::endl;
   }

@@ -12,8 +12,7 @@ Game::~Game(void)
 
 void Game::chooseMinotaur() 
 {
-  srand(static_cast<unsigned int>(time(NULL)));
-  int s = ConfigManager::numPlayers();
+  srand(static_cast<unsigned int>(time(nullptr)));
   int minotaur = rand() % ConfigManager::numPlayers();
   world.getPlayers()[minotaur]->minotaur=true;
 }

@@ -1,14 +1,12 @@
 #include <assert.h>
 #include <GL/glew.h>
-#include <assimp/cimport.h>
+//#include <assimp/cimport.h>
 #include <string>
-
+#include <algorithm>
+#include <limits>
 #include "mesh.h"
 #include "vertexAttrib.h"
 #include "vector4.h"
-
-#define findMin(x,y) (x < y ? x : y)
-#define findMax(x,y) (x > y ? x : y)
 
 gx::Mesh::MeshEntry::MeshEntry(const aiMesh* paiMesh)
   : entitiesData(), MaterialIndex(paiMesh->mMaterialIndex) {
@@ -66,43 +64,37 @@ gx::Mesh::MeshEntry::MeshEntry(MeshEntry&& other) noexcept
   : entitiesData (std::move(other.entitiesData)),
     MaterialIndex(std::move(other.MaterialIndex)) {}
 
-gx::Mesh::Mesh()
-	: m_Entries(), m_Textures() {}
+gx::Mesh::Mesh(const std::string& Filename)
+	: m_Entries(), m_Textures(), m_scene(LoadMesh(Filename)) {
+  // if model fails to load, exit
+	if (!this->m_scene) {
+		std::cout << "Assimp failed to load model.\n";
+		exit(1);
+	}
+}
 
 
 gx::Mesh::~Mesh()
 {
-    Clear();
+  for (unsigned int i = 0 ; i < m_Textures.size() ; i++) {
+    delete m_Textures[i];
+  }
 }
-
-
-void gx::Mesh::Clear()
-{
-    for (unsigned int i = 0 ; i < m_Textures.size() ; i++) {
-        delete m_Textures[i];
-    }
-}
-
 
 const aiScene* gx::Mesh::LoadMesh(const std::string& Filename) 
-{
-  // Release the previously loaded mesh (if it exists)
-  Clear();
-    
+{    
   bool Ret = false;
   Assimp::Importer Importer;
 
   const aiScene* pScene = Importer.ReadFile(Filename.c_str(), 
-	aiProcess_Triangulate	   |
-	aiProcess_GenSmoothNormals |
-	aiProcess_FlipUVs);
+	      aiProcess_Triangulate	     |
+	      aiProcess_GenSmoothNormals |
+	      aiProcess_FlipUVs);
     
   if (pScene) {
       Ret = InitFromScene(pScene, Filename);
-
 	  // get bounding box
-	  //CalcBoundBox(pScene);
-
+	  CalcBoundBox(pScene);
   } else {
       std::cout << "Error parsing '" <<  Filename.c_str() << "': '" << Importer.GetErrorString() << "'\n" << std::endl;
   }
@@ -115,9 +107,7 @@ const aiScene* gx::Mesh::LoadMesh(const std::string& Filename)
 }
 
 bool gx::Mesh::InitFromScene(const aiScene* pScene, const std::string& Filename)
-{  
-    m_Textures.resize(pScene->mNumMaterials);
-
+{
     // Initialize the meshes in the scene one by one
     for (unsigned int i = 0 ; i < pScene->mNumMeshes ; i++) {
         const aiMesh* paiMesh = pScene->mMeshes[i];
@@ -143,6 +133,8 @@ bool gx::Mesh::InitMaterials(const aiScene* pScene, const std::string& Filename)
 
     bool Ret = true;
 
+    this->m_Textures.resize(pScene->mNumMaterials);
+
     // Initialize the materials
     for (unsigned int i = 0 ; i < pScene->mNumMaterials ; i++) {
         const aiMaterial* pMaterial = pScene->mMaterials[i];
@@ -165,8 +157,7 @@ bool gx::Mesh::InitMaterials(const aiScene* pScene, const std::string& Filename)
                     std::cout << "Loaded texture '" << FullPath.c_str() << "'\n" << std::endl; 
                 }
             }
-        }
-
+        } 
         // Load a white texture in case the model does not include its own texture
         if (!m_Textures[i]) {
             m_Textures[i] = new Texture(GL_TEXTURE_2D, "./white.png");
@@ -174,53 +165,50 @@ bool gx::Mesh::InitMaterials(const aiScene* pScene, const std::string& Filename)
             Ret = m_Textures[i]->Load();
         }
     }
-
     return Ret;
 }
 
 void gx::Mesh::CalcBoundBox(const aiScene* scene) {
-
 	// using aiMatrix4x4 instead of gx::matrix since there's more operations defined for it.
 	// for now, we prolly don't need to use it. Read the comment below for
 	// the aiTransformVecByMatrix4 function for further explanation
 	//aiMatrix4x4* transform = &(scene->mRootNode->mTransformation);
 
 	// default values for min/max for instantiation
-	float min_f =  1e10f;
-	float max_f = -1e10f;
+	const float min_f = std::numeric_limits<float>::max();
+	const float max_f = std::numeric_limits<float>::lowest();
 
-	gx::vector3f min(min_f, min_f, min_f);
-	gx::vector3f max(max_f, max_f, max_f);
+	gx::vector3f minVec(min_f, min_f, min_f);
+	gx::vector3f maxVec(max_f, max_f, max_f);
 
 	// only calculate the first mesh because our models only has one
 	const aiMesh* mesh = scene->mMeshes[0];
 
-	// find the min/max coord of every vertices in our mesh
-	for (int t = 0; t < mesh->mNumVertices; t++) {
+	// transform the vertex based on the node's transformation matrix.
+	// we prolly don't have to do this for now since currently we don't
+	// apply the transformation on our model before drawing.
+	//aiTransformVecByMatrix4(&foo, transform);
 
-		aiVector3D foo = mesh->mVertices[t];
+  const aiVector3D* vertexStart = mesh->mVertices;
+  const aiVector3D* vertexEnd   = mesh->mVertices + mesh->mNumVertices;
+  auto xCompare = [](const aiVector3D& a,const aiVector3D& b) {return a.x < b.x;};
+  auto yCompare = [](const aiVector3D& a,const aiVector3D& b) {return a.y < b.y;};
+  auto zCompare = [](const aiVector3D& a,const aiVector3D& b) {return a.z < b.z;};
 
-		// transform the vertex based on the node's transformation matrix.
-		// we prolly don't have to do this for now since currently we don't
-		// apply the transformation on our model before drawing.
-		//aiTransformVecByMatrix4(&foo, transform);
+  minVec.x = std::min_element(vertexStart,vertexEnd,xCompare)->x;
+  minVec.y = std::min_element(vertexStart,vertexEnd,yCompare)->y;
+  minVec.z = std::min_element(vertexStart,vertexEnd,zCompare)->z;
 
-		min.x = findMin(min.x, foo.x);
-		min.y = findMin(min.y, foo.y);
-		min.z = findMin(min.z, foo.z);
-
-		max.x = findMax(max.x, foo.x);
-		max.y = findMax(max.y, foo.y);
-		max.z = findMax(max.z, foo.z);
-	}
-
+  maxVec.x = std::max_element(vertexStart,vertexEnd,xCompare)->x;
+  maxVec.y = std::max_element(vertexStart,vertexEnd,yCompare)->y;
+  maxVec.z = std::max_element(vertexStart,vertexEnd,zCompare)->z;
 	// calc boundary center pos & length info
 	this->m_boundary.center.set(
-		(min.x + max.x) / 2.0f,		// x position
-		(min.y + max.y) / 2.0f,		// y position
-		(min.z + max.z) / 2.0f);	// z position
+		(minVec.x + maxVec.x) / 2.0f,		// x position
+		(minVec.y + maxVec.y) / 2.0f,		// y position
+		(minVec.z + maxVec.z) / 2.0f);	// z position
 
-	this->m_boundary.width = max.x - min.x;
-	this->m_boundary.height = max.y - min.y;
-	this->m_boundary.depth = max.z - min.z;
+	this->m_boundary.width  = maxVec.x - minVec.x;
+	this->m_boundary.height = maxVec.y - minVec.y;
+	this->m_boundary.depth  = maxVec.z - minVec.z;
 }
