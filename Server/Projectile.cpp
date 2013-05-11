@@ -16,9 +16,9 @@ Projectile::~Projectile(void)
 
 void Projectile::update(void) {
 
-	Coordinate nextPosition = ThreeDMovement(position, direction, 0);
-	distanceLeftToTravel -= calculateDistanceInBetween(position, nextPosition);	
-	position = nextPosition;
+	Coordinate nextPosition = ThreeDMovement(position2, direction2, 0);
+	distanceLeftToTravel -= calculateDistanceInBetween(position2, nextPosition);	
+	position2 = nextPosition;
 	
 	//if it already traveled a its range
 	if(distanceLeftToTravel <= 0.0 ) {

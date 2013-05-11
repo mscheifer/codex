@@ -12,8 +12,12 @@ class Entity {
 public:
   static const Entity_Type type = UNDEFINED;
 protected:
-  Coordinate position;
-  Direction direction;
+  v3_t position;
+  v3_t acceleration;
+  v3_t velocity;
+  v3_t direction;
+  Coordinate position2;
+  Direction direction2;
   Map* map;
   std::vector<BoundingObj*> boundingObjs;
   // Some kind of state {paralyzed, frozen, blah blah}
@@ -34,15 +38,20 @@ public:
   virtual void updateBoundsSoft(){}
   std::vector<std::pair<Entity*,gx::vector3f>> detectCollision();
 
-  Coordinate getPosition(void) const { return position; }
-  Direction getDirection(void) const { return direction; }
-  void setDirection(Direction d) { direction = d; }
+  v3_t getPosition(void) const { return position; }
+  v3_t getDirection(void) const { return direction; }
+  void setDirection(v3_t d) { direction = d; }
   void setMap(Map* m) { map = m; }
-  void setPosition(Coordinate c) { position = c;}
+  void setPosition(v3_t c) { position = c;}
   void setBoundingObjs(std::vector<BoundingObj*> b){ boundingObjs = b; }
   std::vector<BoundingObj*> getBoundingObjs(){ return boundingObjs; }
-  Entity_Type getType(){ return type; }
   
+  //TODO temporary to support old stuff
+  Coordinate getPosition2(void) const { return position2; }
+  Direction getDirection2(void) const { return direction2; }
+  void setDirection2(Direction d) { direction2 = d; }
+  void setPosition2(Coordinate c) { position2 = c;}
+
   virtual void serialize(sf::Packet& packet) const
   {
     position.serialize(packet);

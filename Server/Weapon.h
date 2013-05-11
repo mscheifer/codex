@@ -24,7 +24,7 @@ public:
 	virtual bool attackMelee(); 
 	virtual Projectile* attackRange(Direction d, Coordinate c);
   virtual bool pickUp(){ return false; };
-  virtual bool dropDown(Coordinate dropPosition){ position = dropPosition; return false; };
+  virtual bool dropDown(Coordinate dropPosition){ position2 = dropPosition; return false; };
   Entity_Type getType() {
     return type;
   }

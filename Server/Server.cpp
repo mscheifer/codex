@@ -10,20 +10,23 @@ void NetworkServer::combinePackets(ClientGameTimeAction & a) {
 	pPacket.jump |= a.jump;
 	pPacket.facingDirection = a.facingDirection;
 }
+
 void NetworkServer::receiveMessages(int i) {
   sf::Packet packet;
-    while(this->server.receiveMessage(packet,i)) {
-      sf::Packet copy = packet; //TODO: maybe we don't need this. fix later
-      ClientGameTimeAction cgta;
-      uint32_t packetType;
-      packet >> packetType;
-      switch (packetType) {
-        case CGTA:
-          cgta.deserialize(packet);
-          combinePackets(cgta);
-          //cgta.print();
+  bool packetReceived = false;
+  while(this->server.receiveMessage(packet,i)) {
+    packetReceived = true;
+    sf::Packet copy = packet; //TODO: maybe we don't need this. fix later
+    ClientGameTimeAction cgta;
+    uint32_t packetType;
+    packet >> packetType;
+    switch (packetType) {
+      case CGTA:
+        cgta.deserialize(packet);
+        combinePackets(cgta);
+        //ConfigManager::log(cgta.toString()); 
         break;
-        case CHAT: //chat should be part of CGTA  
+      case CHAT: //chat should be part of CGTA  
         this->server.sendToAll(copy); //right now just echoing what received
         break;
       default:
@@ -31,9 +34,12 @@ void NetworkServer::receiveMessages(int i) {
         break;
     }
   }
-  ConfigManager::log(pPacket.toString()); 
-  game.evaluate(pPacket);
-  pPacket.clear();
+  if (packetReceived) {
+    //ConfigManager::log("------------------------------------");
+    //ConfigManager::log(pPacket.toString()); 
+    game.evaluate(pPacket);
+    pPacket.clear();
+  }
 }
 
 void NetworkServer::doServer() {

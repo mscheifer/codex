@@ -32,7 +32,7 @@ bool WeaponFist::dropDown(Coordinate dropPosition)
 {
   if(pickedUp)
     return false;
-  position = dropPosition;
+  position2 = dropPosition;
   pickedUp = false;
   return true;
 };

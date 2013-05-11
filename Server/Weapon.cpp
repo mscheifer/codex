@@ -24,7 +24,7 @@ Weapon::Weapon(float damage, float ran, Coordinate d, float mpcost, Map* m)
 	Melee_Cool_Down_Counter = sf::Clock();
 	strength = damage;
 	range = ran;
-	position = d;
+	position2 = d;
 	mpCost = mpcost;
 	projectileSpeed = 2.0; // pending removal
 	projectileRange = 300; //pending removal
@@ -73,8 +73,8 @@ Projectile* Weapon::attackRange(Direction d , Coordinate c)
 	//c.velocityY = projectileSpeed;
 	//c.velocityZ = projectileSpeed;
 	
-	pj->setPosition(c);
-	pj->setDirection(d);
+	pj->setPosition2(c);
+	pj->setDirection2(d);
 	pj->setStrength(projectileStrength);
 	pj->setRange(projectileRange);
 

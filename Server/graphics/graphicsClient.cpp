@@ -163,6 +163,7 @@ ClientGameTimeAction gx::graphicsClient::handleInput() {
   action.movement = getMovement();
   auto dir = getDir();
   action.facingDirection = Direction(dir.x, dir.y, dir.z);
+  std::cout << action.facingDirection << std::endl;
   action.attackMelee = fire1();
   action.attackRange = fire2();
   return action;

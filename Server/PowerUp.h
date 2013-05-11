@@ -7,11 +7,8 @@ public:
   PowerUp() ;
   ~PowerUp() {}
   
-
-
-  void setPosition(Coordinate c) {
-	  position = c;
-  }
+  //TODO will need to add extra stuff so you can render
+  //each different power up
   void serialize(sf::Packet& packet) const
   {
     position.serialize(packet);
@@ -28,9 +25,6 @@ public:
   void update();
 
 protected:
-  Coordinate position; // place it will respown
-  Direction direction;
-  Map* map;
   sf::Clock Respown_Counter;
   int Respown_Time;
 

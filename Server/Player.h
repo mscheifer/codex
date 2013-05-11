@@ -22,15 +22,12 @@ class Player: public Entity
 public:
   static const float sphereRadius;
   static const Entity_Type type = PLAYER;
-  v3_t acceleration;
-  v3_t velocity;
-  v3_t oldJumpVelocity;
   bool dead; //might be private. should be determined in handleAction
   bool minotaur; //might be private
   int player_id;
   char name[20];
   Player();
-  Player(Position x, Position y, Position z, int assigned_id, Map *);
+  Player(v3_t pos, int assigned_id, Map *);
   ~Player(void);
   std::string getString();
   virtual bool attackBy(DeadlyEntity*);
@@ -39,7 +36,7 @@ public:
   void updateBounds();  
   void updateBoundsSoft(); 
  
-  bool moveTowardDirection(move_t degree, bool jump);
+  bool moveTowardDirection(move_t degree, bool jump); //handle movement input WADS jump
   void jump();
   void handleAction(ClientGameTimeAction a);
   
@@ -67,6 +64,7 @@ public:
   }
 
 private:
+  v3_t oldJumpVelocity;
   float health;
   float maxHealth;
   float mana;
@@ -85,8 +83,8 @@ private:
   void handleSelfAction(ClientGameTimeAction a);
   void handleOtherAction(ClientGameTimeAction a);
   void attack(ClientGameTimeAction a);
-  void init(Position x, Position y, Position z, int assigned_id, Map * m);
-  void generateBounds(Position x,Position y,Position z);
+  void init(v3_t pos, int assigned_id, Map * m);
+  void generateBounds(v3_t pos);
 
   //helper functions for collisions
   bool collideWall(std::pair<Entity*,BoundingObj::vec3_t>& p);
