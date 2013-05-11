@@ -16,7 +16,7 @@ struct ClientGameTimeAction
   bool weapon2; // Used for switching weapon
 	bool jump;
   bool updated;
-	Direction facingDirection;
+	v3_t facingDirection;
   
   bool operator==(const ClientGameTimeAction & other) const{
     if (this->player_id != other.player_id) return false; 

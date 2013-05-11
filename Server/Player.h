@@ -49,12 +49,12 @@ public:
   float getSpeed(){ return speed;}
   void setSpeed(float);
 
-  Entity_Type getType() const {
+  Entity_Type getType() {
     return type;
   }
 
   void Player::serialize(sf::Packet& packet) const {
-    packet << this->getType(); //not necessary
+    packet << type; //not necessary
     Entity::serialize(packet);
     packet << this->player_id;
   }
@@ -65,7 +65,6 @@ public:
     Entity::deserialize(packet);
     packet >> this->player_id;
   }
-
 
 private:
   v3_t oldJumpVelocity;

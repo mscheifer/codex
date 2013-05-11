@@ -99,7 +99,6 @@ bool Player::moveTowardDirection(move_t inputDir, bool jump)
     length_t xp = direction.x * cos(movementAngles[inputDir]) - direction.y * sin(movementAngles[inputDir]);
     length_t yp = direction.x * sin(movementAngles[inputDir]) + direction.y * cos(movementAngles[inputDir]);
     movementDirection = v3_t(xp,yp,0);
-  }
     movementDirection.normalize();
   }
 
@@ -144,7 +143,6 @@ void Player::handleSelfAction(ClientGameTimeAction a) {
 	//start of movement logic
 	moveTowardDirection(a.movement, a.jump);
   direction = v3_t(a.facingDirection.x, a.facingDirection.y, a.facingDirection.z);
-  std::cout << direction << std::endl;
 	updateBounds();
 
 	//start of attacking logic
@@ -246,24 +244,15 @@ void Player::handleCollisions(){
 }
 
 bool Player::collideWall(std::pair<Entity*,BoundingObj::vec3_t>& p){
-  Coordinate c = getPosition2();
   BoundingObj::vec3_t fixShit = p.second;
-	c.x += fixShit.x;
-	c.y += fixShit.y;
-	c.z += fixShit.z;
-  setPosition2(c);
+  position += p.second;
   updateBounds();
   return true;
 }
 
 bool Player::collidePlayer(std::pair<Entity*,BoundingObj::vec3_t>& p){
-  Coordinate c = getPosition2();
   BoundingObj::vec3_t fixShit = p.second;
-	c.x += fixShit.x;
-	c.y += fixShit.y;
-	c.z += fixShit.z;
-  std::cout << "move " << fixShit << std::endl;
-  setPosition2(c);
+  position += p.second;
   updateBounds();
   return true;
 }
