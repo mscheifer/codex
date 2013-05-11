@@ -344,8 +344,10 @@ bool Player::collidePlayer(std::pair<Entity*,BoundingObj::vec3_t>& p){
 }
 
 bool Player::collideProjectile(std::pair<Entity*,BoundingObj::vec3_t>& p){
-  if(((Projectile *)p.first)->getOwner() != this)
+  if(((Projectile *)p.first)->getOwner() != this) {
     std::cout << "OW hit "<< player_id << std::endl;
+    attackBy((Projectile *)p.first);
+  }
   return false;
 }
 

@@ -23,6 +23,7 @@ void Projectile::update(void) {
 	//if it already traveled a its range
 	if(distanceLeftToTravel <= 0.0 ) {
 		// destroy yourself and return
+   
 		map->destroyProjectile(this);
 		return;
 	}
@@ -30,18 +31,7 @@ void Projectile::update(void) {
 	updateBounds();
 	// some collision detection
 
-	if(/* colides with some entity*/ false) {
-		std::vector<Entity> entities;
-		for(unsigned int i = 0; i < entities.size() ; i++){
-			if(entities[i].getType() == PLAYER) {
-				// hits a player
-				Player unLuckyPerson = *(Player*)&entities[i];
-				unLuckyPerson.attackBy(this);
-			}
-		}
-		map->destroyProjectile(this);
-		//now destory youself
-	}
+
 }
 
 void Projectile::setOwner(Player * player)
@@ -67,4 +57,20 @@ void Projectile::updateBounds(){
 void Projectile::updateBoundsSoft(){
   //update the bounding objects
   boundingObjs[0]->setCenter(BoundingObj::vec4_t(position.x, position.y, position.z));
+}
+
+void Projectile::handleCollisions() {
+  
+  std::vector<std::pair<Entity*,BoundingObj::vec3_t>> entities =  detectCollision();
+  
+  
+  for( auto it = entities.begin(); it != entities.end(); it++ ){
+    Entity * e = it->first; 
+    if(e != owner) {
+       map->destroyProjectile(this);
+       map->removeFromQtree(this);
+    }
+    
+  }
+  
 }
