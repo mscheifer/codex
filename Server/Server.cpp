@@ -36,7 +36,6 @@ void NetworkServer::receiveMessages(int i) {
   if (packetReceived) {
     //ConfigManager::log("------------------------------------");
     //ConfigManager::log(pPacket.toString()); 
-    pPacket.print();
     game.evaluate(pPacket);
     pPacket.clear();
   }
