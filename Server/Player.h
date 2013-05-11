@@ -52,19 +52,23 @@ public:
   float getSpeed(){ return speed;}
   void setSpeed(float);
 
-  void serialize(sf::Packet& packet) const {
+  Entity_Type getType() const {
+    return type;
+  }
+
+  void Player::serialize(sf::Packet& packet) const {
+    packet << this->getType(); //not necessary
     Entity::serialize(packet);
     packet << this->player_id;
   }
 
   void deserialize(sf::Packet& packet) {
+    uint32_t packetType; //not necessary
+    packet >> packetType;
     Entity::deserialize(packet);
     packet >> this->player_id;
   }
 
-  Entity_Type getType() {
-    return type;
-  }
 
 private:
   float health;
