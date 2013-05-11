@@ -1,20 +1,16 @@
 #ifndef MESH_H
 #define	MESH_H
-#include <map>
-#include <vector>
 #include <GL/glew.h>
 #include <assimp/Importer.hpp>      // C++ importer interface
 #include <assimp/scene.h>			// Output data structure
 #include <assimp/postprocess.h>		// Post processing flags
+#include <vector>
 #include "vector3.h"
-#include "vector4.h"
-#include "drawSet.h"
-#include "texture.h"
 
 namespace gx {
+class Texture;
 
 class Mesh {
-  #define INVALID_MATERIAL 0xFFFFFFFF
   public:
     Mesh(const std::string& Filename);
     Mesh(const Mesh&);// = delete; //don't copy
@@ -44,10 +40,9 @@ class Mesh {
 
     std::vector<MeshEntry> m_Entries;
     std::vector<Texture*> m_Textures;
-
-    const aiScene* m_scene;
+    bool m_Good;
   private:
-    const aiScene* LoadMesh(const std::string& Filename);
+    bool LoadMesh(const std::string& Filename);
 
     bool InitFromScene(const aiScene* pScene, const std::string& Filename);
     bool InitMaterials(const aiScene* pScene, const std::string& Filename);

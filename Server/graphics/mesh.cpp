@@ -1,12 +1,10 @@
 #include <assert.h>
-#include <GL/glew.h>
-//#include <assimp/cimport.h>
 #include <string>
 #include <algorithm>
 #include <limits>
 #include "mesh.h"
 #include "vertexAttrib.h"
-#include "vector4.h"
+#include "texture.h"
 
 gx::Mesh::MeshEntry::MeshEntry(const aiMesh* paiMesh)
   : entitiesData(), MaterialIndex(paiMesh->mMaterialIndex) {
@@ -28,7 +26,8 @@ gx::Mesh::MeshEntry::MeshEntry(const aiMesh* paiMesh)
   for (unsigned int i = 0 ; i < paiMesh->mNumVertices ; i++) {
     const aiVector3D* pPos = &(paiMesh->mVertices[i]);
     const aiVector3D* pNormal   = &(paiMesh->mNormals[i]);
-    const aiVector3D* pTexCoord = paiMesh->HasTextureCoords(0) ? &(paiMesh->mTextureCoords[0][i]) : &Zero3D;
+    const aiVector3D* pTexCoord =
+      paiMesh->HasTextureCoords(0) ? &(paiMesh->mTextureCoords[0][i]) : &Zero3D;
 	  positions.push_back(pPos->x);
 	  positions.push_back(pPos->y);
 	  positions.push_back(pPos->z);
@@ -65,12 +64,7 @@ gx::Mesh::MeshEntry::MeshEntry(MeshEntry&& other) noexcept
     MaterialIndex(std::move(other.MaterialIndex)) {}
 
 gx::Mesh::Mesh(const std::string& Filename)
-	: m_Entries(), m_Textures(), m_scene(LoadMesh(Filename)) {
-  // if model fails to load, exit
-	if (!this->m_scene) {
-		std::cout << "Assimp failed to load model.\n";
-		exit(1);
-	}
+	: m_Entries(), m_Textures(), m_Good(LoadMesh(Filename)) {
 }
 
 
@@ -81,7 +75,7 @@ gx::Mesh::~Mesh()
   }
 }
 
-const aiScene* gx::Mesh::LoadMesh(const std::string& Filename) 
+bool gx::Mesh::LoadMesh(const std::string& Filename) 
 {    
   bool Ret = false;
   Assimp::Importer Importer;
@@ -96,14 +90,10 @@ const aiScene* gx::Mesh::LoadMesh(const std::string& Filename)
 	  // get bounding box
 	  CalcBoundBox(pScene);
   } else {
-      std::cout << "Error parsing '" <<  Filename.c_str() << "': '" << Importer.GetErrorString() << "'\n" << std::endl;
+      std::cout << "Error parsing '" <<  Filename.c_str() << "': '";
+      std::cout << Importer.GetErrorString() << std::endl;
   }
-
-	if (Ret) {
-		return pScene;
-	} else {
-		return nullptr;
-	}
+  return Ret;
 }
 
 bool gx::Mesh::InitFromScene(const aiScene* pScene, const std::string& Filename)
@@ -169,7 +159,8 @@ bool gx::Mesh::InitMaterials(const aiScene* pScene, const std::string& Filename)
 }
 
 void gx::Mesh::CalcBoundBox(const aiScene* scene) {
-	// using aiMatrix4x4 instead of gx::matrix since there's more operations defined for it.
+	// using aiMatrix4x4 instead of gx::matrix since there's more operations
+  // defined for it.
 	// for now, we prolly don't need to use it. Read the comment below for
 	// the aiTransformVecByMatrix4 function for further explanation
 	//aiMatrix4x4* transform = &(scene->mRootNode->mTransformation);
@@ -191,9 +182,9 @@ void gx::Mesh::CalcBoundBox(const aiScene* scene) {
 
   const aiVector3D* vertexStart = mesh->mVertices;
   const aiVector3D* vertexEnd   = mesh->mVertices + mesh->mNumVertices;
-  auto xCompare = [](const aiVector3D& a,const aiVector3D& b) {return a.x < b.x;};
-  auto yCompare = [](const aiVector3D& a,const aiVector3D& b) {return a.y < b.y;};
-  auto zCompare = [](const aiVector3D& a,const aiVector3D& b) {return a.z < b.z;};
+  auto xCompare= [](const aiVector3D& a,const aiVector3D& b){return a.x < b.x;};
+  auto yCompare= [](const aiVector3D& a,const aiVector3D& b){return a.y < b.y;};
+  auto zCompare= [](const aiVector3D& a,const aiVector3D& b){return a.z < b.z;};
 
   minVec.x = std::min_element(vertexStart,vertexEnd,xCompare)->x;
   minVec.y = std::min_element(vertexStart,vertexEnd,yCompare)->y;
