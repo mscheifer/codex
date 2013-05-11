@@ -27,27 +27,11 @@ std::string readFile(const std::string fileName) {
 }
 
 std::vector<gx::drawSet::vaoData_t> loadModel(const std::string& ModelPath) {
-	gx::Mesh model;
-
-	// we may need the information from this aiScene for later.
-	// Contains all the information on the ModelPath
-	const aiScene* scene = model.LoadMesh(ModelPath);
-
-	// if model fails to load, exit
-	if (!scene) {
-		gx::debugout << "Assimp failed to load model.\n";
-		exit(1);
-	}
+	gx::Mesh model(ModelPath);
 
 	std::vector<gx::drawSet::vaoData_t> entities;
 	//just do the first one until we get loading working
 	entities.push_back(model.m_Entries[0].entitiesData);
-
-	//TODO: the bounding info is contained inside the model mesh.
-
-
-	// if we're done with the aiScene, reclaim memory
-//	aiReleaseImport(scene);
 
 	return entities;
 }
