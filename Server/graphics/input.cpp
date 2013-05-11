@@ -5,9 +5,8 @@
 namespace {
 const double mouseSensitivity = 0.001;
 
-gx::vector3f  mouseDirection;
 sf::Vector2i mouseBasePosition;
-sf::Vector2i mouseDiff;
+sf::Vector2i mouseDiff = sf::Vector2i(0,0);
 
 } //end unnamed namespace
 
@@ -69,6 +68,7 @@ gx::vector3f gx::input::turnPlayer() {
   const vector3f basePlayerDirection = gx::vector3f( 0.0, 1.0, 0.0);
 
   sf::Vector2i curPosition = sf::Mouse::getPosition();
+  gx::vector3f mouseDirection = basePlayerDirection;
   if(curPosition != mouseBasePosition) {
     this->updated = true;
     sf::Vector2i newDiff = curPosition - mouseBasePosition;
