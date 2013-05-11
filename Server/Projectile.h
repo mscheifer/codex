@@ -18,6 +18,7 @@ public:
   Player* getOwner(){return owner;}
   void updateBounds();
   void updateBoundsSoft();
+  void handleCollisions();
   Entity_Type getType() {
     return type;
   }
