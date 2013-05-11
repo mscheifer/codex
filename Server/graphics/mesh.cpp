@@ -76,19 +76,10 @@ gx::Mesh::Mesh(const std::string& Filename)
 
 gx::Mesh::~Mesh()
 {
-    Clear();
-	// if we're done with the aiScene, reclaim memory
-	//aiReleaseImport(scene);
-}
-
-
-void gx::Mesh::Clear()
-{
   for (unsigned int i = 0 ; i < m_Textures.size() ; i++) {
     delete m_Textures[i];
   }
 }
-
 
 const aiScene* gx::Mesh::LoadMesh(const std::string& Filename) 
 {    

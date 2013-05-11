@@ -51,7 +51,6 @@ class Mesh {
 
     bool InitFromScene(const aiScene* pScene, const std::string& Filename);
     bool InitMaterials(const aiScene* pScene, const std::string& Filename);
-    void Clear();
 
 	  // fill in our m_boundary object with the boundary info
 	  void CalcBoundBox(const aiScene* scene);
