@@ -120,10 +120,10 @@ void gx::input::handleEvent(const sf::Event& event) {
     this->width  = event.size.width,
     this->height = event.size.height;
   } else if (event.type == sf::Event::KeyPressed) {
-    this->updated = true;
     if(event.key.code == sf::Keyboard::Escape) {
       this->stopped = true; // end the program
     } else if(event.key.code == sf::Keyboard::Space) {
+      this->updated = true;
       this->jumped = true;
     }
   } else if(event.type == sf::Event::MouseButtonPressed) {

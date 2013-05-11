@@ -72,7 +72,8 @@ void NetworkClient::processInput() {
   }
   if (action.updated) {
     action.player_id = id;
-    this->sendPacket = true; //TODO if nothing chnages dont send a packet
+    this->sendPacket = true; 
+    //ConfigManager::log(action.toString()); 
   }
 }
 /*

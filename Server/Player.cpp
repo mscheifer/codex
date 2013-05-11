@@ -131,15 +131,15 @@ void Player::handleAction(ClientGameTimeAction a) {
 bool Player::moveTowardDirection(move_t inputDir, bool jump)
 {
   std::cout << "moveTowardDir" << std::endl;
-	if(inputDir == NULL_DIR) {
-		return true;
-	}
-	//get movement direction
-  // x' = xcos@ - ysin@
-	// y' = xsin@ + ycos@ 
-  length_t xp = direction.x * cos(movementAngles[inputDir]) - direction.y * sin(movementAngles[inputDir]);
-  length_t yp = direction.x * sin(movementAngles[inputDir]) + direction.y * cos(movementAngles[inputDir]);
-  v3_t movementDirection(xp,yp,0);
+	v3_t movementDirection;
+  if(inputDir != NULL_DIR) {
+    //get movement direction
+    // x' = xcos@ - ysin@
+    // y' = xsin@ + ycos@ 
+    length_t xp = direction.x * cos(movementAngles[inputDir]) - direction.y * sin(movementAngles[inputDir]);
+    length_t yp = direction.x * sin(movementAngles[inputDir]) + direction.y * cos(movementAngles[inputDir]);
+    movementDirection = v3_t(xp,yp,0);
+  }
   movementDirection.normalize();
 
   //if jump add jump velocity
@@ -208,7 +208,7 @@ void Player::handleSelfAction(ClientGameTimeAction a) {
 	moveTowardDirection(a.movement, a.jump);
 	updateBounds();
 
- /* 
+  /*
 	if(a.jump) {
 		jump(a.movement);
 	}
