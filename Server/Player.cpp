@@ -130,7 +130,7 @@ void Player::handleAction(ClientGameTimeAction a) {
 
 bool Player::moveTowardDirection(move_t inputDir, bool jump)
 {
-  std::cout << "moveTowardDir" << std::endl;
+//  std::cout << "moveTowardDir" << std::endl;
 	v3_t movementDirection;
   if(inputDir != NULL_DIR) {
     //get movement direction
