@@ -35,7 +35,7 @@ void NetworkClient::receiveMessages() {
         for(auto playerP = s.players.begin(); playerP != s.players.end(); playerP++) {
           if(playerP->player_id != this->id) {
             auto gentity = toGentity(*playerP);
-            gentity.type = 0;
+            gentity.type = 1;
             entities.push_back(gentity);
           }
         }
