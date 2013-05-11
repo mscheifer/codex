@@ -8,7 +8,7 @@ const double mouseSensitivity = 0.001;
 //base direction needs to be looking forward because mouse movement needs to rotate
 //around the axis that are 90 degrees away from the base direction and its
 //easier if these are the x and z axis
-const vector3f basePlayerDirection = gx::vector3f( 0.0, 1.0, 0.0);
+const gx::vector3f basePlayerDirection = gx::vector3f( 0.0, 1.0, 0.0);
  
 gx::vector3f mouseDirection = basePlayerDirection;
 sf::Vector2i mouseBasePosition;

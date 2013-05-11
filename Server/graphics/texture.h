@@ -3,6 +3,8 @@
 #include <string>
 #include <GL/glew.h>
 
+namespace gx {
+
 class Texture
 {
 public:
@@ -20,6 +22,6 @@ private:
     //Magick::Blob m_blob;
 };
 
-
+} //end namespace gx
 #endif	/* TEXTURE_H */
 

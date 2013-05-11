@@ -6,6 +6,7 @@
 #include <assimp/postprocess.h>		// Post processing flags
 #include <vector>
 #include "vector3.h"
+#include "drawSet.h"
 
 namespace gx {
 class Texture;

@@ -56,7 +56,7 @@ public:
     return type;
   }
 
-  void Player::serialize(sf::Packet& packet) const {
+  void serialize(sf::Packet& packet) const {
     packet << type; //not necessary
     Entity::serialize(packet);
     packet << this->player_id;
