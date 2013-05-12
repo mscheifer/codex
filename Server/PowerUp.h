@@ -8,7 +8,7 @@ public:
   ~PowerUp() {}
   
   //TODO will need to add extra stuff so you can render
-  //each different power up
+  //each different power up @alvin @allen
   void serialize(sf::Packet& packet) const
   {
     position.serialize(packet);

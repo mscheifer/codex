@@ -71,7 +71,7 @@ Projectile* Weapon::attackRange(v3_t dir , v3_t pos)
   pj->setPosition(pos);
 
 	pj->setStrength(projectileStrength);
-	pj->setRange(projectileRange); //TODO not sure what this is
+	pj->setRange(projectileRange); //TODO not sure what this is @allen @alvin
 
 	return pj;
 }
