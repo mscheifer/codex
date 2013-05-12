@@ -4,7 +4,6 @@
 #include <limits>
 #include "mesh.h"
 #include "vertexAttrib.h"
-#include "texture.h"
 
 gx::Mesh::MeshEntry::MeshEntry(const aiMesh* paiMesh)
   : entitiesData(), MaterialIndex(paiMesh->mMaterialIndex) {
@@ -67,14 +66,6 @@ gx::Mesh::Mesh(const std::string& Filename)
 	: m_Entries(), m_Textures(), m_Good(LoadMesh(Filename)) {
 }
 
-
-gx::Mesh::~Mesh()
-{
-  for (unsigned int i = 0 ; i < m_Textures.size() ; i++) {
-    delete m_Textures[i];
-  }
-}
-
 bool gx::Mesh::LoadMesh(const std::string& Filename) 
 {    
   bool Ret = false;
@@ -123,36 +114,31 @@ bool gx::Mesh::InitMaterials(const aiScene* pScene, const std::string& Filename)
 
     bool Ret = true;
 
-    this->m_Textures.resize(pScene->mNumMaterials);
-
     // Initialize the materials
     for (unsigned int i = 0 ; i < pScene->mNumMaterials ; i++) {
         const aiMaterial* pMaterial = pScene->mMaterials[i];
-
-        m_Textures[i] = nullptr;
 
         if (pMaterial->GetTextureCount(aiTextureType_DIFFUSE) > 0) {
             aiString Path;
 
             if (pMaterial->GetTexture(aiTextureType_DIFFUSE, 0, &Path, NULL, NULL, NULL, NULL, NULL) == AI_SUCCESS) {
                 std::string FullPath = Dir + "/" + Path.data;
-                m_Textures[i] = new Texture(GL_TEXTURE_2D, FullPath.c_str());
+                m_Textures.push_back(Texture(GL_TEXTURE_2D, FullPath.c_str()));
 
-                if (!m_Textures[i]->Load()) {
-                    std::cout << "Error loading texture '" << FullPath.c_str() << "'\n" << std::endl;
-                    delete m_Textures[i];
-                    m_Textures[i] = nullptr;
+                if (!m_Textures.back().Load()) {
+                    std::cout << "Error loading texture '" << FullPath.c_str() << std::endl;
+                    m_Textures.pop_back();
                     Ret = false;
                 } else {
-                    std::cout << "Loaded texture '" << FullPath.c_str() << "'\n" << std::endl; 
+                    std::cout << "Loaded texture '" << FullPath.c_str() << std::endl; 
                 }
             }
         } 
         // Load a white texture in case the model does not include its own texture
-        if (!m_Textures[i]) {
-            m_Textures[i] = new Texture(GL_TEXTURE_2D, "./white.png");
+        if (!Ret) {
+            m_Textures.push_back(Texture(GL_TEXTURE_2D, "./white.png"));
 
-            Ret = m_Textures[i]->Load();
+            Ret = m_Textures.back().Load();
         }
     }
     return Ret;

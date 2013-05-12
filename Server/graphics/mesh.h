@@ -1,16 +1,15 @@
 #ifndef MESH_H
 #define	MESH_H
 #include <GL/glew.h>
-#include <assimp/Importer.hpp>      // C++ importer interface
-#include <assimp/scene.h>			// Output data structure
+#include <assimp/Importer.hpp>    // C++ importer interface
+#include <assimp/scene.h>			    // Output data structure
 #include <assimp/postprocess.h>		// Post processing flags
 #include <vector>
 #include "vector3.h"
 #include "drawSet.h"
+#include "texture.h"
 
 namespace gx {
-class Texture;
-
 class Mesh {
   public:
     Mesh(const std::string& Filename);
@@ -18,7 +17,6 @@ class Mesh {
     Mesh& operator=(const Mesh&);// = delete; //don't assign
     Mesh(Mesh&&);
     Mesh& operator=(Mesh&&);// = delete; //define later
-    ~Mesh();
 
     struct MeshEntry {
         MeshEntry(const aiMesh*);
@@ -40,7 +38,7 @@ class Mesh {
 	  } m_boundary;
 
     std::vector<MeshEntry> m_Entries;
-    std::vector<Texture*> m_Textures;
+    std::vector<Texture> m_Textures;
     bool m_Good;
   private:
     bool LoadMesh(const std::string& Filename);
