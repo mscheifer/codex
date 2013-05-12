@@ -130,7 +130,7 @@ void Map::initWalls(void)
 /*
  * Add walls from left to right. Assumes array ends with -1
  */
-void Map::addWallDirection(int startingX, int startingY, int startingZ, Direction dir, int values[])
+void Map::addWallDirection(int startingX, int startingY, int startingZ, v3_t dir, int values[])
 {
   int width = 10;
   int height = 4; 
