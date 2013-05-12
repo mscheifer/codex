@@ -15,7 +15,7 @@ Projectile::~Projectile(void)
 }
 
 void Projectile::update(void) {
-  position += velocity * SERVERCLOCK;
+  position += velocity * ConfigManager::serverTickLengthSec();
 	
   /* TODO not sure what this does
   Coordinate nextPosition = ThreeDMovement(position2, direction2, 0);

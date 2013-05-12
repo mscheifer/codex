@@ -1,6 +1,4 @@
 #pragma once
-#include "3DCoordinate.h"
-#include "directionalVector.h"
 #include "ClientGameTimeAction.h"
 #include "Physics.h"
 #include "Map.h"
@@ -16,8 +14,6 @@ protected:
   v3_t acceleration;
   v3_t velocity;
   v3_t direction;
-  Coordinate position2; //TODO temp
-  Direction direction2;
   Map* map;
   std::vector<BoundingObj*> boundingObjs;
   // Some kind of state {paralyzed, frozen, blah blah}
@@ -46,12 +42,6 @@ public:
   void setMap(Map* m) { map = m; }
   void setBoundingObjs(std::vector<BoundingObj*> b){ boundingObjs = b; }
   std::vector<BoundingObj*> getBoundingObjs(){ return boundingObjs; }
-  
-  //TODO temporary to support old stuff
-  Coordinate getPosition2(void) const { return position2; }
-  Direction getDirection2(void) const { return direction2; }
-  void setDirection2(Direction d) { direction2 = d; }
-  void setPosition2(Coordinate c) { position2 = c;}
 
   virtual void serialize(sf::Packet& packet) const
   {

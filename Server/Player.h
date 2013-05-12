@@ -14,6 +14,7 @@
 #include "algorithm"
 
 const int MOVESCALE = 3;
+const length_t jumpSpeed = 7;
 
 #define MAXWEAPONS 2
 const int MAXJUMP = 2;

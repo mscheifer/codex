@@ -21,7 +21,21 @@ public:
   static unsigned int numPlayers(){
     return StringToNumber<unsigned int>(ConfigManager::configMap["players"]);
   }
+
+  static unsigned int serverTicksPerSec(){
+    return StringToNumber<unsigned int>(ConfigManager::configMap["serverTicksPerSec"]);
+  }
+
+  static float serverTickLengthMilli(){
+    static float ret = 1000.f / serverTicksPerSec();
+    return ret;
+  }
   
+  static float serverTickLengthSec(){
+    static float ret = serverTickLengthMilli() / 1000.f;
+    return ret;
+  }
+
   //log str with given log level
   static void log( std::string str, LogLevels l=DEBUG1);
   

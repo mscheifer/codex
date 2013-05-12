@@ -28,8 +28,8 @@ void Player::init(v3_t pos, int assigned_id, Map * m)
 	maxMana = 100;
 	castDownCounter = sf::Clock();
 	map = m;
-	weapon[0] = new WeaponFist(position2, this->map);
-	weapon[1] = new WeaponFire(position2, this->map);
+	weapon[0] = new WeaponFist(position, this->map);
+	weapon[1] = new WeaponFire(position, this->map);
 	current_weapon_selection = 1;
   
   generateBounds(position);
@@ -89,7 +89,6 @@ bool Player::moveTowardDirection(move_t inputDir, bool jump)
 
   //if jump add jump velocity
   if(jump){
-    int jumpSpeed = 7;
     v3_t jumpDir = movementDirection;
     jumpDir.z = 1;
     jumpDir.scale(jumpSpeed);
@@ -104,9 +103,12 @@ bool Player::moveTowardDirection(move_t inputDir, bool jump)
 }
 
 void Player::update(){
+  //std::cout << "acc" << acceleration << std::endl;
+  std::cout << "velocity" << velocity << std::endl;
+  //std::cout << "position" << velocity << std::endl;
   acceleration = gravity;
-  velocity += acceleration*SERVERCLOCK;
-  position += velocity*SERVERCLOCK;
+  velocity += acceleration * ConfigManager::serverTickLengthSec();
+  position += velocity * ConfigManager::serverTickLengthSec();
   
   //TODO this is temporary, just add teh velocity of the fixit vector on collisions
   //also on collision subtract your jump velocity;
@@ -139,23 +141,12 @@ void Player::handleSelfAction(ClientGameTimeAction a) {
 void Player::handleOtherAction( ClientGameTimeAction) {
 	//since we are modeling projectiles, we are just gonna check for melee
 }
-/*
-void Player::onCollision(Entity* e){
-	if ( e->isProjectile() ) {
-		// do some calculation and deduct health. Allen you should do this part since I don't know how did you organzie the attk calcualtion
-	} else if ( e->isWeapon() ){
-		//pickup the weapon                                              
-		weapon[1] = (Weapon*)e; // any better way to down cast?.. lol
-	} // take care of player case?
-}
-*/
 
 // this do substraction of stemina, respond to the user to render the attak animation  
 void Player::attack( ClientGameTimeAction a) {
 	Weapon* currentWeapon = weapon[current_weapon_selection];
 
-	if(a.attackRange)
-	{
+	if(a.attackRange){
     if( !currentWeapon->canUseWeapon(true) || currentWeapon->getMpCost() > mana){
 			return;
 		}
@@ -163,8 +154,7 @@ void Player::attack( ClientGameTimeAction a) {
 		Projectile* proj = currentWeapon->attackRange(direction, position);
     proj->setOwner(this);
 	}
-	else if(a.attackMelee)
-	{
+	else if(a.attackMelee){
 		if( !currentWeapon->canUseWeapon(false)){
 			return;
 		}
@@ -172,7 +162,6 @@ void Player::attack( ClientGameTimeAction a) {
 	}
 
 	attacking = true;
-
 	return;
 }
 

@@ -4,11 +4,11 @@ class WeaponFist :
   public Weapon
 {
 public:
-  WeaponFist(Coordinate, Map*);
+  WeaponFist(v3_t, Map*);
   ~WeaponFist(void);
   bool attackMelee();
   Projectile* attackRange();
   bool pickUp();
-  bool dropDown(Coordinate dropPosition);
+  bool dropDown(v3_t dropPosition);
 };
 
