@@ -12,6 +12,7 @@ class Entity;
 class Player;
 class Projectile;
 class Wall;
+class Direction;
 
 class Map
 {
@@ -40,4 +41,5 @@ private:
 	std::vector<Projectile *> liveProjectTile;
   Quadtree q;
   void initWalls(void);
+  void addWallDirection(int startingX, int startingY, int startingZ, Direction dir, int values[]);
 };

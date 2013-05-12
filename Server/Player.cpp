@@ -103,9 +103,6 @@ bool Player::moveTowardDirection(move_t inputDir, bool jump)
 }
 
 void Player::update(){
-  //std::cout << "acc" << acceleration << std::endl;
-  std::cout << "velocity" << velocity << std::endl;
-  //std::cout << "position" << velocity << std::endl;
   acceleration = gravity;
   velocity += acceleration * ConfigManager::serverTickLengthSec();
   position += velocity * ConfigManager::serverTickLengthSec();
@@ -242,8 +239,9 @@ bool Player::collidePlayer(std::pair<Entity*,BoundingObj::vec3_t>& p){
 }
 
 bool Player::collideProjectile(std::pair<Entity*,BoundingObj::vec3_t>& p){
-  if(((Projectile *)p.first)->getOwner() != this){
-  //TODO COLLIDE
+  if(((Projectile *)p.first)->getOwner() != this) {
+    std::cout << "OW hit "<< player_id << std::endl;
+    attackBy((Projectile *)p.first);
   }
   return false;
 }
