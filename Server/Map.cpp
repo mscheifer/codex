@@ -17,8 +17,8 @@ Map::Map(void): freeProjectiles(),q(0,Rectangle(BoundingObj::vec4_t(0,0,0),1000,
 
 void Map::initWalls(void)
 {
-  Direction facingEast = Direction(1,0,0);
-  Direction facingNorth = Direction(0,1,0);
+  v3_t facingEast(1,0,0);
+  v3_t facingNorth(0,1,0);
   int width = 10;
   int height = 4; 
   int depth = 1;
@@ -43,8 +43,10 @@ void Map::initWalls(void)
     startingYNeg = ((wallY*width)/2)+centerY;
     i < wallX; i++, startingX += width )
   {
-    Wall* topWall = new Wall(width, depth, height, Coordinate(startingX,startingY, startingZ, 0,0,0), facingNorth, this);
-    Wall* bottomWall = new Wall(width, depth, height, Coordinate(startingX,startingYNeg, startingZ, 0,0,0), facingNorth, this);
+    Wall* topWall = new Wall(width, depth, height, 
+      v3_t(startingX,startingY, startingZ), facingNorth, this);
+    Wall* bottomWall = new Wall(width, depth, height, 
+      v3_t(startingX,startingYNeg, startingZ), facingNorth, this);
     this->entities.push_back(topWall);
     this->entities.push_back(bottomWall);
   }
@@ -55,13 +57,14 @@ void Map::initWalls(void)
     startingY = ((wallY*width)/-2)+(width/2)+centerY;
     i < wallY; i++, startingY += width )
   {
-    Wall* leftWall = new Wall(width, depth, height, Coordinate(startingX,startingY, startingZ, 0,0,0), facingEast, this);
-    Wall* rightWall = new Wall(width, depth, height, Coordinate(startingXNeg,startingY, startingZ, 0,0,0), facingEast, this);
+    Wall* leftWall = new Wall(width, depth, height,
+      v3_t(startingX,startingY, startingZ), facingEast, this);
+    Wall* rightWall = new Wall(width, depth, height,
+      v3_t(startingXNeg,startingY, startingZ), facingEast, this);
     this->entities.push_back(leftWall);
     this->entities.push_back(rightWall);
   }
   
-
   //Wall * floor = new Wall(10, 1, 1, Coordinate(0,0,0,0,0,0), facingEast, this);
   //this->entities.push_back(floor);
 

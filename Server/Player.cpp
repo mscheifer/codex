@@ -4,7 +4,7 @@
 const float Player::sphereRadius = 5.0f;
 
 Player::Player(){}// this->init(0,0,0,0,NULL);}
-
+Player::~Player(void){}
 Player::Player(v3_t pos, int assigned_id, Map * m)
 {
  this->init(pos, assigned_id, m);
@@ -19,9 +19,7 @@ void Player::init(v3_t pos, int assigned_id, Map * m)
 	dead = false;
 	player_id = assigned_id;
 	position = pos;
-	direction.x = 0.0;
-	direction.y = -1.0;
-	direction.z = 0.0;
+  direction = v3_t(0,0,0);
 	defense = 5;
 	health = 100;
 	maxHealth = 100;
@@ -48,10 +46,6 @@ void Player::generateBounds(v3_t position){
   boundingObjs.push_back(b);
 }
 
-Player::~Player(void)
-{
-}
-
 bool Player::attackBy(DeadlyEntity *other)
 {
 	if(other)
@@ -71,14 +65,6 @@ bool Player::damageBy(DeadlyEntity *deadly)
 	return true;
 }
 
-Position getTerrainHeight(Position x, Position y)
-{
-	// TODO: Will need to ask map for this information
-	return 0;
-}
-void Player::fixPosition(){}
-void Player::jump(){}
-
 void Player::handleAction(ClientGameTimeAction a) {
   //std::cout<<"PLAYER: "<<player_id<<" handling packet from "<< a.player_id<<std::endl;
 	if(a.player_id == player_id) {
@@ -86,7 +72,6 @@ void Player::handleAction(ClientGameTimeAction a) {
 	} else {
 		//handleOtherAction(a);
 	}
-
 }
 
 bool Player::moveTowardDirection(move_t inputDir, bool jump)
@@ -153,7 +138,6 @@ void Player::handleSelfAction(ClientGameTimeAction a) {
 
 void Player::handleOtherAction( ClientGameTimeAction) {
 	//since we are modeling projectiles, we are just gonna check for melee
-
 }
 /*
 void Player::onCollision(Entity* e){
@@ -176,7 +160,7 @@ void Player::attack( ClientGameTimeAction a) {
 			return;
 		}
 		mana -= currentWeapon->getMpCost();
-		Projectile* proj = currentWeapon->attackRange(direction2, position2);
+		Projectile* proj = currentWeapon->attackRange(direction, position);
     proj->setOwner(this);
 	}
 	else if(a.attackMelee)
@@ -209,22 +193,27 @@ void Player::updateBounds(){
 
 void Player::updateBoundsSoft(){
   //update the bounding objects
+  boundingObjs[0]->setCenter(BoundingObj::vec4_t(position.x, position.y, position.z));
 }
 
 void Player::handleCollisions(){
   std::vector<std::pair<Entity*,BoundingObj::vec3_t>> entities =  detectCollision();
   bool restart = false;
+  int restarts = 0;
 
   for( auto it = entities.begin(); it != entities.end(); ){
     Entity * e = it->first;
     switch( e->getType() ){
     case WALL:
+      std::cout << "wall" << std::endl;
       restart = collideWall(*it);
       break;
     case PLAYER:
-      restart = collideWall(*it);
+      std::cout << "player" << std::endl;
+      restart = collidePlayer(*it);
       break;
     case PROJECTILE:
+      std::cout << "proj" << std::endl;
       restart = collideProjectile(*it);
       it++;
       break;
@@ -236,10 +225,14 @@ void Player::handleCollisions(){
     //different position now, needs to see what it hit
     //TODO this could cause an infinite loop
     if(restart){
+      restarts++;
       restart = false;
       entities = detectCollision();
       it = entities.begin();
     }
+
+    if( restarts > 3 )
+      break;
   }
 }
 
@@ -252,14 +245,17 @@ bool Player::collideWall(std::pair<Entity*,BoundingObj::vec3_t>& p){
 
 bool Player::collidePlayer(std::pair<Entity*,BoundingObj::vec3_t>& p){
   BoundingObj::vec3_t fixShit = p.second;
+  std::cout << "t0 " << position << " fix " << fixShit << std::endl;
   position += p.second;
+  std::cout << "t1 " << position << std::endl;
   updateBounds();
   return true;
 }
 
 bool Player::collideProjectile(std::pair<Entity*,BoundingObj::vec3_t>& p){
-  if(((Projectile *)p.first)->getOwner() != this)
-    std::cout << "OW hit "<< player_id << std::endl;
+  if(((Projectile *)p.first)->getOwner() != this){
+  //TODO COLLIDE
+  }
   return false;
 }
 

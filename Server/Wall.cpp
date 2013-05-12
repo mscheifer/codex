@@ -2,21 +2,15 @@
 
 const float Wall::sphereRadius = 5.0f;
 
-Wall::Wall(unsigned int w, unsigned int d, unsigned int h, Coordinate sc, Direction direct, Map * m):centerPositions()
+Wall::Wall(unsigned int w, unsigned int d, unsigned int h, v3_t sc, v3_t direct, Map * m):centerPositions()
 {
   width = w;
   depth = d;
   height = h;
   centerPositions.push_back(sc);
   currentCenter = 0;
-
-  //TODO TEMP so that I can render it
-  position = v3_t(sc.x, sc.y, sc.z);
-  direction = v3_t(direct.x, direct.y, direct.z);
-  ////
-
-  position2 = sc;
-  direction2 = direct;
+  position = sc;
+  direction = direct;
   map = m;
 
   BoundingBox* b = new BoundingBox(BoundingObj::vec4_t(direct.x,direct.y,direct.z),
@@ -40,15 +34,15 @@ void Wall::update()
   currentCenter++;
   if( currentCenter == centerPositions.size() )
     currentCenter = 0;
-  position2 = centerPositions[currentCenter];
+  position = centerPositions[currentCenter];
 }
 
-void Wall::addNewCenter(Coordinate center)
+void Wall::addNewCenter(v3_t center)
 {
   centerPositions.push_back(center);
 }
 
-void Wall::addNewCenters(std::vector<Coordinate>& centers)
+void Wall::addNewCenters(std::vector<v3_t>& centers)
 {
   for(unsigned i = 0; i < centers.size(); i++)
     centerPositions.push_back(centers[i]);

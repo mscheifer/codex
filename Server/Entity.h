@@ -16,7 +16,7 @@ protected:
   v3_t acceleration;
   v3_t velocity;
   v3_t direction;
-  Coordinate position2;
+  Coordinate position2; //TODO temp
   Direction direction2;
   Map* map;
   std::vector<BoundingObj*> boundingObjs;
@@ -39,10 +39,11 @@ public:
   std::vector<std::pair<Entity*,gx::vector3f>> detectCollision();
 
   v3_t getPosition(void) const { return position; }
+  void setPosition(v3_t c) { position = c;}
   v3_t getDirection(void) const { return direction; }
   void setDirection(v3_t d) { direction = d; }
+  void setVelocity(v3_t v) { velocity = v; }
   void setMap(Map* m) { map = m; }
-  void setPosition(v3_t c) { position = c;}
   void setBoundingObjs(std::vector<BoundingObj*> b){ boundingObjs = b; }
   std::vector<BoundingObj*> getBoundingObjs(){ return boundingObjs; }
   

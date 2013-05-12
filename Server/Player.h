@@ -37,7 +37,6 @@ public:
   void updateBoundsSoft(); 
  
   bool moveTowardDirection(move_t degree, bool jump); //handle movement input WADS jump
-  void jump();
   void handleAction(ClientGameTimeAction a);
   
   float getHealth() { return health; }
@@ -82,7 +81,6 @@ private:
   Weapon* weapon[MAXWEAPONS]; //0 bare hand, 1 fireball
   int current_weapon_selection; //0 bare hand, 1 fireball
   bool damageBy(DeadlyEntity *);
-  void fixPosition();
   void handleSelfAction(ClientGameTimeAction a);
   void handleOtherAction(ClientGameTimeAction a);
   void attack(ClientGameTimeAction a);

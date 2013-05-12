@@ -61,22 +61,17 @@ bool Weapon::attackMelee()
 {
 	return false;
 }
-Projectile* Weapon::attackRange(Direction d , Coordinate c)
+Projectile* Weapon::attackRange(v3_t dir , v3_t pos)
 {
 	Projectile* pj = map->produceProjectile();
-	//pj = Projectile(c,d);
-  //TODO is the direction normalized?
-  c.velocityX = d.x*projectileSpeed;
-  c.velocityY = d.y*projectileSpeed;
-  c.velocityZ = d.z*projectileSpeed;
-	//c.velocityX = projectileSpeed;
-	//c.velocityY = projectileSpeed;
-	//c.velocityZ = projectileSpeed;
-	
-	pj->setPosition2(c);
-	pj->setDirection2(d);
+  dir.normalize();
+  pj->setDirection(dir);
+  dir.scale(projectileSpeed);
+  pj->setVelocity(dir);
+  pj->setPosition(pos);
+
 	pj->setStrength(projectileStrength);
-	pj->setRange(projectileRange);
+	pj->setRange(projectileRange); //TODO not sure what this is
 
 	return pj;
 }
