@@ -15,6 +15,7 @@
 #include "Game.h"
 #include "ConfigManager.h"
 #include "AudioManager.h"
+#include "EntityPool.h"
 
 class NetworkClient {
   ServerGameTimeRespond s;
@@ -25,11 +26,12 @@ class NetworkClient {
   int id;
   bool sendPacket;
   bool running;
+  EntityPool objPool;
 
   void processInput();
   void receiveMessages();
 public:
-  NetworkClient(): s(), action(), netRecv(), chat(), gxClient(), id(-1),
+  NetworkClient(): s(nullptr), action(), netRecv(), chat(), gxClient(), id(-1),
                    sendPacket(false), running(true) {}
   NetworkClient(const NetworkClient&);// = delete;
   NetworkClient& operator=(const NetworkClient&);// = delete;

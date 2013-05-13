@@ -320,6 +320,9 @@
     <ClInclude Include="graphics\uniformLocation.h">
       <Filter>Header Files\graphics</Filter>
     </ClInclude>
+    <ClInclude Include="EntityPool.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\Makefile">

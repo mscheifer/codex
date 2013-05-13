@@ -31,7 +31,7 @@ void NetworkClient::receiveMessages() {
         this->chat.addChat(chatObj.getChat());
         break;
       case SGTR:
-        s.deserialize(packet);
+        this->s.deserialize(packet);
         for(auto playerP = s.players.begin(); playerP != s.players.end(); playerP++) {
           if(playerP->player_id != this->id) {
             auto gentity = toGentity(*playerP);
