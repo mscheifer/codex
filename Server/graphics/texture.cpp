@@ -5,7 +5,7 @@ gx::Texture::Texture(GLenum TextureTarget, const std::string& FileName)
 {
     m_textureTarget = TextureTarget;
     m_fileName      = FileName;
-    //m_pImage        = NULL;
+    //m_image = ??
 }
 
 bool gx::Texture::Load()

@@ -27,7 +27,7 @@ std::string readFile(const std::string fileName) {
 }
 
 std::vector<gx::drawSet::vaoData_t> loadModel(const std::string& ModelPath) {
-	gx::Mesh model(ModelPath);
+	gx::Mesh model(ModelPath,1);
 
 	std::vector<gx::drawSet::vaoData_t> entities;
 	//just do the first one until we get loading working
