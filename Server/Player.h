@@ -26,7 +26,7 @@ public:
   bool dead; //might be private. should be determined in handleAction
   bool minotaur; //might be private
   int player_id;
-  char name[20];
+  std::string name;
   Player();
   Player(v3_t pos, int assigned_id, Map *);
   ~Player(void);
@@ -62,8 +62,7 @@ public:
     oldJumpVelocity.serialize(packet);
     packet << dead; 
     packet << minotaur; //might be private
-    std::string playerName = name;
-    packet << playerName;
+    packet << name;
     packet << health;
     packet << maxHealth;
     packet << mana;
@@ -91,9 +90,7 @@ public:
     oldJumpVelocity.deserialize(packet);
     packet >>dead; 
     packet >>minotaur; //might be private
-    std::string playerName;
-    packet >> playerName;
-    strcpy(name, playerName.c_str());
+    packet >> name;
     packet >> health;
     packet >> maxHealth;
     packet >> mana;

@@ -31,7 +31,7 @@ class NetworkClient {
   void processInput();
   void receiveMessages();
 public:
-  NetworkClient(): s(nullptr), action(), netRecv(), chat(), gxClient(), id(-1),
+  NetworkClient(): s(&objPool), action(), netRecv(), chat(), gxClient(), id(-1),
                    sendPacket(false), running(true) {}
   NetworkClient(const NetworkClient&);// = delete;
   NetworkClient& operator=(const NetworkClient&);// = delete;

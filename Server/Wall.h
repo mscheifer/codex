@@ -1,9 +1,7 @@
 #pragma once
 #include "Entity.h"
 #include <vector>
-class Wall :
-  public Entity
-{
+class Wall : public Entity {
 public:
   static const float sphereRadius;
   static const Entity_Type type = WALL;
@@ -18,7 +16,7 @@ public:
   void serialize(sf::Packet & packet ) const {
     packet << type; 
     Entity::serialize(packet);
-    packet << centerPositions.size();
+    packet << static_cast<sf::Uint32>(centerPositions.size());
     for (auto it=centerPositions.begin(); it!=centerPositions.end(); it++)
       (*it).serialize(packet);
     packet << currentCenter;
@@ -28,10 +26,10 @@ public:
   } 
   void deserialize(sf::Packet & packet ) {
     Entity::deserialize(packet);
-    int size = 0;
+    sf::Uint32 size = 0;
     centerPositions.clear();
     packet >> size;
-    for (auto i=0; i< size; i++) {
+    for (auto i = 0u; i < size; i++) {
        v3_t v;
        v.deserialize(packet);
        centerPositions.push_back(v);
