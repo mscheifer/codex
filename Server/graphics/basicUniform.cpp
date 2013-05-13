@@ -11,10 +11,6 @@ void gx::uniform::_locations<Type>::updateLoc(GLuint shader, const GLfloat* data
   this->locations.at(shader).write(data);
 }
 
-template<>
-void gx::uniform::_locations<GL_FLOAT>::updateLoc(GLuint shader, const GLfloat data) const {
-  this->locations.at(shader).write(data);
-}
 
 template<GLenum Type>
 void gx::uniform::_locations<Type>::addShader(const shaderProgram& shader) {
@@ -61,6 +57,10 @@ std::string gx::uniform::vec4f::declaration() const {
 
 gx::uniform::vec1f::vec1f(std::string name)
   : _locations<GL_FLOAT>(std::move(name)) {}
+
+void gx::uniform::vec1f::updateLoc(GLuint shader, const GLfloat data) const {
+  this->locations.at(shader).write(data);
+}
 
 void gx::uniform::vec1f::write(const GLfloat* src) {
   this->storage = *src;

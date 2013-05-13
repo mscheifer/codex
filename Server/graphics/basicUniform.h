@@ -21,12 +21,11 @@ namespace uniform {
 	};
   template<GLenum Type>
   class _locations : public basic {
-      std::map<GLuint,loc<Type>> locations;
     protected:
+	  std::map<GLuint,loc<Type>> locations;
       const std::string varName;
       _locations(std::string);
       void updateLoc(GLuint shader, const GLfloat*) const;
-      void updateLoc(GLuint shader, const GLfloat ) const;
     public:
       void addShader(const shaderProgram&);
   };
@@ -50,6 +49,7 @@ namespace uniform {
 	};
   class vec1f : public _locations<GL_FLOAT> {
       GLfloat storage;
+	  void updateLoc(GLuint shader, const GLfloat) const;
     public:
       vec1f(std::string);
       virtual void write(const GLfloat*);
