@@ -11,13 +11,14 @@ public:
   ~Projectile(void);
   void update(void);
   void setStrength(float a);
-  void setRange(Position r);
-  Position range;
-  Position distanceLeftToTravel;
+  void setRange(length_t r);
+  length_t range;
+  length_t distanceLeftToTravel;
   void setOwner(Player *);
   Player* getOwner(){return owner;}
   void updateBounds();
   void updateBoundsSoft();
+  void handleCollisions();
   Entity_Type getType() {
     return type;
   }

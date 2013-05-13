@@ -7,6 +7,7 @@
 #include <stdlib.h>
 #include <stack>
 #include "Quadtree.h"
+#include "Physics.h" //typedef
 
 class Entity;
 class Player;
@@ -40,4 +41,5 @@ private:
 	std::vector<Projectile *> liveProjectTile;
   Quadtree q;
   void initWalls(void);
+  void addWallDirection(int startingX, int startingY, int startingZ, v3_t dir, int values[]);
 };

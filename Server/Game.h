@@ -34,11 +34,11 @@ struct InitPacket
 public:
   static const int packetType = INIT;
   int id;
-  Coordinate position;
-  Direction direction;
+  v3_t position;
+  v3_t direction;
 
   InitPacket() {}
-  InitPacket(int idc, Coordinate coord, Direction dir) : id(idc), position(coord), direction(dir)
+  InitPacket(int idc, v3_t coord, v3_t dir) : id(idc), position(coord), direction(dir)
   {
   }
 

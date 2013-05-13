@@ -6,7 +6,7 @@
 
 class BoundingSphere : public BoundingObj{
 private:
-  unit_t radius; //TODO: change to glfloat
+  unit_t radius;
 
 public:
   BoundingSphere(vec4_t cen, float r) : BoundingObj(cen), radius(r) {

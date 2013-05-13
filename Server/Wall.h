@@ -7,11 +7,11 @@ class Wall :
 public:
   static const float sphereRadius;
   static const Entity_Type type = WALL;
-  Wall(unsigned int width, unsigned int depth, unsigned int height, Coordinate startingCoordinate, Direction direct, Map*);
+  Wall(unsigned int width, unsigned int depth, unsigned int height, v3_t startingCoordinate, v3_t direct, Map*);
   ~Wall(void);
   void update(void);
-  void addNewCenter(Coordinate);
-  void addNewCenters(std::vector<Coordinate>&);
+  void addNewCenter(v3_t);
+  void addNewCenters(std::vector<v3_t>&);
   void updateBounds();
   void updateBoundsSoft(); 
   Entity_Type getType() {
@@ -19,7 +19,7 @@ public:
   }
 private:
   // A vector of POSSIBLE positions
-  std::vector<Coordinate> centerPositions;
+  std::vector<v3_t> centerPositions;
   unsigned int currentCenter;
   unsigned int width;
   unsigned int depth;
