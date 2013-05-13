@@ -4,6 +4,7 @@
 #include <iostream>
 #include <array>
 #include "vector4.h"
+#include <SFML/Network/Packet.hpp>
 
 namespace gx {
 template<typename T>
@@ -53,6 +54,8 @@ class vector3 {
     void print() const;
     bool operator==(const vector3<T>&) const;
     bool operator!=(const vector3<T>&) const;
+    void serialize(sf::Packet & packet) const;
+    void deserialize(sf::Packet & packet);
 };
 
 template<typename T>

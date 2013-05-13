@@ -1,9 +1,9 @@
 #pragma once
-#include "directionalVector.h"
 #include "StaticEnums.h"
 #include <iostream>
 #include <sstream>
 #include "SFML/Network/Packet.hpp"
+#include "Physics.h"
 
 struct ClientGameTimeAction
 {
@@ -16,7 +16,7 @@ struct ClientGameTimeAction
   bool weapon2; // Used for switching weapon
 	bool jump;
   bool updated;
-	Direction facingDirection;
+	v3_t facingDirection;
   
   bool operator==(const ClientGameTimeAction & other) const{
     if (this->player_id != other.player_id) return false; 
@@ -50,7 +50,7 @@ struct ClientGameTimeAction
     packet << player_id;
     packet << (int)movement;
     packet << attackMelee;
-	packet << attackRange;
+	  packet << attackRange;
     packet << weapon1;
     packet << weapon2;
     packet << jump;
@@ -63,7 +63,7 @@ struct ClientGameTimeAction
     packet >> movementInt;
     movement = (move_t) movementInt; //change to static_cast?
     packet >> attackMelee;
-	packet >> attackRange;
+	  packet >> attackRange;
     packet >> weapon1;
     packet >> weapon2;
     packet >> jump;

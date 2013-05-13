@@ -15,10 +15,12 @@ Projectile::~Projectile(void)
 }
 
 void Projectile::update(void) {
-
-	Coordinate nextPosition = ThreeDMovement(position, direction, 0);
-	distanceLeftToTravel -= calculateDistanceInBetween(position, nextPosition);	
-	position = nextPosition;
+  position += velocity * ConfigManager::serverTickLengthSec();
+	
+  /* TODO not sure what this does @allen @alvin
+  Coordinate nextPosition = ThreeDMovement(position2, direction2, 0);
+	distanceLeftToTravel -= calculateDistanceInBetween(position2, nextPosition);	
+	position2 = nextPosition;
 	
 	//if it already traveled a its range
 	if(distanceLeftToTravel <= 0.0 ) {
@@ -27,6 +29,7 @@ void Projectile::update(void) {
 		map->destroyProjectile(this);
 		return;
 	}
+  */
 
 	updateBounds();
 	// some collision detection
@@ -34,8 +37,7 @@ void Projectile::update(void) {
 
 }
 
-void Projectile::setOwner(Player * player)
-{
+void Projectile::setOwner(Player * player){
   owner = player;
 }
 
@@ -43,8 +45,7 @@ void Projectile::setStrength(float f) {
 	strength = f;
 }
 
-void Projectile::setRange(Position r) {
-
+void Projectile::setRange(length_t r) {
 	range = r;
 	distanceLeftToTravel = r;
 }

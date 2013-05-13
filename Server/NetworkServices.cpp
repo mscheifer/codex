@@ -19,8 +19,7 @@ ClientServices::ClientServices() {
        client.setBlocking(false);
        invalidIpAddress = false;
     } else {
-      std::cout << "try again, " << input << " is an invalid ip address";
-      std::cout << std::endl;
+      std::cout << "try again, " << input << " is an invalid ip address" << std::endl;
     }
   } while(invalidIpAddress);
 }
@@ -42,8 +41,7 @@ ServerServices::ServerServices(){
 bool ServerServices::getNewClient(){ 
   // Wait for a connection
   if ( this->listener.accept(*newClient) == sf::Socket::Done ){
-    std::cout << "New client connected: " << newClient->getRemoteAddress();
-    std::cout << std::endl;
+    std::cout << "New client connected: " << newClient->getRemoteAddress() << std::endl;
     newClient->setBlocking(false);
     clients.push_back(newClient);
     std::cout << size() << " clients have connceted" << std::endl;

@@ -1,20 +1,20 @@
 #include "WeaponFist.h"
 
-WeaponFist::WeaponFist(Coordinate pos, Map * m):Weapon(10, 1, pos, 0, m)
-{ // Will inherit weapon's default constructor
-  // will it? --Matt
+WeaponFist::WeaponFist(v3_t pos, Map * m):Weapon(10, 1, pos, 0, m)
+{
 }
 
 WeaponFist::~WeaponFist(void)
 {
 }
+
 bool WeaponFist::attackMelee()
 {
   return false;
 }
+
 Projectile* WeaponFist::attackRange()
 {
-
   return NULL;
   //attackMelee();
 }
@@ -26,7 +26,8 @@ bool WeaponFist::pickUp()
   pickedUp = true;
   return true;
 }
-bool WeaponFist::dropDown(Coordinate dropPosition)
+
+bool WeaponFist::dropDown(v3_t dropPosition)
 {
   if(pickedUp)
     return false;

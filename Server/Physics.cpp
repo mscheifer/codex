@@ -1,5 +1,5 @@
 #include "Physics.h"
-
+/*
 Position calculatePosition(Position x, Velocity v, Acceleration a)
 {
   //x = x0 + v0t + ½at2
@@ -34,3 +34,4 @@ Coordinate ThreeDMovement(Coordinate location, Direction direction, Acceleration
   return Coordinate(newX, newY, newZ, location.velocityX, location.velocityY, newVZ);
 }
 
+*/

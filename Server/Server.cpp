@@ -10,6 +10,7 @@ void NetworkServer::combinePackets(ClientGameTimeAction & a) {
 	pPacket.jump |= a.jump;
 	pPacket.facingDirection = a.facingDirection;
 }
+
 void NetworkServer::receiveMessages(int i) {
   sf::Packet packet;
   bool packetReceived = false;
@@ -46,8 +47,6 @@ void NetworkServer::doServer() {
   ConfigManager::log("lol");
   sf::IpAddress myIpAddress = sf::IpAddress::getLocalAddress();
   std::cout << "Server Ip Address: " << myIpAddress.toString() << std::endl;
-  const int ticksPerSecond = 30;
-  const int tickLength = 1000 / ticksPerSecond;
   sf::Clock clock;
   
   //send id to to the player
@@ -98,7 +97,7 @@ void NetworkServer::doServer() {
     }
 
     //4. go back to sleep slave.
-    sf::sleep( sf::milliseconds( tickLength -
+    sf::sleep( sf::milliseconds( ConfigManager::serverTickLengthMilli() -
                                  clock.getElapsedTime().asMilliseconds()) );
   }
 } 
