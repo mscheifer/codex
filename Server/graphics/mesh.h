@@ -1,30 +1,25 @@
 #ifndef MESH_H
 #define	MESH_H
-#include <map>
-#include <vector>
 #include <GL/glew.h>
-#include <assimp/Importer.hpp>      // C++ importer interface
-#include <assimp/scene.h>			// Output data structure
+#include <assimp/Importer.hpp>    // C++ importer interface
+#include <assimp/scene.h>			    // Output data structure
 #include <assimp/postprocess.h>		// Post processing flags
-#include "vector3.h"
-#include "vector4.h"
+#include <vector>
 #include "drawSet.h"
 #include "texture.h"
 
 namespace gx {
-
 class Mesh {
-  #define INVALID_MATERIAL 0xFFFFFFFF
   public:
-    Mesh(const std::string& Filename);
+    typedef float length_t;
+    Mesh(const std::string& Filename,length_t);
     Mesh(const Mesh&);// = delete; //don't copy
     Mesh& operator=(const Mesh&);// = delete; //don't assign
-    Mesh(Mesh&&);
+    Mesh(Mesh&&);// = delete //define later
     Mesh& operator=(Mesh&&);// = delete; //define later
-    ~Mesh();
 
     struct MeshEntry {
-        MeshEntry(const aiMesh*);
+        MeshEntry(const aiMesh*,const matrix);
         MeshEntry(const MeshEntry&);// = delete; //don't copy
         MeshEntry& operator=(const MeshEntry&);// = delete; //don't assign
         MeshEntry(MeshEntry&&) noexcept;
@@ -36,24 +31,24 @@ class Mesh {
     };
 
 	  struct BoundParam {
+      matrix centerAndResize;
 		  vector3f center;	// center coord of model
-		  float width;	// width (along x axis)
-		  float height;	// height (along y axis)
-		  float depth;	// width (along z axis)
+		  length_t width;	// width  (along x axis)
+		  length_t height;	// height (along y axis)
+		  length_t depth;	// width  (along z axis)
 	  } m_boundary;
 
     std::vector<MeshEntry> m_Entries;
-    std::vector<Texture*> m_Textures;
-
-    const aiScene* m_scene;
+    std::vector<Texture> m_Textures;
+    bool m_Good;
   private:
-    const aiScene* LoadMesh(const std::string& Filename);
+    bool LoadMesh(const std::string& Filename,length_t);
 
-    bool InitFromScene(const aiScene* pScene, const std::string& Filename);
-    bool InitMaterials(const aiScene* pScene, const std::string& Filename);
+    bool InitFromScene(const aiScene*, const std::string& Filename,length_t);
+    bool InitMaterials(const aiScene*, const std::string& Filename);
 
 	  // fill in our m_boundary object with the boundary info
-	  void CalcBoundBox(const aiScene* scene);
+	  void CalcBoundBox(const aiScene* scene,length_t);
 };
 
 Mesh loadMeshFromFile(const std::string&);

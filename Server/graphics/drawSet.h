@@ -6,6 +6,7 @@
 #include "shaderProgram.h"
 #include "vao.h"
 #include "matrix.h"
+#include "uniformLocation.h"
 
 namespace gx {
 class displaySet;
@@ -22,7 +23,7 @@ class drawSet {
     };
     shaderProgram            program;
     std::vector<entityClass> entityClasses;
-    GLint                    modelToWorldLoc;
+    uniform::mat4floc        modelToWorldLoc;
 	  std::vector<uniform::block*> globalUniforms;
   public:
     typedef std::pair<std::vector<GLuint>,

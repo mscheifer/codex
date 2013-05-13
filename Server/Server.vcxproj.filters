@@ -159,6 +159,12 @@
     <ClCompile Include="ChatHandler.cpp">
       <Filter>Header Files</Filter>
     </ClCompile>
+    <ClCompile Include="graphics\basicUniform.cpp">
+      <Filter>Source Files\graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="graphics\uniformLocation.cpp">
+      <Filter>Source Files\graphics</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">
@@ -310,6 +316,9 @@
     </ClInclude>
     <ClInclude Include="util.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="graphics\uniformLocation.h">
+      <Filter>Header Files\graphics</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -1,12 +1,8 @@
 #include "WeaponFist.h"
 
-
 WeaponFist::WeaponFist(v3_t pos, Map * m):Weapon(10, 1, pos, 0, m)
-{ // Will inherit weapon's default constructor
-  // will it? --Matt
-  //TODO it won't fix if needed @alvin @allen
+{
 }
-
 
 WeaponFist::~WeaponFist(void)
 {

@@ -2,7 +2,6 @@
 #define GRAPHICS_CLEINT_H
 #include <SFML/Window.hpp>
 #include <assimp/cimport.h>
-
 #include "displaySet.h"
 #include "drawSet.h"
 #include "light.h"

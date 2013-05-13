@@ -45,6 +45,7 @@ matrix rotateZ(double angle);
 matrix rotateArbitrary(vector3f axis, double angle);
 matrix scaling(matrix::elem_t x, matrix::elem_t y, matrix::elem_t z);
 matrix scalingMatrix(matrix::elem_t x, matrix::elem_t y, matrix::elem_t z);
+matrix uniformScaling(matrix::elem_t x);
 matrix translation(matrix::elem_t x, matrix::elem_t y, matrix::elem_t z);
 //converts a vector from the standard basis to the supplied basis
 //params: x y and z vectors

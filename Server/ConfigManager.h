@@ -18,20 +18,20 @@ public:
   //read and initialize the config file
   static void readConfig();
 
-  static unsigned int numPlayers(){
+  static unsigned int numPlayers() {
     return StringToNumber<unsigned int>(ConfigManager::configMap["players"]);
   }
 
-  static unsigned int serverTicksPerSec(){
+  static unsigned int serverTicksPerSec() {
     return StringToNumber<unsigned int>(ConfigManager::configMap["serverTicksPerSec"]);
   }
 
-  static float serverTickLengthMilli(){
+  static float serverTickLengthMilli() {
     static float ret = 1000.f / serverTicksPerSec();
     return ret;
   }
   
-  static float serverTickLengthSec(){
+  static float serverTickLengthSec() {
     static float ret = serverTickLengthMilli() / 1000.f;
     return ret;
   }
