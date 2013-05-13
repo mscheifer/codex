@@ -36,10 +36,10 @@ void Player::init(v3_t pos, int assigned_id, Map * m)
   m->addToQtree(this);
 }
 
-void Player::generateBounds(v3_t position){
+void Player::generateBounds(v3_t pos){
   //init the bounding objects 
   //BoundingSphere* b = new BoundingSphere(gx::vector4(x,y,z),sphereRadius);
-  BoundingBox* b = new BoundingBox(BoundingObj::vec4_t(position.x,position.y,position.z),
+  BoundingBox* b = new BoundingBox(BoundingObj::vec4_t(pos.x,pos.y,pos.z),
     BoundingObj::vec3_t(1,0,0),BoundingObj::vec3_t(0,1,0),BoundingObj::vec3_t(0,0,1),
     sphereRadius,sphereRadius,sphereRadius);
   b->setEntity(this);
@@ -223,7 +223,6 @@ void Player::handleCollisions(){
 }
 
 bool Player::collideWall(std::pair<Entity*,BoundingObj::vec3_t>& p){
-  BoundingObj::vec3_t fixShit = p.second;
   position += p.second;
   updateBounds();
   return true;
