@@ -60,6 +60,28 @@ public:
     packet << this->getType(); //not necessary
     Entity::serialize(packet);
     packet << this->player_id;
+    acceleration.serialize(packet);
+    velocity.serialize(packet);
+    oldJumpVelocity.serialize(packet);
+    packet <<dead; 
+    packet <<minotaur; //might be private
+    std::string playerName = name;
+    packet << playerName;
+    packet << health;
+    packet << maxHealth;
+    packet << mana;
+    packet << maxMana;
+    packet << defense;
+    packet << speed;
+    packet << castDownTime; //not needed on client ?
+    //sf::Clock castDownCounter;
+    packet << jumpCount; // not needed on client ?
+    packet << canJump; //not needed on client ?
+    packet << attacking;  //not neede on client ?
+    //Weapon* weapon[MAXWEAPONS]; 
+    // change the array to vector ?
+    packet << current_weapon_selection; 
+ 
   }
 
   void deserialize(sf::Packet& packet) {
@@ -67,6 +89,28 @@ public:
     packet >> packetType;
     Entity::deserialize(packet);
     packet >> this->player_id;
+    acceleration.deserialize(packet);
+    velocity.deserialize(packet);
+    oldJumpVelocity.deserialize(packet);
+    packet >>dead; 
+    packet >>minotaur; //might be private
+    std::string playerName;
+    packet >> playerName;
+    strcpy(name, playerName.c_str());
+    packet >> health;
+    packet >> maxHealth;
+    packet >> mana;
+    packet >> maxMana;
+    packet >> defense;
+    packet >> speed;
+    packet >> castDownTime; //not needed on client ?
+    //sf::Clock castDownCounter;
+    packet >> jumpCount; // not needed on client ?
+    packet >> canJump; //not needed on client ?
+    packet >> attacking;  //not neede on client ?
+    //Weapon* weapon[MAXWEAPONS]; 
+    // change the array to vector ?
+    packet >> current_weapon_selection; 
   }
 
 
