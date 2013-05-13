@@ -5,8 +5,8 @@
 #include <array>
 #include <map>
 #include <vector>
-#include <memory>
 #include "basicUniform.h"
+#include "oglUtil.h"
 
 namespace gx {
 class shaderProgram;
@@ -30,7 +30,7 @@ class block {
     block(block&&);// = delete;
     block& operator=(block&&);// = delete;
     ~block();
-    void addShaderBindings(shaderProgram*);
+    void addShaderBindings(shaderProgram*);//TODO: change to take shader reference
     template<typename T>
     void writeBufferStruct(GLintptr offset,const T& data) const {
       if(gx::sharedUniformsOn) {
