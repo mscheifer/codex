@@ -1,6 +1,9 @@
 #pragma once
 #include "Player.h"
 #include "Entity.h"
+#include "Wall.h"
+#include "Projectile.h" 
+#include "Weapon.h"
 
 struct ServerGameTimeRespond
 {
@@ -24,6 +27,21 @@ struct ServerGameTimeRespond
     }
   }
 
+  Entity* createEntity(uint32_t type) {
+    switch (type) {
+    case WALL:
+      return new Wall();
+      break;
+    case PROJECTILE:
+      return new Projectile();
+      break;
+    case WEAPON:
+      return new Weapon();
+      break;
+    }
+    return new Entity();
+  }
+
   //make sure to clear the packet's sizes
   void deserialize(sf::Packet & packet) {
     for (auto ent= entities.begin(); ent!=entities.end();ent++ ) {
@@ -42,7 +60,9 @@ struct ServerGameTimeRespond
     entities.clear();
     packet >> size;
     for(unsigned int i = 0; i < size; i++) {
-      Entity* newEntity = new Entity(); //TODO should we do it lke this?
+      uint32_t packet_type;
+      packet >> packet_type;
+      Entity* newEntity = createEntity(packet_type); 
       newEntity->deserialize(packet);
       entities.push_back(newEntity);
     }

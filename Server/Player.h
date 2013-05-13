@@ -53,15 +53,15 @@ public:
     return type;
   }
 
-  void Player::serialize(sf::Packet& packet) const {
+  void serialize(sf::Packet& packet) const {
     packet << type; //not necessary
     Entity::serialize(packet);
     packet << this->player_id;
     acceleration.serialize(packet);
     velocity.serialize(packet);
     oldJumpVelocity.serialize(packet);
-    packet <<dead; 
-    packet <<minotaur; //might be private
+    packet << dead; 
+    packet << minotaur; //might be private
     std::string playerName = name;
     packet << playerName;
     packet << health;
@@ -83,7 +83,7 @@ public:
 
   void deserialize(sf::Packet& packet) {
     uint32_t packetType; //not necessary
-    packet >> packetType;
+    packet >> packetType; //not necessary
     Entity::deserialize(packet);
     packet >> this->player_id;
     acceleration.deserialize(packet);
