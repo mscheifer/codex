@@ -17,6 +17,8 @@ void Player::init(v3_t pos, int assigned_id, Map * m)
   oldJumpVelocity = v3_t(0,0,0);
   minotaur = false;
 	dead = false;
+  canJump = true;
+  jumpCount = 0;
 	player_id = assigned_id;
 	position = pos;
   direction = v3_t(0,0,0);
@@ -88,33 +90,60 @@ bool Player::moveTowardDirection(move_t inputDir, bool jump)
   }
 
   //if jump add jump velocity
-  if(jump){
+  if(jump && canJump){
+    //add jump velocity
     v3_t jumpDir = movementDirection;
     jumpDir.z = 1;
-    jumpDir.scale(jumpSpeed);
-    oldJumpVelocity += jumpDir;
+    jumpDir.scale(JUMPSPEED);
+    velocity = velocity - oldJumpVelocity;
     velocity += jumpDir;
+    velocity.z = jumpDir.z; //reset z velocity (for double jumping)
+    
+    //remember old velocity
+    jumpDir.z = 0;
+    oldJumpVelocity = jumpDir;
+
+    if(++jumpCount >= MAXJUMP)
+      canJump = false;
   }
   
   //move
-  movementDirection.scale(speed * MOVESCALE);
+  if(jumpCount > 0) //move less if you are in the air
+    movementDirection.scale(speed * AIRMOVESCALE);
+  else
+    movementDirection.scale(speed * MOVESCALE);
   position += movementDirection;
 	return true;
 }
 
 void Player::update(){
-  acceleration = gravity;
+  acceleration = GRAVITY;
   velocity += acceleration * ConfigManager::serverTickLengthSec();
   position += velocity * ConfigManager::serverTickLengthSec();
   
   //TODO this is temporary, just add teh velocity of the fixit vector on collisions
   //also on collision subtract your jump velocity;
   if( position.z < 0 ){
-    velocity.z = 0;
-    oldJumpVelocity.z = 0;
+    velocity.z -= position.z/ConfigManager::serverTickLengthSec();
     velocity = velocity - oldJumpVelocity;
-    oldJumpVelocity.x = oldJumpVelocity.y = 0;
+    oldJumpVelocity = ZEROVEC;
+
     position.z = 0;
+    canJump = true;
+    jumpCount = 0;
+  }
+
+  std::cout << velocity.z << std::endl;
+}
+
+void Player::restartJump(length_t zPosFix){
+  velocity = velocity - oldJumpVelocity;
+  oldJumpVelocity = ZEROVEC;
+
+  if(zPosFix > 0){
+    velocity.z -= zPosFix/ConfigManager::serverTickLengthSec();
+    canJump = true;
+    jumpCount = 0;
   }
 }
 

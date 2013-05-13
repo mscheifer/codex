@@ -14,10 +14,12 @@
 #include "algorithm"
 
 const int MOVESCALE = 3;
-const length_t jumpSpeed = 7;
+const length_t AIRMOVESCALE = 1;
+const length_t JUMPSPEED = 7;
+const int MAXJUMP = 5;
 
 #define MAXWEAPONS 2
-const int MAXJUMP = 2;
+
 class Player: public Entity
 {
 public:
@@ -67,7 +69,7 @@ public:
   }
 
 private:
-  v3_t oldJumpVelocity;
+  v3_t oldJumpVelocity; //the x,y velocity that should be applied
   float health;
   float maxHealth;
   float mana;
@@ -87,6 +89,7 @@ private:
   void attack(ClientGameTimeAction a);
   void init(v3_t pos, int assigned_id, Map * m);
   void generateBounds(v3_t pos);
+  void restartJump(length_t zPosFix);
 
   //helper functions for collisions
   bool collideWall(std::pair<Entity*,BoundingObj::vec3_t>& p);
