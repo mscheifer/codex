@@ -15,7 +15,7 @@
 
 const int MOVESCALE = 3;
 const length_t AIRMOVESCALE = 1;
-const length_t JUMPSPEED = 7;
+const length_t JUMPSPEED = 20;
 const int MAXJUMP = 5;
 
 #define MAXWEAPONS 2

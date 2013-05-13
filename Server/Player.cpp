@@ -120,11 +120,12 @@ void Player::update(){
   acceleration = GRAVITY;
   velocity += acceleration * ConfigManager::serverTickLengthSec();
   position += velocity * ConfigManager::serverTickLengthSec();
-  
+  updateBounds();
   //TODO this is temporary, just add teh velocity of the fixit vector on collisions
   //also on collision subtract your jump velocity;
+  /*
   if( position.z < 0 ){
-    velocity.z -= position.z/ConfigManager::serverTickLengthSec();
+    velocity.z = 0;// -= position.z/ConfigManager::serverTickLengthSec();
     velocity = velocity - oldJumpVelocity;
     oldJumpVelocity = ZEROVEC;
 
@@ -132,6 +133,7 @@ void Player::update(){
     canJump = true;
     jumpCount = 0;
   }
+  */
 
   std::cout << velocity.z << std::endl;
 }
@@ -141,7 +143,7 @@ void Player::restartJump(length_t zPosFix){
   oldJumpVelocity = ZEROVEC;
 
   if(zPosFix > 0){
-    velocity.z -= zPosFix/ConfigManager::serverTickLengthSec();
+    velocity.z = 0; //zPosFix/ConfigManager::serverTickLengthSec();
     canJump = true;
     jumpCount = 0;
   }
@@ -253,6 +255,7 @@ void Player::handleCollisions(){
 
 bool Player::collideWall(std::pair<Entity*,BoundingObj::vec3_t>& p){
   BoundingObj::vec3_t fixShit = p.second;
+  restartJump(fixShit.z);
   position += p.second;
   updateBounds();
   return true;
@@ -260,9 +263,7 @@ bool Player::collideWall(std::pair<Entity*,BoundingObj::vec3_t>& p){
 
 bool Player::collidePlayer(std::pair<Entity*,BoundingObj::vec3_t>& p){
   BoundingObj::vec3_t fixShit = p.second;
-  std::cout << "t0 " << position << " fix " << fixShit << std::endl;
   position += p.second;
-  std::cout << "t1 " << position << std::endl;
   updateBounds();
   return true;
 }

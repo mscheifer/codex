@@ -23,8 +23,8 @@ void Map::initWalls(void)
   int height = 4; 
   int depth = 1;
 
-  int wallX = 16;
-  int wallY = 20;
+  int wallX = 5;
+  int wallY = 5;
 
   int centerX = 0;
   int centerY = 0;
@@ -35,7 +35,6 @@ void Map::initWalls(void)
   int startingYNeg;
   int startingZ = height/2;
 
-  
   // Create the top and bottom perimeter from left to right.
   for( i = 0,
     startingX = ((wallX*width)/-2)+(width/2)+centerX,
@@ -65,6 +64,10 @@ void Map::initWalls(void)
     this->entities.push_back(leftWall);
     this->entities.push_back(rightWall);
   }
+
+  Wall * floor = new Wall(1000, 10, 1000, v3_t(0,0,-10), facingEast, this);
+  this->entities.push_back(floor);
+
   return; // REMOVE THIS TO KILL GRAPHICS
   // Creating facing north walls. DO NOT TOUCH THIS
 
