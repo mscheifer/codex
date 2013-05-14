@@ -4,8 +4,13 @@
 
 namespace {
 const double mouseSensitivity = 0.001;
+
+//base direction needs to be looking forward because mouse movement needs to rotate
+//around the axis that are 90 degrees away from the base direction and its
+//easier if these are the x and z axis
+const gx::vector3f basePlayerDirection = gx::vector3f( 0.0, 1.0, 0.0);
  
-gx::vector3f mouseDirection = gx::vector3f( 0.0, 1.0, 0.0);
+gx::vector3f mouseDirection = basePlayerDirection;
 sf::Vector2i mouseBasePosition;
 sf::Vector2i mouseDiff = sf::Vector2i(0,0);
 
@@ -63,13 +68,7 @@ move_t gx::input::movePlayer() {
 }
 
 gx::vector3f gx::input::turnPlayer() {
-  //base direction needs to be looking forward because mouse movement needs to rotate
-  //around the axis that are 90 degrees away from the base direction and its
-  //easier if these are the x and z axis
-  const vector3f basePlayerDirection = gx::vector3f( 0.0, 1.0, 0.0);
   sf::Vector2i curPosition = sf::Mouse::getPosition();
-  //gx::vector3f mouseDirection = basePlayerDirection;
-  //@matt this is not working
   if(curPosition != mouseBasePosition) {
     this->updated = true;
     sf::Vector2i newDiff = curPosition - mouseBasePosition;

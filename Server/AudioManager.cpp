@@ -1,5 +1,6 @@
 #include "AudioManager.h"
 #include "ConfigManager.h"
+#include "util.h"
 
 sf::Music AudioManager::music;
 sf::Sound AudioManager::sounds[NUM_SOUNDS];

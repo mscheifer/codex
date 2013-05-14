@@ -28,7 +28,7 @@ public:
   bool dead; //might be private. should be determined in handleAction
   bool minotaur; //might be private
   int player_id;
-  char name[20];
+  std::string name;
   Player();
   Player(v3_t pos, int assigned_id, Map *);
   ~Player(void);
@@ -55,17 +55,58 @@ public:
     return type;
   }
 
-  void Player::serialize(sf::Packet& packet) const {
+  void serialize(sf::Packet& packet) const {
     packet << type; //not necessary
     Entity::serialize(packet);
     packet << this->player_id;
+    acceleration.serialize(packet);
+    velocity.serialize(packet);
+    oldJumpVelocity.serialize(packet);
+    packet << dead; 
+    packet << minotaur; //might be private
+    packet << name;
+    packet << health;
+    packet << maxHealth;
+    packet << mana;
+    packet << maxMana;
+    packet << defense;
+    packet << speed;
+    packet << castDownTime; //not needed on client ?
+    //sf::Clock castDownCounter;
+    packet << jumpCount; // not needed on client ?
+    packet << canJump; //not needed on client ?
+    packet << attacking;  //not neede on client ?
+    //Weapon* weapon[MAXWEAPONS]; 
+    // change the array to vector ?
+    packet << current_weapon_selection; 
+ 
   }
 
   void deserialize(sf::Packet& packet) {
     uint32_t packetType; //not necessary
-    packet >> packetType;
+    packet >> packetType; //not necessary
     Entity::deserialize(packet);
     packet >> this->player_id;
+    acceleration.deserialize(packet);
+    velocity.deserialize(packet);
+    oldJumpVelocity.deserialize(packet);
+    packet >>dead; 
+    packet >>minotaur; //might be private
+    packet >> name;
+    packet >> health;
+    packet >> maxHealth;
+    packet >> mana;
+    packet >> maxMana;
+    packet >> defense;
+    packet >> speed;
+    packet >> castDownTime; //not needed on client ?
+    //sf::Clock castDownCounter;
+    packet >> jumpCount; // not needed on client ?
+    packet >> canJump; //not needed on client ?
+    packet >> attacking;  //not neede on client ?
+    //Weapon* weapon[MAXWEAPONS]; 
+    // change the array to vector ?
+    packet >> current_weapon_selection; 
   }
 
 private:

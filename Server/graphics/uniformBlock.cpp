@@ -1,4 +1,5 @@
 #include "uniformBlock.h"
+#include "shaderProgram.h"
 #include "oglUtil.h"
 
 //stores the next available uniform bind point
@@ -77,7 +78,7 @@ void gx::uniform::block::addShaderBindings(shaderProgram* p) {
     debugout << "uniform size: " << sz << endl;
   } else {
     for(auto varp = this->basicStorage.begin(); varp != this->basicStorage.end(); varp++) {
-      (*varp)->addShader(p);
+      (*varp)->addShader(*p);
     }
   }
 }

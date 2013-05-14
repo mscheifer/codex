@@ -9,6 +9,7 @@ class Weapon : public DeadlyEntity
 {
 public:
   static const Entity_Type type = WEAPON;
+  Weapon() {/*TODO initialzie*/}
 	Weapon(Map*);
 	~Weapon(void);
 	Weapon(float damage, float range, v3_t pos, float mpcost, Map*);
@@ -25,6 +26,29 @@ public:
 	virtual Projectile* attackRange(v3_t dir, v3_t pos);
   virtual bool pickUp(){ return false; };
   virtual bool dropDown(v3_t dropPosition){ position = dropPosition; return false; };
+  void serialize(sf::Packet & packet) const {
+	  packet << type;
+    Entity::serialize(packet);
+    //Range_Cool_Down_Time; 
+    //Melee_Cool_Down_Time; 
+    //float projectileStrength;
+    //length_t projectileRange; 
+    packet << mpCost;
+    packet << pickedUp;
+    //sf::Clock Range_Cool_Down_Counter;
+    //sf::Clock Melee_Cool_Down_Counter;
+  }
+  void deserialize(sf::Packet & packet) {
+	  Entity::deserialize(packet);
+    //int Range_Cool_Down_Time; 
+    //int Melee_Cool_Down_Time; 
+    //float projectileStrength;
+    //length_t projectileRange; 
+    packet >> mpCost;
+    packet >> pickedUp;
+    //sf::Clock Range_Cool_Down_Counter;
+    //sf::Clock Melee_Cool_Down_Counter;
+  }
   Entity_Type getType() {
     return type;
   }

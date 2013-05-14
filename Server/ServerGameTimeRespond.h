@@ -1,6 +1,10 @@
 #pragma once
 #include "Player.h"
 #include "Entity.h"
+#include "Wall.h"
+#include "Projectile.h" 
+#include "Weapon.h"
+#include "EntityPool.h"
 
 struct ServerGameTimeRespond
 {
@@ -8,7 +12,10 @@ struct ServerGameTimeRespond
   std::vector<Player> players;
   std::vector<Entity*> entities;
   Game_State state;
+  EntityPool* objPool;
   ServerGameTimeRespond():state(PLAYING) {}
+  //Client's constructor
+  ServerGameTimeRespond(EntityPool* pool): state(PLAYING), objPool(pool) {}
 
   void serialize(sf::Packet & packet) const {
     sf::Uint32 size = static_cast<sf::Uint32>(players.size());
@@ -26,9 +33,7 @@ struct ServerGameTimeRespond
 
   //make sure to clear the packet's sizes
   void deserialize(sf::Packet & packet) {
-    for (auto ent= entities.begin(); ent!=entities.end();ent++ ) {
-      delete *ent;
-    }
+    objPool->reset();
 	  entities.clear();
     players.clear();
     
@@ -42,7 +47,9 @@ struct ServerGameTimeRespond
     entities.clear();
     packet >> size;
     for(unsigned int i = 0; i < size; i++) {
-      Entity* newEntity = new Entity(); //TODO should we do it lke this?
+      uint32_t packet_type;
+      packet >> packet_type;
+      Entity* newEntity = objPool->createEntity(packet_type); 
       newEntity->deserialize(packet);
       entities.push_back(newEntity);
     }

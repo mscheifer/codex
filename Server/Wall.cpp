@@ -2,6 +2,9 @@
 
 const float Wall::sphereRadius = 5.0f;
 
+Wall::Wall() {
+  //TODO initialize
+}
 Wall::Wall(unsigned int w, unsigned int d, unsigned int h, v3_t sc, v3_t direct, Map * m):centerPositions()
 {
   width = w;

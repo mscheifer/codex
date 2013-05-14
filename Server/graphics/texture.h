@@ -1,10 +1,12 @@
 #ifndef TEXTURE_H
 #define	TEXTURE_H
-#include <string>
 #include <GL/glew.h>
+#include <string>
+#include <SFML/Graphics.hpp>
 
-class Texture
-{
+namespace gx {
+
+class Texture {
 public:
     Texture(GLenum TextureTarget, const std::string& FileName);
 
@@ -16,10 +18,9 @@ private:
     std::string m_fileName;
     GLenum m_textureTarget;
     GLuint m_textureObj;
-    //Magick::Image* m_pImage;
-    //Magick::Blob m_blob;
+    sf::Image m_image;
 };
 
-
+} //end namespace gx
 #endif	/* TEXTURE_H */
 

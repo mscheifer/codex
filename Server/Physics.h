@@ -1,7 +1,7 @@
 #pragma once
 #include <math.h>
-#include "graphics\vector3.h"
-#include "graphics\vector4.h"
+#include "graphics/vector3.h"
+#include "graphics/vector4.h"
 
 typedef float length_t;
 typedef gx::vector3<length_t> v3_t;

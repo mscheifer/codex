@@ -96,7 +96,7 @@ void NetworkServer::doServer() {
     }
 
     //4. go back to sleep slave.
-    sf::sleep( sf::milliseconds( ConfigManager::serverTickLengthMilli() -
+    sf::sleep( sf::milliseconds( static_cast<sf::Int32>(ConfigManager::serverTickLengthMilli()) -
                                  clock.getElapsedTime().asMilliseconds()) );
   }
 } 
