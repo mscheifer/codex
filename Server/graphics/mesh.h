@@ -1,12 +1,12 @@
 #ifndef MESH_H
 #define	MESH_H
 #include <GL/glew.h>
-#include <assimp/Importer.hpp>    // C++ importer interface
-#include <assimp/scene.h>			    // Output data structure
-#include <assimp/postprocess.h>		// Post processing flags
 #include <vector>
 #include "drawSet.h"
 #include "texture.h"
+
+class aiMesh;
+class aiScene;
 
 namespace gx {
 class Mesh {

@@ -1,4 +1,7 @@
 #include "Client.h"
+#include <iostream>
+#include "AudioManager.h"
+#include "Game.h"
 
 namespace {
   gx::graphicEntity toGentity(const Entity& ent) {            

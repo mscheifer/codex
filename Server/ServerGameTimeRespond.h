@@ -1,9 +1,6 @@
 #pragma once
 #include "Player.h"
 #include "Entity.h"
-#include "Wall.h"
-#include "Projectile.h" 
-#include "Weapon.h"
 #include "EntityPool.h"
 
 struct ServerGameTimeRespond
