@@ -80,6 +80,7 @@
     <ClCompile Include="boundingSphere.cpp" />
     <ClCompile Include="ChatHandler.cpp" />
     <ClCompile Include="Client.cpp" />
+    <ClCompile Include="ClientGameTimeAction.cpp" />
     <ClCompile Include="ConfigManager.cpp" />
     <ClCompile Include="DeadlyEntity.cpp" />
     <ClCompile Include="Entity.cpp" />

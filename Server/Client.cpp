@@ -24,7 +24,7 @@ void NetworkClient::receiveMessages() {
   sf::Packet packet;
   if (netRecv.receiveMessage(packet)) {
     ChatObject chatObj;
-    uint32_t packetType;
+    sf::Uint32 packetType;
     IdPacket newId(0);
     packet >> packetType;
     std::vector<gx::graphicEntity> entities;
@@ -132,7 +132,7 @@ void NetworkClient::doClient() {
 	  sf::Packet initPacket;
     if (netRecv.receiveMessage(initPacket)) {
       std::cout << "received message" << std::endl;
-      uint32_t packetType;
+      sf::Uint32 packetType;
       initPacket >> packetType;
       if (packetType == JOINID) {
         IdPacket newId(0);

@@ -19,7 +19,7 @@ class EntityPool {
       projectile_index = projectiles.begin();
       weapon_index     = weapons.begin();
     }
-    Entity* createEntity(uint32_t type) {
+    Entity* createEntity(sf::Uint32 type) {
       Entity* ret;
       switch (type) {
         case WALL:

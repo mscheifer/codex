@@ -5,8 +5,8 @@
 #include "drawSet.h"
 #include "texture.h"
 
-class aiMesh;
-class aiScene;
+struct aiMesh;
+struct aiScene;
 
 namespace gx {
 class Mesh {

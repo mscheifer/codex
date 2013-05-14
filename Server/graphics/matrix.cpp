@@ -258,7 +258,7 @@ gx::matrix gx::toRightHandBasisFromYandUp(const vector3f& dirY, const vector3f& 
   } else {
     dirZ = vector3f(0,0,1);
   }
-  std::cout << "dirX: " << dirX << " dirY: " << dirY << " dirZ: " << dirZ << std::endl; 
+  //std::cout << "dirX: " << dirX << " dirY: " << dirY << " dirZ: " << dirZ << std::endl; 
   return toBasis(dirX,dirY,dirZ);
 }
 
