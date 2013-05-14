@@ -46,6 +46,8 @@ class EntityPool {
           ret = &*weapon_index;
           weapon_index++;
           break;
+        default:
+          ret = nullptr;
       }
       return ret;
     }
