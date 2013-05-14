@@ -245,19 +245,20 @@ gx::matrix gx::toBasis(const vector3f& x,const vector3f& y,const vector3f& z) {
                 0,   0,   0,   1);
 }
 
-gx::matrix gx::toRightHandBasisFromY(const vector3f& dirY) {
-  vector3f dirX( dirY.y,-dirY.x,      0);
+gx::matrix gx::toRightHandBasisFromYandUp(const vector3f& dirY, const vector3f& up) {
+  vector3f dirX = dirY * up;
   if(dirX.magnitude() > 0) {
     dirX.scale(dirY.magnitude() / dirX.magnitude());
   } else {
     dirX = vector3f(1,0,0);
   }
-  vector3f dirZ(      0,-dirY.z, dirY.y);
+  vector3f dirZ = dirX * dirY;
   if(dirZ.magnitude() > 0) {
     dirZ.scale(dirY.magnitude() / dirZ.magnitude());
   } else {
     dirZ = vector3f(0,0,1);
   }
+  std::cout << "dirX: " << dirX << " dirY: " << dirY << " dirZ: " << dirZ << std::endl; 
   return toBasis(dirX,dirY,dirZ);
 }
 

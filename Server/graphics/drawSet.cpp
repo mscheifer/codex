@@ -55,6 +55,7 @@ void gx::drawSet::addEntity(vector4f pos,vector3f dirY,unsigned int type) {
   */
   dirY.z = 0;
   dirY.normalize();
-  matrix rotAndTrans = translation(pos.x,pos.y,pos.z) * toRightHandBasisFromY(dirY);
+  const vector3f up = vector3f(0,0,1);
+  matrix rotAndTrans = translation(pos.x,pos.y,pos.z) * toRightHandBasisFromYandUp(dirY,up);
   this->entityClasses[type].positions.push_back(rotAndTrans);
 }
