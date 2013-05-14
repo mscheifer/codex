@@ -37,7 +37,6 @@ void Game::evaluate(ClientGameTimeAction a) {
 
 /* updates & resolve collision for each clock tick */
 void Game::updateAndResolveCollision() {
-  std::cout << world.getQuadtreePtr()->size() << std::endl;
   std::vector<Player *> currentPlayers =  world.getPlayers();
 	std::vector<Entity *> currentEntities = world.getEntity();
 
