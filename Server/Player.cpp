@@ -31,8 +31,8 @@ void Player::init(v3_t pos, int assigned_id, Map * m)
 	castDownCounter = sf::Clock();
 	map = m;
 	weapon[0] = new WeaponFist(position, this->map);
-	weapon[1] = new WeaponFire(position, this->map);
-	current_weapon_selection = 1;
+	weapon[1] = new WeaponFire(position, this->map); //TODO add this to entities if we want it
+	current_weapon_selection = 0;
   
   generateBounds(position);
   m->addToQtree(this);
@@ -117,6 +117,11 @@ bool Player::moveTowardDirection(move_t inputDir, bool jump)
 }
 
 void Player::update(){
+  //pick up weapon stuff
+  pickup = nullptr;
+  pickupWeaponType = UNK;
+
+  //update movement
   acceleration = GRAVITY;
   velocity += acceleration * ConfigManager::serverTickLengthSec();
   position += velocity * ConfigManager::serverTickLengthSec();
@@ -144,6 +149,13 @@ void Player::handleSelfAction(ClientGameTimeAction a) {
 	moveTowardDirection(a.movement, a.jump);
   direction = v3_t(a.facingDirection.x, a.facingDirection.y, a.facingDirection.z);
 	updateBounds();
+
+  //try pick up
+  if(a.pickup && pickup ){
+    weapon[current_weapon_selection]->dropDown(position);
+    weapon[current_weapon_selection] = pickup;
+    pickup->pickUp();
+  }
 
 	//start of attacking logic
 	if(a.attackRange || a.attackMelee) {
@@ -217,6 +229,13 @@ void Player::handleCollisions(){
     case PROJECTILE:
       //std::cout << "proj" << std::endl;
       restart = collideProjectile(*it);
+      break;
+    case WEAPON:
+      pickup = (Weapon*)e;
+      pickupWeaponType = ((Weapon*)e)->getWeaponType();
+      //std::cout << "pick me up plz" << std::endl;
+      //((Weapon*) e)->pickUp();
+      //TODO finish this
       break;
     default:
       break;

@@ -29,6 +29,7 @@ public:
   bool minotaur; //might be private
   int player_id;
   std::string name;
+  WeaponType pickupWeaponType;
   Player();
   Player(v3_t pos, int assigned_id, Map *);
   ~Player(void);
@@ -64,9 +65,9 @@ public:
     packet << type; //not necessary
     Entity::serialize(packet);
     packet << this->player_id;
-    acceleration.serialize(packet);
-    velocity.serialize(packet);
-    oldJumpVelocity.serialize(packet);
+    //acceleration.serialize(packet);
+    //velocity.serialize(packet);
+    //oldJumpVelocity.serialize(packet);
     packet << dead; 
     packet << minotaur; //might be private
     packet << name;
@@ -83,8 +84,8 @@ public:
     packet << attacking;  //not neede on client ?
     //Weapon* weapon[MAXWEAPONS]; 
     // change the array to vector ?
+    packet << static_cast<uint32_t>(pickupWeaponType);
     packet << current_weapon_selection; 
- 
   }
 
   void deserialize(sf::Packet& packet) {
@@ -92,9 +93,9 @@ public:
     packet >> packetType; //not necessary
     Entity::deserialize(packet);
     packet >> this->player_id;
-    acceleration.deserialize(packet);
-    velocity.deserialize(packet);
-    oldJumpVelocity.deserialize(packet);
+    //acceleration.deserialize(packet);
+    //velocity.deserialize(packet);
+    //oldJumpVelocity.deserialize(packet);
     packet >>dead; 
     packet >>minotaur; //might be private
     packet >> name;
@@ -111,10 +112,14 @@ public:
     packet >> attacking;  //not neede on client ?
     //Weapon* weapon[MAXWEAPONS]; 
     // change the array to vector ?
+    uint32_t pickupWeaponTypeUint32;
+    packet >> pickupWeaponTypeUint32;
+    pickupWeaponType = static_cast<WeaponType>(pickupWeaponTypeUint32);
     packet >> current_weapon_selection; 
   }
 
 private:
+  Weapon* pickup;
   v3_t oldJumpVelocity; //the x,y velocity that should be applied
   float health;
   float maxHealth;

@@ -3,6 +3,7 @@
 #include "Player.h"
 #include "Entity.h"
 #include "Wall.h"
+#include "Weapon.h"
 
 const float Map::Item_Pick_Up_Ranges = 1.0f;
 
@@ -16,6 +17,13 @@ Map::Map(void): freeProjectiles(),q(0,Rectangle(BoundingObj::vec4_t(0,0,0),1000,
 
 void Map::initWalls(void)
 {
+  WeaponFire* w1 = new WeaponFire(v3_t(100,100,0), this);
+  w1->dropDown(v3_t(100,100,0));
+  entities.push_back(w1);
+  WeaponFire* w2 = new WeaponFire(v3_t(120,120,0), this);
+  w2->dropDown(v3_t(120,120,0));
+  entities.push_back(w2);
+
   v3_t facingEast(1,0,0);
   v3_t facingNorth(0,1,0);
   int width = 10;

@@ -13,6 +13,7 @@ class Entity;
 class Player;
 class Projectile;
 class Wall;
+class Weapon;
 
 class Map
 {
