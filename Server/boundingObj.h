@@ -47,10 +47,12 @@ public:
   
   //compare the rect pointers
   bool operator==(const BoundingObj &other){
-    return other.rect == rect;
+    return this == &other;
+    //return other.rect == rect;
   }
   bool operator!=(const BoundingObj &other){
-    return other.rect != rect;
+    return this != &other;
+    //return other.rect != rect;
   }
 
   //setters and getters

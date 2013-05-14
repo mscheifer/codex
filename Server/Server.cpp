@@ -90,7 +90,6 @@ void NetworkServer::doServer() {
     //2. update all entities and resolve collision
     game.updateAndResolveCollision();
 
-
     //3. prep and send response to everyone
 	  if(!this->server.sendPacketToAll<ServerGameTimeRespond>( game.prepResponse() ) ) {
       std::cout << "Error sending sgtr to everybody" << std::endl;

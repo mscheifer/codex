@@ -192,6 +192,7 @@ std::vector<Entity *> Map::getEntity() {
 			entities.erase(entities.begin() + i);
 	   }
    }
+   removeFromQtree(proj);
  }
 
  bool Map::addPlayer(Player * newPlayer)

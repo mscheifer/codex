@@ -8,21 +8,31 @@ std::vector<std::pair<Entity*,BoundingObj::vec3_t>> Entity::detectCollision(){
 
   //all of my bounding objs
   std::vector<BoundingObj*> vec = getBoundingObjs();
-  for(auto it = vec.begin(); it != vec.end(); it++){
-    map->getQuadtreePtr()->retrieve(potentialCollisions, *it);
+  for(auto myObjsIt = vec.begin(); myObjsIt != vec.end(); myObjsIt++){
+    map->getQuadtreePtr()->retrieve(potentialCollisions, *myObjsIt);
 
     //all potential collisions with bounding obj[i]
     for(auto it2 = potentialCollisions.begin(); it2 != potentialCollisions.end(); it2++){
       
-      //check if entity is inside//TODO maybe no entity check 
+      //don't collide with self
+      if((*it2)->getEntity() == this)
+        continue;
+
+      //check if I have already collided with this entity //TODO maybe no entity check 
       //[for 2 objs collide with 1 of my bboxes] shortest dist changes
       auto finder = res.begin();
+      bool flag = false;
       for( ; finder != res.end(); finder++){
-        if( finder->first == (*it)->getEntity() )
+        if( finder->first == (*it2)->getEntity() ){
+          flag = true;
           break;
+        }
       }
+      if(flag)
+        break;
+
       if( finder == res.end() ){
-        std::pair<bool,BoundingObj::vec3_t> collRes = collide(*it,*it2);
+        std::pair<bool,BoundingObj::vec3_t> collRes = collide(*myObjsIt,*it2);
         //try collide
         if(collRes.first){
           res.push_back(std::pair<Entity*,BoundingObj::vec3_t>((*it2)->getEntity(),collRes.second));

@@ -30,6 +30,7 @@ private:
 public:
   Quadtree(int pLevel, Rectangle pBounds);
   ~Quadtree();
+  int size(); //TODO nothing should call this this is for testing only
 
   //clear the quadtree
   void clear();

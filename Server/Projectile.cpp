@@ -15,26 +15,18 @@ Projectile::~Projectile(void)
 }
 
 void Projectile::update(void) {
-  position += velocity * ConfigManager::serverTickLengthSec();
-	
-  /* TODO not sure what this does @allen @alvin
-  Coordinate nextPosition = ThreeDMovement(position2, direction2, 0);
-	distanceLeftToTravel -= calculateDistanceInBetween(position2, nextPosition);	
-	position2 = nextPosition;
-	
-	//if it already traveled a its range
-	if(distanceLeftToTravel <= 0.0 ) {
-		// destroy yourself and return
-   
-		map->destroyProjectile(this);
-		return;
-	}
-  */
+  v3_t distanceTravelled = velocity * ConfigManager::serverTickLengthSec();
+	position += distanceTravelled;
+  
+  //see if travelled full range
+  distanceLeftToTravel -= distanceTravelled.magnitude();
+  if(distanceLeftToTravel <= 0.0){
+    map->destroyProjectile(this);
+    return;
+  }
 
 	updateBounds();
 	// some collision detection
-
-
 }
 
 void Projectile::setOwner(Player * player){
@@ -63,13 +55,11 @@ void Projectile::updateBoundsSoft(){
 void Projectile::handleCollisions() {
   
   std::vector<std::pair<Entity*,BoundingObj::vec3_t>> entities =  detectCollision();
-  
-  
+
   for( auto it = entities.begin(); it != entities.end(); it++ ){
     Entity * e = it->first; 
     if(e != owner) {
        map->destroyProjectile(this);
-       map->removeFromQtree(this);
     }
     
   }

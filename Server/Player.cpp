@@ -121,21 +121,6 @@ void Player::update(){
   velocity += acceleration * ConfigManager::serverTickLengthSec();
   position += velocity * ConfigManager::serverTickLengthSec();
   updateBounds();
-  //TODO this is temporary, just add teh velocity of the fixit vector on collisions
-  //also on collision subtract your jump velocity;
-  /*
-  if( position.z < 0 ){
-    velocity.z = 0;// -= position.z/ConfigManager::serverTickLengthSec();
-    velocity = velocity - oldJumpVelocity;
-    oldJumpVelocity = ZEROVEC;
-
-    position.z = 0;
-    canJump = true;
-    jumpCount = 0;
-  }
-  */
-
-  std::cout << velocity.z << std::endl;
 }
 
 void Player::restartJump(length_t zPosFix){
@@ -222,15 +207,15 @@ void Player::handleCollisions(){
     Entity * e = it->first;
     switch( e->getType() ){
     case WALL:
-      std::cout << "wall" << std::endl;
+      //std::cout << "wall" << std::endl;
       restart = collideWall(*it);
       break;
     case PLAYER:
-      std::cout << "player" << std::endl;
+      //std::cout << "player" << std::endl;
       restart = collidePlayer(*it);
       break;
     case PROJECTILE:
-      std::cout << "proj" << std::endl;
+      //std::cout << "proj" << std::endl;
       restart = collideProjectile(*it);
       it++;
       break;
