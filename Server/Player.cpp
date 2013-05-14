@@ -211,16 +211,14 @@ void Player::handleCollisions(){
       restart = collideWall(*it);
       break;
     case PLAYER:
-      //std::cout << "player" << std::endl;
+      ////std::cout << "player" << std::endl;
       restart = collidePlayer(*it);
       break;
     case PROJECTILE:
       //std::cout << "proj" << std::endl;
       restart = collideProjectile(*it);
-      it++;
       break;
     default:
-      it++;
       break;
     }
 
@@ -231,6 +229,8 @@ void Player::handleCollisions(){
       restart = false;
       entities = detectCollision();
       it = entities.begin();
+    } else {
+      it++;
     }
 
     if( restarts > 3 )

@@ -43,6 +43,7 @@ void Game::updateAndResolveCollision() {
   for( unsigned int i = 0; i < currentPlayers.size(); i++ ) {
 		 //std::cout << " hello nigga, updating entities" << std::endl;
 		 currentPlayers[i]->update();
+     world.separatePlayers(currentPlayers[i]);
 	}
 
   for( unsigned int i = 0; i < currentEntities.size(); i++ ) {
@@ -53,7 +54,7 @@ void Game::updateAndResolveCollision() {
   for( unsigned int i = 0; i <  currentPlayers.size(); i++ ) {
     currentPlayers[i]->handleCollisions();
 	}
-
+   
 	for( unsigned int i = 0; i < currentEntities.size(); i++ ) {
 		currentEntities[i]->handleCollisions();
 	}

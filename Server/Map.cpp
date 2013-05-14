@@ -6,7 +6,6 @@
 
 const float Map::Item_Pick_Up_Ranges = 1.0f;
 
-
 //TODO the rectangle should be the actual world bounds
 Map::Map(void): freeProjectiles(),q(0,Rectangle(BoundingObj::vec4_t(0,0,0),1000,1000))
 {
@@ -176,12 +175,12 @@ std::vector<Entity *> Map::getEntity() {
    }
    Projectile* ret = freeProjectiles->top();
    freeProjectiles->pop();
-   entities.push_back(ret); //note shouldn't this be live projecties?
+   entities.push_back(ret); //TODO shouldn't this be live projecties?
    addToQtree(ret);
    return ret;
  }
 
- //note should we just process all live projectiles, thenw e can remove
+ //TODO should we just process all live projectiles, thenw e can remove
  void Map::destroyProjectile(Projectile * proj)
  {
    proj->setOwner(NULL);
@@ -194,6 +193,43 @@ std::vector<Entity *> Map::getEntity() {
    }
    removeFromQtree(proj);
  }
+
+void Map::separatePlayers(Player* player){
+  std::vector<BoundingObj*> myObjs = player->getBoundingObjs();
+  int restart = false;
+  int restarts = 0;
+
+  for( unsigned int i=0; i < players.size(); i++ ){
+    
+    if(players[i] != player){
+      std::vector<BoundingObj*> objs = players[i]->getBoundingObjs();  
+      for( auto boxes = objs.begin(); boxes != objs.end(); boxes++){
+        for( auto myBoxes = myObjs.begin(); myBoxes != myObjs.end(); myBoxes++){
+          std::pair<bool,BoundingObj::vec3_t> res = collide(*myBoxes,*boxes);
+          if(res.first){
+            player->collidePlayer(
+              std::pair<Entity*, BoundingObj::vec3_t>((*boxes)->getEntity(),
+              res.second));
+            restart = true;
+            break;
+          }
+        }
+        if(restart)
+          break;
+      }
+    }
+
+    if(restart){
+      restarts++;
+      i = 0;
+      restart = false;
+    }
+
+    if(restarts > 3)
+      break;
+
+  }
+}
 
  bool Map::addPlayer(Player * newPlayer)
  {

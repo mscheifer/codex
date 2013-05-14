@@ -38,6 +38,11 @@ public:
   void handleCollisions();  
   void updateBounds();  
   void updateBoundsSoft(); 
+  
+  //helper functions for collisions
+  bool collideWall(std::pair<Entity*,BoundingObj::vec3_t>& p);
+  bool collidePlayer(std::pair<Entity*,BoundingObj::vec3_t>& p);
+  bool collideProjectile(std::pair<Entity*,BoundingObj::vec3_t>& p);
  
   bool moveTowardDirection(move_t degree, bool jump); //handle movement input WADS jump
   void handleAction(ClientGameTimeAction a);
@@ -131,9 +136,4 @@ private:
   void init(v3_t pos, int assigned_id, Map * m);
   void generateBounds(v3_t pos);
   void restartJump(length_t zPosFix);
-
-  //helper functions for collisions
-  bool collideWall(std::pair<Entity*,BoundingObj::vec3_t>& p);
-  bool collidePlayer(std::pair<Entity*,BoundingObj::vec3_t>& p);
-  bool collideProjectile(std::pair<Entity*,BoundingObj::vec3_t>& p);
 };

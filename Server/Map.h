@@ -28,6 +28,7 @@ public:
   void destroyProjectile(Projectile *);
   bool addPlayer(Player *);
   Quadtree* getQuadtreePtr(){ return &q; }
+  void separatePlayers(Player* player);
   
   //add this entity to the quadtree, should only be called in a constructor
   //of an entity
