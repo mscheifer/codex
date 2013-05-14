@@ -11,27 +11,30 @@ class loc {
 };
 template <>
 class loc<GL_FLOAT_MAT4> {
-    GLint  location;
+    GLint   location;
+    GLsizei     size;
   public:
-    loc(const shaderProgram&,std::string);
+    loc(const shaderProgram&,std::string,GLsizei);
     void write(const GLfloat*) const;
-    void write(const GLfloat data) const;
+    void write(const GLfloat) const;
 };
 template <>
 class loc<GL_FLOAT_VEC4> {
     GLint  location;
+    GLsizei     size;
   public:
-    loc(const shaderProgram&,std::string);
+    loc(const shaderProgram&,std::string,GLsizei);
     void write(const GLfloat*) const;
-    void write(const GLfloat data) const;
+    void write(const GLfloat) const;
 };
 template <>
 class loc<GL_FLOAT> {
     GLint  location;
+    GLsizei     size;
   public:
-    loc(const shaderProgram&,std::string);
+    loc(const shaderProgram&,std::string,GLsizei);
     void write(const GLfloat*) const;
-    void write(const GLfloat data) const;
+    void write(const GLfloat) const;
 };
 
 typedef loc<GL_FLOAT_MAT4> mat4floc;
