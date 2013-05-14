@@ -1,9 +1,6 @@
 #pragma once
 #include "Player.h"
 #include "Entity.h"
-#include "Wall.h"
-#include "Projectile.h" 
-#include "Weapon.h"
 #include "EntityPool.h"
 
 struct ServerGameTimeRespond
@@ -47,7 +44,7 @@ struct ServerGameTimeRespond
     entities.clear();
     packet >> size;
     for(unsigned int i = 0; i < size; i++) {
-      uint32_t packet_type;
+      sf::Uint32 packet_type;
       packet >> packet_type;
       Entity* newEntity = objPool->createEntity(packet_type); 
       newEntity->deserialize(packet);

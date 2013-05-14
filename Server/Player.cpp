@@ -247,7 +247,6 @@ bool Player::collideWall(std::pair<Entity*,BoundingObj::vec3_t>& p){
 }
 
 bool Player::collidePlayer(std::pair<Entity*,BoundingObj::vec3_t>& p){
-  BoundingObj::vec3_t fixShit = p.second;
   position += p.second;
   updateBounds();
   return true;

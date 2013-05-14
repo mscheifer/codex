@@ -1,13 +1,15 @@
 #include "AsciUI.h"
 #include <string>
 #include <iostream>
+#include "Map.h"
+#include "Entity.h"
+#include "Player.h"
 
 using namespace std;
 
 AsciUI::AsciUI(void)
 {
 }
-
 
 AsciUI::~AsciUI(void)
 {
