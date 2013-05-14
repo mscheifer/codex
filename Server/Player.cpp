@@ -239,6 +239,7 @@ void Player::handleCollisions(){
 }
 
 bool Player::collideWall(std::pair<Entity*,BoundingObj::vec3_t>& p){
+  BoundingObj::vec3_t fixShit = p.second;
   restartJump(fixShit.z);
   position += p.second;
   updateBounds();

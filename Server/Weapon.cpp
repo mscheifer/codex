@@ -27,7 +27,7 @@ Weapon::Weapon(float damage, float ran, v3_t pos, float mpcost, Map* m)
 	position = pos;
 	mpCost = mpcost;
 	projectileSpeed = 20.0; // pending removal
-	projectileRange = 10; //pending removal
+	projectileRange = 100; //pending removal
 	projectileStrength = 1; //pending removal
 	this->map = m;
 }
@@ -61,6 +61,8 @@ bool Weapon::attackMelee()
 {
 	return false;
 }
+
+//@alvin @allen why is this here?
 Projectile* Weapon::attackRange(v3_t dir , v3_t pos)
 {
 	Projectile* pj = map->produceProjectile();
