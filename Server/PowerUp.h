@@ -2,26 +2,18 @@
 #include "Entity.h"
 #include "Player.h"
 
-class PowerUp : Entity{
+class PowerUp : public Entity{
 public:
-  PowerUp() ;
-  ~PowerUp() {}
+  PowerUp(){} ;
+  PowerUp(v3_t p, Map* m) ;
+  ~PowerUp() {};
   
-  //TODO will need to add extra stuff so you can render
+  static const Entity_Type type = POWER_UP;
   //each different power up @alvin @allen
-  void serialize(sf::Packet& packet) const
-  {
-    position.serialize(packet);
-    direction.serialize(packet);
-  }
+  void serialize(sf::Packet& packet) const;
 
-  void deserialize(sf::Packet& packet)
-  {
-    position.deserialize(packet);
-    direction.deserialize(packet);
-  }
-
-  void onCollision(Entity*);
+  void deserialize(sf::Packet& packet);
+  void handleCollisions();
   void update();
 
 protected:

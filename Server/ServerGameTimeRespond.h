@@ -47,6 +47,7 @@ struct ServerGameTimeRespond
       sf::Uint32 packet_type;
       packet >> packet_type;
       Entity* newEntity = objPool->createEntity(packet_type); 
+
       newEntity->deserialize(packet);
       entities.push_back(newEntity);
     }
