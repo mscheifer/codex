@@ -224,10 +224,7 @@ gx::matrix gx::scalingMatrix(matrix::elem_t x, matrix::elem_t y,
 }
 
 gx::matrix gx::uniformScaling(matrix::elem_t s) {
-  return matrix(s,0,0,0,
-                0,s,0,0,
-                0,0,s,0,
-                0,0,0,1);
+  return scalingMatrix(s,s,s);
 }
 
 gx::matrix gx::translation(matrix::elem_t x, matrix::elem_t y,

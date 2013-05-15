@@ -16,10 +16,19 @@ gx::vector4f toVec4(const aiVector3D& aiVec) {
 gx::vector3f toVec3(const aiVector3D& aiVec) {
   return gx::vector3f(aiVec.x,aiVec.y,aiVec.z);
 }
-} //end unnamed namespace
 
-gx::Mesh::MeshEntry::MeshEntry(const aiMesh* paiMesh, const matrix resize)
-  : entitiesData(), MaterialIndex(paiMesh->mMaterialIndex) {
+void printNodes(aiNode* node, int level) {
+  if(node == nullptr) return;
+  for(int i = 0; i < level; i++) {
+    std::cout << "  ";
+  }
+  std::cout << node->mName.C_Str() << std::endl;
+  for(unsigned int i = 0; i < node->mNumChildren; i++) {
+    printNodes(node->mChildren[i],level+1);
+  }
+}
+
+gx::drawSet::vaoData_t initEntitiesData(const aiMesh* paiMesh, const gx::matrix resize) {
   std::vector<GLuint> Indices;
 
   const aiVector3D Zero3D(0.0f, 0.0f, 0.0f);
@@ -40,7 +49,7 @@ gx::Mesh::MeshEntry::MeshEntry(const aiMesh* paiMesh, const matrix resize)
     const aiVector3D* pNormal   = &(paiMesh->mNormals[i]);
     const aiVector3D* pTexCoord =
       paiMesh->HasTextureCoords(0) ? &(paiMesh->mTextureCoords[0][i]) : &Zero3D;
-    vector4f posVec = resize * toVec4(*pPos);
+    gx::vector4f posVec = resize * toVec4(*pPos);
 	  positions.push_back(posVec.x);
 	  positions.push_back(posVec.y);
 	  positions.push_back(posVec.z);
@@ -52,7 +61,7 @@ gx::Mesh::MeshEntry::MeshEntry(const aiMesh* paiMesh, const matrix resize)
 	  colors.push_back(0.0f);
 	  colors.push_back(1.0f);
     //resize works for normals too because we're doing uniform scaling
-    vector3f normVec = resize * toVec3(*pNormal);
+    gx::vector3f normVec = resize * toVec3(*pNormal);
     normals.push_back(normVec.x);
 	  normals.push_back(normVec.y);
 	  normals.push_back(normVec.z);
@@ -71,7 +80,14 @@ gx::Mesh::MeshEntry::MeshEntry(const aiMesh* paiMesh, const matrix resize)
 	attribs.push_back(colorsAttrib);
 	attribs.push_back(normalsAttrib);
 
-	this->entitiesData = std::make_pair(Indices,attribs);
+	return std::make_pair(Indices,attribs);
+}
+} //end unnamed namespace
+
+gx::Mesh::MeshEntry::MeshEntry(const aiMesh* paiMesh, const matrix resize)
+  : entitiesData(initEntitiesData(paiMesh,resize)),
+    MaterialIndex(paiMesh->mMaterialIndex)                                 {
+  std::cout << "mesh num bones: " << paiMesh->mNumBones << std::endl;
 };
 
 gx::Mesh::MeshEntry::MeshEntry(MeshEntry&& other) noexcept
@@ -91,7 +107,18 @@ bool gx::Mesh::LoadMesh(const std::string& Filename, length_t height)
 	      aiProcess_Triangulate	     |
 	      aiProcess_GenSmoothNormals |
 	      aiProcess_FlipUVs);
-    
+  std::cout << "num animations: " << pScene->mNumAnimations   << std::endl;
+  std::cout << "num meshes: "     << pScene->mNumMeshes       << std::endl;
+  std::cout << "num textures: "   << pScene->mNumTextures     << std::endl;
+  std::cout << "nodes: "          << std::endl;
+  printNodes(pScene->mRootNode,0);
+  for(unsigned int i = 0; i < pScene->mNumAnimations; i++) {
+    std::cout << "animation: " << pScene->mAnimations[i]->mName.C_Str() << std::endl;
+    std::cout << "duration: " << pScene->mAnimations[i]->mDuration << std::endl;
+    std::cout << "tics per second: " << pScene->mAnimations[i]->mTicksPerSecond << std::endl;
+    std::cout << "meshes: " << pScene->mAnimations[i]->mNumMeshChannels << std::endl;
+    std::cout << "bones: " << pScene->mAnimations[i]->mNumChannels << std::endl;
+  }
   if (pScene) {
       Ret = InitFromScene(pScene, Filename, height);
   } else {
@@ -172,14 +199,10 @@ void gx::Mesh::CalcBoundBox(const aiScene* scene, length_t modelHeight) {
 	// the aiTransformVecByMatrix4 function for further explanation
 	//aiMatrix4x4* transform = &(scene->mRootNode->mTransformation);
 
-	// default values for min/max for instantiation
-	const float min_f = std::numeric_limits<float>::max();
-	const float max_f = std::numeric_limits<float>::lowest();
+	gx::vector3f minVec;
+	gx::vector3f maxVec;
 
-	gx::vector3f minVec(min_f, min_f, min_f);
-	gx::vector3f maxVec(max_f, max_f, max_f);
-
-	// only calculate the first mesh because our models only has one
+	// only calculate the first mesh because our models only have one
 	const aiMesh* mesh = scene->mMeshes[0];
 
 	// transform the vertex based on the node's transformation matrix.
@@ -211,6 +234,7 @@ void gx::Mesh::CalcBoundBox(const aiScene* scene, length_t modelHeight) {
 	this->m_boundary.depth  = maxVec.z - minVec.z;
 
   auto center = this->m_boundary.center;
+  std::cout << "scale val: " << modelHeight / this->m_boundary.height << std::endl;
   this->m_boundary.centerAndResize =
     uniformScaling(modelHeight / this->m_boundary.height) *
     translation(-center.x,-center.y,-center.z);

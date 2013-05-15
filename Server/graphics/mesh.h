@@ -28,14 +28,15 @@ class Mesh {
 		    drawSet::vaoData_t entitiesData;
 
         unsigned int MaterialIndex;
+        std::map<std::string,unsigned int> BoneMap;
     };
 
 	  struct BoundParam {
       matrix centerAndResize;
 		  vector3f center;	// center coord of model
-		  length_t width;	// width  (along x axis)
+		  length_t width;	  // width  (along x axis)
 		  length_t height;	// height (along y axis)
-		  length_t depth;	// width  (along z axis)
+		  length_t depth;	  // width  (along z axis)
 	  } m_boundary;
 
     std::vector<MeshEntry> m_Entries;
@@ -43,15 +44,10 @@ class Mesh {
     bool m_Good;
   private:
     bool LoadMesh(const std::string& Filename,length_t);
-
     bool InitFromScene(const aiScene*, const std::string& Filename,length_t);
     bool InitMaterials(const aiScene*, const std::string& Filename);
-
 	  // fill in our m_boundary object with the boundary info
 	  void CalcBoundBox(const aiScene* scene,length_t);
 };
-
-Mesh loadMeshFromFile(const std::string&);
-
 } //end namespace gx
 #endif	/* MESH_H */
