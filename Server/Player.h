@@ -3,16 +3,16 @@
 #include <iostream>
 #include <sstream>
 #include <cmath>
+#include <algorithm>
+#include <string>
 #include "Entity.h"
 #include "Physics.h"
-#include <string>
 #include "Weapon.h"
 #include "WeaponFist.h"
 #include "WeaponFire.h"
 #include "ClientGameTimeAction.h"
 #include "boundingManager.h"
-#include "algorithm"
-#include "PowerUP.h"
+#include "PowerUp.h"
 
 const int MOVESCALE = 3;
 const length_t AIRMOVESCALE = 1;
@@ -42,9 +42,9 @@ public:
   void updateBoundsSoft(); 
   
   //helper functions for collisions
-  bool collideWall(std::pair<Entity*,BoundingObj::vec3_t>& p);
-  bool collidePlayer(std::pair<Entity*,BoundingObj::vec3_t>& p);
-  bool collideProjectile(std::pair<Entity*,BoundingObj::vec3_t>& p);
+  bool collideWall(const std::pair<Entity*,BoundingObj::vec3_t>& p);
+  bool collidePlayer(const std::pair<Entity*,BoundingObj::vec3_t>& p);
+  bool collideProjectile(const std::pair<Entity*,BoundingObj::vec3_t>& p);
  
   bool moveTowardDirection(move_t degree, bool jump); //handle movement input WADS jump
   void handleAction(ClientGameTimeAction a);

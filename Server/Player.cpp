@@ -266,7 +266,7 @@ void Player::handleCollisions(){
   }
 }
 
-bool Player::collideWall(std::pair<Entity*,BoundingObj::vec3_t>& p){
+bool Player::collideWall(const std::pair<Entity*,BoundingObj::vec3_t>& p){
   BoundingObj::vec3_t fixShit = p.second;
   restartJump(fixShit.z);
   position += p.second;
@@ -274,13 +274,13 @@ bool Player::collideWall(std::pair<Entity*,BoundingObj::vec3_t>& p){
   return true;
 }
 
-bool Player::collidePlayer(std::pair<Entity*,BoundingObj::vec3_t>& p){
+bool Player::collidePlayer(const std::pair<Entity*,BoundingObj::vec3_t>& p){
   position += p.second;
   updateBounds();
   return true;
 }
 
-bool Player::collideProjectile(std::pair<Entity*,BoundingObj::vec3_t>& p){
+bool Player::collideProjectile(const std::pair<Entity*,BoundingObj::vec3_t>& p){
   if(((Projectile *)p.first)->getOwner() != this) {
     std::cout << "OW hit "<< player_id << std::endl;
     attackBy((Projectile *)p.first);
