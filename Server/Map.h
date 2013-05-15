@@ -8,10 +8,12 @@
 #include <stack>
 #include "Quadtree.h"
 
+
 class Entity;
 class Player;
 class Projectile;
 class Wall;
+class PowerUp;
 
 class Map
 {
@@ -40,4 +42,5 @@ private:
 	std::vector<Projectile *> liveProjectTile;
   Quadtree q;
   void initWalls(void);
+  void initPowerUps(void);
 };

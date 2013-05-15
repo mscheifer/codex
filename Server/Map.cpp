@@ -13,8 +13,16 @@ Map::Map(void): freeProjectiles(),q(0,Rectangle(BoundingObj::vec4_t(0,0,0),1000,
 	map_size = 15;
 	freeProjectiles = new std::stack<Projectile *>();
   initWalls();
+  initPowerUps();
 }
 
+void Map::initPowerUps() {
+  PowerUp* superPower = new PowerUp();
+
+
+
+  this->entities.push_back(superPower);
+}
 void Map::initWalls(void)
 {
   Direction facingEast = Direction(1,0,0);

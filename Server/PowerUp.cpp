@@ -6,20 +6,18 @@ PowerUp::PowerUp(void)
 	active = true;
 }
 
-void PowerUp::onCollision(Entity* entity) {
+void PowerUp::onCollision(Player* player) {
 	//if it's not active, dont do anything
 
 	if(active == false )
 		return ;
 	
-	//if a player hits a powerup	
-	if(entity->getType() == PLAYER) {
-		Player luckyGuy = *(Player*)entity;
-		luckyGuy.setHealth(luckyGuy.getHealth() + healthMutiplyer);
-		luckyGuy.setSpeed(luckyGuy.getSpeed() + speedMutiplyer);
-		luckyGuy.setMana(luckyGuy.getMana() + manaMutiplyer);
-		active = false;
-	}
+	Player luckyGuy = *player;
+	luckyGuy.setHealth(luckyGuy.getHealth() + healthMutiplyer);
+	luckyGuy.setSpeed(luckyGuy.getSpeed() + speedMutiplyer);
+	luckyGuy.setMana(luckyGuy.getMana() + manaMutiplyer);
+	active = false;
+	
 	Respown_Counter.restart();
 }
 

@@ -2,11 +2,12 @@
 #include "Entity.h"
 #include "Player.h"
 
-class PowerUp : Entity{
+class PowerUp : public Entity{
 public:
   PowerUp() ;
   ~PowerUp() {}
   
+  static const Entity_Type type = POWER_UP;
 
 
   void setPosition(Coordinate c) {
@@ -24,7 +25,7 @@ public:
     direction.deserialize(packet);
   }
 
-  void onCollision(Entity*);
+  void onCollision(Player*);
   void update();
 
 protected:

@@ -12,6 +12,7 @@
 #include "ClientGameTimeAction.h"
 #include "boundingManager.h"
 #include "algorithm"
+#include "PowerUP.h"
 
 const int MOVESCALE = 3;
 

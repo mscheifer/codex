@@ -28,7 +28,7 @@ Weapon::Weapon(float damage, float ran, Coordinate d, float mpcost, Map* m)
 	mpCost = mpcost;
 	projectileSpeed = 20.0; // pending removal
 	projectileRange = 300; //pending removal
-	projectileStrength = 1; //pending removal
+	projectileStrength = 26; //pending removal
 	this->map = m;
 }
 
