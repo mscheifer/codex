@@ -20,7 +20,7 @@ void Game::chooseMinotaur()
 int Game::join()
 {
   unsigned int userID = world.getPlayers().size();
-  Player * newPlayer = new Player(0,0,0,0, &world);
+  Player * newPlayer = new Player(v3_t(0,0,0), 0, &world);
   newPlayer->player_id = userID;
   world.addPlayer(newPlayer);
   return userID;
@@ -37,21 +37,24 @@ void Game::evaluate(ClientGameTimeAction a) {
 
 /* updates & resolve collision for each clock tick */
 void Game::updateAndResolveCollision() {
-
   std::vector<Player *> currentPlayers =  world.getPlayers();
 	std::vector<Entity *> currentEntities = world.getEntity();
+
   for( unsigned int i = 0; i < currentPlayers.size(); i++ ) {
 		 //std::cout << " hello nigga, updating entities" << std::endl;
 		 currentPlayers[i]->update();
+     world.separatePlayers(currentPlayers[i]);
 	}
+
   for( unsigned int i = 0; i < currentEntities.size(); i++ ) {
 		 currentEntities[i]->update();
 	}
+
   //run collision fix here
   for( unsigned int i = 0; i <  currentPlayers.size(); i++ ) {
     currentPlayers[i]->handleCollisions();
 	}
-
+   
 	for( unsigned int i = 0; i < currentEntities.size(); i++ ) {
 		currentEntities[i]->handleCollisions();
 	}

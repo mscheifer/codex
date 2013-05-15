@@ -7,6 +7,7 @@
 #include <stdlib.h>
 #include <stack>
 #include "Quadtree.h"
+#include "Physics.h" //typedef
 
 
 class Entity;
@@ -29,6 +30,7 @@ public:
   void destroyProjectile(Projectile *);
   bool addPlayer(Player *);
   Quadtree* getQuadtreePtr(){ return &q; }
+  void separatePlayers(Player* player);
   
   //add this entity to the quadtree, should only be called in a constructor
   //of an entity
@@ -43,4 +45,5 @@ private:
   Quadtree q;
   void initWalls(void);
   void initPowerUps(void);
+  void addWallDirection(int startingX, int startingY, int startingZ, v3_t dir, int values[]);
 };

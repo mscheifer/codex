@@ -15,23 +15,23 @@
 #include "PowerUP.h"
 
 const int MOVESCALE = 3;
+const length_t AIRMOVESCALE = 1;
+const length_t JUMPSPEED = 20;
+const int MAXJUMP = 5;
 
 #define MAXWEAPONS 2
-const int MAXJUMP = 2;
+
 class Player: public Entity
 {
 public:
   static const float sphereRadius;
   static const Entity_Type type = PLAYER;
-  v3_t acceleration;
-  v3_t velocity;
-  v3_t oldJumpVelocity;
   bool dead; //might be private. should be determined in handleAction
   bool minotaur; //might be private
   int player_id;
-  char name[20];
+  std::string name;
   Player();
-  Player(Position x, Position y, Position z, int assigned_id, Map *);
+  Player(v3_t pos, int assigned_id, Map *);
   ~Player(void);
   std::string getString();
   virtual bool attackBy(DeadlyEntity*);
@@ -39,9 +39,13 @@ public:
   void handleCollisions();  
   void updateBounds();  
   void updateBoundsSoft(); 
+  
+  //helper functions for collisions
+  bool collideWall(std::pair<Entity*,BoundingObj::vec3_t>& p);
+  bool collidePlayer(std::pair<Entity*,BoundingObj::vec3_t>& p);
+  bool collideProjectile(std::pair<Entity*,BoundingObj::vec3_t>& p);
  
-  bool moveTowardDirection(move_t degree, bool jump);
-  void jump();
+  bool moveTowardDirection(move_t degree, bool jump); //handle movement input WADS jump
   void handleAction(ClientGameTimeAction a);
   
   float getHealth() { return health; }
@@ -53,25 +57,66 @@ public:
   float getSpeed(){ return speed;}
   void setSpeed(float);
 
-  Entity_Type getType()  {
+  Entity_Type getType() {
     return type;
   }
 
-  void Player::serialize(sf::Packet& packet) const {
+  void serialize(sf::Packet& packet) const {
     packet << type; //not necessary
     Entity::serialize(packet);
     packet << this->player_id;
+    acceleration.serialize(packet);
+    velocity.serialize(packet);
+    oldJumpVelocity.serialize(packet);
+    packet << dead; 
+    packet << minotaur; //might be private
+    packet << name;
+    packet << health;
+    packet << maxHealth;
+    packet << mana;
+    packet << maxMana;
+    packet << defense;
+    packet << speed;
+    packet << castDownTime; //not needed on client ?
+    //sf::Clock castDownCounter;
+    packet << jumpCount; // not needed on client ?
+    packet << canJump; //not needed on client ?
+    packet << attacking;  //not neede on client ?
+    //Weapon* weapon[MAXWEAPONS]; 
+    // change the array to vector ?
+    packet << current_weapon_selection; 
+ 
   }
 
   void deserialize(sf::Packet& packet) {
-    uint32_t packetType; //not necessary
-    packet >> packetType;
+    sf::Uint32 packetType; //not necessary
+    packet >> packetType; //not necessary
     Entity::deserialize(packet);
     packet >> this->player_id;
+    acceleration.deserialize(packet);
+    velocity.deserialize(packet);
+    oldJumpVelocity.deserialize(packet);
+    packet >>dead; 
+    packet >>minotaur; //might be private
+    packet >> name;
+    packet >> health;
+    packet >> maxHealth;
+    packet >> mana;
+    packet >> maxMana;
+    packet >> defense;
+    packet >> speed;
+    packet >> castDownTime; //not needed on client ?
+    //sf::Clock castDownCounter;
+    packet >> jumpCount; // not needed on client ?
+    packet >> canJump; //not needed on client ?
+    packet >> attacking;  //not neede on client ?
+    //Weapon* weapon[MAXWEAPONS]; 
+    // change the array to vector ?
+    packet >> current_weapon_selection; 
   }
 
-
 private:
+  v3_t oldJumpVelocity; //the x,y velocity that should be applied
   float health;
   float maxHealth;
   float mana;
@@ -86,15 +131,10 @@ private:
   Weapon* weapon[MAXWEAPONS]; //0 bare hand, 1 fireball
   int current_weapon_selection; //0 bare hand, 1 fireball
   bool damageBy(DeadlyEntity *);
-  void fixPosition();
   void handleSelfAction(ClientGameTimeAction a);
   void handleOtherAction(ClientGameTimeAction a);
   void attack(ClientGameTimeAction a);
-  void init(Position x, Position y, Position z, int assigned_id, Map * m);
-  void generateBounds(Position x,Position y,Position z);
-
-  //helper functions for collisions
-  bool collideWall(std::pair<Entity*,BoundingObj::vec3_t>& p);
-  bool collidePlayer(std::pair<Entity*,BoundingObj::vec3_t>& p);
-  bool collideProjectile(std::pair<Entity*,BoundingObj::vec3_t>& p);
+  void init(v3_t pos, int assigned_id, Map * m);
+  void generateBounds(v3_t pos);
+  void restartJump(length_t zPosFix);
 };

@@ -1,6 +1,5 @@
 #include "graphicsClient.h"
 #include <fstream>
-#include <assimp/cimport.h> 
 #include "oglUtil.h"
 #include "mesh.h"
 #include "loadCube.h"
@@ -27,7 +26,7 @@ std::string readFile(const std::string fileName) {
 }
 
 std::vector<gx::drawSet::vaoData_t> loadModel(const std::string& ModelPath) {
-	gx::Mesh model(ModelPath);
+	gx::Mesh model(ModelPath,1);
 
 	std::vector<gx::drawSet::vaoData_t> entities;
 	//just do the first one until we get loading working
@@ -146,7 +145,7 @@ ClientGameTimeAction gx::graphicsClient::handleInput() {
   action.movement = getMovement();
   auto dir = getDir();
   action.updated = this->userInput.getUpdated();
-  action.facingDirection = Direction(dir.x, dir.y, dir.z);
+  action.facingDirection = dir;
   action.attackMelee = fire1();
   action.attackRange = fire2();
   return action;

@@ -1,14 +1,14 @@
 #include <iostream>
 #include "texture.h"
 
-Texture::Texture(GLenum TextureTarget, const std::string& FileName)
+gx::Texture::Texture(GLenum TextureTarget, const std::string& FileName)
 {
     m_textureTarget = TextureTarget;
     m_fileName      = FileName;
-    //m_pImage        = NULL;
+    //m_image = ??
 }
 
-bool Texture::Load()
+bool gx::Texture::Load()
 {
     /*try {
         m_pImage = new Magick::Image(m_fileName);
@@ -28,7 +28,7 @@ bool Texture::Load()
     return true;
 }
 
-void Texture::Bind(GLenum TextureUnit)
+void gx::Texture::Bind(GLenum TextureUnit)
 {
     //glActiveTexture(TextureUnit);
     //glBindTexture(m_textureTarget, m_textureObj);

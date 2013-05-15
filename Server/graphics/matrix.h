@@ -1,7 +1,6 @@
 #ifndef MATRIX4_H
 #define MATRIX4_H
 #include <GL/glew.h>
-#include <vector>
 #include <array>
 #include "vector4.h"
 #include "vector3.h"
@@ -45,11 +44,12 @@ matrix rotateZ(double angle);
 matrix rotateArbitrary(vector3f axis, double angle);
 matrix scaling(matrix::elem_t x, matrix::elem_t y, matrix::elem_t z);
 matrix scalingMatrix(matrix::elem_t x, matrix::elem_t y, matrix::elem_t z);
+matrix uniformScaling(matrix::elem_t x);
 matrix translation(matrix::elem_t x, matrix::elem_t y, matrix::elem_t z);
 //converts a vector from the standard basis to the supplied basis
 //params: x y and z vectors
 matrix toBasis(vector3f const&,vector3f const&,vector3f const&);
-matrix toRightHandBasisFromY(vector3f const&);
+matrix toRightHandBasisFromYandUp(vector3f const&,vector3f const&);
 
 const matrix identity = matrix(1, 0, 0, 0,
                                0, 1, 0, 0,

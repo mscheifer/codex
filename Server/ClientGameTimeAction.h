@@ -1,9 +1,7 @@
 #pragma once
-#include "directionalVector.h"
+#include <SFML/Network.hpp>
 #include "StaticEnums.h"
-#include <iostream>
-#include <sstream>
-#include "SFML/Network/Packet.hpp"
+#include "Physics.h"
 
 struct ClientGameTimeAction
 {
@@ -16,29 +14,12 @@ struct ClientGameTimeAction
   bool weapon2; // Used for switching weapon
 	bool jump;
   bool updated;
-	Direction facingDirection;
+	v3_t facingDirection;
   
-  bool operator==(const ClientGameTimeAction & other) const{
-    if (this->player_id != other.player_id) return false; 
-    if (this->movement != other.movement) return false; 
-    if (this->attackMelee != other.attackMelee) return false; 
-    if (this->weapon1 != other.weapon1) return false; 
-    if (this->weapon2 != other.weapon2) return false; 
-    if (this->jump != other.jump) return false; 
-    if (this->facingDirection != other.facingDirection) return false; 
-    return true;
-  }
-  bool operator!=(const ClientGameTimeAction & other) const{
-    return !(*this==other);
-  }
+  bool operator==(const ClientGameTimeAction & other) const;
+  bool operator!=(const ClientGameTimeAction & other) const;
 
-  void clear() {
-    movement = NULL_DIR;
-    attackMelee = attackRange = weapon1 = weapon2 = jump = false;
-    facingDirection.x = facingDirection.z = 0;
-    facingDirection.y = 0;
-    updated = false;
-  }
+  void clear();
 
 	ClientGameTimeAction() : 
     player_id(-1), movement(NULL_DIR),
@@ -48,9 +29,9 @@ struct ClientGameTimeAction
 
   void serialize(sf::Packet & packet) {
     packet << player_id;
-    packet << (int)movement;
+    packet << static_cast<sf::Int32>(movement);
     packet << attackMelee;
-	packet << attackRange;
+	  packet << attackRange;
     packet << weapon1;
     packet << weapon2;
     packet << jump;
@@ -59,38 +40,18 @@ struct ClientGameTimeAction
 
   void deserialize(sf::Packet & packet) {
     packet >> player_id;
-    int movementInt = 0;
+    sf::Int32 movementInt = 0;
     packet >> movementInt;
-    movement = (move_t) movementInt; //change to static_cast?
+    movement = static_cast<move_t>(movementInt);
     packet >> attackMelee;
-	packet >> attackRange;
+	  packet >> attackRange;
     packet >> weapon1;
     packet >> weapon2;
     packet >> jump;
     facingDirection.deserialize(packet);
   }
 
-  void print() {
-    std::cout << "id " << player_id << std::endl
-      << "mov " << movement << std::endl
-      << "attackMelee " << attackMelee << std::endl
-	    << "range " << attackRange << std::endl
-      << "weapon1 " << weapon1 << std::endl
-      << "weapon2 " << weapon2 << std::endl
-      << "jump " << jump << std::endl
-      << "facingDirection " << facingDirection.x << " "<< facingDirection.y << " " << facingDirection.z << std::endl; 
-  }
+  void print();
 
-  std::string toString(){
-    std::stringstream ss;
-    ss << "id " << player_id << std::endl
-      << "mov " << movement << std::endl
-      << "attackMelee " << attackMelee << std::endl
-	    << "range " << attackRange << std::endl
-      << "weapon1 " << weapon1 << std::endl
-      << "weapon2 " << weapon2 << std::endl
-      << "jump " << jump << std::endl
-      << "facingDirection " << facingDirection.x << " "<< facingDirection.y << " " << facingDirection.z << std::endl << std::endl; \
-    return ss.str();
-  }
+  std::string toString();
 };

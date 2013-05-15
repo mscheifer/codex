@@ -1,4 +1,5 @@
 #include "vao.h"
+#include "vertexAttrib.h"
 
 gx::vao::vao(const std::vector<GLuint>                   indices,
              const std::vector<const vertexAttrib*>      attribs,

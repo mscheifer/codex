@@ -199,6 +199,20 @@ std::ostream& gx::operator<< (std::ostream& out, const gx::vector3<T>& v) {
   return out;
 }
 
+template<typename T>
+void gx::vector3<T>::serialize(sf::Packet & packet) const {
+    packet<<x;
+    packet<<y;
+    packet<<z;
+}
+
+template<typename T>
+void gx::vector3<T>::deserialize(sf::Packet & packet) {
+    packet>>x;
+    packet>>y;
+    packet>>z;
+}
+
 template class gx::vector3<GLfloat>;
 template gx::vector3<GLfloat> gx::operator*<GLfloat>(vector3<GLfloat>::elem_t, const vector3<GLfloat>&);
 template std::ostream& gx::operator<<<GLfloat> (std::ostream&, const vector3<GLfloat>&);

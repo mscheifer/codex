@@ -1,19 +1,17 @@
 #pragma once
-#include "3DCoordinate.h"
-#include "directionalVector.h"
-#include "ClientGameTimeAction.h"
-#include "Physics.h"
-#include "Map.h"
 #include <vector>
-#include <stdint.h> //uint32_t
+#include "ClientGameTimeAction.h"
+#include "Map.h"
 #include "boundingManager.h"
 
 class Entity {
 public:
   static const Entity_Type type = UNDEFINED;
 protected:
-  Coordinate position;
-  Direction direction;
+  v3_t position;
+  v3_t acceleration;
+  v3_t velocity;
+  v3_t direction;
   Map* map;
   std::vector<BoundingObj*> boundingObjs;
   // Some kind of state {paralyzed, frozen, blah blah}
@@ -23,7 +21,7 @@ public:
   Entity() {}
   virtual ~Entity() {}
   
-  virtual void handleAction(ClientGameTimeAction){}
+  virtual void handleAction(ClientGameTimeAction){} //what does this do?
   virtual void update(){}
   virtual void handleCollisions(){}
   
@@ -34,14 +32,15 @@ public:
   virtual void updateBoundsSoft(){}
   std::vector<std::pair<Entity*,gx::vector3f>> detectCollision();
 
-  Coordinate getPosition(void) const { return position; }
-  Direction getDirection(void) const { return direction; }
-  void setDirection(Direction d) { direction = d; }
+  v3_t getPosition(void) const { return position; }
+  void setPosition(v3_t c) { position = c;}
+  v3_t getDirection(void) const { return direction; }
+  void setDirection(v3_t d) { direction = d; }
+  void setVelocity(v3_t v) { velocity = v; }
   void setMap(Map* m) { map = m; }
-  void setPosition(Coordinate c) { position = c;}
   void setBoundingObjs(std::vector<BoundingObj*> b){ boundingObjs = b; }
   std::vector<BoundingObj*> getBoundingObjs(){ return boundingObjs; }
-  
+
   virtual void serialize(sf::Packet& packet) const
   {
     position.serialize(packet);
@@ -53,5 +52,5 @@ public:
     position.deserialize(packet);
     direction.deserialize(packet);
   }
-  virtual Entity_Type getType()  { return type; }
+  virtual Entity_Type getType() { return type; }
 };

@@ -1,14 +1,24 @@
+#include "mesh.h"
+#include <assimp/Importer.hpp>    // C++ importer interface
+#include <assimp/scene.h>			    // Output data structure
+#include <assimp/postprocess.h>		// Post processing flags
 #include <assert.h>
-#include <GL/glew.h>
-//#include <assimp/cimport.h>
 #include <string>
 #include <algorithm>
 #include <limits>
-#include "mesh.h"
+#include "matrix.h"
 #include "vertexAttrib.h"
-#include "vector4.h"
 
-gx::Mesh::MeshEntry::MeshEntry(const aiMesh* paiMesh)
+namespace {
+gx::vector4f toVec4(const aiVector3D& aiVec) {
+  return gx::vector4f(aiVec.x,aiVec.y,aiVec.z);
+}
+gx::vector3f toVec3(const aiVector3D& aiVec) {
+  return gx::vector3f(aiVec.x,aiVec.y,aiVec.z);
+}
+} //end unnamed namespace
+
+gx::Mesh::MeshEntry::MeshEntry(const aiMesh* paiMesh, const matrix resize)
   : entitiesData(), MaterialIndex(paiMesh->mMaterialIndex) {
   std::vector<GLuint> Indices;
 
@@ -28,20 +38,24 @@ gx::Mesh::MeshEntry::MeshEntry(const aiMesh* paiMesh)
   for (unsigned int i = 0 ; i < paiMesh->mNumVertices ; i++) {
     const aiVector3D* pPos = &(paiMesh->mVertices[i]);
     const aiVector3D* pNormal   = &(paiMesh->mNormals[i]);
-    const aiVector3D* pTexCoord = paiMesh->HasTextureCoords(0) ? &(paiMesh->mTextureCoords[0][i]) : &Zero3D;
-	  positions.push_back(pPos->x);
-	  positions.push_back(pPos->y);
-	  positions.push_back(pPos->z);
-	  positions.push_back(1.0f);
+    const aiVector3D* pTexCoord =
+      paiMesh->HasTextureCoords(0) ? &(paiMesh->mTextureCoords[0][i]) : &Zero3D;
+    vector4f posVec = resize * toVec4(*pPos);
+	  positions.push_back(posVec.x);
+	  positions.push_back(posVec.y);
+	  positions.push_back(posVec.z);
+	  positions.push_back(posVec.w);
       // temporary color filler. 
 			// colors are stored in materials
 	  colors.push_back(1.0f);
 	  colors.push_back(0.2f);
 	  colors.push_back(0.0f);
 	  colors.push_back(1.0f);
-    normals.push_back(pNormal->x);
-	  normals.push_back(pNormal->y);
-	  normals.push_back(pNormal->z);
+    //resize works for normals too because we're doing uniform scaling
+    vector3f normVec = resize * toVec3(*pNormal);
+    normals.push_back(normVec.x);
+	  normals.push_back(normVec.y);
+	  normals.push_back(normVec.z);
     //TODO: use texture coordinates
 	}
 
@@ -64,24 +78,11 @@ gx::Mesh::MeshEntry::MeshEntry(MeshEntry&& other) noexcept
   : entitiesData (std::move(other.entitiesData)),
     MaterialIndex(std::move(other.MaterialIndex)) {}
 
-gx::Mesh::Mesh(const std::string& Filename)
-	: m_Entries(), m_Textures(), m_scene(LoadMesh(Filename)) {
-  // if model fails to load, exit
-	if (!this->m_scene) {
-		std::cout << "Assimp failed to load model.\n";
-		exit(1);
-	}
+gx::Mesh::Mesh(const std::string& Filename, length_t height)
+	: m_Entries(), m_Textures(), m_Good(LoadMesh(Filename, height)) {
 }
 
-
-gx::Mesh::~Mesh()
-{
-  for (unsigned int i = 0 ; i < m_Textures.size() ; i++) {
-    delete m_Textures[i];
-  }
-}
-
-const aiScene* gx::Mesh::LoadMesh(const std::string& Filename) 
+bool gx::Mesh::LoadMesh(const std::string& Filename, length_t height) 
 {    
   bool Ret = false;
   Assimp::Importer Importer;
@@ -92,84 +93,81 @@ const aiScene* gx::Mesh::LoadMesh(const std::string& Filename)
 	      aiProcess_FlipUVs);
     
   if (pScene) {
-      Ret = InitFromScene(pScene, Filename);
-	  // get bounding box
-	  CalcBoundBox(pScene);
+      Ret = InitFromScene(pScene, Filename, height);
   } else {
-      std::cout << "Error parsing '" <<  Filename.c_str() << "': '" << Importer.GetErrorString() << "'\n" << std::endl;
+      std::cout << "Error parsing '" <<  Filename.c_str() << "': '";
+      std::cout << Importer.GetErrorString() << std::endl;
+  }
+  return Ret;
+}
+
+bool gx::Mesh::InitFromScene(const aiScene* pScene, const std::string& Filename,
+                             const length_t height) {
+  // get bounding box
+  CalcBoundBox(pScene,height);
+
+  if(pScene->mNumMeshes > 1) {
+    std::cout << "Warning: more than 1 mesh in model" << std::endl;
   }
 
-	if (Ret) {
-		return pScene;
-	} else {
-		return nullptr;
-	}
+  // Initialize the meshes in the scene one by one
+  for (unsigned int i = 0 ; i < pScene->mNumMeshes ; i++) {
+    const aiMesh* paiMesh = pScene->mMeshes[i];
+    this->m_Entries.push_back(
+      MeshEntry(paiMesh,this->m_boundary.centerAndResize));
+  }
+
+  return InitMaterials(pScene, Filename);
 }
 
-bool gx::Mesh::InitFromScene(const aiScene* pScene, const std::string& Filename)
-{
-    // Initialize the meshes in the scene one by one
-    for (unsigned int i = 0 ; i < pScene->mNumMeshes ; i++) {
-        const aiMesh* paiMesh = pScene->mMeshes[i];
-        this->m_Entries.push_back(MeshEntry(paiMesh));
-    }
+bool gx::Mesh::InitMaterials(const aiScene* pScene,const std::string& Filename){
+  // Extract the directory part from the file name
+  std::string::size_type SlashIndex = Filename.find_last_of("/");
+  std::string Dir;
 
-    return InitMaterials(pScene, Filename);
-}
+  if (SlashIndex == std::string::npos) {
+    Dir = ".";
+  } else if (SlashIndex == 0) {
+    Dir = "/";
+  } else {
+    Dir = Filename.substr(0, SlashIndex);
+  }
 
-bool gx::Mesh::InitMaterials(const aiScene* pScene, const std::string& Filename)
-{
-    // Extract the directory part from the file name
-    std::string::size_type SlashIndex = Filename.find_last_of("/");
-    std::string Dir;
+  bool Ret = true;
 
-    if (SlashIndex == std::string::npos) {
-        Dir = ".";
-    } else if (SlashIndex == 0) {
-        Dir = "/";
-    } else {
-        Dir = Filename.substr(0, SlashIndex);
-    }
+  // Initialize the materials
+  for (unsigned int i = 0 ; i < pScene->mNumMaterials ; i++) {
+    const aiMaterial* pMaterial = pScene->mMaterials[i];
 
-    bool Ret = true;
+    if (pMaterial->GetTextureCount(aiTextureType_DIFFUSE) > 0) {
+      aiString Path;
 
-    this->m_Textures.resize(pScene->mNumMaterials);
+      if(pMaterial->GetTexture(aiTextureType_DIFFUSE, 0, &Path) == AI_SUCCESS) {
+        std::string FullPath = Dir + "/" + Path.data;
+        this->m_Textures.push_back(Texture(GL_TEXTURE_2D, FullPath.c_str()));
 
-    // Initialize the materials
-    for (unsigned int i = 0 ; i < pScene->mNumMaterials ; i++) {
-        const aiMaterial* pMaterial = pScene->mMaterials[i];
-
-        m_Textures[i] = nullptr;
-
-        if (pMaterial->GetTextureCount(aiTextureType_DIFFUSE) > 0) {
-            aiString Path;
-
-            if (pMaterial->GetTexture(aiTextureType_DIFFUSE, 0, &Path, NULL, NULL, NULL, NULL, NULL) == AI_SUCCESS) {
-                std::string FullPath = Dir + "/" + Path.data;
-                m_Textures[i] = new Texture(GL_TEXTURE_2D, FullPath.c_str());
-
-                if (!m_Textures[i]->Load()) {
-                    std::cout << "Error loading texture '" << FullPath.c_str() << "'\n" << std::endl;
-                    delete m_Textures[i];
-                    m_Textures[i] = nullptr;
-                    Ret = false;
-                } else {
-                    std::cout << "Loaded texture '" << FullPath.c_str() << "'\n" << std::endl; 
-                }
-            }
-        } 
-        // Load a white texture in case the model does not include its own texture
-        if (!m_Textures[i]) {
-            m_Textures[i] = new Texture(GL_TEXTURE_2D, "./white.png");
-
-            Ret = m_Textures[i]->Load();
+        if (!m_Textures.back().Load()) {
+          std::cout<<"Error loading texture '" << FullPath.c_str() << std::endl;
+          this->m_Textures.pop_back();
+          Ret = false;
+        } else {
+          std::cout << "Loaded texture '" << FullPath.c_str() << std::endl; 
         }
+      }
+    } 
+    // Load a white texture in case the model does not include its own texture
+    if (!Ret) {
+      this->m_Textures.push_back(Texture(GL_TEXTURE_2D, "./white.png"));
+
+      Ret = this->m_Textures.back().Load();
     }
-    return Ret;
+  }
+  return Ret;
 }
 
-void gx::Mesh::CalcBoundBox(const aiScene* scene) {
-	// using aiMatrix4x4 instead of gx::matrix since there's more operations defined for it.
+void gx::Mesh::CalcBoundBox(const aiScene* scene, length_t modelHeight) {
+	// using aiMatrix4x4 instead of gx::matrix since there's more operations
+  // defined for it.
 	// for now, we prolly don't need to use it. Read the comment below for
 	// the aiTransformVecByMatrix4 function for further explanation
 	//aiMatrix4x4* transform = &(scene->mRootNode->mTransformation);
@@ -191,9 +189,9 @@ void gx::Mesh::CalcBoundBox(const aiScene* scene) {
 
   const aiVector3D* vertexStart = mesh->mVertices;
   const aiVector3D* vertexEnd   = mesh->mVertices + mesh->mNumVertices;
-  auto xCompare = [](const aiVector3D& a,const aiVector3D& b) {return a.x < b.x;};
-  auto yCompare = [](const aiVector3D& a,const aiVector3D& b) {return a.y < b.y;};
-  auto zCompare = [](const aiVector3D& a,const aiVector3D& b) {return a.z < b.z;};
+  auto xCompare= [](const aiVector3D& a,const aiVector3D& b){return a.x < b.x;};
+  auto yCompare= [](const aiVector3D& a,const aiVector3D& b){return a.y < b.y;};
+  auto zCompare= [](const aiVector3D& a,const aiVector3D& b){return a.z < b.z;};
 
   minVec.x = std::min_element(vertexStart,vertexEnd,xCompare)->x;
   minVec.y = std::min_element(vertexStart,vertexEnd,yCompare)->y;
@@ -211,4 +209,9 @@ void gx::Mesh::CalcBoundBox(const aiScene* scene) {
 	this->m_boundary.width  = maxVec.x - minVec.x;
 	this->m_boundary.height = maxVec.y - minVec.y;
 	this->m_boundary.depth  = maxVec.z - minVec.z;
+
+  auto center = this->m_boundary.center;
+  this->m_boundary.centerAndResize =
+    uniformScaling(modelHeight / this->m_boundary.height) *
+    translation(-center.x,-center.y,-center.z);
 }

@@ -16,7 +16,7 @@ Weapon::~Weapon()
 {
 }
 
-Weapon::Weapon(float damage, float ran, Coordinate d, float mpcost, Map* m)
+Weapon::Weapon(float damage, float ran, v3_t pos, float mpcost, Map* m)
 {
 	Range_Cool_Down_Time = 0;
 	Melee_Cool_Down_Time = 0;
@@ -24,10 +24,10 @@ Weapon::Weapon(float damage, float ran, Coordinate d, float mpcost, Map* m)
 	Melee_Cool_Down_Counter = sf::Clock();
 	strength = damage;
 	range = ran;
-	position = d;
+	position = pos;
 	mpCost = mpcost;
 	projectileSpeed = 20.0; // pending removal
-	projectileRange = 300; //pending removal
+	projectileRange = 100; //pending removal
 	projectileStrength = 26; //pending removal
 	this->map = m;
 }
@@ -61,22 +61,19 @@ bool Weapon::attackMelee()
 {
 	return false;
 }
-Projectile* Weapon::attackRange(Direction d , Coordinate c)
+
+//@alvin @allen why is this here?
+Projectile* Weapon::attackRange(v3_t dir , v3_t pos)
 {
 	Projectile* pj = map->produceProjectile();
-	//pj = Projectile(c,d);
-  //TODO is the direction normalized?
-  c.velocityX = d.x*projectileSpeed;
-  c.velocityY = d.y*projectileSpeed;
-  c.velocityZ = d.z*projectileSpeed;
-	//c.velocityX = projectileSpeed;
-	//c.velocityY = projectileSpeed;
-	//c.velocityZ = projectileSpeed;
-	
-	pj->setPosition(c);
-	pj->setDirection(d);
+  dir.normalize();
+  pj->setDirection(dir);
+  dir.scale(projectileSpeed);
+  pj->setVelocity(dir);
+  pj->setPosition(pos);
+
 	pj->setStrength(projectileStrength);
-	pj->setRange(projectileRange);
+	pj->setRange(projectileRange); //TODO not sure what this is @allen @alvin
 
 	return pj;
 }

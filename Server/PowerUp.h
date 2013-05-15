@@ -8,11 +8,7 @@ public:
   ~PowerUp() {}
   
   static const Entity_Type type = POWER_UP;
-
-
-  void setPosition(Coordinate c) {
-	  position = c;
-  }
+  //each different power up @alvin @allen
   void serialize(sf::Packet& packet) const
   {
     position.serialize(packet);
@@ -29,9 +25,6 @@ public:
   void update();
 
 protected:
-  Coordinate position; // place it will respown
-  Direction direction;
-  Map* map;
   sf::Clock Respown_Counter;
   int Respown_Time;
 

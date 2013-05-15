@@ -117,8 +117,7 @@ void Quadtree::remove(BoundingObj* o) {
   int index = getIndex(o);
   if( index != -1 && nodes[0] != nullptr) {
     nodes[index]->remove(o);
-    return;
-  } else if ( index == -1 ) {
+  } else {
     objects.remove(o);
   }
 }
@@ -140,4 +139,11 @@ std::vector<BoundingObj*> & Quadtree::retrieve(std::vector<BoundingObj*> & retur
       returnObjects.push_back(*it);
   }
   return returnObjects;
+}
+
+int Quadtree::size(){
+  if( nodes[0] == nullptr )
+    return objects.size();
+  else
+    return objects.size() + nodes[0]->size() + nodes[1]->size() + nodes[2]->size() + nodes[3]->size();
 }

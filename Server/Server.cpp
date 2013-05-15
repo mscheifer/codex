@@ -10,6 +10,7 @@ void NetworkServer::combinePackets(ClientGameTimeAction & a) {
 	pPacket.jump |= a.jump;
 	pPacket.facingDirection = a.facingDirection;
 }
+
 void NetworkServer::receiveMessages(int i) {
   sf::Packet packet;
   bool packetReceived = false;
@@ -17,7 +18,7 @@ void NetworkServer::receiveMessages(int i) {
     packetReceived = true;
     sf::Packet copy = packet; //TODO: maybe we don't need this. fix later
     ClientGameTimeAction cgta;
-    uint32_t packetType;
+    sf::Uint32 packetType;
     packet >> packetType;
     switch (packetType) {
       case CGTA:
@@ -46,8 +47,6 @@ void NetworkServer::doServer() {
   ConfigManager::log("lol");
   sf::IpAddress myIpAddress = sf::IpAddress::getLocalAddress();
   std::cout << "Server Ip Address: " << myIpAddress.toString() << std::endl;
-  const int ticksPerSecond = 30;
-  const int tickLength = 1000 / ticksPerSecond;
   sf::Clock clock;
   
   //send id to to the player
@@ -91,14 +90,13 @@ void NetworkServer::doServer() {
     //2. update all entities and resolve collision
     game.updateAndResolveCollision();
 
-
     //3. prep and send response to everyone
 	  if(!this->server.sendPacketToAll<ServerGameTimeRespond>( game.prepResponse() ) ) {
       std::cout << "Error sending sgtr to everybody" << std::endl;
     }
 
     //4. go back to sleep slave.
-    sf::sleep( sf::milliseconds( tickLength -
+    sf::sleep( sf::milliseconds( static_cast<sf::Int32>(ConfigManager::serverTickLengthMilli()) -
                                  clock.getElapsedTime().asMilliseconds()) );
   }
 } 

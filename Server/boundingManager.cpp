@@ -187,7 +187,7 @@ std::pair<bool,BoundingObj::vec3_t> boxRay(const BoundingBox* b,const Ray* r){
   //the time it hit
   t = tfirst;
   BoundingObj::vec3_t ret = r->getDirection();
-  ret.scale(1.0-t);
+  ret.scale(1.0f-t);
   //ret.scale(1.0-tfirst);
   //ret.negate();
 
@@ -205,7 +205,7 @@ std::pair<bool,BoundingObj::vec3_t> sphereSphere(const BoundingSphere* o, const 
   BoundingObj::unit_t mag = v3.magnitude();
   BoundingObj::unit_t radSum = o->getRadius() + t->getRadius();
   v3.normalize();
-  v3.scale( (radSum - mag) ); //TODO float errro?
+  v3.scale(radSum - mag);
 
   return std::pair<bool, BoundingObj::vec3_t>( mag < radSum, v3);
 }

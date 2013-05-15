@@ -1,4 +1,7 @@
 #include "Client.h"
+#include <iostream>
+#include "AudioManager.h"
+#include "Game.h"
 
 namespace {
   gx::graphicEntity toGentity(const Entity& ent) {            
@@ -21,7 +24,7 @@ void NetworkClient::receiveMessages() {
   sf::Packet packet;
   if (netRecv.receiveMessage(packet)) {
     ChatObject chatObj;
-    uint32_t packetType;
+    sf::Uint32 packetType;
     IdPacket newId(0);
     packet >> packetType;
     std::vector<gx::graphicEntity> entities;
@@ -31,17 +34,17 @@ void NetworkClient::receiveMessages() {
         this->chat.addChat(chatObj.getChat());
         break;
       case SGTR:
-        s.deserialize(packet);
+        this->s.deserialize(packet);
         for(auto playerP = s.players.begin(); playerP != s.players.end(); playerP++) {
           if(playerP->player_id != this->id) {
             auto gentity = toGentity(*playerP);
-            gentity.type = 3;
+            gentity.type = 0;
             entities.push_back(gentity);
           }
         }
         for(auto entP = s.entities.begin(); entP != s.entities.end(); entP++) {
             auto gentity = toGentity(**entP);
-            gentity.type = 3;
+            gentity.type = 1;
             entities.push_back(gentity);
         }
         auto pos = s.players[this->id].getPosition();
@@ -129,7 +132,7 @@ void NetworkClient::doClient() {
 	  sf::Packet initPacket;
     if (netRecv.receiveMessage(initPacket)) {
       std::cout << "received message" << std::endl;
-      uint32_t packetType;
+      sf::Uint32 packetType;
       initPacket >> packetType;
       if (packetType == JOINID) {
         IdPacket newId(0);

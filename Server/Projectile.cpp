@@ -15,27 +15,21 @@ Projectile::~Projectile(void)
 }
 
 void Projectile::update(void) {
-
-	Coordinate nextPosition = ThreeDMovement(position, direction, 0);
-	distanceLeftToTravel -= calculateDistanceInBetween(position, nextPosition);	
-	position = nextPosition;
-	
-	//if it already traveled a its range
-	if(distanceLeftToTravel <= 0.0 ) {
-		// destroy yourself and return
-   
-		map->destroyProjectile(this);
-		return;
-	}
+  v3_t distanceTravelled = velocity * ConfigManager::serverTickLengthSec();
+	position += distanceTravelled;
+  
+  //see if travelled full range
+  distanceLeftToTravel -= distanceTravelled.magnitude();
+  if(distanceLeftToTravel <= 0.0){
+    map->destroyProjectile(this);
+    return;
+  }
 
 	updateBounds();
 	// some collision detection
-
-
 }
 
-void Projectile::setOwner(Player * player)
-{
+void Projectile::setOwner(Player * player){
   owner = player;
 }
 
@@ -43,8 +37,7 @@ void Projectile::setStrength(float f) {
 	strength = f;
 }
 
-void Projectile::setRange(Position r) {
-
+void Projectile::setRange(length_t r) {
 	range = r;
 	distanceLeftToTravel = r;
 }
@@ -62,13 +55,11 @@ void Projectile::updateBoundsSoft(){
 void Projectile::handleCollisions() {
   
   std::vector<std::pair<Entity*,BoundingObj::vec3_t>> entities =  detectCollision();
-  
-  
+
   for( auto it = entities.begin(); it != entities.end(); it++ ){
     Entity * e = it->first; 
     if(e != owner) {
        map->destroyProjectile(this);
-       map->removeFromQtree(this);
     }
     
   }

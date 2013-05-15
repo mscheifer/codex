@@ -6,12 +6,12 @@
 #include "boundingObj.h"
 
 #include "boundingSphere.h" //TODO remove for testing
-#include "boundingBox.h" //TODO remove for testing
-#include "Ray.h" //TODO remove for testing
+#include "boundingBox.h"
+#include "Ray.h"
 
 class Quadtree{
 private:
-  static const int maxObjects = 1; //TODO this needs to not be 1
+  static const int maxObjects = 10; //TODO adjust these values
   static const int maxLevels = 5;
   int level;
   std::list<BoundingObj*> objects;
@@ -30,6 +30,7 @@ private:
 public:
   Quadtree(int pLevel, Rectangle pBounds);
   ~Quadtree();
+  int size(); //TODO nothing should call this this is for testing only
 
   //clear the quadtree
   void clear();
