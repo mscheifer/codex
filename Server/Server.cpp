@@ -8,7 +8,8 @@ void NetworkServer::combinePackets(ClientGameTimeAction & a) {
 	pPacket.weapon1 |= a.weapon1;
 	pPacket.weapon2 |= a.weapon2;
 	pPacket.jump |= a.jump;
-	pPacket.facingDirection = a.facingDirection;
+  pPacket.pickup |= a.pickup;
+  pPacket.facingDirection = a.facingDirection;
 }
 
 void NetworkServer::receiveMessages(int i) {
@@ -35,9 +36,10 @@ void NetworkServer::receiveMessages(int i) {
     }
   }
   if (packetReceived) {
-    //ConfigManager::log("------------------------------------");
-    //ConfigManager::log(pPacket.toString()); 
+    ConfigManager::log("------------------------------------");
+    ConfigManager::log(pPacket.toString()); 
     game.evaluate(pPacket);
+
     pPacket.clear();
   }
 }

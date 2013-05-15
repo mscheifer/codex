@@ -1,6 +1,7 @@
 #include "Player.h"
 #include "Projectile.h"
 
+
 const float Player::sphereRadius = 5.0f;
 
 Player::Player(){}// this->init(0,0,0,0,NULL);}
@@ -31,8 +32,8 @@ void Player::init(v3_t pos, int assigned_id, Map * m)
 	castDownCounter = sf::Clock();
 	map = m;
 	weapon[0] = new WeaponFist(position, this->map);
-	weapon[1] = new WeaponFire(position, this->map);
-	current_weapon_selection = 1;
+	weapon[1] = new WeaponFire(position, this->map); //TODO add this to entities if we want it
+	current_weapon_selection = 0;
   
   generateBounds(position);
   m->addToQtree(this);
@@ -117,9 +118,16 @@ bool Player::moveTowardDirection(move_t inputDir, bool jump)
 }
 
 void Player::update(){
+  //pick up weapon stuff
+  pickup = nullptr;
+  pickupWeaponType = UNK;
+
+  //update movement
   acceleration = GRAVITY;
   velocity += acceleration * ConfigManager::serverTickLengthSec();
   position += velocity * ConfigManager::serverTickLengthSec();
+  health = (health+5 > maxHealth? maxHealth : health+5);
+  mana = (mana+5 > maxMana? maxMana : mana+5);
   updateBounds();
 }
 
@@ -144,6 +152,15 @@ void Player::handleSelfAction(ClientGameTimeAction a) {
 	moveTowardDirection(a.movement, a.jump);
   direction = v3_t(a.facingDirection.x, a.facingDirection.y, a.facingDirection.z);
 	updateBounds();
+
+  std::cout << a.pickup << std::endl;
+
+  //try pick up
+  if(a.pickup && pickup ){
+    weapon[current_weapon_selection]->dropDown(position);
+    weapon[current_weapon_selection] = pickup;
+    pickup->pickUp();
+  }
 
 	//start of attacking logic
 	if(a.attackRange || a.attackMelee) {
@@ -205,21 +222,31 @@ void Player::handleCollisions(){
 
   for( auto it = entities.begin(); it != entities.end(); ){
     Entity * e = it->first;
-    switch( e->getType() ){
-    case WALL:
-      //std::cout << "wall" << std::endl;
-      restart = collideWall(*it);
-      break;
-    case PLAYER:
-      ////std::cout << "player" << std::endl;
-      restart = collidePlayer(*it);
-      break;
-    case PROJECTILE:
-      //std::cout << "proj" << std::endl;
-      restart = collideProjectile(*it);
-      break;
-    default:
-      break;
+    switch( e->getType() ) {
+      case WALL:
+        //std::cout << "wall" << std::endl;
+        restart = collideWall(*it);
+        break;
+      case PLAYER:
+        ////std::cout << "player" << std::endl;
+        restart = collidePlayer(*it);
+        break;
+      case PROJECTILE:
+        //std::cout << "proj" << std::endl;
+        restart = collideProjectile(*it);
+        break;
+      case WEAPON:
+        pickup = (Weapon*)e;
+        pickupWeaponType = ((Weapon*)e)->getWeaponType();
+        //std::cout << "pick me up plz" << std::endl;
+        //((Weapon*) e)->pickUp();
+        //TODO finish this
+        break;
+      case POWER_UP:
+        //((PowerUp *)&it)->onCollision(this);
+        break;
+      default:
+        break;
     }
 
     //different position now, needs to see what it hit
@@ -233,12 +260,11 @@ void Player::handleCollisions(){
       it++;
     }
 
-    if( restarts > 3 )
-      break;
+    if( restarts > 3 ) break;
   }
 }
 
-bool Player::collideWall(std::pair<Entity*,BoundingObj::vec3_t>& p){
+bool Player::collideWall(const std::pair<Entity*,BoundingObj::vec3_t>& p){
   BoundingObj::vec3_t fixShit = p.second;
   restartJump(fixShit.z);
   position += p.second;
@@ -246,16 +272,17 @@ bool Player::collideWall(std::pair<Entity*,BoundingObj::vec3_t>& p){
   return true;
 }
 
-bool Player::collidePlayer(std::pair<Entity*,BoundingObj::vec3_t>& p){
+bool Player::collidePlayer(const std::pair<Entity*,BoundingObj::vec3_t>& p){
   position += p.second;
   updateBounds();
   return true;
 }
 
-bool Player::collideProjectile(std::pair<Entity*,BoundingObj::vec3_t>& p){
+bool Player::collideProjectile(const std::pair<Entity*,BoundingObj::vec3_t>& p){
   if(((Projectile *)p.first)->getOwner() != this) {
     std::cout << "OW hit "<< player_id << std::endl;
     attackBy((Projectile *)p.first);
+    std::cout << health  << " HP left" << " for " << player_id << std::endl;
   }
   return false;
 }

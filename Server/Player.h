@@ -3,15 +3,16 @@
 #include <iostream>
 #include <sstream>
 #include <cmath>
+#include <algorithm>
+#include <string>
 #include "Entity.h"
 #include "Physics.h"
-#include <string>
 #include "Weapon.h"
 #include "WeaponFist.h"
 #include "WeaponFire.h"
 #include "ClientGameTimeAction.h"
 #include "boundingManager.h"
-#include "algorithm"
+#include "PowerUp.h"
 
 const int MOVESCALE = 3;
 const length_t AIRMOVESCALE = 1;
@@ -29,6 +30,7 @@ public:
   bool minotaur; //might be private
   int player_id;
   std::string name;
+  WeaponType pickupWeaponType;
   Player();
   Player(v3_t pos, int assigned_id, Map *);
   ~Player(void);
@@ -40,9 +42,9 @@ public:
   void updateBoundsSoft(); 
   
   //helper functions for collisions
-  bool collideWall(std::pair<Entity*,BoundingObj::vec3_t>& p);
-  bool collidePlayer(std::pair<Entity*,BoundingObj::vec3_t>& p);
-  bool collideProjectile(std::pair<Entity*,BoundingObj::vec3_t>& p);
+  bool collideWall(const std::pair<Entity*,BoundingObj::vec3_t>& p);
+  bool collidePlayer(const std::pair<Entity*,BoundingObj::vec3_t>& p);
+  bool collideProjectile(const std::pair<Entity*,BoundingObj::vec3_t>& p);
  
   bool moveTowardDirection(move_t degree, bool jump); //handle movement input WADS jump
   void handleAction(ClientGameTimeAction a);
@@ -56,17 +58,16 @@ public:
   float getSpeed(){ return speed;}
   void setSpeed(float);
 
-  Entity_Type getType() {
+  Entity_Type getType() const {
     return type;
   }
 
   void serialize(sf::Packet& packet) const {
-    packet << type; //not necessary
     Entity::serialize(packet);
     packet << this->player_id;
-    acceleration.serialize(packet);
-    velocity.serialize(packet);
-    oldJumpVelocity.serialize(packet);
+    //acceleration.serialize(packet);
+    //velocity.serialize(packet);
+    //oldJumpVelocity.serialize(packet);
     packet << dead; 
     packet << minotaur; //might be private
     packet << name;
@@ -83,18 +84,16 @@ public:
     packet << attacking;  //not neede on client ?
     //Weapon* weapon[MAXWEAPONS]; 
     // change the array to vector ?
+    packet << static_cast<sf::Uint32>(pickupWeaponType);
     packet << current_weapon_selection; 
- 
   }
 
   void deserialize(sf::Packet& packet) {
-    sf::Uint32 packetType; //not necessary
-    packet >> packetType; //not necessary
     Entity::deserialize(packet);
     packet >> this->player_id;
-    acceleration.deserialize(packet);
-    velocity.deserialize(packet);
-    oldJumpVelocity.deserialize(packet);
+    //acceleration.deserialize(packet);
+    //velocity.deserialize(packet);
+    //oldJumpVelocity.deserialize(packet);
     packet >>dead; 
     packet >>minotaur; //might be private
     packet >> name;
@@ -111,10 +110,14 @@ public:
     packet >> attacking;  //not neede on client ?
     //Weapon* weapon[MAXWEAPONS]; 
     // change the array to vector ?
+    sf::Uint32 pickupWeaponTypeUint32;
+    packet >> pickupWeaponTypeUint32;
+    pickupWeaponType = static_cast<WeaponType>(pickupWeaponTypeUint32);
     packet >> current_weapon_selection; 
   }
 
 private:
+  Weapon* pickup;
   v3_t oldJumpVelocity; //the x,y velocity that should be applied
   float health;
   float maxHealth;

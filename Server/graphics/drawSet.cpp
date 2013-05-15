@@ -46,13 +46,7 @@ void gx::drawSet::reset() {
   }
 }
 
-void gx::drawSet::addEntity(vector4f pos,vector3f dirY,unsigned int type) {
-  /*
-  vector3f dirX(dirY.y, -dirY.x, 0);
-  dirY.normalize();
-  dirX.normalize();
-  matrix rotAndTrans = translation(pos.x,pos.y,pos.z) * toBasis(dirX,dirY,vector3f(0,0,1));
-  */
+void gx::drawSet::addEntity(vector3f pos,vector3f dirY,unsigned int type) {
   dirY.z = 0;
   dirY.normalize();
   const vector3f up = vector3f(0,0,1);

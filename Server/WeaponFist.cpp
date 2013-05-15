@@ -18,7 +18,7 @@ Projectile* WeaponFist::attackRange()
   return NULL;
   //attackMelee();
 }
-
+/*
 bool WeaponFist::pickUp()
 {
   if(pickedUp)
@@ -26,6 +26,7 @@ bool WeaponFist::pickUp()
   pickedUp = true;
   return true;
 }
+
 
 bool WeaponFist::dropDown(v3_t dropPosition)
 {
@@ -35,3 +36,4 @@ bool WeaponFist::dropDown(v3_t dropPosition)
   pickedUp = false;
   return true;
 };
+*/

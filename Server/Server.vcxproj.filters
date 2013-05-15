@@ -165,6 +165,9 @@
     <ClCompile Include="graphics\uniformLocation.cpp">
       <Filter>Source Files\graphics</Filter>
     </ClCompile>
+    <ClCompile Include="AsciUI.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
     <ClCompile Include="ClientGameTimeAction.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>

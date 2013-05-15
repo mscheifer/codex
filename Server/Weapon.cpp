@@ -11,7 +11,6 @@ Weapon::Weapon(Map* m)
 	this->map = m;
 }
 
-
 Weapon::~Weapon()
 {
 }
@@ -25,20 +24,12 @@ Weapon::Weapon(float damage, float ran, v3_t pos, float mpcost, Map* m)
 	strength = damage;
 	range = ran;
 	position = pos;
+  direction = v3_t(0,0,1);
 	mpCost = mpcost;
 	projectileSpeed = 20.0; // pending removal
 	projectileRange = 100; //pending removal
-	projectileStrength = 1; //pending removal
+	projectileStrength = 26; //pending removal
 	this->map = m;
-}
-
-
-void Weapon::handleAction(ClientGameTimeAction){
-
-}
-
-void Weapon::onCollision(Entity*) {
-
 }
 
 bool Weapon::canUseWeapon(bool range_attack) {
@@ -47,14 +38,6 @@ bool Weapon::canUseWeapon(bool range_attack) {
 			return true;
 	}
 	return false;
-}
-
-void Weapon::useWeapon( bool range_attack){
-	if(range_attack) {
-		Range_Cool_Down_Counter.restart();
-	} else {
-		Melee_Cool_Down_Counter.restart();
-	}
 }
 
 bool Weapon::attackMelee()
@@ -78,3 +61,38 @@ Projectile* Weapon::attackRange(v3_t dir , v3_t pos)
 	return pj;
 }
 
+bool Weapon::pickUp(){
+  if(pickedUp)
+    return false;
+  
+  render = false;
+  map->removeFromQtree(this);
+  return true;
+}
+
+bool Weapon::dropDown(v3_t dropPosition){
+  //if(!pickedUp)
+  //  return false;
+
+  render = true;
+  position = dropPosition;
+  pickedUp = false;
+  map->addToQtree(this);
+  return true;
+}
+
+//
+//void Weapon::useWeapon( bool range_attack){
+//	if(range_attack) {
+//		Range_Cool_Down_Counter.restart();
+//	} else {
+//		Melee_Cool_Down_Counter.restart();
+//	}
+//}
+//void Weapon::handleAction(ClientGameTimeAction){
+//
+//}
+//
+//void Weapon::onCollision(Entity*) {
+//
+//}

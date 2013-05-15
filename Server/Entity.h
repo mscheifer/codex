@@ -8,6 +8,7 @@ class Entity {
 public:
   static const Entity_Type type = UNDEFINED;
 protected:
+  bool render;
   v3_t position;
   v3_t acceleration;
   v3_t velocity;
@@ -18,7 +19,7 @@ protected:
   // Power ups {contains MULTIPLERS for health, defense/ elemental weapons}
 
 public:
-  Entity() {}
+  Entity() { render = true; }
   virtual ~Entity() {}
   
   virtual void handleAction(ClientGameTimeAction){} //what does this do?
@@ -32,6 +33,7 @@ public:
   virtual void updateBoundsSoft(){}
   std::vector<std::pair<Entity*,gx::vector3f>> detectCollision();
 
+  bool canRender() const { return render; }
   v3_t getPosition(void) const { return position; }
   void setPosition(v3_t c) { position = c;}
   v3_t getDirection(void) const { return direction; }
@@ -52,5 +54,5 @@ public:
     position.deserialize(packet);
     direction.deserialize(packet);
   }
-  virtual Entity_Type getType() { return type; }
+  virtual Entity_Type getType() const { return type; }
 };
