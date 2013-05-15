@@ -1,82 +1,63 @@
 #ifndef ENTITYPOOL_H
 #define ENTITYPOOL_H
 #include <vector>
+#include <memory>
 #include <assert.h>
 #include "Wall.h"
 #include "Projectile.h"
 #include "Weapon.h"
 
-class EntityPool {
-    //don't modify main vectors for duration of serialization
-	  std::vector<Wall>                 walls;
-    std::vector<Projectile>           projectiles;
-    std::vector<Weapon>               weapons;
-    std::vector<PowerUp>              powerUps;
-
-	  std::vector<Wall*>                newWalls;
-    std::vector<Projectile*>          newProjectiles;
-    std::vector<Weapon*>              newWeapons;
-    std::vector<PowerUp*>             newPowerUps;
-
-    std::vector<Wall>::iterator       wall_index;
-    std::vector<Projectile>::iterator projectile_index;
-    std::vector<Weapon>::iterator     weapon_index;
-    std::vector<PowerUp>::iterator    powerUp_index;
+template<typename T>
+class objPool {
+    //don't modify main vector for duration of serialization
+	           std::vector<T>                  objs;
+	           std::vector<std::unique_ptr<T>> newObjs;
+    typename std::vector<T>::iterator        objsIndex;
   public:
     void reset() {
-      walls.resize(walls.size() + newWalls.size());
-      projectiles.resize(walls.size() + newProjectiles.size());
-      weapons.resize(walls.size() + newWeapons.size());
-      powerUps.resize(walls.size() + newPowerUps.size());
+      objs.resize(objs.size() + newObjs.size());
+      newObjs.clear();
+      objsIndex = objs.begin();
+    }
+    T* createEntity() {
+      T* ret;
+      if(objsIndex == objs.end()) {
+        newObjs.push_back(std::unique_ptr<T>(new T()));
+        ret = prev(newObjs.end())->get();
+      } else {
+        ret = &*objsIndex;
+        objsIndex++;
+      }
+      return ret;
+    }
+};
 
-      newWalls.clear();
-      newProjectiles.clear();
-      newWeapons.clear();
-      newPowerUps.clear();
-
-      wall_index       = walls      .begin();
-      projectile_index = projectiles.begin();
-      weapon_index     = weapons    .begin();
-      powerUp_index    = powerUps   .begin();
+class EntityPool {
+	  objPool<Wall>                 walls;
+    objPool<Projectile>           projectiles;
+    objPool<Weapon>               weapons;
+    objPool<PowerUp>              powerUps;
+  public:
+    void reset() {
+      walls.reset();
+      projectiles.reset();
+      weapons.reset();
+      powerUps.reset();
     }
     Entity* createEntity(sf::Uint32 type) {
       Entity* ret;
       switch (type) {
         case WALL:
-          if(wall_index == walls.end()) {
-            newWalls.push_back(new Wall());
-            ret = *prev(newWalls.end());
-          } else {
-            ret = &*wall_index;
-            wall_index++;
-          }
+          ret = walls.createEntity();
           break;
         case PROJECTILE:
-          if(projectile_index == projectiles.end()) {
-            newProjectiles.push_back(new Projectile());
-            ret = *prev(newProjectiles.end());
-          } else {
-            ret = &*projectile_index;
-            projectile_index++;
-          }
+          ret = projectiles.createEntity();
           break;
         case WEAPON:
-          if(weapon_index == weapons.end()) {
-            newWeapons.push_back(new Weapon());
-            ret = *prev(newWeapons.end());
-          } else {
-            ret = &*weapon_index;
-            weapon_index++;
-          }
+          ret = weapons.createEntity();
           break;
         case POWER_UP:
-          if(powerUp_index == powerUps.end()) {
-            newPowerUps.push_back(new PowerUp());
-            ret = *prev(newPowerUps.end());
-          } else {
-            ret = &*powerUp_index;
-            powerUp_index++;
-          }
+          ret = powerUps.createEntity();
           break;
         case PLAYER:
           assert(false);

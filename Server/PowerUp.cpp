@@ -27,7 +27,7 @@ void PowerUp::handleCollisions() {
     Entity * e = it->first; 
 
     if(e->getType() == PLAYER) {
-       std::cout << "collided " << std::endl;
+      // std::cout << "collided " << std::endl;
       Player luckyGuy = *(Player*)e;
       luckyGuy.setHealth(luckyGuy.getHealth() + healthMutiplyer);
 	    luckyGuy.setSpeed(luckyGuy.getSpeed() + speedMutiplyer);
