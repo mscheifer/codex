@@ -1,6 +1,5 @@
 #include "graphicsClient.h"
 #include <fstream>
-#include <assimp/cimport.h> 
 #include "oglUtil.h"
 #include "mesh.h"
 #include "loadCube.h"

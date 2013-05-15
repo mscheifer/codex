@@ -1,11 +1,9 @@
 #include <cctype> //this is for toupper method
 #include "Server.h"
 #include "Client.h"
-#include "Player.h"
 
 int main() {
   std::cout.sync_with_stdio(false); //speed up printing
-
 
   ConfigManager::readConfig();
 

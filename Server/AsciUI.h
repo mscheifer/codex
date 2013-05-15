@@ -1,7 +1,10 @@
 #pragma once
-#include "Map.h"
-#include "Entity.h"
-#include "Player.h"
+#include <vector>
+
+class Map;
+class Player;
+class Entity;
+
 class AsciUI
 {
 public:

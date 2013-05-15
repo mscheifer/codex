@@ -1,9 +1,8 @@
 #pragma once
-#include <string>
-#include <SFML/Window.hpp>
 #include <SFML/Graphics.hpp>
-#include <list>
 #include <SFML/Network.hpp>
+#include <string>
+#include <list>
 #include "StaticEnums.h" //just for DEFINE right now
 
 class ChatHandler {

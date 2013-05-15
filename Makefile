@@ -1,9 +1,10 @@
 NAME	   = Server/drchao
 ECHO	   = @echo
-CC       = @clang++
+CC       = @g++
+BINFLAGS = -O3 -DNDEBUG
 WARNINGS = -Wall -Wextra -Wstrict-overflow=5 -Wshadow #-Wconversion
 INCLUDE  = -IServer/
-CCFLAGS  = -g $(WARNINGS) $(INCLUDE) -std=c++11
+CCFLAGS  = $(BINFLAGS) $(WARNINGS) $(INCLUDE) -std=c++11
 LDSFML = -lsfml-window -lsfml-system -lsfml-audio -lsfml-network -lsfml-graphics
 LDFLAGS  = $(CCFLAGS) $(LDSFML) -lGL -lGLEW -lassimp
 OBJDIR   = obj/
@@ -12,7 +13,13 @@ SOURCES  = $(foreach dir, $(SRCDIRS), $(wildcard $(dir)*.cpp))
 OBJS     = $(patsubst %.cpp, $(OBJDIR)%.o, $(SOURCES))
 DEPENDENCIES = $(patsubst %.o, %.d, $(OBJS))
 
+.PHONY: all debug clean new
+
 all: $(NAME)
+
+debug: BINFLAGS = -g
+
+debug: all
 
 $(OBJS): $(OBJDIR)%.o: %.cpp
 	$(ECHO) "Compiling $<"

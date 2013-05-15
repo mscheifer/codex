@@ -4,10 +4,10 @@
 #include <vector>
 #include <map>
 #include <string>
-#include "vertexAttrib.h"
 #include "vertexAttribSignature.h"
 
 namespace gx {
+class vertexAttrib;
 
 class vao {
     GLuint  id;

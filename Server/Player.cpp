@@ -1,6 +1,7 @@
 #include "Player.h"
 #include "Projectile.h"
 
+
 const float Player::sphereRadius = 5.0f;
 
 Player::Player(){}// this->init(0,0,0,0,NULL);}
@@ -239,6 +240,10 @@ void Player::handleCollisions(){
       //((Weapon*) e)->pickUp();
       //TODO finish this
       break;
+    case POWER_UP:
+      //((PowerUp *)&it)->onCollision(this);
+      it++;
+      break;
     default:
       break;
     }
@@ -268,7 +273,6 @@ bool Player::collideWall(std::pair<Entity*,BoundingObj::vec3_t>& p){
 }
 
 bool Player::collidePlayer(std::pair<Entity*,BoundingObj::vec3_t>& p){
-  BoundingObj::vec3_t fixShit = p.second;
   position += p.second;
   updateBounds();
   return true;
@@ -278,6 +282,7 @@ bool Player::collideProjectile(std::pair<Entity*,BoundingObj::vec3_t>& p){
   if(((Projectile *)p.first)->getOwner() != this) {
     std::cout << "OW hit "<< player_id << std::endl;
     attackBy((Projectile *)p.first);
+    std::cout << health  << " HP left" << " for " << player_id << std::endl;
   }
   return false;
 }

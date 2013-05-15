@@ -1,20 +1,9 @@
 #ifndef CLIENT_H
 #define CLIENT_H
-#include <SFML/Network.hpp>
-#include <SFML/Window.hpp>
-#include <SFML/Graphics.hpp>
-#include <SFML/Audio.hpp>
-#include "Weapon.h"
-#include <iostream>
-#include <string>
-#include <list>
 #include "NetworkServices.h"
 #include "graphics/graphicsClient.h"
 #include "ServerGameTimeRespond.h"
 #include "ChatHandler.h"
-#include "Game.h"
-#include "ConfigManager.h"
-#include "AudioManager.h"
 #include "EntityPool.h"
 
 class NetworkClient {

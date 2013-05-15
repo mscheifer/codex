@@ -14,7 +14,7 @@ void gx::uniform::_locations<Type>::updateLoc(GLuint shader, const GLfloat* data
 
 template<GLenum Type>
 void gx::uniform::_locations<Type>::addShader(const shaderProgram& shader) {
-  this->locations.insert(std::make_pair(shader.progNum(),loc<Type>(shader,this->varName)));
+  this->locations.insert(std::make_pair(shader.progNum(),loc<Type>(shader,this->varName,1)));
 }
 
 gx::uniform::mat4f::mat4f(std::string name)

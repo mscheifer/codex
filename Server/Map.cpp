@@ -13,8 +13,13 @@ Map::Map(void): freeProjectiles(),q(0,Rectangle(BoundingObj::vec4_t(0,0,0),1000,
 	map_size = 15;
 	freeProjectiles = new std::stack<Projectile *>();
   initWalls();
+  initPowerUps();
 }
 
+void Map::initPowerUps() {
+  PowerUp* superPower = new PowerUp( v3_t(2,9,0), this);
+  this->entities.push_back(superPower);
+}
 void Map::initWalls(void)
 {
   WeaponFire* w1 = new WeaponFire(v3_t(100,100,0), this);

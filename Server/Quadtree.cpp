@@ -115,7 +115,6 @@ void Quadtree::insert(BoundingObj* o){
 
 void Quadtree::remove(BoundingObj* o) {
   int index = getIndex(o);
-      int sizeI = objects.size();
   if( index != -1 && nodes[0] != nullptr) {
     nodes[index]->remove(o);
   } else {

@@ -12,6 +12,7 @@
 #include "ClientGameTimeAction.h"
 #include "boundingManager.h"
 #include "algorithm"
+#include "PowerUP.h"
 
 const int MOVESCALE = 3;
 const length_t AIRMOVESCALE = 1;
@@ -89,7 +90,7 @@ public:
   }
 
   void deserialize(sf::Packet& packet) {
-    uint32_t packetType; //not necessary
+    sf::Uint32 packetType; //not necessary
     packet >> packetType; //not necessary
     Entity::deserialize(packet);
     packet >> this->player_id;

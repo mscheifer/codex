@@ -19,7 +19,7 @@ void NetworkServer::receiveMessages(int i) {
     packetReceived = true;
     sf::Packet copy = packet; //TODO: maybe we don't need this. fix later
     ClientGameTimeAction cgta;
-    uint32_t packetType;
+    sf::Uint32 packetType;
     packet >> packetType;
     switch (packetType) {
       case CGTA:

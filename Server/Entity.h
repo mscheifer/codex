@@ -1,9 +1,7 @@
 #pragma once
-#include "ClientGameTimeAction.h"
-#include "Physics.h"
-#include "Map.h"
 #include <vector>
-#include <stdint.h> //uint32_t
+#include "ClientGameTimeAction.h"
+#include "Map.h"
 #include "boundingManager.h"
 
 class Entity {
@@ -24,7 +22,7 @@ public:
   Entity() { render = true; }
   virtual ~Entity() {}
   
-  virtual void handleAction(ClientGameTimeAction){}
+  virtual void handleAction(ClientGameTimeAction){} //what does this do?
   virtual void update(){}
   virtual void handleCollisions(){}
   

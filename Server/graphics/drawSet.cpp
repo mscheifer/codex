@@ -12,7 +12,7 @@ gx::drawSet::drawSet(const std::string vertShader, const std::string fragShader,
                      const std::vector<vaoData_t> vaoDatas,
          std::vector<uniform::block*>  globalUnifs)
   : program(vertShader, fragShader, globalUnifs), entityClasses(),
-    modelToWorldLoc(program,"modelToWorld"), globalUniforms(globalUnifs) {
+    modelToWorldLoc(program,"modelToWorld",1), globalUniforms(globalUnifs) {
   for(auto vaoDatap = vaoDatas.begin(); vaoDatap != vaoDatas.end(); ++vaoDatap){
     const auto& vaoData = *vaoDatap;
     entityClass newEntClass(std::vector<matrix>(),
@@ -55,6 +55,7 @@ void gx::drawSet::addEntity(vector4f pos,vector3f dirY,unsigned int type) {
   */
   dirY.z = 0;
   dirY.normalize();
-  matrix rotAndTrans = translation(pos.x,pos.y,pos.z) * toRightHandBasisFromY(dirY);
+  const vector3f up = vector3f(0,0,1);
+  matrix rotAndTrans = translation(pos.x,pos.y,pos.z) * toRightHandBasisFromYandUp(dirY,up);
   this->entityClasses[type].positions.push_back(rotAndTrans);
 }
