@@ -27,7 +27,16 @@ void NetworkClient::receiveMessages() {
             entities.push_back(&(*playerP));
           }
         }
-        for(auto entP = s.entities.begin(); entP != s.entities.end(); entP++) {
+        for(auto entP = s.walls.begin(); entP != s.walls.end(); entP++) {
+          entities.push_back(*entP);
+        }
+        for(auto entP = s.projectiles.begin(); entP != s.projectiles.end(); entP++) {
+          entities.push_back(*entP);
+        }
+        for(auto entP = s.powerups.begin(); entP != s.powerups.end(); entP++) {
+          entities.push_back(*entP);
+        }
+        for(auto entP = s.weapons.begin(); entP != s.weapons.end(); entP++) {
           entities.push_back(*entP);
         }
         auto pos = s.players[this->id].getPosition();
@@ -140,5 +149,4 @@ void NetworkClient::doClient() {
       this->sendPacket = false;
     }
   }
-  while(true) {}
 }

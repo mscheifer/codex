@@ -62,7 +62,10 @@ void Game::updateAndResolveCollision() {
 
 ServerGameTimeRespond Game::prepResponse() {
 	ServerGameTimeRespond s;
-	s.entities.clear();
+	s.weapons.clear();
+	s.projectiles.clear();
+	s.walls.clear();
+	s.powerups.clear();
   s.players.clear();
 	std::vector<Player*> currentPlayers =  world.getPlayers();
 	std::vector<Entity*> currentEntities = world.getEntity();
@@ -72,9 +75,25 @@ ServerGameTimeRespond Game::prepResponse() {
 
 	for( unsigned int i = 0; i < currentEntities.size(); i++ ) {
     if( currentEntities[i]->canRender() ) {
-		  s.entities.push_back(currentEntities[i]);
-    }
-	}
+      switch (currentEntities[i]->getType()) { // I am casting pointers but I don't care
+      case WALL:
+		    s.walls.push_back((Wall*) currentEntities[i]); 
+        break;
+      case PROJECTILE:
+		    s.projectiles.push_back((Projectile*) currentEntities[i]); 
+        break;
+      case POWER_UP:
+		    s.powerups.push_back((PowerUp*) currentEntities[i]); 
+        break;
+      case WEAPON:
+		    s.weapons.push_back((Weapon*) currentEntities[i]); 
+        break;        
+      default:
+        std::cout<<"Error for Entity type!!!!!!"<<std::endl;
+        break;
+      }
+    }  
+  }
 	  
 	unsigned int deadPlayers = 0;
   bool minotaurLose  = false;

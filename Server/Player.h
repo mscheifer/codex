@@ -63,7 +63,6 @@ public:
   }
 
   void serialize(sf::Packet& packet) const {
-    packet << type; //not necessary
     Entity::serialize(packet);
     packet << this->player_id;
     //acceleration.serialize(packet);
@@ -90,8 +89,6 @@ public:
   }
 
   void deserialize(sf::Packet& packet) {
-    sf::Uint32 packetType; //not necessary
-    packet >> packetType; //not necessary
     Entity::deserialize(packet);
     packet >> this->player_id;
     //acceleration.deserialize(packet);

@@ -24,13 +24,12 @@ public:
     return type;
   }
   void serialize(sf::Packet & packet) const {
-    packet << type;
     Entity::serialize(packet);
     //(*owner).serialize(packet);
   } 
   void deserialize( sf::Packet & packet ) {
     Entity::deserialize(packet);
-    //delete owner;
+    //delete owner; this segfaults
     //Player* owner = new Player();
     //(*owner).deserialize(packet);
   }

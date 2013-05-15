@@ -15,7 +15,6 @@ public:
   void updateBounds();
   void updateBoundsSoft(); 
   void serialize(sf::Packet & packet ) const {
-    packet << type; 
     Entity::serialize(packet);
     /*
     packet << static_cast<sf::Uint32>(centerPositions.size());
