@@ -14,6 +14,7 @@ struct ClientGameTimeAction
   bool weapon2; // Used for switching weapon
 	bool jump;
   bool updated;
+  bool pickup;
 	v3_t facingDirection;
   
   bool operator==(const ClientGameTimeAction & other) const;
@@ -25,7 +26,7 @@ struct ClientGameTimeAction
     player_id(-1), movement(NULL_DIR),
     attackMelee(false),attackRange(false),
     weapon1(false), weapon2(false),
-    jump(false), updated(false), facingDirection() {};
+    jump(false), updated(false), pickup(false), facingDirection() {};//TODO pickup should be flase
 
   void serialize(sf::Packet & packet) {
     packet << player_id;
@@ -35,6 +36,7 @@ struct ClientGameTimeAction
     packet << weapon1;
     packet << weapon2;
     packet << jump;
+    packet << pickup;
     facingDirection.serialize(packet);
   }
 
@@ -48,6 +50,7 @@ struct ClientGameTimeAction
     packet >> weapon1;
     packet >> weapon2;
     packet >> jump;
+    packet >> pickup;
     facingDirection.deserialize(packet);
   }
 

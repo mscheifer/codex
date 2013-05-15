@@ -3,6 +3,7 @@
 #include "Player.h"
 #include "Entity.h"
 #include "Wall.h"
+#include "Weapon.h"
 
 const float Map::Item_Pick_Up_Ranges = 1.0f;
 
@@ -12,10 +13,24 @@ Map::Map(void): freeProjectiles(),q(0,Rectangle(BoundingObj::vec4_t(0,0,0),1000,
 	map_size = 15;
 	freeProjectiles = new std::stack<Projectile *>();
   initWalls();
+  initPowerUps();
 }
 
+void Map::initPowerUps() {
+  PowerUp* superPower = new PowerUp( v3_t(2,9,0), this);
+  this->entities.push_back(superPower);
+}
 void Map::initWalls(void)
 {
+  WeaponFire* w1 = new WeaponFire(v3_t(100,100,0), this);
+  w1->dropDown(v3_t(100,100,0));
+  w1->setDirection(v3_t(0,1,0));
+  entities.push_back(w1);
+  WeaponFire* w2 = new WeaponFire(v3_t(120,120,0), this);
+  w2->dropDown(v3_t(120,120,0));
+  w2->setDirection(v3_t(0,1,0));
+  entities.push_back(w2);
+
   v3_t facingEast(1,0,0);
   v3_t facingNorth(0,1,0);
   int width = 10;
@@ -64,6 +79,13 @@ void Map::initWalls(void)
     this->entities.push_back(rightWall);
   }
 
+  Wall *moveableWall = new Wall(width, depth, height, v3_t(0,0,20), facingNorth, this);
+  moveableWall->setWallChangeTime(1000.f);
+  moveableWall->addNewCenter(v3_t(0,0,5));
+  moveableWall->addNewCenter(v3_t(0,0,20));
+  moveableWall->addNewCenter(v3_t(0,10,20));
+  moveableWall->addNewCenter(v3_t(0,0,20));
+  this->entities.push_back(moveableWall);
   Wall * floor = new Wall(1000, 10, 1000, v3_t(0,0,-10), facingEast, this);
   this->entities.push_back(floor);
 

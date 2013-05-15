@@ -61,7 +61,6 @@ void Projectile::handleCollisions() {
     if(e != owner) {
        map->destroyProjectile(this);
     }
-    
   }
-  
+
 }

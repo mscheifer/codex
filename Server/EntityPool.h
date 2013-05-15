@@ -9,7 +9,9 @@ class EntityPool {
 	  std::vector<Wall>                 walls;
     std::vector<Projectile>           projectiles;
     std::vector<Weapon>               weapons;
+    std::vector<PowerUp>              powerUps;
 
+    std::vector<PowerUp>::iterator       powerUp_index;
     std::vector<Wall>::iterator       wall_index;
     std::vector<Projectile>::iterator projectile_index;
     std::vector<Weapon>::iterator     weapon_index;
@@ -18,6 +20,7 @@ class EntityPool {
       wall_index       = walls.begin();
       projectile_index = projectiles.begin();
       weapon_index     = weapons.begin();
+      powerUp_index = powerUps.begin();
     }
     Entity* createEntity(sf::Uint32 type) {
       Entity* ret;
@@ -45,6 +48,14 @@ class EntityPool {
           }
           ret = &*weapon_index;
           weapon_index++;
+          break;
+        case POWER_UP:
+          if(powerUp_index == powerUps.end()) {
+            powerUps.push_back(PowerUp());
+            powerUp_index = --powerUps.end();
+          }
+          ret = &*powerUp_index;
+          powerUp_index++;
           break;
         default:
           ret = nullptr;

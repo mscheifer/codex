@@ -17,7 +17,7 @@ sf::Vector2i mouseDiff = sf::Vector2i(0,0);
 } //end unnamed namespace
 
 gx::input::input()
-  : updated(false), jumped(false), stopped(false), fired1(false), fired2(false) {}
+  : updated(false), jumped(false), stopped(false), fired1(false), fired2(false), pickup(false) {}
 
 bool gx::input::getUpdated() {
   return this->updated;
@@ -33,6 +33,9 @@ bool gx::input::fire1() {
 }
 bool gx::input::fire2() {
   return this->fired2;
+}
+bool gx::input::pickUp() {
+  return this->pickup;
 }
 
 move_t gx::input::movePlayer() {
@@ -106,6 +109,7 @@ void gx::input::handle(sf::Window& window) {
   this->resized = false;
   this->fired1  = false;
   this->fired2  = false;
+  this->pickup = false;
   sf::Event event;
   while (window.pollEvent(event)) {
     this->handleEvent(event);
@@ -125,6 +129,9 @@ void gx::input::handleEvent(const sf::Event& event) {
     } else if(event.key.code == sf::Keyboard::Space) {
       this->updated = true;
       this->jumped = true;
+    } else if(event.key.code == sf::Keyboard::F){
+      this->updated = true;
+      this->pickup = true;
     }
   } else if(event.type == sf::Event::MouseButtonPressed) {
     this->updated = true;

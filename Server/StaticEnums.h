@@ -1,6 +1,7 @@
 #pragma once
 #define _USE_MATH_DEFINES
 #include <math.h>
+#include <string>
 
 //const int NUM_PLAYERS = 2; use the config file now
 
@@ -32,4 +33,12 @@ enum Game_State {MANOTAUR_WIN, CIVILIAN_WIN, PLAYING};
 //Networking enums
 enum Opcode {INIT,JOINID, CHAT, T1, T2, CGTA, SGTR, ERROR};
 
-enum Entity_Type {UNDEFINED, PROJECTILE, PLAYER, WEAPON, WALL};
+enum Entity_Type {UNDEFINED, PROJECTILE, PLAYER, WEAPON, WALL, POWER_UP};
+
+enum WeaponType{UNK=0, FIRE, FIST};
+
+const std::string WeaponNames[] = {
+  "UNKNOWN",
+  "STAFF OF FIRE",
+  "FIST"
+};

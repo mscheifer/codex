@@ -18,6 +18,7 @@ class input {
     bool   stopped;
     bool   fired1;
     bool   fired2;
+    bool   pickup;
     unsigned int width;
     unsigned int height;
     bool resized;
@@ -28,6 +29,7 @@ class input {
     bool       getStop();
     bool         fire1();
     bool         fire2();
+    bool        pickUp();
     move_t  movePlayer();
     vector3f turnPlayer();
 

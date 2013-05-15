@@ -148,6 +148,7 @@ ClientGameTimeAction gx::graphicsClient::handleInput() {
   action.facingDirection = dir;
   action.attackMelee = fire1();
   action.attackRange = fire2();
+  action.pickup = this->userInput.pickUp();
   return action;
 }
 

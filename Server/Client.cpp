@@ -63,6 +63,10 @@ void NetworkClient::receiveMessages() {
         //render WIN OR LOSE based on s.state
         //std::cout << pos.x << "," << pos.y << "," << pos.z << std::endl;
         sf::Listener::setPosition(pos.x, pos.y, pos.z);
+
+        //TODO not sure where to put this
+        if( s.players[id].pickupWeaponType != UNK )
+          std::cout << "can pick up weapon type " << WeaponNames[s.players[id].pickupWeaponType] << std::endl;
         break;
     }
   }
@@ -73,6 +77,7 @@ void NetworkClient::processInput() {
   if(this->gxClient.closed()) { //add running  in ClientGameTimeAction ?
     this->running = false;
   }
+  ConfigManager::log(action.toString()); 
   if (action.updated) {
     action.player_id = id;
     this->sendPacket = true; 
