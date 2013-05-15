@@ -42,7 +42,22 @@ void NetworkClient::receiveMessages() {
             entities.push_back(gentity);
           }
         }
-        for(auto entP = s.entities.begin(); entP != s.entities.end(); entP++) {
+        for(auto entP = s.walls.begin(); entP != s.walls.end(); entP++) {
+            auto gentity = toGentity(**entP);
+            gentity.type = 1;
+            entities.push_back(gentity);
+        }
+        for(auto entP = s.projectiles.begin(); entP != s.projectiles.end(); entP++) {
+            auto gentity = toGentity(**entP);
+            gentity.type = 1;
+            entities.push_back(gentity);
+        }
+        for(auto entP = s.powerups.begin(); entP != s.powerups.end(); entP++) {
+            auto gentity = toGentity(**entP);
+            gentity.type = 1;
+            entities.push_back(gentity);
+        }
+        for(auto entP = s.weapons.begin(); entP != s.weapons.end(); entP++) {
             auto gentity = toGentity(**entP);
             gentity.type = 1;
             entities.push_back(gentity);

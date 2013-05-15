@@ -56,13 +56,10 @@ void PowerUp::updateBounds(){
 
 void PowerUp::serialize(sf::Packet& packet) const
 {
-  packet << type;
-  position.serialize(packet);
-  direction.serialize(packet);
+  Entity::serialize(packet);
 }
 
 void PowerUp::deserialize(sf::Packet& packet)
 { 
-  position.deserialize(packet);
-  direction.deserialize(packet);
+  Entity::deserialize(packet);
 }
