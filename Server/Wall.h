@@ -11,6 +11,7 @@ public:
   void update(void);
   void addNewCenter(v3_t);
   void addNewCenters(std::vector<v3_t>&);
+  void setWallChangeTime(float t);
   void updateBounds();
   void updateBoundsSoft(); 
   void serialize(sf::Packet & packet ) const {
@@ -45,9 +46,12 @@ public:
 private:
   // A vector of POSSIBLE positions
   std::vector<v3_t> centerPositions;
+  float wallMoveTime;
+  sf::Clock wallMoveClock;
   unsigned int currentCenter;
   unsigned int width;
   unsigned int depth;
   unsigned int height;
+  length_t distanceLeft;
 };
 

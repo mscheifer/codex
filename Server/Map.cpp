@@ -79,6 +79,13 @@ void Map::initWalls(void)
     this->entities.push_back(rightWall);
   }
 
+  Wall *moveableWall = new Wall(width, depth, height, v3_t(0,0,20), facingNorth, this);
+  moveableWall->setWallChangeTime(1000.f);
+  moveableWall->addNewCenter(v3_t(0,0,5));
+  moveableWall->addNewCenter(v3_t(0,0,20));
+  moveableWall->addNewCenter(v3_t(0,10,20));
+  moveableWall->addNewCenter(v3_t(0,0,20));
+  this->entities.push_back(moveableWall);
   Wall * floor = new Wall(1000, 10, 1000, v3_t(0,0,-10), facingEast, this);
   this->entities.push_back(floor);
 

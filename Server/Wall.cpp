@@ -15,7 +15,8 @@ Wall::Wall(unsigned int w, unsigned int d, unsigned int h, v3_t sc, v3_t direct,
   position = sc;
   direction = direct;
   map = m;
-
+  wallMoveClock = sf::Clock();
+  wallMoveTime = 0;
   BoundingBox* b = new BoundingBox(BoundingObj::vec4_t(direct.x,direct.y,direct.z),
     BoundingObj::vec3_t(1,0,0),BoundingObj::vec3_t(0,1,0),BoundingObj::vec3_t(0,0,1),
     w/2.f,h/2.f,d/2.f);
@@ -34,10 +35,30 @@ Wall::~Wall(void)
   */
 void Wall::update()
 {
-  currentCenter++;
-  if( currentCenter == centerPositions.size() )
-    currentCenter = 0;
-  position = centerPositions[currentCenter];
+  if(centerPositions.size() < 2)
+    return;
+
+  if(distanceLeft > 0)
+  {
+    v3_t distanceTravelled = velocity * ConfigManager::serverTickLengthSec();
+	  position += distanceTravelled;
+    distanceLeft -= distanceTravelled.magnitude();
+    this->updateBounds();
+  } else if( wallMoveClock.getElapsedTime().asMilliseconds() < wallMoveTime ) {
+		  return;
+  } else {
+    wallMoveClock.restart();
+    currentCenter++;
+    if( currentCenter == centerPositions.size() )
+      currentCenter = 0;
+    v3_t temp = centerPositions[currentCenter]; 
+    v3_t targetVector = v3_t(temp.x - position.x, temp.y - position.y, temp.z - position.z);
+    distanceLeft = targetVector.magnitude();
+    targetVector.normalize();
+    targetVector.scale(5);
+    velocity = targetVector;
+    this->updateBounds();
+  }
 }
 
 void Wall::addNewCenter(v3_t center)
@@ -48,7 +69,7 @@ void Wall::addNewCenter(v3_t center)
 void Wall::addNewCenters(std::vector<v3_t>& centers)
 {
   for(unsigned i = 0; i < centers.size(); i++)
-    centerPositions.push_back(centers[i]);
+    this->addNewCenter(centers[i]);
 }
 
 void Wall::updateBounds(){
@@ -59,4 +80,9 @@ void Wall::updateBounds(){
 void Wall::updateBoundsSoft(){
   //update the bounding objects
   boundingObjs[0]->setCenter(BoundingObj::vec4_t(position.x, position.y, position.z));
+}
+
+void Wall::setWallChangeTime(float t)
+{
+  wallMoveTime = t;
 }
