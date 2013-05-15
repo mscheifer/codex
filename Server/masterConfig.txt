@@ -1,5 +1,5 @@
 log=0
 sound=0
 graphicsDebug=false
-players=2
+players=1
 serverTicksPerSec=30

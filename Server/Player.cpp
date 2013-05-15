@@ -220,7 +220,7 @@ void Player::handleCollisions(){
       restart = collideProjectile(*it);
       break;
     case POWER_UP:
-      ((PowerUp *)&it)->onCollision(this);
+      //((PowerUp *)&it)->onCollision(this);
       it++;
       break;
     default:
