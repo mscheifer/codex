@@ -150,6 +150,8 @@ void Player::handleSelfAction(ClientGameTimeAction a) {
   direction = v3_t(a.facingDirection.x, a.facingDirection.y, a.facingDirection.z);
 	updateBounds();
 
+  std::cout << a.pickup << std::endl;
+
   //try pick up
   if(a.pickup && pickup ){
     weapon[current_weapon_selection]->dropDown(position);

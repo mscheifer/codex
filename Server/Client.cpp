@@ -74,6 +74,7 @@ void NetworkClient::processInput() {
   if(this->gxClient.closed()) { //add running  in ClientGameTimeAction ?
     this->running = false;
   }
+  ConfigManager::log(action.toString()); 
   if (action.updated) {
     action.player_id = id;
     this->sendPacket = true; 

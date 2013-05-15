@@ -26,6 +26,7 @@ struct ClientGameTimeAction
     if (this->weapon1 != other.weapon1) return false; 
     if (this->weapon2 != other.weapon2) return false; 
     if (this->jump != other.jump) return false; 
+    if (this->pickup != other.pickup) return false;
     if (this->facingDirection != other.facingDirection) return false; 
     return true;
   }
@@ -35,7 +36,7 @@ struct ClientGameTimeAction
 
   void clear() {
     movement = NULL_DIR;
-    attackMelee = attackRange = weapon1 = weapon2 = jump = false;
+    attackMelee = attackRange = weapon1 = weapon2 = jump = pickup = false;
     facingDirection.x = facingDirection.z = 0;
     facingDirection.y = 0;
     updated = false;
@@ -45,7 +46,7 @@ struct ClientGameTimeAction
     player_id(-1), movement(NULL_DIR),
     attackMelee(false),attackRange(false),
     weapon1(false), weapon2(false),
-    jump(false), updated(false), facingDirection(), pickup(true) {};//TODO pickup should be flase
+    jump(false), updated(false), pickup(false), facingDirection() {};//TODO pickup should be flase
 
   void serialize(sf::Packet & packet) {
     packet << player_id;
@@ -55,6 +56,7 @@ struct ClientGameTimeAction
     packet << weapon1;
     packet << weapon2;
     packet << jump;
+    packet << pickup;
     facingDirection.serialize(packet);
   }
 
@@ -68,6 +70,7 @@ struct ClientGameTimeAction
     packet >> weapon1;
     packet >> weapon2;
     packet >> jump;
+    packet >> pickup;
     facingDirection.deserialize(packet);
   }
 
@@ -79,6 +82,7 @@ struct ClientGameTimeAction
       << "weapon1 " << weapon1 << std::endl
       << "weapon2 " << weapon2 << std::endl
       << "jump " << jump << std::endl
+      << "pickup " << pickup << std::endl
       << "facingDirection " << facingDirection.x << " "<< facingDirection.y << " " << facingDirection.z << std::endl; 
   }
 
@@ -91,6 +95,7 @@ struct ClientGameTimeAction
       << "weapon1 " << weapon1 << std::endl
       << "weapon2 " << weapon2 << std::endl
       << "jump " << jump << std::endl
+      << "pickup " << pickup << std::endl
       << "facingDirection " << facingDirection.x << " "<< facingDirection.y << " " << facingDirection.z << std::endl << std::endl; \
     return ss.str();
   }
