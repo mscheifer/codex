@@ -4,21 +4,6 @@
 #include "Game.h"
 
 namespace {
-/*
-  gx::graphicEntity toGentity(const Entity& ent) {            
-    auto pos = ent.getPosition();
-    auto dir = ent.getDirection();
-    gx::graphicEntity gentity;
-    gentity.position =  gx::vector4f(static_cast<gx::vector4f::elem_t>(pos.x),
-                                    static_cast<gx::vector4f::elem_t>(pos.y),
-                                    static_cast<gx::vector4f::elem_t>(pos.z));
-    gentity.direction = gx::vector3f(static_cast<gx::vector3f::elem_t>(dir.x),
-                                     static_cast<gx::vector3f::elem_t>(dir.y),
-                                     static_cast<gx::vector3f::elem_t>(dir.z));
-    gentity.type = 0;
-    return gentity;
-  }
-*/
 } //end nunnamed namespace
 
 void NetworkClient::receiveMessages() {
@@ -27,7 +12,6 @@ void NetworkClient::receiveMessages() {
   if (netRecv.receiveMessage(packet)) {
     ChatObject chatObj;
     sf::Uint32 packetType;
-    IdPacket newId(0);
     packet >> packetType;
     std::vector<Entity*> entities;
     switch (packetType) {
@@ -44,7 +28,7 @@ void NetworkClient::receiveMessages() {
           }
         }
         for(auto entP = s.entities.begin(); entP != s.entities.end(); entP++) {
-            entities.push_back(*entP);
+          entities.push_back(*entP);
         }
         auto pos = s.players[this->id].getPosition();
         gxClient.updatePosition(gx::vector4f(pos.x,pos.y,pos.z));

@@ -31,25 +31,23 @@ struct ServerGameTimeRespond
   //make sure to clear the packet's sizes
   void deserialize(sf::Packet & packet) {
     objPool->reset();
-	  entities.clear();
     players.clear();
     
-    sf::Uint32 size = 0;
+    sf::Uint32 size;
     packet >> size;
     for (unsigned int i=0; i < size; i++) {
       Player p = Player();
       p.deserialize(packet);
-      players.push_back(p);
+      this->players.push_back(p);
     }
-    entities.clear();
+    this->entities.clear();
     packet >> size;
     for(unsigned int i = 0; i < size; i++) {
       sf::Uint32 packet_type;
       packet >> packet_type;
       Entity* newEntity = objPool->createEntity(packet_type); 
-
       newEntity->deserialize(packet);
-      entities.push_back(newEntity);
+      this->entities.push_back(newEntity);
     }
   }
 };
