@@ -120,6 +120,8 @@ void Player::update(){
   acceleration = GRAVITY;
   velocity += acceleration * ConfigManager::serverTickLengthSec();
   position += velocity * ConfigManager::serverTickLengthSec();
+  health = (health+5 > maxHealth? maxHealth : health+5);
+  mana = (mana+5 > maxMana? maxMana : mana+5);
   updateBounds();
 }
 
