@@ -40,7 +40,7 @@ public:
     packet >> depth;
     packet >> height;
   }
-  Entity_Type getType() {
+  Entity_Type getType() const {
     return type;
   }
 private:

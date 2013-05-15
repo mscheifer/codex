@@ -20,7 +20,7 @@ public:
   void updateBounds();
   void updateBoundsSoft();
   void handleCollisions();
-  Entity_Type getType() {
+  Entity_Type getType() const {
     return type;
   }
   void serialize(sf::Packet & packet) const {

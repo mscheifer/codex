@@ -58,7 +58,7 @@ public:
   float getSpeed(){ return speed;}
   void setSpeed(float);
 
-  Entity_Type getType() {
+  Entity_Type getType() const {
     return type;
   }
 

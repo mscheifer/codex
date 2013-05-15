@@ -7,14 +7,16 @@
 #include "input.h"
 #include "ClientGameTimeAction.h" 
 
-namespace gx {
+class Entity;
 
+namespace gx {
+/*
 struct graphicEntity {
   vector4f position;
   vector3f direction;
   unsigned int type;
 };
-
+*/
 class graphicsClient {
     sf::Window window;
     GLenum     glewStatus;
@@ -51,7 +53,7 @@ class graphicsClient {
     ClientGameTimeAction handleInput();
     void draw();
     void updatePosition(vector4f);
-    void updateEntities(std::vector<graphicEntity>);
+    void updateEntities(std::vector<Entity*>);
 
     //input functions
     bool closed()        { return this->userInput.getStop(); }

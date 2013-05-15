@@ -4,6 +4,7 @@
 #include "Game.h"
 
 namespace {
+/*
   gx::graphicEntity toGentity(const Entity& ent) {            
     auto pos = ent.getPosition();
     auto dir = ent.getDirection();
@@ -17,6 +18,7 @@ namespace {
     gentity.type = 0;
     return gentity;
   }
+*/
 } //end nunnamed namespace
 
 void NetworkClient::receiveMessages() {
@@ -27,7 +29,7 @@ void NetworkClient::receiveMessages() {
     sf::Uint32 packetType;
     IdPacket newId(0);
     packet >> packetType;
-    std::vector<gx::graphicEntity> entities;
+    std::vector<Entity*> entities;
     switch (packetType) {
       case CHAT:
         chatObj.deserialize(packet);
@@ -37,31 +39,20 @@ void NetworkClient::receiveMessages() {
         this->s.deserialize(packet);
         for(auto playerP = s.players.begin(); playerP != s.players.end(); playerP++) {
           if(playerP->player_id != this->id) {
-            auto gentity = toGentity(*playerP);
-            gentity.type = 0;
-            entities.push_back(gentity);
+            //make sure the SGTR stays in scope
+            entities.push_back(&(*playerP));
           }
         }
         for(auto entP = s.entities.begin(); entP != s.entities.end(); entP++) {
-            auto gentity = toGentity(**entP);
-            gentity.type = 1;
-            entities.push_back(gentity);
+            entities.push_back(*entP);
         }
         auto pos = s.players[this->id].getPosition();
-        gxClient.updatePosition(gx::vector4f(
-          static_cast<gx::vector3f::elem_t>(pos.x),
-          static_cast<gx::vector3f::elem_t>(pos.y),
-          static_cast<gx::vector3f::elem_t>(pos.z)));
-        gx::graphicEntity gentity;
-        gentity.position  = gx::vector4f(0,0,0);
-        gentity.direction = gx::vector3f(0,1,0);
-        gentity.type = 4;
-        entities.push_back(gentity); //add skybox
+        gxClient.updatePosition(gx::vector4f(pos.x,pos.y,pos.z));
+        entities.push_back(&(this->skybox)); //add skybox
         gxClient.updateEntities(entities);
         //std::cout << "num entities received: " << entities.size() << std::endl;
         if (s.players[id].dead) { /*render death everytime ? */}
         //render WIN OR LOSE based on s.state
-        //std::cout << pos.x << "," << pos.y << "," << pos.z << std::endl;
         sf::Listener::setPosition(pos.x, pos.y, pos.z);
 
         //TODO not sure where to put this
