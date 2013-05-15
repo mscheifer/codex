@@ -15,6 +15,7 @@ public:
   void deserialize(sf::Packet& packet);
   void handleCollisions();
   void update();
+  void updateBounds(); //TODO this maybe should be in inherited (if differen sizes)
 
 protected:
   sf::Clock Respown_Counter;

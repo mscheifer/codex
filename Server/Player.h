@@ -85,7 +85,7 @@ public:
     packet << attacking;  //not neede on client ?
     //Weapon* weapon[MAXWEAPONS]; 
     // change the array to vector ?
-    packet << static_cast<uint32_t>(pickupWeaponType);
+    packet << static_cast<sf::Uint32>(pickupWeaponType);
     packet << current_weapon_selection; 
   }
 
@@ -113,7 +113,7 @@ public:
     packet >> attacking;  //not neede on client ?
     //Weapon* weapon[MAXWEAPONS]; 
     // change the array to vector ?
-    uint32_t pickupWeaponTypeUint32;
+    sf::Uint32 pickupWeaponTypeUint32;
     packet >> pickupWeaponTypeUint32;
     pickupWeaponType = static_cast<WeaponType>(pickupWeaponTypeUint32);
     packet >> current_weapon_selection; 

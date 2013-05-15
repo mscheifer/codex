@@ -6,10 +6,12 @@ PowerUp::PowerUp(v3_t p, Map* m)
   setPosition(p);
 	Respown_Counter = sf::Clock();
 	active = true;
-  m->addToQtree(this);
   BoundingBox* b = new BoundingBox(BoundingObj::vec4_t(0,0,0),BoundingObj::vec3_t(1,0,0),BoundingObj::vec3_t(0,1,0),BoundingObj::vec3_t(0,0,1),
   5,5,5);
-
+  b->setEntity(this);
+  //BoundingSphere* b = new BoundingSphere(gx::vector4(x,y,z),sphereRadius);
+  boundingObjs.push_back(b);
+  m->addToQtree(this);
 }
 
 void PowerUp::handleCollisions() {
@@ -44,6 +46,12 @@ void PowerUp::update() {
 	if ((Respown_Counter.getElapsedTime().asMilliseconds() >= Respown_Time) && active == false) {
 		active = true;
 	}
+  updateBounds();
+}
+
+void PowerUp::updateBounds(){
+  //update the bounding objects
+  boundingObjs[0]->setCenterOnTree(BoundingObj::vec4_t(position.x, position.y, position.z));
 }
 
 void PowerUp::serialize(sf::Packet& packet) const
