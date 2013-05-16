@@ -30,7 +30,6 @@ public:
   virtual WeaponType getWeaponType() const{ return wtype; }
   
   void serialize(sf::Packet & packet) const {
-	  packet << type;
     Entity::serialize(packet);
     //Range_Cool_Down_Time; 
     //Melee_Cool_Down_Time; 
@@ -52,7 +51,7 @@ public:
     //sf::Clock Range_Cool_Down_Counter;
     //sf::Clock Melee_Cool_Down_Counter;
   }
-  Entity_Type getType() {
+  Entity_Type getType() const {
     return type;
   }
 

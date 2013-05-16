@@ -17,6 +17,7 @@ int main() {
     NetworkClient client;
     client.doClient();
   }
+  while(true) {} //keep command line window open
   
   return 0;
 }

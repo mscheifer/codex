@@ -20,17 +20,16 @@ public:
   void updateBounds();
   void updateBoundsSoft();
   void handleCollisions();
-  Entity_Type getType() {
+  Entity_Type getType() const {
     return type;
   }
   void serialize(sf::Packet & packet) const {
-    packet << type;
     Entity::serialize(packet);
     //(*owner).serialize(packet);
   } 
   void deserialize( sf::Packet & packet ) {
     Entity::deserialize(packet);
-    //delete owner;
+    //delete owner; this segfaults
     //Player* owner = new Player();
     //(*owner).deserialize(packet);
   }

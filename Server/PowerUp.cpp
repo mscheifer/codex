@@ -4,6 +4,7 @@ PowerUp::PowerUp(v3_t p, Map* m)
 {
   map = m;
   setPosition(p);
+  setDirection(v3_t(0,1,0));
 	Respown_Counter = sf::Clock();
 	active = true;
   BoundingBox* b = new BoundingBox(BoundingObj::vec4_t(0,0,0),BoundingObj::vec3_t(1,0,0),BoundingObj::vec3_t(0,1,0),BoundingObj::vec3_t(0,0,1),
@@ -27,7 +28,7 @@ void PowerUp::handleCollisions() {
     Entity * e = it->first; 
 
     if(e->getType() == PLAYER) {
-       std::cout << "collided " << std::endl;
+      // std::cout << "collided " << std::endl;
       Player luckyGuy = *(Player*)e;
       luckyGuy.setHealth(luckyGuy.getHealth() + healthMutiplyer);
 	    luckyGuy.setSpeed(luckyGuy.getSpeed() + speedMutiplyer);
@@ -56,13 +57,10 @@ void PowerUp::updateBounds(){
 
 void PowerUp::serialize(sf::Packet& packet) const
 {
-  packet << type;
-  position.serialize(packet);
-  direction.serialize(packet);
+  Entity::serialize(packet);
 }
 
 void PowerUp::deserialize(sf::Packet& packet)
 { 
-  position.deserialize(packet);
-  direction.deserialize(packet);
+  Entity::deserialize(packet);
 }

@@ -3,6 +3,7 @@
 #include "oglUtil.h"
 #include "mesh.h"
 #include "loadCube.h"
+#include "Entity.h"
 
 namespace {
 const unsigned int defaultWindowWidth  = 800;
@@ -44,10 +45,12 @@ std::vector<gx::drawSet::vaoData_t> entitiesData() {
     //setup drawing data
   std::vector<gx::drawSet::vaoData_t> entitiesData;
   auto cubes = gx::loadCube();
+  auto skybox = gx::loadSkybox();
+  entitiesData.insert(entitiesData.end(),skybox.begin(),skybox.end());
   entitiesData.insert(entitiesData.end(),model_import2.begin(),model_import2.end());
-  //entitiesData.insert(entitiesData.end(),model_import.begin(),model_import.end());
   entitiesData.insert(entitiesData.end(),wallImport.begin(),wallImport.end());
   entitiesData.insert(entitiesData.end(),cubes.begin(),cubes.end());
+  entitiesData.insert(entitiesData.end(),model_import.begin(),model_import.end());
   return entitiesData;
 }
 //must call after window is initialized
@@ -178,11 +181,11 @@ void gx::graphicsClient::updatePosition(vector4f pos) {
   this->setCamera();
 }
 
-void gx::graphicsClient::updateEntities(std::vector<graphicEntity> data) {
+void gx::graphicsClient::updateEntities(std::vector<Entity*> data) {
   this->entities.reset();
 
   for(auto entityP = data.begin(); entityP != data.end(); ++entityP) {
-    const auto& entity = *entityP;
-    entities.addEntity(entity.position, entity.direction, entity.type);
+    const auto& entity = **entityP;
+    entities.addEntity(entity.getPosition(), entity.getDirection(), entity.getType());
   }
 }
