@@ -1,6 +1,4 @@
 #include "Player.h"
-#include "Projectile.h"
-
 
 const float Player::sphereRadius = 5.0f;
 
@@ -32,7 +30,7 @@ void Player::init(v3_t pos, int assigned_id, Map * m)
 	castDownCounter = sf::Clock();
 	map = m;
 	weapon[0] = new WeaponFist(position, this->map);
-	weapon[1] = new WeaponFire(position, this->map); //TODO add this to entities if we want it
+	weapon[1] = new WeaponFire(position, this->map); //TODO add this to entities if we want it to drop
 	current_weapon_selection = 0;
   
   generateBounds(position);

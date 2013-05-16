@@ -8,6 +8,3 @@ typedef gx::vector3<length_t> v3_t;
 
 const v3_t GRAVITY(0,0,-9.8f);
 const v3_t ZEROVEC(0,0,0);
-
-//Coordinate ThreeDMovement(Coordinate location, Direction direction, Velocity accelerationZ);
-//Position calculateDistanceInBetween( Coordinate x, Coordinate y);

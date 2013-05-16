@@ -6,13 +6,13 @@
 #include <algorithm>
 #include <string>
 #include "Entity.h"
-#include "Physics.h"
+#include "ClientGameTimeAction.h"
+
+#include "PowerUp.h"
+#include "Projectile.h"
 #include "Weapon.h"
 #include "WeaponFist.h"
 #include "WeaponFire.h"
-#include "ClientGameTimeAction.h"
-#include "boundingManager.h"
-#include "PowerUp.h"
 
 const int MOVESCALE = 3;
 const length_t AIRMOVESCALE = 1;

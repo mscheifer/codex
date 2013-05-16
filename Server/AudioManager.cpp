@@ -1,6 +1,4 @@
 #include "AudioManager.h"
-#include "ConfigManager.h"
-#include "util.h"
 
 sf::Music AudioManager::music;
 std::map<std::string, sf::SoundBuffer*> AudioManager::soundBuffers;

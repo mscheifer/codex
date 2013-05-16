@@ -72,7 +72,6 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="AsciUI.cpp" />
     <ClCompile Include="AudioManager.cpp" />
     <ClCompile Include="boundingBox.cpp" />
     <ClCompile Include="boundingManager.cpp" />
@@ -106,7 +105,6 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Map.cpp" />
     <ClCompile Include="NetworkServices.cpp" />
-    <ClCompile Include="Physics.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="PowerUp.cpp" />
     <ClCompile Include="Projectile.cpp" />
@@ -120,8 +118,6 @@
     <ClCompile Include="WeaponFist.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="3DCoordinate.h" />
-    <ClInclude Include="AsciUI.h" />
     <ClInclude Include="boundingBox.h" />
     <ClInclude Include="boundingManager.h" />
     <ClInclude Include="boundingObj.h" />
@@ -131,7 +127,6 @@
     <ClInclude Include="ConfigManager.h" />
     <ClInclude Include="ClientGameTimeAction.h" />
     <ClInclude Include="DeadlyEntity.h" />
-    <ClInclude Include="directionalVector.h" />
     <ClInclude Include="Entity.h" />
     <ClInclude Include="EntityPool.h" />
     <ClInclude Include="Game.h" />
