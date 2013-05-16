@@ -30,7 +30,6 @@ public:
   bool minotaur; //might be private
   int player_id;
   std::string name;
-  WeaponType pickupWeaponType;
   Player();
   Player(v3_t pos, int assigned_id, Map *);
   ~Player(void);
@@ -49,14 +48,14 @@ public:
   bool moveTowardDirection(move_t degree, bool jump); //handle movement input WADS jump
   void handleAction(ClientGameTimeAction a);
   
+  //getters and setters
   float getHealth() { return health; }
   void setHealth(float);
-
   float getMana() {return mana;}
   void setMana(float);
-
   float getSpeed(){ return speed;}
   void setSpeed(float);
+  WeaponType getPickupWeaponType() const{ return pickupWeaponType; }
 
   Entity_Type getType() {
     return type;
@@ -118,6 +117,8 @@ public:
 
 private:
   Weapon* pickup;
+  WeaponType pickupWeaponType;
+
   v3_t oldJumpVelocity; //the x,y velocity that should be applied
   float health;
   float maxHealth;

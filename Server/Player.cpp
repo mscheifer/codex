@@ -118,6 +118,8 @@ bool Player::moveTowardDirection(move_t inputDir, bool jump)
 }
 
 void Player::update(){
+  clearEvents();
+
   //pick up weapon stuff
   pickup = nullptr;
   pickupWeaponType = UNK;
@@ -275,7 +277,12 @@ bool Player::collideWall(std::pair<Entity*,BoundingObj::vec3_t>& p){
 }
 
 bool Player::collidePlayer(std::pair<Entity*,BoundingObj::vec3_t>& p){
-  position += p.second;
+  BoundingObj::vec3_t fixVec = p.second;
+  fixVec.scale(0.5f);
+  position += fixVec;
+  fixVec.negate();
+  p.first->setPosition( p.first->getPosition() + fixVec );
+  p.first->updateBounds();
   updateBounds();
   return true;
 }

@@ -35,7 +35,7 @@ public:
   
   //add this entity to the quadtree, should only be called in a constructor
   //of an entity
-  void addToQtree(Entity* e);
+  void addToQtree(Entity* e); 
   void removeFromQtree(Entity* e);
 
 private:

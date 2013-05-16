@@ -57,6 +57,8 @@ Projectile* Weapon::attackRange(v3_t dir , v3_t pos)
 
 	pj->setStrength(projectileStrength);
 	pj->setRange(projectileRange); //TODO not sure what this is @allen @alvin
+  pj->setFired(true);
+  pj->setFiredGuard(true);
 
 	return pj;
 }

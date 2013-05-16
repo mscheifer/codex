@@ -51,6 +51,7 @@ void NetworkClient::receiveMessages() {
             auto gentity = toGentity(**entP);
             gentity.type = 1;
             entities.push_back(gentity);
+            AudioManager::processEntitySound(**entP);
         }
         for(auto entP = s.powerups.begin(); entP != s.powerups.end(); entP++) {
             auto gentity = toGentity(**entP);
@@ -80,8 +81,8 @@ void NetworkClient::receiveMessages() {
         sf::Listener::setPosition(pos.x, pos.y, pos.z);
 
         //TODO not sure where to put this
-        if( s.players[id].pickupWeaponType != UNK )
-          std::cout << "can pick up weapon type " << WeaponNames[s.players[id].pickupWeaponType] << std::endl;
+        if( s.players[id].getPickupWeaponType() != UNK )
+          std::cout << "can pick up weapon type " << WeaponNames[s.players[id].getPickupWeaponType()] << std::endl;
         break;
     }
   }
@@ -144,7 +145,6 @@ void NetworkClient::doClient() {
   ConfigManager::setupLog("client");
   sf::Listener::setDirection(1.f, 0.f, 0.f);
   AudioManager::loadSounds();
-  AudioManager::playSound("m1",0,0,0);
   //AudioManager::playMusic("m1");
 
   std::cout << "Waiting for other players to join" << std::endl;
