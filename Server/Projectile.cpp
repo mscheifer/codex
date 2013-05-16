@@ -15,7 +15,6 @@ Projectile::~Projectile(void)
 }
 
 void Projectile::update(void) {
-  clearEvents();
   v3_t distanceTravelled = velocity * ConfigManager::serverTickLengthSec();
 	position += distanceTravelled;
   
@@ -67,7 +66,5 @@ void Projectile::handleCollisions() {
 }
 
 void Projectile::clearEvents(){
-  if(!firedGuard)
-    fired = false;
-  firedGuard = false;
+  fired = false;
 }

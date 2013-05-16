@@ -5,6 +5,9 @@
 #include "ServerGameTimeRespond.h"
 #include "ChatHandler.h"
 #include "EntityPool.h"
+#include "AudioManager.h"
+#include "Game.h"
+#include <iostream>
 
 class NetworkClient {
   ServerGameTimeRespond s;

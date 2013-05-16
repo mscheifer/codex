@@ -81,6 +81,7 @@ void NetworkServer::doServer() {
   while(true) {
     clock.restart();
     
+    game.clearEvents();
     // don't fuck with this order here
 
     //1. handle incoming packet

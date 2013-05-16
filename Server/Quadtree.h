@@ -48,7 +48,7 @@ public:
   //Return all objects that could collide with the given object
   std::vector<BoundingObj*>& retrieve(std::vector<BoundingObj*> & returnObjects, BoundingObj* pRect);
   
-  
+  /*
   static void test(){
     Rectangle worldBounds(BoundingObj::vec4_t(0,0,0),1000,1000);
     Quadtree q(0, worldBounds);
@@ -145,6 +145,6 @@ public:
     std::cout << l.size() << "==1 b3 cw: s1." << std::endl;
     
   }
-  
+  */
   
 };

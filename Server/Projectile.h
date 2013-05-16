@@ -7,7 +7,7 @@ public DeadlyEntity
 {
 public:
   static const Entity_Type type =PROJECTILE;
-  Projectile():fired(false),firedGuard(false) {/*TODO initialize */ }
+  Projectile():fired(false) {/*TODO initialize */ }
   Projectile(Map* m);
   ~Projectile(void);
   void update(void);
@@ -39,12 +39,9 @@ public:
 private:
   Player * owner;
   bool fired;
-  bool firedGuard; //because fired will get set to false the frame it spawns
 
 public:
   bool getFired() const{ return fired; }
   void setFired(bool f) { fired = f; }
-  bool getFiredGuard() const{ return firedGuard; }
-  void setFiredGuard(bool f){ firedGuard = f; }
 };
 

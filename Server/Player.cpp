@@ -118,7 +118,6 @@ bool Player::moveTowardDirection(move_t inputDir, bool jump)
 }
 
 void Player::update(){
-  clearEvents();
 
   //pick up weapon stuff
   pickup = nullptr;
@@ -154,8 +153,6 @@ void Player::handleSelfAction(ClientGameTimeAction a) {
 	moveTowardDirection(a.movement, a.jump);
   direction = v3_t(a.facingDirection.x, a.facingDirection.y, a.facingDirection.z);
 	updateBounds();
-
-  std::cout << a.pickup << std::endl;
 
   //try pick up
   if(a.pickup && pickup ){
