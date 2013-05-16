@@ -23,11 +23,11 @@ void Map::initPowerUps() {
 void Map::initWalls(void)
 {
   WeaponFire* w1 = new WeaponFire(v3_t(100,100,0), this);
-  w1->dropDown(v3_t(100,100,0));
+  w1->dropDown(v3_t(10,10,0));
   w1->setDirection(v3_t(0,1,0));
   entities.push_back(w1);
   WeaponFire* w2 = new WeaponFire(v3_t(120,120,0), this);
-  w2->dropDown(v3_t(120,120,0));
+  w2->dropDown(v3_t(10,-10,0));
   w2->setDirection(v3_t(0,1,0));
   entities.push_back(w2);
 
