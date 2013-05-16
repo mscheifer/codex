@@ -128,6 +128,6 @@ InitPacket Game::getInitPacket(int playerId) {
     }
   }
 
-  //TODO THIS SHOULD NEVER HAPPEn
+  std::cout << "ERROR init packet, player id not found" << std::endl;
   return InitPacket(player->player_id, player->getPosition(), player->getDirection());
 }

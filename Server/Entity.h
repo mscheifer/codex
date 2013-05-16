@@ -1,8 +1,8 @@
 #pragma once
 #include <vector>
-#include "ClientGameTimeAction.h"
 #include "Map.h"
 #include "boundingManager.h"
+#include "StaticEnums.h"
 
 class Entity {
 public:
@@ -22,9 +22,9 @@ public:
   Entity() { render = true; }
   virtual ~Entity() {}
   
-  virtual void handleAction(ClientGameTimeAction){} //what does this do?
   virtual void update(){}
   virtual void handleCollisions(){}
+  virtual void clearEvents(){}
   
   //update the bounding objects
   //the bounding objects should automatically update thier position on the tree

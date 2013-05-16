@@ -1,6 +1,8 @@
 #pragma once
-#include "Entity.h"
 #include <vector>
+#include <SFML/System.hpp>
+#include "Entity.h"
+
 class Wall : public Entity {
 public:
   static const float sphereRadius;
@@ -48,7 +50,7 @@ public:
   }
 private:
   // A vector of POSSIBLE positions
-  // why?
+  // why? --matt
   std::vector<v3_t> centerPositions;
   float wallMoveTime;
   sf::Clock wallMoveClock;

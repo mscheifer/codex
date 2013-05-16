@@ -94,6 +94,9 @@ gx::Mesh::MeshEntry::MeshEntry(const aiMesh* paiMesh, const matrix resize)
   : entitiesData(initEntitiesData(paiMesh,resize)),
     MaterialIndex(paiMesh->mMaterialIndex)                                 {
   std::cout << "mesh num bones: " << paiMesh->mNumBones << std::endl;
+  for(int i = 0; i < paiMesh->mNumBones; i++) {
+    std::cout << "  bone: " << paiMesh->mBones[i]->mName.C_Str() << std::endl;
+  }
 };
 
 gx::Mesh::MeshEntry::MeshEntry(MeshEntry&& other) noexcept
