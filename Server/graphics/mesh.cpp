@@ -23,6 +23,12 @@ void printNodes(aiNode* node, int level) {
     std::cout << "  ";
   }
   std::cout << node->mName.C_Str() << std::endl;
+  /*
+  for(int i = 0; i < level; i++) {
+    std::cout << "  ";
+  }
+  std::cout << node->mTransformation << std::endl;
+  */
   for(unsigned int i = 0; i < node->mNumChildren; i++) {
     printNodes(node->mChildren[i],level+1);
   }
@@ -107,6 +113,7 @@ bool gx::Mesh::LoadMesh(const std::string& Filename, length_t height)
 	      aiProcess_Triangulate	     |
 	      aiProcess_GenSmoothNormals |
 	      aiProcess_FlipUVs);
+  //print
   std::cout << "num animations: " << pScene->mNumAnimations   << std::endl;
   std::cout << "num meshes: "     << pScene->mNumMeshes       << std::endl;
   std::cout << "num textures: "   << pScene->mNumTextures     << std::endl;
@@ -118,7 +125,14 @@ bool gx::Mesh::LoadMesh(const std::string& Filename, length_t height)
     std::cout << "tics per second: " << pScene->mAnimations[i]->mTicksPerSecond << std::endl;
     std::cout << "meshes: " << pScene->mAnimations[i]->mNumMeshChannels << std::endl;
     std::cout << "bones: " << pScene->mAnimations[i]->mNumChannels << std::endl;
+    for(unsigned int j = 0; j < pScene->mAnimations[i]->mNumChannels; j++) {
+      std::cout << "  bonesName: " << pScene->mAnimations[i]->mChannels[j]->mNodeName.C_Str() << std::endl;
+      std::cout << "    position keys " << pScene->mAnimations[i]->mChannels[j]->mNumPositionKeys << std::endl;
+      std::cout << "    rotation keys " << pScene->mAnimations[i]->mChannels[j]->mNumRotationKeys << std::endl;
+      std::cout << "    scaling keys " << pScene->mAnimations[i]->mChannels[j]->mNumScalingKeys << std::endl;
+    }
   }
+  //end print
   if (pScene) {
       Ret = InitFromScene(pScene, Filename, height);
   } else {
