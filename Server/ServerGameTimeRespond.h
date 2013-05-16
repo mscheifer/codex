@@ -61,28 +61,28 @@ struct ServerGameTimeRespond
     this->walls.clear();
     packet >> size;
     for(unsigned int i = 0; i < size; i++) {
-      Wall* newWall = (Wall*) objPool->createEntity(static_cast<sf::Uint32>(WALL)); 
+      Wall* newWall = objPool->createWall(); 
       newWall->deserialize(packet);
       this->walls.push_back(newWall);
     }
     this->projectiles.clear();
     packet >> size;
     for(unsigned int i = 0; i < size; i++) {
-      Projectile* newProjectile = (Projectile*) objPool->createEntity(static_cast<sf::Uint32>(PROJECTILE)); 
+      Projectile* newProjectile = objPool->createProjectile(); 
       newProjectile->deserialize(packet);
       this->projectiles.push_back(newProjectile);
     }
     this->powerups.clear();
     packet >> size;
     for(unsigned int i = 0; i < size; i++) {
-      PowerUp* newPowerUp = (PowerUp*) objPool->createEntity(static_cast<sf::Uint32>(POWER_UP)); 
+      PowerUp* newPowerUp = objPool->createPowerUp(); 
       newPowerUp->deserialize(packet);
       this->powerups.push_back(newPowerUp);
     }
     this->weapons.clear();
     packet >> size;
     for(unsigned int i = 0; i < size; i++) {
-      Weapon* newWeapon = (Weapon*) objPool->createEntity(static_cast<sf::Uint32>(WEAPON)); 
+      Weapon* newWeapon = objPool->createWeapon(); 
       newWeapon->deserialize(packet);
       this->weapons.push_back(newWeapon);
     }

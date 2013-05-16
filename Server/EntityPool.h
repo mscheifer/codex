@@ -44,28 +44,17 @@ class EntityPool {
       weapons.reset();
       powerUps.reset();
     }
-    Entity* createEntity(sf::Uint32 type) {
-      Entity* ret;
-      switch (type) {
-        case WALL:
-          ret = walls.createEntity();
-          break;
-        case PROJECTILE:
-          ret = projectiles.createEntity();
-          break;
-        case WEAPON:
-          ret = weapons.createEntity();
-          break;
-        case POWER_UP:
-          ret = powerUps.createEntity();
-          break;
-        case PLAYER:
-          assert(false);
-          break;
-        default:
-          ret = nullptr;
-      }
-      return ret;
+    Wall* createWall() {
+      return walls.createEntity();
+    }
+    Projectile* createProjectile() {
+      return projectiles.createEntity();
+    }
+    Weapon* createWeapon() {
+      return weapons.createEntity();
+    }
+    PowerUp* createPowerUp() {
+      return powerUps.createEntity();
     }
 };
 #endif
