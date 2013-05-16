@@ -55,5 +55,5 @@ public:
     position.deserialize(packet);
     direction.deserialize(packet);
   }
-  virtual Entity_Type getType() { return type; }
+  virtual Entity_Type getType() const { return type; }
 };

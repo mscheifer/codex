@@ -16,12 +16,16 @@ class NetworkClient {
   bool sendPacket;
   bool running;
   EntityPool objPool;
+  Entity skybox; //this is kind of stupid but we'll do it for now
 
   void processInput();
   void receiveMessages();
 public:
   NetworkClient(): s(&objPool), action(), netRecv(), chat(), gxClient(), id(-1),
-                   sendPacket(false), running(true) {}
+                   sendPacket(false), running(true) {
+    skybox.setPosition(gx::vector3f(0,0,0));
+    skybox.setDirection(gx::vector3f(0,1,0));
+  }
   NetworkClient(const NetworkClient&);// = delete;
   NetworkClient& operator=(const NetworkClient&);// = delete;
   NetworkClient(NetworkClient&&);// = delete;

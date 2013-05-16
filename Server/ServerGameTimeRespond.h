@@ -50,40 +50,41 @@ struct ServerGameTimeRespond
   void deserialize(sf::Packet & packet) {
     objPool->reset();
     players.clear();
-    sf::Uint32 size = 0;
+    
+    sf::Uint32 size;
     packet >> size;
     for (unsigned int i=0; i < size; i++) {
       Player p = Player();
       p.deserialize(packet);
-      players.push_back(p);
+      this->players.push_back(p);
     }
-    walls.clear();
+    this->walls.clear();
     packet >> size;
     for(unsigned int i = 0; i < size; i++) {
-      Wall* newWall = (Wall*) objPool->createEntity(static_cast<sf::Uint32>(WALL)); 
+      Wall* newWall = objPool->createWall(); 
       newWall->deserialize(packet);
-      walls.push_back(newWall);
+      this->walls.push_back(newWall);
     }
-    projectiles.clear();
+    this->projectiles.clear();
     packet >> size;
     for(unsigned int i = 0; i < size; i++) {
-      Projectile* newProjectile = (Projectile*) objPool->createEntity(static_cast<sf::Uint32>(PROJECTILE)); 
+      Projectile* newProjectile = objPool->createProjectile(); 
       newProjectile->deserialize(packet);
-      projectiles.push_back(newProjectile);
+      this->projectiles.push_back(newProjectile);
     }
-    powerups.clear();
+    this->powerups.clear();
     packet >> size;
     for(unsigned int i = 0; i < size; i++) {
-      PowerUp* newPowerUp = (PowerUp*) objPool->createEntity(static_cast<sf::Uint32>(POWER_UP)); 
+      PowerUp* newPowerUp = objPool->createPowerUp(); 
       newPowerUp->deserialize(packet);
-      powerups.push_back(newPowerUp);
+      this->powerups.push_back(newPowerUp);
     }
-    weapons.clear();
+    this->weapons.clear();
     packet >> size;
     for(unsigned int i = 0; i < size; i++) {
-      Weapon* newWeapon = (Weapon*) objPool->createEntity(static_cast<sf::Uint32>(WEAPON)); 
+      Weapon* newWeapon = objPool->createWeapon(); 
       newWeapon->deserialize(packet);
-      weapons.push_back(newWeapon);
+      this->weapons.push_back(newWeapon);
     }
   }
 };

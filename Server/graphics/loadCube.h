@@ -88,7 +88,12 @@ std::vector<gx::drawSet::vaoData_t> loadCube() {
   ret.push_back(std::make_pair(indices,blueCubeAttribs));
   ret.push_back(std::make_pair(indices,redCubeAttribs));
 
-  //sky box and floor
+  return ret;
+}
+
+std::vector<gx::drawSet::vaoData_t> loadSkybox() {
+  std::vector<drawSet::vaoData_t> ret;
+  //sky box
   std::array<GLfloat,8*4> skyboxVtArr = {{ 1000.0f, 1000.0f, 500.0f, 1.0f,
 	                                        -1000.0f, 1000.0f, 500.0f, 1.0f,
                                           -1000.0f,-1000.0f, 500.0f, 1.0f,

@@ -32,7 +32,7 @@ class drawSet {
                   std::vector<uniform::block*>);
     void draw() const;
     void reset();
-    void addEntity(vector4f,vector3f,unsigned int);
+    void addEntity(vector3f,vector3f,unsigned int);
 };
 
 } //end namespace gx

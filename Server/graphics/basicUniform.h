@@ -22,7 +22,7 @@ namespace uniform {
   template<GLenum Type>
   class _locations : public basic {
     protected:
-	  std::map<GLuint,loc<Type>> locations;
+	  std::map<GLuint,const loc<Type>> locations;
       const std::string varName;
       _locations(std::string);
       void updateLoc(GLuint shader, const GLfloat*) const;

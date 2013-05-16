@@ -224,10 +224,7 @@ gx::matrix gx::scalingMatrix(matrix::elem_t x, matrix::elem_t y,
 }
 
 gx::matrix gx::uniformScaling(matrix::elem_t s) {
-  return matrix(s,0,0,0,
-                0,s,0,0,
-                0,0,s,0,
-                0,0,0,1);
+  return scalingMatrix(s,s,s);
 }
 
 gx::matrix gx::translation(matrix::elem_t x, matrix::elem_t y,
@@ -250,13 +247,13 @@ gx::matrix gx::toRightHandBasisFromYandUp(const vector3f& dirY, const vector3f& 
   if(dirX.magnitude() > 0) {
     dirX.scale(dirY.magnitude() / dirX.magnitude());
   } else {
-    dirX = vector3f(1,0,0);
+    dirX = vector3f(1,0,0) * dirY.magnitude();
   }
   vector3f dirZ = dirX * dirY;
   if(dirZ.magnitude() > 0) {
     dirZ.scale(dirY.magnitude() / dirZ.magnitude());
   } else {
-    dirZ = vector3f(0,0,1);
+    dirZ = vector3f(0,0,1) * dirY.magnitude();
   }
   //std::cout << "dirX: " << dirX << " dirY: " << dirY << " dirZ: " << dirZ << std::endl; 
   return toBasis(dirX,dirY,dirZ);

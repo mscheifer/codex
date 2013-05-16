@@ -51,7 +51,7 @@ public:
     //sf::Clock Range_Cool_Down_Counter;
     //sf::Clock Melee_Cool_Down_Counter;
   }
-  Entity_Type getType() {
+  Entity_Type getType() const {
     return type;
   }
 

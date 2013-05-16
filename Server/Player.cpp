@@ -224,32 +224,31 @@ void Player::handleCollisions(){
 
   for( auto it = entities.begin(); it != entities.end(); ){
     Entity * e = it->first;
-    switch( e->getType() ){
-    case WALL:
-      //std::cout << "wall" << std::endl;
-      restart = collideWall(*it);
-      break;
-    case PLAYER:
-      ////std::cout << "player" << std::endl;
-      restart = collidePlayer(*it);
-      break;
-    case PROJECTILE:
-      //std::cout << "proj" << std::endl;
-      restart = collideProjectile(*it);
-      break;
-    case WEAPON:
-      pickup = (Weapon*)e;
-      pickupWeaponType = ((Weapon*)e)->getWeaponType();
-      //std::cout << "pick me up plz" << std::endl;
-      //((Weapon*) e)->pickUp();
-      //TODO finish this
-      break;
-    case POWER_UP:
-      //((PowerUp *)&it)->onCollision(this);
-      it++;
-      break;
-    default:
-      break;
+    switch( e->getType() ) {
+      case WALL:
+        //std::cout << "wall" << std::endl;
+        restart = collideWall(*it);
+        break;
+      case PLAYER:
+        ////std::cout << "player" << std::endl;
+        restart = collidePlayer(*it);
+        break;
+      case PROJECTILE:
+        //std::cout << "proj" << std::endl;
+        restart = collideProjectile(*it);
+        break;
+      case WEAPON:
+        pickup = (Weapon*)e;
+        pickupWeaponType = ((Weapon*)e)->getWeaponType();
+        //std::cout << "pick me up plz" << std::endl;
+        //((Weapon*) e)->pickUp();
+        //TODO finish this
+        break;
+      case POWER_UP:
+        //((PowerUp *)&it)->onCollision(this);
+        break;
+      default:
+        break;
     }
 
     //different position now, needs to see what it hit
@@ -263,12 +262,11 @@ void Player::handleCollisions(){
       it++;
     }
 
-    if( restarts > 3 )
-      break;
+    if( restarts > 3 ) break;
   }
 }
 
-bool Player::collideWall(std::pair<Entity*,BoundingObj::vec3_t>& p){
+bool Player::collideWall(const std::pair<Entity*,BoundingObj::vec3_t>& p){
   BoundingObj::vec3_t fixShit = p.second;
   restartJump(fixShit.z);
   position += p.second;
@@ -276,7 +274,7 @@ bool Player::collideWall(std::pair<Entity*,BoundingObj::vec3_t>& p){
   return true;
 }
 
-bool Player::collidePlayer(std::pair<Entity*,BoundingObj::vec3_t>& p){
+bool Player::collidePlayer(const std::pair<Entity*,BoundingObj::vec3_t>& p){
   BoundingObj::vec3_t fixVec = p.second;
   fixVec.scale(0.5f);
   position += fixVec;
@@ -287,7 +285,7 @@ bool Player::collidePlayer(std::pair<Entity*,BoundingObj::vec3_t>& p){
   return true;
 }
 
-bool Player::collideProjectile(std::pair<Entity*,BoundingObj::vec3_t>& p){
+bool Player::collideProjectile(const std::pair<Entity*,BoundingObj::vec3_t>& p){
   if(((Projectile *)p.first)->getOwner() != this) {
     std::cout << "OW hit "<< player_id << std::endl;
     attackBy((Projectile *)p.first);
