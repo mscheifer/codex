@@ -96,6 +96,7 @@ gx::Mesh::MeshEntry::MeshEntry(const aiMesh* paiMesh, const matrix resize)
   std::cout << "mesh num bones: " << paiMesh->mNumBones << std::endl;
   for(int i = 0; i < paiMesh->mNumBones; i++) {
     std::cout << "  bone: " << paiMesh->mBones[i]->mName.C_Str();
+    std::cout << " name_length: " << paiMesh->mBones[i]->mName.length;
     std::cout << " numVerts: " << paiMesh->mBones[i]->mNumWeights << std::endl;
   }
 };

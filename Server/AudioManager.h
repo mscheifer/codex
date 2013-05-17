@@ -6,7 +6,7 @@
 #include "Wall.h"
 #include "Projectile.h"
 #include "Weapon.h"
-#include "Powerup.h"
+#include "PowerUp.h"
 #include <array>
 
 class AudioManager{

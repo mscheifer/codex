@@ -38,8 +38,8 @@ std::vector<gx::drawSet::vaoData_t> loadModel(const std::string& ModelPath) {
 
 std::vector<gx::drawSet::vaoData_t> entitiesData() {
 	// MODEL LOADING
-  std::vector<gx::drawSet::vaoData_t> model_import  = loadModel("models/weird_orange_thing.dae");
-  std::vector<gx::drawSet::vaoData_t> model_import2 = loadModel("models/Model_rotate.dae");
+  std::vector<gx::drawSet::vaoData_t> model_import  = loadModel("models/boblampclean.md5mesh");
+  std::vector<gx::drawSet::vaoData_t> model_import2 = loadModel("models/Test_Run.dae");
   std::vector<gx::drawSet::vaoData_t> wallImport    = loadModel("models/wall.dae");
 
     //setup drawing data
