@@ -11,9 +11,11 @@ int main() {
   std::string input = ""; 
   std::getline(std::cin, input);
   if( std::toupper(input[0]) == 'S' ) {
+    ConfigManager::setupLog("server");
     NetworkServer server;
     server.doServer();
   } else {
+    ConfigManager::setupLog("client");
     NetworkClient client;
     client.doClient();
   }

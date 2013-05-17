@@ -23,7 +23,6 @@ std::ofstream ConfigManager::logfile;
 void ConfigManager::log(std::string str, ConfigManager::LogLevels lev){
   if( StringToNumber<int>(ConfigManager::configMap["log"]) == 0 ) 
     return;
-
   time_t timer;
   timer = time(nullptr);
   struct tm * currTime = localtime(&timer);

@@ -38,12 +38,15 @@ std::vector<gx::drawSet::vaoData_t> loadModel(const std::string& ModelPath) {
 
 std::vector<gx::drawSet::vaoData_t> entitiesData() {
 	// MODEL LOADING
+  
   std::vector<gx::drawSet::vaoData_t> model_import  = loadModel("models/weird_orange_thing.dae");
+  
   std::vector<gx::drawSet::vaoData_t> model_import2 = loadModel("models/Model_rotate.dae");
   std::vector<gx::drawSet::vaoData_t> wallImport    = loadModel("models/wall.dae");
-
+  
     //setup drawing data
   std::vector<gx::drawSet::vaoData_t> entitiesData;
+ 
   auto cubes = gx::loadCube();
   auto skybox = gx::loadSkybox();
   entitiesData.insert(entitiesData.end(),skybox.begin(),skybox.end());
@@ -51,8 +54,9 @@ std::vector<gx::drawSet::vaoData_t> entitiesData() {
   entitiesData.insert(entitiesData.end(),wallImport.begin(),wallImport.end());
   entitiesData.insert(entitiesData.end(),cubes.begin(),cubes.end());
   entitiesData.insert(entitiesData.end(),model_import.begin(),model_import.end());
+   
   return entitiesData;
-}
+  }
 //must call after window is initialized
 GLenum initGlew() {
   //should glew be done per context?? if so, move to static method
@@ -94,7 +98,7 @@ std::vector<gx::uniform::block*> gx::graphicsClient::uniforms() {
   return ret;
 }
 // create the window
-//make sure this is above all opengl objects so that the desctructor is called
+//make sure this is above al opengl objects so that the desctructor is called
 //last so we have an opengl context for destructors
 gx::graphicsClient::graphicsClient():
     window(sf::VideoMode(defaultWindowWidth, defaultWindowHeight),
@@ -160,13 +164,62 @@ void gx::graphicsClient::draw() {
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
   gx::debugout << "glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT";
   gx::debugout << "| GL_STENCIL_BUFFER_BIT);" << gx::endl;
-
-    // draw...
+  
+  // draw...
 	entities.draw();
+  
+  //render sfml
+  glBindVertexArray(0);
+  debugout << "Bound 0 draw loop" << endl;
+  window.pushGLStates();
+  //glUseProgram(0);
+  glBindBuffer(GL_ARRAY_BUFFER, 0);
+  /* -----------------------move to a method ----------------------*/
+  sf::Text welcome;
+  sf::Font font;
+  font.loadFromFile("C:/Windows/Fonts/arial.ttf");
+  welcome.setFont(font);
+  welcome.setColor(sf::Color::Yellow);
+  welcome.setCharacterSize(36);
+  welcome.setString("You are alive");
+  welcome.setPosition(180,200);
+  sf::RectangleShape healthBar;
+  sf::RectangleShape healthLoss;
+  healthBar.setSize(sf::Vector2f(200,25));
+  //healthBar.setOutlineColor(sf::Color::Black);
+  //healthBar.setOutlineThickness(2);
+  healthBar.setFillColor(sf::Color::Green);
+  healthBar.setPosition(10,550);
+  healthLoss.setSize(sf::Vector2f(100,25));
+  //healthLoss.setOutlineColor(sf::Color::Black);
+  //healthLoss.setOutlineThickness(2);
+  healthLoss.setFillColor(sf::Color::Red);
+  healthLoss.setPosition(110,550);
+  sf::RectangleShape manaBar;
+  sf::RectangleShape manaLoss;
+  manaBar.setSize(sf::Vector2f(200,25));
+  //manaBar.setOutlineColor(sf::Color::Black);
+  //manaBar.setOutlineThickness(2);
+  manaBar.setFillColor(sf::Color::Color(100,149,237));
+  manaBar.setPosition(590,550);
+  manaLoss.setSize(sf::Vector2f(100,25));
+  //manaLoss.setOutlineColor(sf::Color::Black);
+  //manaLoss.setOutlineThickness(2);
+  manaLoss.setFillColor(sf::Color::Blue);
+  manaLoss.setPosition(690,550);
+  window.draw(healthBar);
+  window.draw(healthLoss);
+  window.draw(manaBar);
+  window.draw(manaLoss);
+  window.draw(welcome); //should I pass window in
+  /* ------------------------------*/
+  window.popGLStates(); 
+  //glDisableClientState(GL_VERTEX_ARRAY);
+  //glDisableClientState(GL_COLOR_ARRAY);
+  //glDisableClientState(GL_TEXTURE_COORD_ARRAY);
 
   // end the current frame (internally swaps the front and back buffers)
   window.display();
-
   //fps calc
   fpsFrames++;
   if(fpsClock.getElapsedTime().asSeconds() >= 1) {

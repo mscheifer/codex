@@ -6,6 +6,7 @@
 #include "light.h"
 #include "input.h"
 #include "ClientGameTimeAction.h" 
+#include <SFML/Graphics.hpp>
 
 class Entity;
 
@@ -18,7 +19,7 @@ struct graphicEntity {
 };
 */
 class graphicsClient {
-    sf::Window window;
+    sf::RenderWindow window;
     GLenum     glewStatus;
     input      userInput;
     //scene data

@@ -36,8 +36,8 @@ void NetworkServer::receiveMessages(int i) {
     }
   }
   if (packetReceived) {
-    ConfigManager::log("------------------------------------");
-    ConfigManager::log(pPacket.toString()); 
+    //ConfigManager::log("------------------------------------");
+    //ConfigManager::log(pPacket.toString()); 
     game.evaluate(pPacket);
 
     pPacket.clear();
@@ -45,7 +45,7 @@ void NetworkServer::receiveMessages(int i) {
 }
 
 void NetworkServer::doServer() {
-  ConfigManager::setupLog("server");
+  //ConfigManager::setupLog("server");
   ConfigManager::log("lol");
   sf::IpAddress myIpAddress = sf::IpAddress::getLocalAddress();
   std::cout << "Server Ip Address: " << myIpAddress.toString() << std::endl;
