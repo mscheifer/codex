@@ -1,12 +1,9 @@
 #include "AudioManager.h"
-#include "ConfigManager.h"
-#include "util.h"
 
 sf::Music AudioManager::music;
 std::map<std::string, sf::SoundBuffer*> AudioManager::soundBuffers;
 std::map<std::string, std::string> AudioManager::musics;
-std::array<sf::Sound, AudioManager::NUM_SOUNDS> AudioManager::sounds;
-std::array<int, AudioManager::NUM_SOUNDS> AudioManager::soundOwner;
+std::list<sf::Sound> AudioManager::sounds;
 bool AudioManager::useSound;
 
 void AudioManager::loadSound(std::string key, std::string sound){
@@ -34,42 +31,33 @@ void AudioManager::loadSounds(){
   musics["m1"] = "sounds/music.wav";
 }
 
-void AudioManager::playSound(std::string key, int id, float x, float y, float z, bool force){
+void AudioManager::playSound(std::string key, v3_t pos){
   if(useSound) 
     return;
 
   std::map<std::string,sf::SoundBuffer*>::iterator it;
   it = soundBuffers.find(key);
-  
-  sf::Time maxTime;
-  int maxInd = 0;
 
   if(it != soundBuffers.end()){ //element exists
-    for(int i = 0; i < sounds.size(); i++){ //find empty sound
-      if(sounds[i].getStatus() != sf::Sound::Playing){
-        sounds[i].setBuffer(*((*it).second));
-        sounds[i].setPosition(x,y,z);
-        sounds[i].play();
-        soundOwner[i] = id;
-        force = false; //we played it
+    auto sound = sounds.begin();
+    for(sound = sounds.begin(); sound != sounds.end(); sound++){
+      if(sound->getStatus() != sf::Sound::Playing){
+        playSoundHelper(sound,pos,it->second);
         break;
-      } else if (force){
-        sf::Time t = sounds[i].getPlayingOffset();
-        if(t > maxTime){
-          maxTime = t;
-          maxInd = i;
-        }
       }
     }
 
-    //force option
-    if(force){
-      sounds[maxInd].setBuffer(*((*it).second));
-      sounds[maxInd].setPosition(x,y,z);
-      sounds[maxInd].play();
-      soundOwner[maxInd] = id;
+    if(sound == sounds.end()){
+      sounds.push_front(sf::Sound());
+      playSoundHelper(sounds.begin(),pos,it->second);
     }
-  } 
+  }
+}
+
+void AudioManager::playSoundHelper(std::list<sf::Sound>::iterator index, v3_t pos, sf::SoundBuffer* sbuff){
+  index->setBuffer(*sbuff);
+  index->setPosition(pos.x,pos.y,pos.z);
+  index->play();
 }
 
 void AudioManager::playMusic(std::string musicN){
@@ -82,23 +70,15 @@ void AudioManager::playMusic(std::string musicN){
   }
 }
 
-void AudioManager::processEntitySound(Player& o){
+void AudioManager::processPlayerSound(Player& o){
+
 
 }
 
-void AudioManager::processEntitySound(Wall& o){
-}
-
-void AudioManager::processEntitySound(Projectile& o){
+void AudioManager::processProjectileSound(Projectile& o){
   if(o.getFired()){
-    playSound("f1",-1, o.getPosition().x, o.getPosition().y, o.getPosition().z);
+    playSound("f1", o.getPosition());
   }
-}
-
-void AudioManager::processEntitySound(PowerUp& o){
-}
-
-void AudioManager::processEntitySound(Weapon& o){
 }
 
 /*

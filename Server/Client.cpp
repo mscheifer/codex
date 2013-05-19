@@ -1,7 +1,4 @@
 #include "Client.h"
-#include <iostream>
-#include "AudioManager.h"
-#include "Game.h"
 
 namespace {
 } //end nunnamed namespace
@@ -32,7 +29,7 @@ void NetworkClient::receiveMessages() {
         }
         for(auto entP = s.projectiles.begin(); entP != s.projectiles.end(); entP++) {
           entities.push_back(*entP);
-            AudioManager::processEntitySound(**entP);
+            AudioManager::processProjectileSound(**entP);
         }
         for(auto entP = s.powerups.begin(); entP != s.powerups.end(); entP++) {
           entities.push_back(*entP);
@@ -49,6 +46,8 @@ void NetworkClient::receiveMessages() {
         if (s.players[id].dead) { /*render death everytime ? */}
         //render WIN OR LOSE based on s.state
         sf::Listener::setPosition(pos.x, pos.y, pos.z);
+        auto dir = s.players[this->id].getDirection();
+        sf::Listener::setDirection(dir.x, dir.y, dir.z);
 
         //TODO not sure where to put this
         if( s.players[id].getPickupWeaponType() != UNK )
@@ -111,7 +110,6 @@ void NetworkClient::processInput(){
 }
 */
 void NetworkClient::doClient() {
-  sf::Listener::setDirection(1.f, 0.f, 0.f);
   AudioManager::loadSounds();
   //AudioManager::playMusic("m1");
 

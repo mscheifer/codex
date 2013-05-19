@@ -6,13 +6,13 @@
 #include <algorithm>
 #include <string>
 #include "Entity.h"
-#include "Physics.h"
+#include "ClientGameTimeAction.h"
+
+#include "PowerUp.h"
+#include "Projectile.h"
 #include "Weapon.h"
 #include "WeaponFist.h"
 #include "WeaponFire.h"
-#include "ClientGameTimeAction.h"
-#include "boundingManager.h"
-#include "PowerUp.h"
 
 const int MOVESCALE = 3;
 const length_t AIRMOVESCALE = 1;
@@ -30,6 +30,7 @@ public:
   bool minotaur; //might be private
   int player_id;
   std::string name;
+
   Player();
   Player(v3_t pos, int assigned_id, Map *);
   ~Player(void);
@@ -38,7 +39,8 @@ public:
   void update();
   void handleCollisions();  
   void updateBounds();  
-  void updateBoundsSoft(); 
+  void updateBoundsSoft();
+  //void clearEvents();
   
   //helper functions for collisions
   bool collideWall(const std::pair<Entity*,BoundingObj::vec3_t>& p);

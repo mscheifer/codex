@@ -69,6 +69,7 @@ public:
   int join();
   void chooseMinotaur();
   InitPacket getInitPacket(int playerId);
+  void clearEvents();
 private:
 	Map world;
 };

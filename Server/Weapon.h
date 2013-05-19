@@ -60,7 +60,7 @@ protected:
 	int Melee_Cool_Down_Time; 
 	float projectileStrength;
   length_t projectileSpeed;
-	length_t projectileRange; //TODO @alvin @allen should this be here?, projectile has its own range
+	length_t projectileRange; 
 	float mpCost;
 	bool pickedUp;
 	sf::Clock Range_Cool_Down_Counter;
