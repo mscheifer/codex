@@ -9,6 +9,7 @@ void NetworkServer::combinePackets(ClientGameTimeAction & a) {
 	pPacket.weapon2 |= a.weapon2;
 	pPacket.jump |= a.jump;
   pPacket.pickup |= a.pickup;
+  pPacket.switchWeapon |= a.switchWeapon;
   pPacket.facingDirection = a.facingDirection;
 }
 
