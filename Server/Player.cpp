@@ -13,6 +13,7 @@ Player::Player(v3_t pos, int assigned_id, Map * m)
 
 void Player::init(v3_t pos, int assigned_id, Map * m)
 {
+  //std::cout<<"a player is created"<<std::endl;
   velocity = v3_t(0,0,0);
   acceleration = v3_t(0,0,0);
   oldJumpVelocity = v3_t(0,0,0);
@@ -128,8 +129,9 @@ void Player::update(){
   acceleration = GRAVITY;
   velocity += acceleration * ConfigManager::serverTickLengthSec();
   position += velocity * ConfigManager::serverTickLengthSec();
-  health = (health+5 > maxHealth? maxHealth : health+5);
-  mana = (mana+5 > maxMana? maxMana : mana+5);
+  //I disabled health regen and mana regen  (BOWEN)
+  //health = (health+5 > maxHealth? maxHealth : health+5);
+  //mana = (mana+5 > maxMana? maxMana : mana+5);
   updateBounds();
 }
 
@@ -155,7 +157,7 @@ void Player::handleSelfAction(ClientGameTimeAction a) {
   direction = v3_t(a.facingDirection.x, a.facingDirection.y, a.facingDirection.z);
 	updateBounds();
 
-  std::cout << a.pickup << std::endl;
+  //std::cout << a.pickup << std::endl;
 
   //try pick up
   if(a.pickup && pickup ){
@@ -296,6 +298,7 @@ bool Player::collideProjectile(const std::pair<Entity*,BoundingObj::vec3_t>& p){
 
 void Player::setHealth(float h) {
 	health = h;
+//  std::cout<<"health set to "<<health<<std::endl;
 }
 
 void Player::setSpeed(float s) {

@@ -44,6 +44,7 @@ void NetworkClient::receiveMessages() {
         gxClient.updatePosition(gx::vector4f(pos.x,pos.y,pos.z));
         entities.push_back(&(this->skybox)); //add skybox
         gxClient.updateEntities(entities);
+        gxClient.updateHUD(s.players[id]);
         //std::cout << "num entities received: " << entities.size() << std::endl;
         if (s.players[id].dead) { /*render death everytime ? */}
         //render WIN OR LOSE based on s.state

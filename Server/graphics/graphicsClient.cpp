@@ -113,7 +113,7 @@ gx::graphicsClient::graphicsClient():
     playerStartDirection(0.0, 1.0,0.0),//change to result of init packet
     playerStartRight(playerStartDirection.y,playerStartDirection.x,playerStartDirection.z),
     playerPosition(0.0, 0.0, 0.0),//change to the result of init packet
-     fpsClock(), fpsFrames(0)                 {
+     fpsClock(), fpsFrames(0) , Hud()                {
   this->window.setVerticalSyncEnabled(false);
   this->window.setMouseCursorVisible(false);
   if(!this->window.setActive()) {
@@ -168,50 +168,14 @@ void gx::graphicsClient::draw() {
   // draw...
 	entities.draw();
   
-  //render sfml
+  //render sfml please don't comment or uncomment anything from the following block
   glBindVertexArray(0);
   debugout << "Bound 0 draw loop" << endl;
   window.pushGLStates();
   //glUseProgram(0);
   glBindBuffer(GL_ARRAY_BUFFER, 0);
   /* -----------------------move to a method ----------------------*/
-  sf::Text welcome;
-  sf::Font font;
-  font.loadFromFile("C:/Windows/Fonts/arial.ttf");
-  welcome.setFont(font);
-  welcome.setColor(sf::Color::Yellow);
-  welcome.setCharacterSize(36);
-  welcome.setString("You are alive");
-  welcome.setPosition(180,200);
-  sf::RectangleShape healthBar;
-  sf::RectangleShape healthLoss;
-  healthBar.setSize(sf::Vector2f(200,25));
-  //healthBar.setOutlineColor(sf::Color::Black);
-  //healthBar.setOutlineThickness(2);
-  healthBar.setFillColor(sf::Color::Green);
-  healthBar.setPosition(10,550);
-  healthLoss.setSize(sf::Vector2f(100,25));
-  //healthLoss.setOutlineColor(sf::Color::Black);
-  //healthLoss.setOutlineThickness(2);
-  healthLoss.setFillColor(sf::Color::Red);
-  healthLoss.setPosition(110,550);
-  sf::RectangleShape manaBar;
-  sf::RectangleShape manaLoss;
-  manaBar.setSize(sf::Vector2f(200,25));
-  //manaBar.setOutlineColor(sf::Color::Black);
-  //manaBar.setOutlineThickness(2);
-  manaBar.setFillColor(sf::Color::Color(100,149,237));
-  manaBar.setPosition(590,550);
-  manaLoss.setSize(sf::Vector2f(100,25));
-  //manaLoss.setOutlineColor(sf::Color::Black);
-  //manaLoss.setOutlineThickness(2);
-  manaLoss.setFillColor(sf::Color::Blue);
-  manaLoss.setPosition(690,550);
-  window.draw(healthBar);
-  window.draw(healthLoss);
-  window.draw(manaBar);
-  window.draw(manaLoss);
-  window.draw(welcome); //should I pass window in
+  Hud.draw(window); 
   /* ------------------------------*/
   window.popGLStates(); 
   //glDisableClientState(GL_VERTEX_ARRAY);
@@ -241,4 +205,8 @@ void gx::graphicsClient::updateEntities(std::vector<Entity*> data) {
     const auto& entity = **entityP;
     entities.addEntity(entity.getPosition(), entity.getDirection(), entity.getType());
   }
+}
+
+void gx::graphicsClient::updateHUD(Player & player) {
+  this->Hud.updateHUD(player);
 }

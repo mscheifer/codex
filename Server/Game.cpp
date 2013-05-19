@@ -67,9 +67,14 @@ ServerGameTimeRespond Game::prepResponse() {
 	s.walls.clear();
 	s.powerups.clear();
   s.players.clear();
-	std::vector<Player*> currentPlayers =  world.getPlayers();
+	std::vector<Player*>  currentPlayers =  world.getPlayers();
 	std::vector<Entity*> currentEntities = world.getEntity();
 	for( unsigned int i = 0; i < currentPlayers.size(); i++ ) {
+     //for testing
+    std::cout<<"i is "<<i<<std::endl;
+     if (currentPlayers[i]->getHealth() > 0) {
+       (currentPlayers[i])->setHealth(currentPlayers[i]->getHealth()-1);
+     } else  (currentPlayers[i])->setHealth(100);
 		 s.players.push_back(*currentPlayers[i]); //add the player to the return struct
 	}
 
