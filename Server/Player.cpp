@@ -304,3 +304,56 @@ void Player::setMana(float m) {
 	mana = m;
 }
 
+void Player::serialize(sf::Packet& packet) const {
+    Entity::serialize(packet);
+    packet << this->player_id;
+    //acceleration.serialize(packet);
+    //velocity.serialize(packet);
+    //oldJumpVelocity.serialize(packet);
+    packet << dead; 
+    packet << minotaur; //might be private
+    packet << name;
+    packet << health;
+    packet << maxHealth;
+    packet << mana;
+    packet << maxMana;
+    packet << defense;
+    packet << speed;
+    packet << castDownTime; //not needed on client ?
+    //sf::Clock castDownCounter;
+    packet << jumpCount; // not needed on client ?
+    packet << canJump; //not needed on client ?
+    packet << attacking;  //not neede on client ?
+    //Weapon* weapon[MAXWEAPONS]; 
+    // change the array to vector ?
+    packet << static_cast<sf::Uint32>(pickupWeaponType);
+    packet << current_weapon_selection; 
+  }
+
+  void Player::deserialize(sf::Packet& packet) {
+    Entity::deserialize(packet);
+    packet >> this->player_id;
+    //acceleration.deserialize(packet);
+    //velocity.deserialize(packet);
+    //oldJumpVelocity.deserialize(packet);
+    packet >>dead; 
+    packet >>minotaur; //might be private
+    packet >> name;
+    packet >> health;
+    packet >> maxHealth;
+    packet >> mana;
+    packet >> maxMana;
+    packet >> defense;
+    packet >> speed;
+    packet >> castDownTime; //not needed on client ?
+    //sf::Clock castDownCounter;
+    packet >> jumpCount; // not needed on client ?
+    packet >> canJump; //not needed on client ?
+    packet >> attacking;  //not neede on client ?
+    //Weapon* weapon[MAXWEAPONS]; 
+    // change the array to vector ?
+    sf::Uint32 pickupWeaponTypeUint32;
+    packet >> pickupWeaponTypeUint32;
+    pickupWeaponType = static_cast<WeaponType>(pickupWeaponTypeUint32);
+    packet >> current_weapon_selection; 
+  }

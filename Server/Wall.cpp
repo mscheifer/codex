@@ -86,3 +86,33 @@ void Wall::setWallChangeTime(float t)
 {
   wallMoveTime = t;
 }
+
+  void Wall::serialize(sf::Packet & packet ) const {
+    Entity::serialize(packet);
+    /*
+    packet << static_cast<sf::Uint32>(centerPositions.size());
+    for (auto it=centerPositions.begin(); it!=centerPositions.end(); it++)
+      (*it).serialize(packet);
+    packet << currentCenter;
+    packet << width;
+    packet << depth;
+    packet << height;
+    */
+  } 
+  void Wall::deserialize(sf::Packet & packet ) {
+    Entity::deserialize(packet);
+    /*
+    sf::Uint32 size;
+    packet >> size;
+    centerPositions.clear();
+    for (auto i = 0u; i < size; i++) {
+       v3_t v;
+       v.deserialize(packet);
+       centerPositions.push_back(v);
+    }
+    packet >> currentCenter;
+    packet >> width;
+    packet >> depth;
+    packet >> height;
+    */
+  }

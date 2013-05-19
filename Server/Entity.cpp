@@ -46,3 +46,14 @@ std::vector<std::pair<Entity*,BoundingObj::vec3_t>> Entity::detectCollision(){
 
   return res;
 }
+  void Entity::serialize(sf::Packet& packet) const
+  {
+    position.serialize(packet);
+    direction.serialize(packet);
+  }
+
+  void Entity::deserialize(sf::Packet& packet)
+  {    
+    position.deserialize(packet);
+    direction.deserialize(packet);
+  }

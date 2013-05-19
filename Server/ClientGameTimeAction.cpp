@@ -24,6 +24,32 @@ void ClientGameTimeAction::clear() {
   facingDirection.y = 0;
   updated = false;
 }
+  void ClientGameTimeAction::serialize(sf::Packet & packet) const {
+    packet << player_id;
+    packet << static_cast<sf::Int32>(movement);
+    packet << attackMelee;
+	  packet << attackRange;
+    packet << weapon1;
+    packet << weapon2;
+    packet << jump;
+    packet << pickup;
+    facingDirection.serialize(packet);
+  }
+
+  void ClientGameTimeAction::deserialize(sf::Packet & packet) {
+    packet >> player_id;
+    sf::Int32 movementInt = 0;
+    packet >> movementInt;
+    movement = static_cast<move_t>(movementInt);
+    packet >> attackMelee;
+	  packet >> attackRange;
+    packet >> weapon1;
+    packet >> weapon2;
+    packet >> jump;
+    packet >> pickup;
+    facingDirection.deserialize(packet);
+  }
+
 
 void ClientGameTimeAction::print() {
   std::cout << "id " << player_id << std::endl

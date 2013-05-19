@@ -80,7 +80,30 @@ bool Weapon::dropDown(v3_t dropPosition){
   pickedUp = false;
   map->addToQtree(this);
   return true;
-}
+} 
+void Weapon::serialize(sf::Packet & packet) const {
+    Entity::serialize(packet);
+    //Range_Cool_Down_Time; 
+    //Melee_Cool_Down_Time; 
+    //float projectileStrength;
+    //length_t projectileRange; 
+    packet << mpCost;
+    packet << pickedUp;
+    //sf::Clock Range_Cool_Down_Counter;
+    //sf::Clock Melee_Cool_Down_Counter;
+  }
+  void Weapon::deserialize(sf::Packet & packet) {
+	  Entity::deserialize(packet);
+    //int Range_Cool_Down_Time; 
+    //int Melee_Cool_Down_Time; 
+    //float projectileStrength;
+    //length_t projectileRange; 
+    packet >> mpCost;
+    packet >> pickedUp;
+    //sf::Clock Range_Cool_Down_Counter;
+    //sf::Clock Melee_Cool_Down_Counter;
+  }
+
 
 //
 //void Weapon::useWeapon( bool range_attack){
