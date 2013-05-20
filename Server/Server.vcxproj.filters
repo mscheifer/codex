@@ -159,13 +159,13 @@
     <ClCompile Include="graphics\uniformLocation.cpp">
       <Filter>Source Files\graphics</Filter>
     </ClCompile>
-    <ClCompile Include="AsciUI.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="ClientGameTimeAction.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="HUD.cpp">
+      <Filter>Source Files\graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="lobby.cpp">
       <Filter>Source Files\graphics</Filter>
     </ClCompile>
   </ItemGroup>
@@ -318,6 +318,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="HUD.h">
+      <Filter>Header Files\graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="lobby.h">
       <Filter>Header Files\graphics</Filter>
     </ClInclude>
   </ItemGroup>

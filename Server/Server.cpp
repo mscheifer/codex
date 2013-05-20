@@ -66,6 +66,21 @@ void NetworkServer::doServer() {
   }
   //choose minotaur
   game.chooseMinotaur();
+  
+  //Wait for players to start
+  int connectionCount = 0;
+  while (connectionCount < ConfigManager::numPlayers()) {
+    for(unsigned int i = 0; i < server.size(); i++){
+      sf::Packet packet;
+      if (this->server.receiveMessage(packet,i)) {
+        sf::Uint32 packetType;
+        packet >> packetType;
+        if (packetType == INIT) {
+            connectionCount++;
+        }
+      }
+    }
+  }
 
   //send init packet to the players
   for(unsigned int i = 0; i < server.size(); i++){

@@ -113,9 +113,18 @@ void NetworkClient::doClient() {
   AudioManager::loadSounds();
   //AudioManager::playMusic("m1");
 
-  std::cout << "Waiting for other players to join" << std::endl;
+  //std::cout << "Waiting for other players to join" << std::endl;
+  //TODO refactor the menu logic 
+  bool joined = false;
   while(true) {
 	  sf::Packet initPacket;
+    this->gxClient.drawLobby();
+    if (joined && this->gxClient.gameStart()) {
+      initPacket << static_cast<sf::Uint32>(INIT); 
+      netRecv.sendMessage(initPacket);
+      joined =false; //only send packet once
+    }
+    initPacket.clear();
     if (netRecv.receiveMessage(initPacket)) {
       std::cout << "received message" << std::endl;
       sf::Uint32 packetType;
@@ -126,12 +135,14 @@ void NetworkClient::doClient() {
         this->id = newId.id;
         std::cout << "USERID: " << this->id << std::endl;
         this->action.player_id = id;
+        joined = true;
       } else if (packetType == INIT) {
          //TODO: init the position
         break;
       }
 	  }
   }
+  this->gxClient.disableCursor();
   std::cout << "game started" << std::endl;
   //  main run loop
   //for(int i = 0; i < 4; i++) {

@@ -115,7 +115,7 @@ gx::graphicsClient::graphicsClient():
     playerPosition(0.0, 0.0, 0.0),//change to the result of init packet
      fpsClock(), fpsFrames(0) , Hud()                {
   this->window.setVerticalSyncEnabled(false);
-  this->window.setMouseCursorVisible(false);
+  this->window.setMouseCursorVisible(true);
   if(!this->window.setActive()) {
     std::cout << "error activating window" << std::endl;
     exit(1);
@@ -210,4 +210,21 @@ void gx::graphicsClient::updateEntities(std::vector<Entity*> data) {
 
 void gx::graphicsClient::updateHUD(Player & player) {
   this->Hud.updateHUD(player);
+}
+
+void gx::graphicsClient::drawLobby() {
+  glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
+  glBindVertexArray(0);
+  window.pushGLStates();
+  glBindBuffer(GL_ARRAY_BUFFER, 0);
+  this->Lobby.drawLobby(window);
+  window.popGLStates(); 
+  window.display();
+}
+void gx::graphicsClient::disableCursor() {
+  this->window.setMouseCursorVisible(false);
+}
+
+bool gx::graphicsClient::gameStart() const {
+  return (this->Lobby).getStart();
 }
