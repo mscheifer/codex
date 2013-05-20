@@ -24,7 +24,9 @@ public:
   static const length_t JUMPSPEED;// = 2;//ConfigManager::playerJumpSpeed();
   static const int MAXJUMP;// = 2;//ConfigManager::playerMaxJump();
 
-  static const float sphereRadius;
+  static const float playerWidth;
+  static const float playerHeight;
+  static const float playerDepth;
   static const Entity_Type type = PLAYER;
   bool dead; //might be private. should be determined in handleAction
   bool minotaur; //might be private

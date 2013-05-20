@@ -34,8 +34,8 @@ void Map::initWalls(void)
   v3_t facingEast(1,0,0);
   v3_t facingNorth(0,1,0);
   int width = 10;
-  int height = 4; 
-  int depth = 1;
+  int height = 2; 
+  int depth = 4;
 
   int wallX = 5;
   int wallY = 5;
@@ -47,7 +47,7 @@ void Map::initWalls(void)
   int startingXNeg;
   int startingY;
   int startingYNeg;
-  int startingZ = height/2;
+  int startingZ = depth/2;
 
   // Create the top and bottom perimeter from left to right.
   for( i = 0,
@@ -86,7 +86,7 @@ void Map::initWalls(void)
   moveableWall->addNewCenter(v3_t(0,10,20));
   moveableWall->addNewCenter(v3_t(0,0,20));
   this->entities.push_back(moveableWall);
-  Wall * floor = new Wall(1000, 10, 1000, v3_t(0,0,-10), facingEast, this);
+  Wall * floor = new Wall(1000, 10, 1000, v3_t(0,0,-5), facingEast, this);
   this->entities.push_back(floor);
 
   return; // REMOVE THIS TO KILL GRAPHICS

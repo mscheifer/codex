@@ -40,7 +40,7 @@ public:
     updateOnTree();
   }
   //virtual void rotate(){} TODO
-
+  virtual std::string toString();
   virtual bool isRay() const{return false;}
   virtual bool isSphere() const{return false;}
   virtual bool isBox() const{return false;}

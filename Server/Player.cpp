@@ -1,6 +1,9 @@
 #include "Player.h"
 
-const float Player::sphereRadius = 5.0f;
+const float Player::playerWidth = 1.0f;
+const float Player::playerHeight = 1.0f;
+const float Player::playerDepth = 3.0f;
+
 const length_t Player::MOVESCALE = ConfigManager::playerMovescale();
 const length_t Player::AIRMOVESCALE = ConfigManager::playerAirMovescale();
 const length_t Player::JUMPSPEED = ConfigManager::playerJumpSpeed();
@@ -36,7 +39,7 @@ void Player::init(v3_t pos, int assigned_id, Map * m)
 	map = m;
 	weapon[0] = new WeaponFist(position, this->map);
 	weapon[1] = new WeaponFire(position, this->map); //TODO add this to entities if we want it to drop
-	current_weapon_selection = 0;
+	current_weapon_selection = 1;
   
   generateBounds(position);
   m->addToQtree(this);
@@ -47,7 +50,7 @@ void Player::generateBounds(v3_t pos){
   //BoundingSphere* b = new BoundingSphere(gx::vector4(x,y,z),sphereRadius);
   BoundingBox* b = new BoundingBox(BoundingObj::vec4_t(pos.x,pos.y,pos.z),
     BoundingObj::vec3_t(1,0,0),BoundingObj::vec3_t(0,1,0),BoundingObj::vec3_t(0,0,1),
-    sphereRadius,sphereRadius,sphereRadius);
+    playerWidth,playerHeight,playerDepth);
   b->setEntity(this);
   boundingObjs.push_back(b);
 }
@@ -119,11 +122,8 @@ bool Player::moveTowardDirection(move_t inputDir, bool jump)
   else
     movementDirection.scale(speed * MOVESCALE);
 
-  
   movementDirection = correctMovement(movementDirection, true);
-
   position += movementDirection;
-
 	return true;
 }
 
@@ -132,7 +132,6 @@ v3_t Player::correctMovement(v3_t movementDirection, bool slide){
   std::vector<RayCollision> colls = detectCollision(&movementRay);
   bool restart = false;
   int restarts = 0;
-
   for(auto coll = colls.begin(); coll != colls.end(); ){
     Entity * e = coll->e;
     v3_t acceptedMove = movementRay.getDirection();
@@ -218,7 +217,10 @@ void Player::update(){
   //update movement
   acceleration = getGravity();
   velocity += acceleration * ConfigManager::serverTickLengthSec();
-  position += velocity * ConfigManager::serverTickLengthSec();
+  v3_t attemptMove = velocity * ConfigManager::serverTickLengthSec();
+  position += correctMovement( attemptMove, false );
+  //position += velocity * ConfigManager::serverTickLengthSec();
+  
   //I disabled health regen and mana regen  (BOWEN)
   //health = (health+5 > maxHealth? maxHealth : health+5);
   //mana = (mana+5 > maxMana? maxMana : mana+5);
@@ -258,6 +260,10 @@ void Player::handleSelfAction(ClientGameTimeAction a) {
 	if(a.attackRange || a.attackMelee) {
 		attack(a);
 	}
+
+  if(a.switchWeapon){
+    current_weapon_selection = ++current_weapon_selection % MAXWEAPONS;
+  }
 }
 
 void Player::handleOtherAction( ClientGameTimeAction) {
@@ -274,7 +280,8 @@ void Player::attack( ClientGameTimeAction a) {
 		}
 		mana -= currentWeapon->getMpCost();
 		Projectile* proj = currentWeapon->attackRange(direction, position);
-    proj->setOwner(this);
+    if(proj)
+      proj->setOwner(this);
 	}
 	else if(a.attackMelee){
 		if( !currentWeapon->canUseWeapon(false)){

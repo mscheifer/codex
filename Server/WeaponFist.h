@@ -9,7 +9,7 @@ public:
   WeaponFist(v3_t, Map*);
   ~WeaponFist(void);
   bool attackMelee();
-  Projectile* attackRange();
+  Projectile* attackRange(v3_t dir, v3_t pos);
   //bool pickUp();
   //bool dropDown(v3_t dropPosition);
 

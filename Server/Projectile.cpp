@@ -62,7 +62,6 @@ void Projectile::handleCollisions() {
        map->destroyProjectile(this);
     }
   }
-
 }
 
 void Projectile::clearEvents(){

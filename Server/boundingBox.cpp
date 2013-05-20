@@ -123,3 +123,11 @@ BoundingBox BoundingBox::getAABB() const{
                       (maxY-minY)/2,
                       (maxZ-minZ)/2);
 }
+
+std::string BoundingBox::toString(){
+  std::stringstream ss;
+  ss << BoundingObj::toString();
+  ss << "axis x " << ax << " axis y " << ay << " axis z " << az << std::endl;
+  ss << "hw " << hw << " hh " << hh << " hd " << hd << std::endl;
+  return ss.str();
+}

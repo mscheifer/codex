@@ -29,7 +29,7 @@ std::vector<std::pair<Entity*,BoundingObj::vec3_t>> Entity::detectCollision(){
         }
       }
       if(flag)
-        break;
+        continue;
 
       if( finder == res.end() ){
         std::pair<bool,BoundingObj::vec3_t> collRes = collide(*myObjsIt,*it2);
@@ -85,9 +85,11 @@ std::vector<RayCollision> Entity::detectCollision(Ray* r){
       }
     }
     if(flag)
-      break;
+      continue;
 
     if( finder == res.end() ){
+      ConfigManager::log( r->toString() );
+      ConfigManager::log( (*it2)->toString() );
       RayCollision collRes = rayCollide(r,*it2);
       //try collide
       if(collRes.collided){

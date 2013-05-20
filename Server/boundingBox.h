@@ -30,6 +30,7 @@ public:
 
   BoundingBox getAABB() const;
   bool isBox() const{return true;}
+  std::string toString();
   void rotate(vec3_t dir, vec3_t up);
 
   vec3_t getAx() const{ return ax; }

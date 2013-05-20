@@ -220,8 +220,8 @@ std::pair<bool,BoundingObj::vec3_t> boxRay(const BoundingBox* b,const Ray* r,
   }
 
   //the time it hit
-  timeHit = t;
   t = tfirst;
+  timeHit = t;
   BoundingObj::vec3_t ret = r->getDirection();
   ret.scale(1.0f-t);
   //ret.scale(1.0-tfirst);
@@ -299,10 +299,10 @@ std::pair<bool,BoundingObj::vec3_t> collide(const BoundingObj * a,const  Boundin
 
 RayCollision rayCollide(const Ray * r,const  BoundingObj * b){
   RayCollision res;
-  
+
   if(b->isBox()){ //TODO right now this only works for boxes
     std::pair<bool,BoundingObj::vec3_t> res2 = 
-      boxRay((const BoundingBox*)b, (const Ray*)r, res.tfirst, res.normalAxis, res.parallelAxis);
+      boxRay((const BoundingBox *)b, r, res.tfirst, res.normalAxis, res.parallelAxis);
     res.collided = res2.first;
   }
 
@@ -316,7 +316,12 @@ void boxTest(){
     BoundingObj::vec3_t(1,0,0), BoundingObj::vec3_t(0,1,0), BoundingObj::vec3_t(0,0 ,1),
     5,5,5);
 
-    collide(&r1, &b1);
+    RayCollision f = rayCollide(&r1, &b1);
+    std::cout << f.collided << std::endl
+      << f.e << std::endl 
+      << f.normalAxis << std::endl
+      << f.parallelAxis << std::endl
+      << f.tfirst << std::endl;
 
   /*
 
