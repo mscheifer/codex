@@ -3,6 +3,7 @@
 #include <GL/glew.h>
 #include <iostream>
 #include <string>
+#include <sstream>
 #include "ConfigManager.h"
 #include "windowsHacks.h"
 #include "util.h"
@@ -23,19 +24,32 @@ const std::string shaderHeader =
   "#version 130\n" + shaderExtensions + "\n";
 
 struct debugStream {
+  std::string logString;
   template<typename T>
-  const debugStream& operator<<(const T& a) const {
+  debugStream& operator<<(const T& a) {
     bool userDebugOn = StringToBool(ConfigManager::configMap["graphicsDebug"]);
-    if(debugOn && userDebugOn) std::cout << a;
-    GLenum err;
-    while(gx::debugOn && userDebugOn && (err = glGetError())) {
-      std::cout << "OpenGL error: " << err << std::endl;
-    }
+    if(debugOn && userDebugOn) {
+      std::cout << a;
+      std::stringstream ss;
+      ss << a;
+      logString += ss.str();
+      if(logString.back() == '\n') {
+        ConfigManager::log(logString.substr(0,logString.length()-1));
+        logString = "";
+        GLenum err;
+        while((err = glGetError())) {
+          std::cout << "OpenGL error: " << err << std::endl;
+          std::stringstream ss;
+          ss << err;
+          ConfigManager::log(std::string("OpenGL error: ") + ss.str() + std::string("\n"));
+        }
+      }
+    } 
     return *this;
   }
 };
 
-constexpr debugStream debugout = {};
+extern debugStream debugout;
 
 const std::string endl = "\n";
 

@@ -41,6 +41,7 @@ void NetworkClient::receiveMessages() {
         gxClient.updatePosition(gx::vector4f(pos.x,pos.y,pos.z));
         entities.push_back(&(this->skybox)); //add skybox
         gxClient.updateEntities(entities);
+        gxClient.updateHUD(s.players[id]);
         //std::cout << "num entities received: " << entities.size() << std::endl;
         if (s.players[id].dead) { /*render death everytime ? */}
         //render WIN OR LOSE based on s.state
@@ -61,7 +62,6 @@ void NetworkClient::processInput() {
   if(this->gxClient.closed()) { //add running  in ClientGameTimeAction ?
     this->running = false;
   }
-  ConfigManager::log(action.toString()); 
   if (action.updated) {
     action.player_id = id;
     this->sendPacket = true; 
@@ -110,13 +110,21 @@ void NetworkClient::processInput(){
 }
 */
 void NetworkClient::doClient() {
-  ConfigManager::setupLog("client");
   AudioManager::loadSounds();
   //AudioManager::playMusic("m1");
 
-  std::cout << "Waiting for other players to join" << std::endl;
+  //std::cout << "Waiting for other players to join" << std::endl;
+  //TODO refactor the menu logic 
+  bool joined = false;
   while(true) {
 	  sf::Packet initPacket;
+    this->gxClient.drawLobby();
+    if (joined && this->gxClient.gameStart()) {
+      initPacket << static_cast<sf::Uint32>(INIT); 
+      netRecv.sendMessage(initPacket);
+      joined =false; //only send packet once
+    }
+    initPacket.clear();
     if (netRecv.receiveMessage(initPacket)) {
       std::cout << "received message" << std::endl;
       sf::Uint32 packetType;
@@ -127,12 +135,14 @@ void NetworkClient::doClient() {
         this->id = newId.id;
         std::cout << "USERID: " << this->id << std::endl;
         this->action.player_id = id;
+        joined = true;
       } else if (packetType == INIT) {
          //TODO: init the position
         break;
       }
 	  }
   }
+  this->gxClient.disableCursor();
   std::cout << "game started" << std::endl;
   //  main run loop
   //for(int i = 0; i < 4; i++) {

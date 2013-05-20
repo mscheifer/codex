@@ -24,18 +24,9 @@ public:
   Entity_Type getType() const {
     return type;
   }
-  void serialize(sf::Packet & packet) const {
-    Entity::serialize(packet);
-    packet << fired;
-    //(*owner).serialize(packet);
-  } 
-  void deserialize( sf::Packet & packet ) {
-    Entity::deserialize(packet);
-    packet >> fired;
-    //delete owner; this segfaults
-    //Player* owner = new Player();
-    //(*owner).deserialize(packet);
-  }
+  void serialize(sf::Packet & packet) const;
+  void deserialize(sf::Packet & packet);
+ 
 private:
   Player * owner;
   bool fired;

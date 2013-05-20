@@ -47,16 +47,8 @@ public:
   void setBoundingObjs(std::vector<BoundingObj*> b){ boundingObjs = b; }
   std::vector<BoundingObj*> getBoundingObjs(){ return boundingObjs; }
 
-  virtual void serialize(sf::Packet& packet) const
-  {
-    position.serialize(packet);
-    direction.serialize(packet);
-  }
-
-  virtual void deserialize(sf::Packet& packet)
-  {    
-    position.deserialize(packet);
-    direction.deserialize(packet);
-  }
+  virtual void serialize(sf::Packet& packet) const;
+  virtual void deserialize(sf::Packet& packet);
+ 
   virtual Entity_Type getType() const { return type; }
 };

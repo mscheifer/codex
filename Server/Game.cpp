@@ -34,6 +34,8 @@ void Game::evaluate(ClientGameTimeAction a) {
 		currentPlayers[i]->handleAction(a);
     world.separatePlayers(currentPlayers[i]);
 	}
+  //matt c please take this out
+  std::cout<<"switch weapon? "<<a.switchWeapon<<std::endl;
 }
 
 /* updates & resolve collision for each clock tick */
@@ -66,9 +68,13 @@ ServerGameTimeRespond Game::prepResponse() {
 	s.walls.clear();
 	s.powerups.clear();
   s.players.clear();
-	std::vector<Player*> currentPlayers =  world.getPlayers();
+	std::vector<Player*>  currentPlayers =  world.getPlayers();
 	std::vector<Entity*> currentEntities = world.getEntity();
 	for( unsigned int i = 0; i < currentPlayers.size(); i++ ) {
+     //for testing
+     if (currentPlayers[i]->getHealth() > 0) {
+       (currentPlayers[i])->setHealth(currentPlayers[i]->getHealth()-1);
+     } else  (currentPlayers[i])->setHealth(100);
 		 s.players.push_back(*currentPlayers[i]); //add the player to the return struct
 	}
 

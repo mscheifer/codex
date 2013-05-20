@@ -29,28 +29,9 @@ public:
 	float getMpCost(){ return mpCost; }
   virtual WeaponType getWeaponType() const{ return wtype; }
   
-  void serialize(sf::Packet & packet) const {
-    Entity::serialize(packet);
-    //Range_Cool_Down_Time; 
-    //Melee_Cool_Down_Time; 
-    //float projectileStrength;
-    //length_t projectileRange; 
-    packet << mpCost;
-    packet << pickedUp;
-    //sf::Clock Range_Cool_Down_Counter;
-    //sf::Clock Melee_Cool_Down_Counter;
-  }
-  void deserialize(sf::Packet & packet) {
-	  Entity::deserialize(packet);
-    //int Range_Cool_Down_Time; 
-    //int Melee_Cool_Down_Time; 
-    //float projectileStrength;
-    //length_t projectileRange; 
-    packet >> mpCost;
-    packet >> pickedUp;
-    //sf::Clock Range_Cool_Down_Counter;
-    //sf::Clock Melee_Cool_Down_Counter;
-  }
+  void serialize(sf::Packet & packet) const;
+  void deserialize(sf::Packet & packet); 
+ 
   Entity_Type getType() const {
     return type;
   }
