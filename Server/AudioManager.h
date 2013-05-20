@@ -2,12 +2,12 @@
 #include <SFML/Audio.hpp>
 #include <map>
 #include <array>
-#include "Entity.h"
+
 #include "Player.h"
 #include "Wall.h"
-#include "Projectile.h"
-#include "Weapon.h"
-#include "Powerup.h"
+//#include "Projectile.h"
+//#include "Weapon.h"
+//#include "Powerup.h"
 
 class AudioManager{
 private:

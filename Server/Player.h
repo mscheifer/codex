@@ -14,16 +14,16 @@
 #include "WeaponFist.h"
 #include "WeaponFire.h"
 
-const int MOVESCALE = 3;
-const length_t AIRMOVESCALE = 1;
-const length_t JUMPSPEED = 20;
-const int MAXJUMP = 5;
-
 #define MAXWEAPONS 2
 
 class Player: public Entity
 {
 public:
+  static const length_t MOVESCALE;// = 2;//ConfigManager::playerMovescale();
+  static const length_t AIRMOVESCALE;// = 2;//ConfigManager::playerAirMovescale();
+  static const length_t JUMPSPEED;// = 2;//ConfigManager::playerJumpSpeed();
+  static const int MAXJUMP;// = 2;//ConfigManager::playerMaxJump();
+
   static const float sphereRadius;
   static const Entity_Type type = PLAYER;
   bool dead; //might be private. should be determined in handleAction

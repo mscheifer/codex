@@ -1,6 +1,10 @@
 #include "Player.h"
 
 const float Player::sphereRadius = 5.0f;
+const length_t Player::MOVESCALE = ConfigManager::playerMovescale();
+const length_t Player::AIRMOVESCALE = ConfigManager::playerAirMovescale();
+const length_t Player::JUMPSPEED = ConfigManager::playerJumpSpeed();
+const int Player::MAXJUMP = ConfigManager::playerMaxJump();
 
 Player::Player(){}// this->init(0,0,0,0,NULL);}
 Player::~Player(void){}
@@ -91,7 +95,7 @@ bool Player::moveTowardDirection(move_t inputDir, bool jump)
   //if jump add jump velocity, 
   // and not free fall with no jumps
   if(jump && canJump && 
-    !(jumpCount == 0 && velocity.z < GRAVITY.z * ConfigManager::serverTickLengthSec() * 5)){
+    !(jumpCount == 0 && velocity.z < getGravity().z * ConfigManager::serverTickLengthSec() * 5)){
     //add jump velocity
     v3_t jumpDir = movementDirection;
     jumpDir.z = 1;
@@ -211,7 +215,7 @@ void Player::update(){
   pickupWeaponType = UNK;
 
   //update movement
-  acceleration = GRAVITY;
+  acceleration = getGravity();
   velocity += acceleration * ConfigManager::serverTickLengthSec();
   position += velocity * ConfigManager::serverTickLengthSec();
   health = (health+5 > maxHealth? maxHealth : health+5);

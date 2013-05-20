@@ -8,9 +8,8 @@ class ConfigManager {
   enum LogLevels {DEBUG1=1, DEBUG2=2, NOTE=3}; //in order of decreasing scope (lower will show more)
   static const LogLevels level = ConfigManager::DEBUG1; //Change this to access more/less
   static std::ofstream logfile;
-
+  static bool read;
   static std::string levelToString(LogLevels);
-
   typedef std::map<std::string, std::string> configMap_t;
 
 public:
@@ -41,4 +40,10 @@ public:
   
   //setup the logfile
   static void setupLog(std::string str = "");
+
+  static const float playerMovescale(){ if(!read) readConfig(); return StringToNumber<float>(ConfigManager::configMap["movescale"]); }
+  static const float playerAirMovescale(){ return StringToNumber<float>(ConfigManager::configMap["airMovescale"]); }
+  static const float playerJumpSpeed(){ return StringToNumber<float>(ConfigManager::configMap["jumpSpeed"]); }
+  static const int playerMaxJump(){ return StringToNumber<int>(ConfigManager::configMap["maxJump"]); }
+  static const float gravity(){  return StringToNumber<float>(ConfigManager::configMap["gravity"]); }
 };
