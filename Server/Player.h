@@ -142,4 +142,5 @@ private:
   void init(v3_t pos, int assigned_id, Map * m);
   void generateBounds(v3_t pos);
   void restartJump(length_t zPosFix);
+  v3_t correctMovement(v3_t movementDirection, bool slide);
 };

@@ -25,7 +25,8 @@ private:
    * object cannot completely fit within a child node and is part
    * of the parent node
    */
-  int getIndex(BoundingObj* o);
+  //int getIndex(BoundingObj* o);
+  int getIndex(Rectangle& pRect) const;
 
 public:
   Quadtree(int pLevel, Rectangle pBounds);
@@ -47,6 +48,7 @@ public:
 
   //Return all objects that could collide with the given object
   std::vector<BoundingObj*>& retrieve(std::vector<BoundingObj*> & returnObjects, BoundingObj* pRect);
+  std::vector<BoundingObj*>& retrieve(std::vector<BoundingObj*> & returnObjects, Rectangle* pRect);
   
   /*
   static void test(){
