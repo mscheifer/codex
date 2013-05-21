@@ -18,6 +18,7 @@ Map::Map(void): freeProjectiles(),q(0,Rectangle(BoundingObj::vec4_t(0,0,0),1000,
 
 void Map::initPowerUps() {
   PowerUp* superPower = new PowerUp( v3_t(2,9,0), this);
+  superPower->setRespownTime(5000);
   this->entities.push_back(superPower);
 }
 void Map::initWalls(void)

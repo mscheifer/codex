@@ -29,7 +29,6 @@ public:
   static const float playerDepth;
   static const Entity_Type type = PLAYER;
   bool dead; //might be private. should be determined in handleAction
-  bool minotaur; //might be private
   int player_id;
   std::string name;
 
@@ -59,14 +58,22 @@ public:
   void setMana(float);
   float getSpeed(){ return speed;}
   void setSpeed(float);
+  void setSpeedUpTime(int s) { speedUpTime = s; };
+  void activateSpeedUp(void) { speedUp = true ;};
+  bool isSpeedUpActive(void) { return speedUp;};
+  void setAttackSpeed(float s) { attackSpeed = s;};
+  float getAttackSpeedDiv(void) {return attackSpeed;};
+  void restartSpeedUpCounter(void) { speedUpCounter.restart();};
   WeaponType getPickupWeaponType() const{ return pickupWeaponType; }
-
+  void setAsMinotaur(bool b);
+  bool isMinotaur();
   Entity_Type getType() const {
     return type;
   }
   
   void serialize(sf::Packet& packet) const;
   void deserialize(sf::Packet& packet);
+
   
 
 private:
@@ -74,14 +81,21 @@ private:
   WeaponType pickupWeaponType;
 
   v3_t oldJumpVelocity; //the x,y velocity that should be applied
+  bool minotaur; //might be private
   float health;
+  float healthRegen;
   float maxHealth;
   float mana;
+  float manaRegen;
   float maxMana;
   float defense;
   float speed;
+  int speedUpTime;
+  float attackSpeed;
   float castDownTime;
   sf::Clock castDownCounter;
+  sf::Clock speedUpCounter;
+  bool speedUp;
   int jumpCount;
   bool canJump;
   bool attacking;

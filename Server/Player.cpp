@@ -31,11 +31,16 @@ void Player::init(v3_t pos, int assigned_id, Map * m)
   direction = v3_t(0,0,0);
 	defense = 5;
 	health = 100;
+  healthRegen = ConfigManager::playerHpRegen();
 	maxHealth = 100;
 	speed = 1;
+  attackSpeed = 1;
 	mana = 100;
+  manaRegen = ConfigManager::playerMpRegen();
 	maxMana = 100;
 	castDownCounter = sf::Clock();
+  speedUpCounter = sf::Clock();
+  speedUp = false;
 	map = m;
 	weapon[0] = new WeaponFist(position, this->map);
 	weapon[1] = new WeaponFire(position, this->map); //TODO add this to entities if we want it to drop
@@ -43,6 +48,24 @@ void Player::init(v3_t pos, int assigned_id, Map * m)
   
   generateBounds(position);
   m->addToQtree(this);
+}
+
+void Player::setAsMinotaur(bool b)
+{
+  minotaur = b;
+  if(b)
+  {
+    healthRegen = ConfigManager::minotaurHpRegen();
+    manaRegen = ConfigManager::minotaurMpRegen();
+  } else {
+    healthRegen = ConfigManager::playerHpRegen();
+    manaRegen = ConfigManager::playerMpRegen();
+  }
+}
+
+bool Player::isMinotaur()
+{
+  return minotaur;
 }
 
 void Player::generateBounds(v3_t pos){
@@ -133,6 +156,11 @@ bool Player::correctMovementHit( Entity* e ){
 }
 
 void Player::update(){
+  //powerup shit
+  if(speedUp && speedUpCounter.getElapsedTime().asMilliseconds() > speedUpTime) {
+     speedUp = false;
+     attackSpeed = 1.0;
+  }
 
   //pick up weapon stuff
   pickup = nullptr;
@@ -146,8 +174,8 @@ void Player::update(){
   //position += velocity * ConfigManager::serverTickLengthSec();
   
   //I disabled health regen and mana regen  (BOWEN)
-  //health = (health+5 > maxHealth? maxHealth : health+5);
-  //mana = (mana+5 > maxMana? maxMana : mana+5);
+  //health = (health+healthRegen > maxHealth? maxHealth : health+5);
+  //mana = (mana+manaRegen > maxMana? maxMana : mana+5);
   updateBounds();
 }
 
@@ -199,16 +227,15 @@ void Player::attack( ClientGameTimeAction a) {
 	Weapon* currentWeapon = weapon[current_weapon_selection];
 
 	if(a.attackRange){
-    if( !currentWeapon->canUseWeapon(true) || currentWeapon->getMpCost() > mana){
+    if( !currentWeapon->canUseWeapon(true, this) || currentWeapon->getMpCost() > mana){
 			return;
 		}
 		mana -= currentWeapon->getMpCost();
-		Projectile* proj = currentWeapon->attackRange(direction, position);
-    if(proj)
-      proj->setOwner(this);
+		currentWeapon->attackRange(direction, position, this);
+
 	}
 	else if(a.attackMelee){
-		if( !currentWeapon->canUseWeapon(false)){
+		if( !currentWeapon->canUseWeapon(false, this)){
 			return;
 		}
 		currentWeapon->attackMelee();

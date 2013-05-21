@@ -1,10 +1,14 @@
 #include "Client.h"
-
+#include <iostream>
+#include "AudioManager.h"
+#include "Game.h"
+int cycle = 0;
 namespace {
 } //end nunnamed namespace
 
 void NetworkClient::receiveMessages() {
   //receive from server and process
+   
   sf::Packet packet;
   if (netRecv.receiveMessage(packet)) {
     ChatObject chatObj;
@@ -23,6 +27,12 @@ void NetworkClient::receiveMessages() {
             //make sure the SGTR stays in scope
             entities.push_back(&(*playerP));
           }
+          
+          if(cycle  == 100 ) {
+             cycle = 0;
+             std::cout << "Current health is " << (*playerP).getHealth() << std::endl;
+          }
+
         }
         for(auto entP = s.walls.begin(); entP != s.walls.end(); entP++) {
           entities.push_back(*entP);
@@ -117,6 +127,7 @@ void NetworkClient::doClient() {
   //TODO refactor the menu logic 
   bool joined = false;
   while(true) {
+    cycle++;
 	  sf::Packet initPacket;
     this->gxClient.drawLobby();
     if (joined && this->gxClient.gameStart()) {
@@ -146,15 +157,31 @@ void NetworkClient::doClient() {
   std::cout << "game started" << std::endl;
   //  main run loop
   //for(int i = 0; i < 4; i++) {
+  /*sf::Clock profilerTime;
+  float processInputTime;
+  float receiveMessagesTime;
+  float drawTime;
+  float sendPackTime;*/
   while(this->running) {
     //process input and send events
+  
+    //profilerTime.restart();
     this->processInput();
+    //processInputTime = profilerTime.getElapsedTime().asMilliseconds();
+    //profilerTime.restart();
     this->receiveMessages();
+    //receiveMessagesTime = profilerTime.getElapsedTime().asMilliseconds();
+    //profilerTime.restart();
     this->gxClient.draw();
+    //drawTime = profilerTime.getElapsedTime().asMilliseconds();
+    //profilerTime.restart();
     if(this->sendPacket) {//if dead player still should be able to chat?
       //this->action.print();
       this->netRecv.sendPacket<ClientGameTimeAction>(action);
       this->sendPacket = false;
     }
+    //sendPackTime = profilerTime.getElapsedTime().asMilliseconds();
+    //std::cout<<"processInput: "<< processInputTime <<"ms\treceiveMessagesTime: "<<
+      //receiveMessagesTime <<"ms\tdrawTime: "<< drawTime <<"ms\tsendPackTime: "<< sendPackTime <<std::endl;
   }
 }

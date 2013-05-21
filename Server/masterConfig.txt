@@ -8,3 +8,7 @@ airMovescale=1
 maxJump=2
 jumpSpeed=10
 gravity=-20
+humanHpRegen=.21
+humanMpRegen=.15
+minotaurHpRegen=.42
+minotaurMpRegen=.30
