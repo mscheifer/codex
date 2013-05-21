@@ -33,12 +33,13 @@ void PowerUp::handleCollisions() {
       luckyGuy.setHealth(luckyGuy.getHealth() + healthMutiplyer);
 	    luckyGuy.setSpeed(luckyGuy.getSpeed() + speedMutiplyer);
 	    luckyGuy.setMana(luckyGuy.getMana() + manaMutiplyer);
+      active = false;
     }
     
   }
 	
 	
-	active = false;
+	
 	
 	Respown_Counter.restart();
 }
@@ -47,6 +48,7 @@ void PowerUp::update() {
 	if ((Respown_Counter.getElapsedTime().asMilliseconds() >= Respown_Time) && active == false) {
 		active = true;
 	}
+  //std::cout << " it's active? " << active << std::endl;
   updateBounds();
 }
 

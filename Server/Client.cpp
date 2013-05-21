@@ -2,12 +2,13 @@
 #include <iostream>
 #include "AudioManager.h"
 #include "Game.h"
-
+int cycle = 0;
 namespace {
 } //end nunnamed namespace
 
 void NetworkClient::receiveMessages() {
   //receive from server and process
+   
   sf::Packet packet;
   if (netRecv.receiveMessage(packet)) {
     ChatObject chatObj;
@@ -26,6 +27,12 @@ void NetworkClient::receiveMessages() {
             //make sure the SGTR stays in scope
             entities.push_back(&(*playerP));
           }
+          
+          if(cycle  == 100 ) {
+             cycle = 0;
+             std::cout << "Current health is " << (*playerP).getHealth() << std::endl;
+          }
+
         }
         for(auto entP = s.walls.begin(); entP != s.walls.end(); entP++) {
           entities.push_back(*entP);
@@ -118,6 +125,7 @@ void NetworkClient::doClient() {
 
   std::cout << "Waiting for other players to join" << std::endl;
   while(true) {
+    cycle++;
 	  sf::Packet initPacket;
     if (netRecv.receiveMessage(initPacket)) {
       std::cout << "received message" << std::endl;
@@ -140,6 +148,7 @@ void NetworkClient::doClient() {
   //for(int i = 0; i < 4; i++) {
   while(this->running) {
     //process input and send events
+  
     this->processInput();
     this->receiveMessages();
     this->gxClient.draw();
