@@ -26,9 +26,7 @@ bool Projectile::correctMovementHit( Entity* e ){
 
 void Projectile::update(void) {
   v3_t distanceTravelled = velocity * ConfigManager::serverTickLengthSec();
-  std::cout << distanceTravelled << std::endl;
   distanceTravelled = correctMovement(distanceTravelled, false);
-    std::cout << "\t corrected: " <<  distanceTravelled << std::endl;
 	position += distanceTravelled;
   
   //see if travelled full range

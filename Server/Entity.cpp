@@ -106,7 +106,7 @@ std::vector<RayCollision> Entity::detectCollision(Ray* r){
 }
 
 v3_t Entity::correctMovement(v3_t movementDirection, bool slide){
-  BoundingBox * myBox = (BoundingBox*) boundingObjs[0];
+  BoundingBox * myBox = (BoundingBox*) boundingObjs[0]; //TODO just doing this for now
   //add the radius to account for collision
   //v3_t radius = myBox->getMaxRadius( movementDirection );
   //movementDirection += radius;
@@ -133,14 +133,12 @@ v3_t Entity::correctMovement(v3_t movementDirection, bool slide){
           }
           coll->normalAxis.normalize();
 
-          //get the max "radius" on teh normal
-          //TODO just doing this for now
+          //get the max "radius" on teh normal (sliding out)
           coll->normalAxis = myBox->getMaxRadius(coll->normalAxis);
-
           //subtract the max radius (normal axis is in opposite direction)
           newDir += coll->normalAxis;
 
-          //project extra onto axis parallel and add that
+          //project extra onto axis parallel and add that (the slide)
           v3_t excess = acceptedMove;
           excess.scale(1.0f - coll->tfirst);
           coll->parallelAxis.normalize();
