@@ -32,9 +32,7 @@ public:
   void serialize(sf::Packet & packet) const;
   void deserialize(sf::Packet & packet); 
  
-  Entity_Type getType() const {
-    return type;
-  }
+  Entity_Type getType() const { return type; }
 
 protected:
 	int Range_Cool_Down_Time; //cool down time between uses in milliseconds

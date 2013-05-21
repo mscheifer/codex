@@ -8,12 +8,7 @@
 #include "Entity.h"
 #include "ClientGameTimeAction.h"
 
-#include "PowerUp.h"
-#include "Projectile.h"
 #include "Weapon.h"
-#include "WeaponFist.h"
-#include "WeaponFire.h"
-
 #define MAXWEAPONS 2
 
 class Player: public Entity
@@ -67,14 +62,10 @@ public:
   WeaponType getPickupWeaponType() const{ return pickupWeaponType; }
   void setAsMinotaur(bool b);
   bool isMinotaur();
-  Entity_Type getType() const {
-    return type;
-  }
+  Entity_Type getType() const { return type; }
   
   void serialize(sf::Packet& packet) const;
   void deserialize(sf::Packet& packet);
-
-  
 
 private:
   Weapon* pickup;

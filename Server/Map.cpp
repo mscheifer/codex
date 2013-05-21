@@ -4,6 +4,9 @@
 #include "Entity.h"
 #include "Wall.h"
 #include "Weapon.h"
+#include "WeaponFist.h"
+#include "WeaponFire.h"
+#include "PowerUp.h"
 
 const float Map::Item_Pick_Up_Ranges = 1.0f;
 

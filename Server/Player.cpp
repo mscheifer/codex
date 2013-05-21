@@ -1,5 +1,9 @@
 #include "Player.h"
 
+#include "Projectile.h"
+#include "WeaponFist.h"
+#include "WeaponFire.h"
+
 const float Player::playerWidth = 1.0f;
 const float Player::playerHeight = 1.0f;
 const float Player::playerDepth = 3.0f;

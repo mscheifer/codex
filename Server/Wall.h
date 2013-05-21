@@ -19,9 +19,7 @@ public:
   void serialize(sf::Packet & packet ) const;
   void deserialize(sf::Packet & packet );
 
-  Entity_Type getType() const {
-    return type;
-  }
+  Entity_Type getType() const { return type; }
 private:
   // A vector of POSSIBLE positions
   // why? --matt

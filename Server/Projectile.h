@@ -21,9 +21,7 @@ public:
   void updateBoundsSoft();
   void handleCollisions();
   void clearEvents();
-  Entity_Type getType() const {
-    return type;
-  }
+  Entity_Type getType() const { return type; }
   void serialize(sf::Packet & packet) const;
   void deserialize(sf::Packet & packet);
  
