@@ -14,7 +14,7 @@ void Game::chooseMinotaur()
 {
   srand(static_cast<unsigned int>(time(nullptr)));
   int minotaur = rand() % ConfigManager::numPlayers();
-  world.getPlayers()[minotaur]->minotaur=true;
+  world.getPlayers()[minotaur]->setAsMinotaur(true);
 }
 
 int Game::join()
@@ -104,7 +104,7 @@ ServerGameTimeRespond Game::prepResponse() {
   bool minotaurLose  = false;
   //determine who wins
   for (unsigned int i = 0; i< currentPlayers.size(); i++ ) {
-     if (!currentPlayers[i]->minotaur) {
+     if (!currentPlayers[i]->isMinotaur()) {
         if (currentPlayers[i]->dead) {
           deadPlayers++;
         }

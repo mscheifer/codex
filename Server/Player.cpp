@@ -28,10 +28,12 @@ void Player::init(v3_t pos, int assigned_id, Map * m)
   direction = v3_t(0,0,0);
 	defense = 5;
 	health = 100;
+  healthRegen = ConfigManager::playerHpRegen();
 	maxHealth = 100;
 	speed = 1;
   attackSpeed = 1;
 	mana = 100;
+  manaRegen = ConfigManager::playerMpRegen();
 	maxMana = 100;
 	castDownCounter = sf::Clock();
   speedUpCounter = sf::Clock();
@@ -43,6 +45,24 @@ void Player::init(v3_t pos, int assigned_id, Map * m)
   
   generateBounds(position);
   m->addToQtree(this);
+}
+
+void Player::setAsMinotaur(bool b)
+{
+  minotaur = b;
+  if(b)
+  {
+    healthRegen = ConfigManager::minotaurHpRegen();
+    manaRegen = ConfigManager::minotaurMpRegen();
+  } else {
+    healthRegen = ConfigManager::playerHpRegen();
+    manaRegen = ConfigManager::playerMpRegen();
+  }
+}
+
+bool Player::isMinotaur()
+{
+  return minotaur;
 }
 
 void Player::generateBounds(v3_t pos){
@@ -213,7 +233,6 @@ v3_t Player::correctMovement(v3_t movementDirection, bool slide){
 }
 
 void Player::update(){
-
   //powerup shit
   if(speedUp && speedUpCounter.getElapsedTime().asMilliseconds() > speedUpTime) {
      speedUp = false;
@@ -229,8 +248,8 @@ void Player::update(){
   velocity += acceleration * ConfigManager::serverTickLengthSec();
   position += velocity * ConfigManager::serverTickLengthSec();
   //I disabled health regen and mana regen  (BOWEN)
-  //health = (health+5 > maxHealth? maxHealth : health+5);
-  //mana = (mana+5 > maxMana? maxMana : mana+5);
+  //health = (health+healthRegen > maxHealth? maxHealth : health+5);
+  //mana = (mana+manaRegen > maxMana? maxMana : mana+5);
   updateBounds();
 }
 

@@ -27,7 +27,6 @@ public:
   static const float sphereRadius;
   static const Entity_Type type = PLAYER;
   bool dead; //might be private. should be determined in handleAction
-  bool minotaur; //might be private
   int player_id;
   std::string name;
 
@@ -64,7 +63,8 @@ public:
   float getAttackSpeedDiv(void) {return attackSpeed;};
   void restartSpeedUpCounter(void) { speedUpCounter.restart();};
   WeaponType getPickupWeaponType() const{ return pickupWeaponType; }
-
+  void setAsMinotaur(bool b);
+  bool isMinotaur();
   Entity_Type getType() const {
     return type;
   }
@@ -79,9 +79,12 @@ private:
   WeaponType pickupWeaponType;
 
   v3_t oldJumpVelocity; //the x,y velocity that should be applied
+  bool minotaur; //might be private
   float health;
+  float healthRegen;
   float maxHealth;
   float mana;
+  float manaRegen;
   float maxMana;
   float defense;
   float speed;
