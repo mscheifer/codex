@@ -59,9 +59,25 @@ void NetworkClient::receiveMessages() {
         auto dir = s.players[this->id].getDirection();
         sf::Listener::setDirection(dir.x, dir.y, dir.z);
 
-        //TODO not sure where to put this
+        //TODO not sure where to put this @bowen add to HUD here
         if( s.players[id].getPickupWeaponType() != UNK )
           std::cout << "can pick up weapon type " << WeaponNames[s.players[id].getPickupWeaponType()] << std::endl;
+        
+        //calculate proximity of players
+        //TODO actually base this on proximity of players 
+        int proximity = 0;
+        if(s.players[this->id].getPosition().x > 0){
+          proximity++;
+        }
+        if(s.players[this->id].getPosition().y > 0){
+          proximity++;
+        }
+        if(s.players[this->id].getPosition().y > 10){
+          proximity++;
+        }
+        std::cout << proximity << std::endl;
+        AudioManager::updateMusic(proximity);
+        
         break;
     }
   }
