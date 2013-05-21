@@ -157,16 +157,31 @@ void NetworkClient::doClient() {
   std::cout << "game started" << std::endl;
   //  main run loop
   //for(int i = 0; i < 4; i++) {
+  /*sf::Clock profilerTime;
+  float processInputTime;
+  float receiveMessagesTime;
+  float drawTime;
+  float sendPackTime;*/
   while(this->running) {
     //process input and send events
   
+    //profilerTime.restart();
     this->processInput();
+    //processInputTime = profilerTime.getElapsedTime().asMilliseconds();
+    //profilerTime.restart();
     this->receiveMessages();
+    //receiveMessagesTime = profilerTime.getElapsedTime().asMilliseconds();
+    //profilerTime.restart();
     this->gxClient.draw();
+    //drawTime = profilerTime.getElapsedTime().asMilliseconds();
+    //profilerTime.restart();
     if(this->sendPacket) {//if dead player still should be able to chat?
       //this->action.print();
       this->netRecv.sendPacket<ClientGameTimeAction>(action);
       this->sendPacket = false;
     }
+    //sendPackTime = profilerTime.getElapsedTime().asMilliseconds();
+    //std::cout<<"processInput: "<< processInputTime <<"ms\treceiveMessagesTime: "<<
+      //receiveMessagesTime <<"ms\tdrawTime: "<< drawTime <<"ms\tsendPackTime: "<< sendPackTime <<std::endl;
   }
 }
