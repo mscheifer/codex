@@ -132,6 +132,8 @@ v3_t Player::correctMovement(v3_t movementDirection, bool slide){
   std::vector<RayCollision> colls = detectCollision(&movementRay);
   bool restart = false;
   int restarts = 0;
+  std::cout << movementDirection << std::endl;
+
   for(auto coll = colls.begin(); coll != colls.end(); ){
     Entity * e = coll->e;
     v3_t acceptedMove = movementRay.getDirection();
@@ -147,7 +149,7 @@ v3_t Player::correctMovement(v3_t movementDirection, bool slide){
         if(slide){
           //project max "radius" onto normal and add the largest
           //adjust normal axis to be in opposite direction as movement (pi/2 - -pi/2)
-          if( movementRay.getDirection().dot(coll->normalAxis) > 0 ){
+          if( newDir.dot(coll->normalAxis) > 0 ){
             coll->normalAxis.negate();
           }
           coll->normalAxis.normalize();
@@ -158,18 +160,18 @@ v3_t Player::correctMovement(v3_t movementDirection, bool slide){
           BoundingBox * myBox = (BoundingBox*) boundingObjs[0];
           v3_t radius = myBox->getAx();
           radius.scale(myBox->getHw());
-          maxRad = radius.dot(coll->normalAxis);
+          maxRad = std::fabs(radius.dot(coll->normalAxis));
 
           radius = myBox->getAy();
           radius.scale(myBox->getHh());
-          rad = radius.dot(coll->normalAxis);
+          rad = std::fabs(radius.dot(coll->normalAxis));
           if( rad > maxRad ){
             maxRad = rad;
           }
 
           radius = myBox->getAz();
           radius.scale(myBox->getHd());
-          rad = radius.dot(coll->normalAxis);
+          rad = std::fabs(radius.dot(coll->normalAxis));
           if( rad > maxRad ){
             maxRad = rad;
           }
@@ -181,7 +183,9 @@ v3_t Player::correctMovement(v3_t movementDirection, bool slide){
           v3_t excess = acceptedMove;
           excess.scale(1.0f - coll->tfirst);
           coll->parallelAxis.normalize();
-          excess.scale( excess.dot(coll->parallelAxis) );
+          length_t slide = excess.dot(coll->parallelAxis);
+          excess = coll->parallelAxis;
+          excess.scale(slide);
           newDir += excess;
         }
 
@@ -205,6 +209,8 @@ v3_t Player::correctMovement(v3_t movementDirection, bool slide){
     if( restarts > 3 ) break;
   }
 
+    std::cout << "\t corrected " << movementRay.getDirection() << std::endl;
+
   return movementRay.getDirection();
 }
 
@@ -218,8 +224,8 @@ void Player::update(){
   acceleration = getGravity();
   velocity += acceleration * ConfigManager::serverTickLengthSec();
   v3_t attemptMove = velocity * ConfigManager::serverTickLengthSec();
-  position += correctMovement( attemptMove, false );
-  //position += velocity * ConfigManager::serverTickLengthSec();
+  //position += correctMovement( attemptMove, false );
+  position += velocity * ConfigManager::serverTickLengthSec();
   
   //I disabled health regen and mana regen  (BOWEN)
   //health = (health+5 > maxHealth? maxHealth : health+5);
