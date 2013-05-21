@@ -1,6 +1,8 @@
 #ifndef NETWORKSERVICE_H
 #define NETWORKSERVICE_H
 #include <SFML/Network.hpp>
+#include <iostream>
+#include "StaticEnums.h"
 
 class ClientServices{
   public:

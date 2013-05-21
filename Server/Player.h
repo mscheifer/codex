@@ -6,30 +6,31 @@
 #include <algorithm>
 #include <string>
 #include "Entity.h"
-#include "Physics.h"
+#include "ClientGameTimeAction.h"
+
+#include "PowerUp.h"
+#include "Projectile.h"
 #include "Weapon.h"
 #include "WeaponFist.h"
 #include "WeaponFire.h"
-#include "ClientGameTimeAction.h"
-#include "boundingManager.h"
-#include "PowerUp.h"
-
-const int MOVESCALE = 3;
-const length_t AIRMOVESCALE = 1;
-const length_t JUMPSPEED = 20;
-const int MAXJUMP = 5;
 
 #define MAXWEAPONS 2
 
 class Player: public Entity
 {
 public:
+  static const length_t MOVESCALE;// = 2;//ConfigManager::playerMovescale();
+  static const length_t AIRMOVESCALE;// = 2;//ConfigManager::playerAirMovescale();
+  static const length_t JUMPSPEED;// = 2;//ConfigManager::playerJumpSpeed();
+  static const int MAXJUMP;// = 2;//ConfigManager::playerMaxJump();
+
   static const float sphereRadius;
   static const Entity_Type type = PLAYER;
   bool dead; //might be private. should be determined in handleAction
   bool minotaur; //might be private
   int player_id;
   std::string name;
+
   Player();
   Player(v3_t pos, int assigned_id, Map *);
   ~Player(void);
@@ -38,7 +39,8 @@ public:
   void update();
   void handleCollisions();  
   void updateBounds();  
-  void updateBoundsSoft(); 
+  void updateBoundsSoft();
+  //void clearEvents();
   
   //helper functions for collisions
   bool collideWall(const std::pair<Entity*,BoundingObj::vec3_t>& p);
@@ -60,60 +62,10 @@ public:
   Entity_Type getType() const {
     return type;
   }
-
-  void serialize(sf::Packet& packet) const {
-    Entity::serialize(packet);
-    packet << this->player_id;
-    //acceleration.serialize(packet);
-    //velocity.serialize(packet);
-    //oldJumpVelocity.serialize(packet);
-    packet << dead; 
-    packet << minotaur; //might be private
-    packet << name;
-    packet << health;
-    packet << maxHealth;
-    packet << mana;
-    packet << maxMana;
-    packet << defense;
-    packet << speed;
-    packet << castDownTime; //not needed on client ?
-    //sf::Clock castDownCounter;
-    packet << jumpCount; // not needed on client ?
-    packet << canJump; //not needed on client ?
-    packet << attacking;  //not neede on client ?
-    //Weapon* weapon[MAXWEAPONS]; 
-    // change the array to vector ?
-    packet << static_cast<sf::Uint32>(pickupWeaponType);
-    packet << current_weapon_selection; 
-  }
-
-  void deserialize(sf::Packet& packet) {
-    Entity::deserialize(packet);
-    packet >> this->player_id;
-    //acceleration.deserialize(packet);
-    //velocity.deserialize(packet);
-    //oldJumpVelocity.deserialize(packet);
-    packet >>dead; 
-    packet >>minotaur; //might be private
-    packet >> name;
-    packet >> health;
-    packet >> maxHealth;
-    packet >> mana;
-    packet >> maxMana;
-    packet >> defense;
-    packet >> speed;
-    packet >> castDownTime; //not needed on client ?
-    //sf::Clock castDownCounter;
-    packet >> jumpCount; // not needed on client ?
-    packet >> canJump; //not needed on client ?
-    packet >> attacking;  //not neede on client ?
-    //Weapon* weapon[MAXWEAPONS]; 
-    // change the array to vector ?
-    sf::Uint32 pickupWeaponTypeUint32;
-    packet >> pickupWeaponTypeUint32;
-    pickupWeaponType = static_cast<WeaponType>(pickupWeaponTypeUint32);
-    packet >> current_weapon_selection; 
-  }
+  
+  void serialize(sf::Packet& packet) const;
+  void deserialize(sf::Packet& packet);
+  
 
 private:
   Weapon* pickup;
@@ -140,4 +92,5 @@ private:
   void init(v3_t pos, int assigned_id, Map * m);
   void generateBounds(v3_t pos);
   void restartJump(length_t zPosFix);
+  v3_t correctMovement(v3_t movementDirection, bool slide);
 };

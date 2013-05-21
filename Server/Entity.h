@@ -3,10 +3,12 @@
 #include "Map.h"
 #include "boundingManager.h"
 #include "StaticEnums.h"
+#include "graphics\matrix.h"
 
 class Entity {
 public:
   static const Entity_Type type = UNDEFINED;
+
 protected:
   bool render;
   v3_t position;
@@ -31,7 +33,9 @@ public:
   virtual void updateBounds(){}
   //this is only for showing collision boxes on client, should never be called
   virtual void updateBoundsSoft(){}
-  std::vector<std::pair<Entity*,gx::vector3f>> detectCollision();
+  //return a vector of entites collided with and shortest vector of removal
+  std::vector<std::pair<Entity*,v3_t>> detectCollision();
+  std::vector<RayCollision> detectCollision(Ray* r);
 
   bool canRender() const { return render; }
   v3_t getPosition(void) const { return position; }
@@ -43,16 +47,8 @@ public:
   void setBoundingObjs(std::vector<BoundingObj*> b){ boundingObjs = b; }
   std::vector<BoundingObj*> getBoundingObjs(){ return boundingObjs; }
 
-  virtual void serialize(sf::Packet& packet) const
-  {
-    position.serialize(packet);
-    direction.serialize(packet);
-  }
-
-  virtual void deserialize(sf::Packet& packet)
-  {    
-    position.deserialize(packet);
-    direction.deserialize(packet);
-  }
+  virtual void serialize(sf::Packet& packet) const;
+  virtual void deserialize(sf::Packet& packet);
+ 
   virtual Entity_Type getType() const { return type; }
 };

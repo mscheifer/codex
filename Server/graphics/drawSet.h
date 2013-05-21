@@ -19,7 +19,10 @@ class drawSet {
       std::vector<matrix> positions;
       vao                 vertData;
       entityClass(std::vector<matrix>,vao);
+      entityClass(const entityClass&);// = delete; //don't copy
+      entityClass& operator=(const entityClass&);// = delete; //don't assign
       entityClass(entityClass&&);
+      entityClass& operator=(entityClass&&);// = delete; //define later
     };
     shaderProgram            program;
     std::vector<entityClass> entityClasses;

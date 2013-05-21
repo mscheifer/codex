@@ -19,6 +19,7 @@ class input {
     bool   fired1;
     bool   fired2;
     bool   pickup;
+    bool   switchWeapon;
     unsigned int width;
     unsigned int height;
     bool resized;
@@ -30,6 +31,7 @@ class input {
     bool         fire1();
     bool         fire2();
     bool        pickUp();
+    bool       switchW();
     move_t  movePlayer();
     vector3f turnPlayer();
 

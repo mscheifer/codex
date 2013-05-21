@@ -19,11 +19,11 @@ std::string ConfigManager::levelToString(LogLevels lev) {
 
 ConfigManager::configMap_t ConfigManager::configMap;
 std::ofstream ConfigManager::logfile;
+bool ConfigManager::read = false;
 
 void ConfigManager::log(std::string str, ConfigManager::LogLevels lev){
   if( StringToNumber<int>(ConfigManager::configMap["log"]) == 0 ) 
     return;
-
   time_t timer;
   timer = time(nullptr);
   struct tm * currTime = localtime(&timer);
@@ -51,6 +51,10 @@ void ConfigManager::setupLog(std::string str){
 }
 
 void ConfigManager::readConfig() {
+  if(read)
+    return;
+
+  read = true;
   std::ifstream configFile;
   configFile.open("config.txt");
   std::string line;
@@ -64,8 +68,15 @@ void ConfigManager::readConfig() {
   size_t ind = 0;
   while( configFile >> line ){
     ind = line.find('=');
+    if( ind == std::string::npos )
+      continue;
+    //std::cout << line << std::endl;
+      
+    //std::cout << "insert: " << line.substr(0,ind) << " = " << line.substr(ind+1) << std::endl;
     std::pair<std::string,std::string> s = std::pair<std::string,std::string>(line.substr(0,ind),line.substr(ind+1));
-    ConfigManager::configMap.insert(s);
-    //std::cout << line.substr(0,ind) << " = " << line.substr(ind+1) << std::endl;
+    if(!ConfigManager::configMap.insert(s).second)
+      std::cout << "Error reading config file" << std::endl;
+    //std::cout << "key " << line.substr(0,ind) << " = " << ConfigManager::configMap[line.substr(0,ind)] << std::endl;
+
   }
 }

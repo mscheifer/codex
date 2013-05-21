@@ -38,12 +38,15 @@ std::vector<gx::drawSet::vaoData_t> loadModel(const std::string& ModelPath) {
 
 std::vector<gx::drawSet::vaoData_t> entitiesData() {
 	// MODEL LOADING
+  
   std::vector<gx::drawSet::vaoData_t> model_import  = loadModel("models/weird_orange_thing.dae");
+  
   std::vector<gx::drawSet::vaoData_t> model_import2 = loadModel("models/Model_rotate.dae");
   std::vector<gx::drawSet::vaoData_t> wallImport    = loadModel("models/wall.dae");
-
+  
     //setup drawing data
   std::vector<gx::drawSet::vaoData_t> entitiesData;
+ 
   auto cubes = gx::loadCube();
   auto skybox = gx::loadSkybox();
   entitiesData.insert(entitiesData.end(),skybox.begin(),skybox.end());
@@ -51,8 +54,9 @@ std::vector<gx::drawSet::vaoData_t> entitiesData() {
   entitiesData.insert(entitiesData.end(),wallImport.begin(),wallImport.end());
   entitiesData.insert(entitiesData.end(),cubes.begin(),cubes.end());
   entitiesData.insert(entitiesData.end(),model_import.begin(),model_import.end());
+   
   return entitiesData;
-}
+  }
 //must call after window is initialized
 GLenum initGlew() {
   //should glew be done per context?? if so, move to static method
@@ -94,7 +98,7 @@ std::vector<gx::uniform::block*> gx::graphicsClient::uniforms() {
   return ret;
 }
 // create the window
-//make sure this is above all opengl objects so that the desctructor is called
+//make sure this is above al opengl objects so that the desctructor is called
 //last so we have an opengl context for destructors
 gx::graphicsClient::graphicsClient():
     window(sf::VideoMode(defaultWindowWidth, defaultWindowHeight),
@@ -109,9 +113,9 @@ gx::graphicsClient::graphicsClient():
     playerStartDirection(0.0, 1.0,0.0),//change to result of init packet
     playerStartRight(playerStartDirection.y,playerStartDirection.x,playerStartDirection.z),
     playerPosition(0.0, 0.0, 0.0),//change to the result of init packet
-     fpsClock(), fpsFrames(0)                 {
+     fpsClock(), fpsFrames(0) , Hud()                {
   this->window.setVerticalSyncEnabled(false);
-  this->window.setMouseCursorVisible(false);
+  this->window.setMouseCursorVisible(true);
   if(!this->window.setActive()) {
     std::cout << "error activating window" << std::endl;
     exit(1);
@@ -152,6 +156,7 @@ ClientGameTimeAction gx::graphicsClient::handleInput() {
   action.attackMelee = fire1();
   action.attackRange = fire2();
   action.pickup = this->userInput.pickUp();
+  action.switchWeapon = this->userInput.switchW();
   return action;
 }
 
@@ -160,13 +165,26 @@ void gx::graphicsClient::draw() {
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
   gx::debugout << "glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT";
   gx::debugout << "| GL_STENCIL_BUFFER_BIT);" << gx::endl;
-
-    // draw...
+  
+  // draw...
 	entities.draw();
+  
+  //render sfml please don't comment or uncomment anything from the following block
+  glBindVertexArray(0);
+  debugout << "Bound 0 draw loop" << endl;
+  window.pushGLStates();
+  //glUseProgram(0);
+  glBindBuffer(GL_ARRAY_BUFFER, 0);
+  /* -----------------------move to a method ----------------------*/
+  Hud.draw(window); 
+  /* ------------------------------*/
+  window.popGLStates(); 
+  //glDisableClientState(GL_VERTEX_ARRAY);
+  //glDisableClientState(GL_COLOR_ARRAY);
+  //glDisableClientState(GL_TEXTURE_COORD_ARRAY);
 
   // end the current frame (internally swaps the front and back buffers)
   window.display();
-
   //fps calc
   fpsFrames++;
   if(fpsClock.getElapsedTime().asSeconds() >= 1) {
@@ -188,4 +206,25 @@ void gx::graphicsClient::updateEntities(std::vector<Entity*> data) {
     const auto& entity = **entityP;
     entities.addEntity(entity.getPosition(), entity.getDirection(), entity.getType());
   }
+}
+
+void gx::graphicsClient::updateHUD(Player & player) {
+  this->Hud.updateHUD(player);
+}
+
+void gx::graphicsClient::drawLobby() {
+  glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
+  glBindVertexArray(0);
+  window.pushGLStates();
+  glBindBuffer(GL_ARRAY_BUFFER, 0);
+  this->Lobby.drawLobby(window);
+  window.popGLStates(); 
+  window.display();
+}
+void gx::graphicsClient::disableCursor() {
+  this->window.setMouseCursorVisible(false);
+}
+
+bool gx::graphicsClient::gameStart() const {
+  return (this->Lobby).getStart();
 }

@@ -28,7 +28,9 @@ public:
       updateRect();
   } 
 
+  BoundingBox getAABB() const;
   bool isBox() const{return true;}
+  void rotate(vec3_t dir, vec3_t up);
 
   vec3_t getAx() const{ return ax; }
   vec3_t getAy() const{ return ay; }

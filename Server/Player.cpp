@@ -1,8 +1,10 @@
 #include "Player.h"
-#include "Projectile.h"
-
 
 const float Player::sphereRadius = 5.0f;
+const length_t Player::MOVESCALE = ConfigManager::playerMovescale();
+const length_t Player::AIRMOVESCALE = ConfigManager::playerAirMovescale();
+const length_t Player::JUMPSPEED = ConfigManager::playerJumpSpeed();
+const int Player::MAXJUMP = ConfigManager::playerMaxJump();
 
 Player::Player(){}// this->init(0,0,0,0,NULL);}
 Player::~Player(void){}
@@ -13,6 +15,7 @@ Player::Player(v3_t pos, int assigned_id, Map * m)
 
 void Player::init(v3_t pos, int assigned_id, Map * m)
 {
+  //std::cout<<"a player is created"<<std::endl;
   velocity = v3_t(0,0,0);
   acceleration = v3_t(0,0,0);
   oldJumpVelocity = v3_t(0,0,0);
@@ -32,7 +35,7 @@ void Player::init(v3_t pos, int assigned_id, Map * m)
 	castDownCounter = sf::Clock();
 	map = m;
 	weapon[0] = new WeaponFist(position, this->map);
-	weapon[1] = new WeaponFire(position, this->map); //TODO add this to entities if we want it
+	weapon[1] = new WeaponFire(position, this->map); //TODO add this to entities if we want it to drop
 	current_weapon_selection = 0;
   
   generateBounds(position);
@@ -90,8 +93,10 @@ bool Player::moveTowardDirection(move_t inputDir, bool jump)
     movementDirection.normalize();
   }
 
-  //if jump add jump velocity
-  if(jump && canJump){
+  //if jump add jump velocity, 
+  // and not free fall with no jumps
+  if(jump && canJump && 
+    !(jumpCount == 0 && velocity.z < getGravity().z * ConfigManager::serverTickLengthSec() * 5)){
     //add jump velocity
     v3_t jumpDir = movementDirection;
     jumpDir.z = 1;
@@ -108,28 +113,115 @@ bool Player::moveTowardDirection(move_t inputDir, bool jump)
       canJump = false;
   }
   
-  //move
+  //adjust movement
   if(jumpCount > 0) //move less if you are in the air
     movementDirection.scale(speed * AIRMOVESCALE);
   else
     movementDirection.scale(speed * MOVESCALE);
+
+  
+  movementDirection = correctMovement(movementDirection, true);
+
   position += movementDirection;
+
 	return true;
 }
 
+v3_t Player::correctMovement(v3_t movementDirection, bool slide){
+  Ray movementRay(v4_t(position.x,position.y,position.z), movementDirection);
+  std::vector<RayCollision> colls = detectCollision(&movementRay);
+  bool restart = false;
+  int restarts = 0;
+
+  for(auto coll = colls.begin(); coll != colls.end(); ){
+    Entity * e = coll->e;
+    v3_t acceptedMove = movementRay.getDirection();
+
+    switch(coll->e->getType()){
+    case WALL:
+    case PLAYER:
+      {
+        //scale by tfirst
+        v3_t newDir = acceptedMove;
+        newDir.scale(coll->tfirst);
+        
+        if(slide){
+          //project max "radius" onto normal and add the largest
+          //adjust normal axis to be in opposite direction as movement (pi/2 - -pi/2)
+          if( movementRay.getDirection().dot(coll->normalAxis) > 0 ){
+            coll->normalAxis.negate();
+          }
+          coll->normalAxis.normalize();
+
+          length_t maxRad;
+          length_t rad;
+          //TODO just doing this for now
+          BoundingBox * myBox = (BoundingBox*) boundingObjs[0];
+          v3_t radius = myBox->getAx();
+          radius.scale(myBox->getHw());
+          maxRad = radius.dot(coll->normalAxis);
+
+          radius = myBox->getAy();
+          radius.scale(myBox->getHh());
+          rad = radius.dot(coll->normalAxis);
+          if( rad > maxRad ){
+            maxRad = rad;
+          }
+
+          radius = myBox->getAz();
+          radius.scale(myBox->getHd());
+          rad = radius.dot(coll->normalAxis);
+          if( rad > maxRad ){
+            maxRad = rad;
+          }
+
+          coll->normalAxis.scale(maxRad);
+          newDir += coll->normalAxis;
+
+          //project extra onto axis parallel and add that
+          v3_t excess = acceptedMove;
+          excess.scale(1.0f - coll->tfirst);
+          coll->parallelAxis.normalize();
+          excess.scale( excess.dot(coll->parallelAxis) );
+          newDir += excess;
+        }
+
+        movementRay.setDirection(newDir);
+        restart = true;
+        break;
+      }
+    default:
+      break;
+    }
+
+    if(restart){
+      restarts++;
+      restart = false;
+      colls = detectCollision(&movementRay);
+      coll = colls.begin();
+    } else {
+      coll++;
+    }
+
+    if( restarts > 3 ) break;
+  }
+
+  return movementRay.getDirection();
+}
+
 void Player::update(){
-  clearEvents();
 
   //pick up weapon stuff
   pickup = nullptr;
   pickupWeaponType = UNK;
 
   //update movement
-  acceleration = GRAVITY;
+  acceleration = getGravity();
   velocity += acceleration * ConfigManager::serverTickLengthSec();
   position += velocity * ConfigManager::serverTickLengthSec();
-  health = (health+5 > maxHealth? maxHealth : health+5);
-  mana = (mana+5 > maxMana? maxMana : mana+5);
+  //I disabled health regen and mana regen  (BOWEN)
+  //health = (health+5 > maxHealth? maxHealth : health+5);
+  //mana = (mana+5 > maxMana? maxMana : mana+5);
   updateBounds();
 }
 
@@ -154,8 +246,6 @@ void Player::handleSelfAction(ClientGameTimeAction a) {
 	moveTowardDirection(a.movement, a.jump);
   direction = v3_t(a.facingDirection.x, a.facingDirection.y, a.facingDirection.z);
 	updateBounds();
-
-  std::cout << a.pickup << std::endl;
 
   //try pick up
   if(a.pickup && pickup ){
@@ -296,6 +386,7 @@ bool Player::collideProjectile(const std::pair<Entity*,BoundingObj::vec3_t>& p){
 
 void Player::setHealth(float h) {
 	health = h;
+//  std::cout<<"health set to "<<health<<std::endl;
 }
 
 void Player::setSpeed(float s) {
@@ -306,3 +397,56 @@ void Player::setMana(float m) {
 	mana = m;
 }
 
+void Player::serialize(sf::Packet& packet) const {
+    Entity::serialize(packet);
+    packet << this->player_id;
+    //acceleration.serialize(packet);
+    //velocity.serialize(packet);
+    //oldJumpVelocity.serialize(packet);
+    packet << dead; 
+    packet << minotaur; //might be private
+    packet << name;
+    packet << health;
+    packet << maxHealth;
+    packet << mana;
+    packet << maxMana;
+    packet << defense;
+    packet << speed;
+    packet << castDownTime; //not needed on client ?
+    //sf::Clock castDownCounter;
+    packet << jumpCount; // not needed on client ?
+    packet << canJump; //not needed on client ?
+    packet << attacking;  //not neede on client ?
+    //Weapon* weapon[MAXWEAPONS]; 
+    // change the array to vector ?
+    packet << static_cast<sf::Uint32>(pickupWeaponType);
+    packet << current_weapon_selection; 
+  }
+
+  void Player::deserialize(sf::Packet& packet) {
+    Entity::deserialize(packet);
+    packet >> this->player_id;
+    //acceleration.deserialize(packet);
+    //velocity.deserialize(packet);
+    //oldJumpVelocity.deserialize(packet);
+    packet >>dead; 
+    packet >>minotaur; //might be private
+    packet >> name;
+    packet >> health;
+    packet >> maxHealth;
+    packet >> mana;
+    packet >> maxMana;
+    packet >> defense;
+    packet >> speed;
+    packet >> castDownTime; //not needed on client ?
+    //sf::Clock castDownCounter;
+    packet >> jumpCount; // not needed on client ?
+    packet >> canJump; //not needed on client ?
+    packet >> attacking;  //not neede on client ?
+    //Weapon* weapon[MAXWEAPONS]; 
+    // change the array to vector ?
+    sf::Uint32 pickupWeaponTypeUint32;
+    packet >> pickupWeaponTypeUint32;
+    pickupWeaponType = static_cast<WeaponType>(pickupWeaponTypeUint32);
+    packet >> current_weapon_selection; 
+  }

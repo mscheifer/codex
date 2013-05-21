@@ -16,35 +16,9 @@ public:
   void setWallChangeTime(float t);
   void updateBounds();
   void updateBoundsSoft(); 
-  void serialize(sf::Packet & packet ) const {
-    Entity::serialize(packet);
-    /*
-    packet << static_cast<sf::Uint32>(centerPositions.size());
-    for (auto it=centerPositions.begin(); it!=centerPositions.end(); it++)
-      (*it).serialize(packet);
-    packet << currentCenter;
-    packet << width;
-    packet << depth;
-    packet << height;
-    */
-  } 
-  void deserialize(sf::Packet & packet ) {
-    Entity::deserialize(packet);
-    /*
-    sf::Uint32 size;
-    packet >> size;
-    centerPositions.clear();
-    for (auto i = 0u; i < size; i++) {
-       v3_t v;
-       v.deserialize(packet);
-       centerPositions.push_back(v);
-    }
-    packet >> currentCenter;
-    packet >> width;
-    packet >> depth;
-    packet >> height;
-    */
-  }
+  void serialize(sf::Packet & packet ) const;
+  void deserialize(sf::Packet & packet );
+
   Entity_Type getType() const {
     return type;
   }

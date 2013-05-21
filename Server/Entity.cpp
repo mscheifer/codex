@@ -46,3 +46,59 @@ std::vector<std::pair<Entity*,BoundingObj::vec3_t>> Entity::detectCollision(){
 
   return res;
 }
+  void Entity::serialize(sf::Packet& packet) const
+  {
+    position.serialize(packet);
+    direction.serialize(packet);
+  }
+
+  void Entity::deserialize(sf::Packet& packet)
+  {    
+    position.deserialize(packet);
+    direction.deserialize(packet);
+  }
+
+std::vector<RayCollision> Entity::detectCollision(Ray* r){
+  std::vector<RayCollision> res;
+  std::vector<BoundingObj*> potentialCollisions;
+  potentialCollisions.clear();
+  res.clear();
+
+  //all of my bounding objs
+  map->getQuadtreePtr()->retrieve(potentialCollisions, r);
+
+  //all potential collisions with bounding obj[i]
+  for(auto it2 = potentialCollisions.begin(); it2 != potentialCollisions.end(); it2++){
+      
+    //don't collide with self
+    if((*it2)->getEntity() == this)
+      continue;
+
+    //check if I have already collided with this entity //TODO maybe no entity check 
+    //[for 2 objs collide with 1 of my bboxes] shortest dist changes
+    auto finder = res.begin();
+    bool flag = false;
+    for( ; finder != res.end(); finder++){
+      if( finder->e == (*it2)->getEntity() ){
+        flag = true;
+        break;
+      }
+    }
+    if(flag)
+      break;
+
+    if( finder == res.end() ){
+      RayCollision collRes = rayCollide(r,*it2);
+      //try collide
+      if(collRes.collided){
+        collRes.e = (*it2)->getEntity();
+        res.push_back(collRes);
+      }
+    }
+  }
+
+  //sort by greater because a longer hit will mean it was hit first
+  std::sort (res.begin(), res.end(), sortRayCollision);
+
+  return res;
+}

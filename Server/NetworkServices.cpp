@@ -1,6 +1,4 @@
 #include "NetworkServices.h"
-#include <iostream>
-#include "StaticEnums.h"
 
 const unsigned short PORT_NUMBER = 55001;
 const int TIMEOUT = 1;

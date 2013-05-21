@@ -15,7 +15,6 @@ Projectile::~Projectile(void)
 }
 
 void Projectile::update(void) {
-  clearEvents();
   v3_t distanceTravelled = velocity * ConfigManager::serverTickLengthSec();
 	position += distanceTravelled;
   
@@ -67,7 +66,18 @@ void Projectile::handleCollisions() {
 }
 
 void Projectile::clearEvents(){
-  if(!firedGuard)
-    fired = false;
-  firedGuard = false;
+  fired = false;
 }
+
+void Projectile::serialize(sf::Packet & packet) const {
+  Entity::serialize(packet);
+  packet << fired;
+  //(*owner).serialize(packet);
+} 
+void Projectile::deserialize( sf::Packet & packet ) {
+  Entity::deserialize(packet);
+  packet >> fired;
+  //delete owner; this segfaults
+  //Player* owner = new Player();
+  //(*owner).deserialize(packet);
+ }
