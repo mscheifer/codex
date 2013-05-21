@@ -1,4 +1,5 @@
 #include "Entity.h"
+#include <algorithm>
 
 std::vector<std::pair<Entity*,BoundingObj::vec3_t>> Entity::detectCollision(){
   std::vector<std::pair<Entity*,BoundingObj::vec3_t>> res;

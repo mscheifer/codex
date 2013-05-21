@@ -1,7 +1,7 @@
-#include "drawSet.h"
+#include "graphicsEntity.h"
 
 namespace gx {
-std::vector<gx::drawSet::vaoData_t> loadCube() {
+std::vector<gx::staticEntity> loadCube() {
   std::array<GLfloat,8*4> posArray    = {{ 0.0f, 0.0f, 0.0f, 1.0f,
                                            1.0f, 0.0f, 0.0f, 1.0f,
                                            0.0f, 1.0f, 0.0f, 1.0f,
@@ -61,38 +61,32 @@ std::vector<gx::drawSet::vaoData_t> loadCube() {
   std::vector<GLfloat> normDiffs( normDiffArray.begin(),  normDiffArray.end());
   std::vector<GLuint>  indices(    indicesArray.begin(),   indicesArray.end());
 
-  gx::vertexAttrib* positionsAttrib =
-    new gx::vertexAttrib("position",4,0,positions);
-  gx::vertexAttrib* blueAttrib =
-    new gx::vertexAttrib("color"   ,4,0,blue);
-  gx::vertexAttrib* redAttrib =
-    new gx::vertexAttrib("color"   ,4,0,red);
-  gx::vertexAttrib* normalsAttrib =
-    new gx::vertexAttrib("normal"  ,3,0,normals);
-  gx::vertexAttrib* normDiffAttrib =
-    new gx::vertexAttrib("normDiff",1,0,normDiffs);
+  auto positionsAttrib = std::make_shared<gx::vertexAttrib>("position",4,0,positions);
+  auto      blueAttrib = std::make_shared<gx::vertexAttrib>("color"   ,4,0,blue);
+  auto       redAttrib = std::make_shared<gx::vertexAttrib>("color"   ,4,0,red);
+  auto   normalsAttrib = std::make_shared<gx::vertexAttrib>("normal"  ,3,0,normals);
+  auto  normDiffAttrib = std::make_shared<gx::vertexAttrib>("normDiff",1,0,normDiffs);
 
-  std::vector<const gx::vertexAttrib*> blueCubeAttribs;
+  std::vector<std::shared_ptr<const gx::vertexAttrib>> blueCubeAttribs;
   blueCubeAttribs.push_back(positionsAttrib);
   blueCubeAttribs.push_back(blueAttrib);
   blueCubeAttribs.push_back(normalsAttrib);
   blueCubeAttribs.push_back(normDiffAttrib);
 
-  std::vector<const gx::vertexAttrib*> redCubeAttribs;
+  std::vector<std::shared_ptr<const gx::vertexAttrib>> redCubeAttribs;
   redCubeAttribs.push_back(positionsAttrib);
   redCubeAttribs.push_back(redAttrib);
   redCubeAttribs.push_back(normalsAttrib);
   redCubeAttribs.push_back(normDiffAttrib);
 
-  std::vector<drawSet::vaoData_t> ret;
-  ret.push_back(std::make_pair(indices,blueCubeAttribs));
-  ret.push_back(std::make_pair(indices,redCubeAttribs));
+  std::vector<staticEntity> ret;
+  ret.push_back({indices,blueCubeAttribs});
+  ret.push_back({indices,redCubeAttribs});
 
   return ret;
 }
 
-std::vector<gx::drawSet::vaoData_t> loadSkybox() {
-  std::vector<drawSet::vaoData_t> ret;
+gx::staticEntity loadSkybox() {
   //sky box
   std::array<GLfloat,8*4> skyboxVtArr = {{ 1000.0f, 1000.0f, 500.0f, 1.0f,
 	                                        -1000.0f, 1000.0f, 500.0f, 1.0f,
@@ -135,19 +129,15 @@ std::vector<gx::drawSet::vaoData_t> loadSkybox() {
   std::vector<GLfloat> skyboxnormals(  skyboxNormA.begin(),   skyboxNormA.end());
   std::vector<GLuint>  skyboxindices(skyboxIndices.begin(), skyboxIndices.end());
   std::vector<GLfloat> lightblue(   lightblueArray.begin(),lightblueArray.end());
-  gx::vertexAttrib* skyboxPosAttrib =
-    new gx::vertexAttrib("position",4,0,skyboxVerts);
-  gx::vertexAttrib* skyboxColorAttrib =
-    new gx::vertexAttrib("color"   ,4,0,lightblue);
-  gx::vertexAttrib* skyboxNormalsAttrib =
-    new gx::vertexAttrib("normal"  ,3,0,skyboxnormals);
+  auto     skyboxPosAttrib = std::make_shared<gx::vertexAttrib>("position",4,0,skyboxVerts);
+  auto   skyboxColorAttrib = std::make_shared<gx::vertexAttrib>("color"   ,4,0,lightblue);
+  auto skyboxNormalsAttrib = std::make_shared<gx::vertexAttrib>("normal"  ,3,0,skyboxnormals);
 
-  std::vector<const gx::vertexAttrib*> skyboxAttribs;
+  std::vector<std::shared_ptr<const gx::vertexAttrib>> skyboxAttribs;
   skyboxAttribs.push_back(skyboxPosAttrib);
   skyboxAttribs.push_back(skyboxColorAttrib);
   skyboxAttribs.push_back(skyboxNormalsAttrib);
-  ret.push_back(std::make_pair(skyboxindices,skyboxAttribs));
 
-  return ret;
+  return {skyboxindices,skyboxAttribs};
 }
 } //end namespace gx

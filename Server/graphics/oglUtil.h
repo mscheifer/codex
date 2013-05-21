@@ -14,7 +14,11 @@ namespace gx {
 //don't set to true or it will break on Matt, Alvin and Bowen's machines
 constexpr bool sharedUniformsOn = false;
 
+#ifdef GRAPHICSDEBUG
+constexpr bool debugOn = true;
+#else
 constexpr bool debugOn = false;
+#endif
 
 const std::string shaderExtensions = 
   sharedUniformsOn ? "#extension GL_ARB_uniform_buffer_object : require\n" : "";

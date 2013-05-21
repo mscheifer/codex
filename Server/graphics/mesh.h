@@ -2,11 +2,12 @@
 #define	MESH_H
 #include <GL/glew.h>
 #include <vector>
-#include "drawSet.h"
+#include <assimp/Importer.hpp>    // C++ importer interface
+#include "matrix.h"
 #include "texture.h"
+#include "graphicsEntity.h"
 
 struct aiMesh;
-struct aiScene;
 
 namespace gx {
 class Mesh {
@@ -25,29 +26,33 @@ class Mesh {
         MeshEntry(MeshEntry&&) noexcept;
         MeshEntry& operator=(MeshEntry&&);// = delete; //define later
 
-		    drawSet::vaoData_t entitiesData;
+		    dynamicEntity entitiesData;
 
         unsigned int MaterialIndex;
         std::map<std::string,unsigned int> BoneMap;
     };
 
+    Assimp::Importer       mImporter; //this needs to be a member so the aiScene stays in scope
+    const aiScene*         mScene;
+
 	  struct BoundParam {
       matrix centerAndResize;
 		  vector3f center;	// center coord of model
 		  length_t width;	  // width  (along x axis)
-		  length_t height;	// height (along y axis)
-		  length_t depth;	  // width  (along z axis)
+		  length_t depth;	  // width  (along y axis)
+		  length_t height;	// height (along z axis)
 	  } m_boundary;
 
     std::vector<MeshEntry> m_Entries;
-    std::vector<Texture> m_Textures;
-    bool m_Good;
+    std::vector<Texture>   m_Textures;
+
+    bool                   m_Good();
   private:
-    bool LoadMesh(const std::string& Filename,length_t);
-    bool InitFromScene(const aiScene*, const std::string& Filename,length_t);
-    bool InitMaterials(const aiScene*, const std::string& Filename);
+    static const aiScene*         LoadFile(Assimp::Importer&,const std::string& Filename);
+    static std::vector<MeshEntry> InitFromScene(const aiScene*, const matrix);
+    static std::vector<Texture>   InitMaterials(const aiScene*, const std::string& Filename);
 	  // fill in our m_boundary object with the boundary info
-	  void CalcBoundBox(const aiScene* scene,length_t);
+	  static BoundParam CalcBoundBox(const aiScene* scene,length_t);
 };
 } //end namespace gx
 #endif	/* MESH_H */

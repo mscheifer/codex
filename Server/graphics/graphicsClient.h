@@ -2,7 +2,7 @@
 #define GRAPHICS_CLEINT_H
 #include <SFML/Window.hpp>
 #include "displaySet.h"
-#include "drawSet.h"
+#include "drawer.h"
 #include "light.h"
 #include "input.h"
 #include "ClientGameTimeAction.h" 
@@ -10,13 +10,6 @@
 class Entity;
 
 namespace gx {
-/*
-struct graphicEntity {
-  vector4f position;
-  vector3f direction;
-  unsigned int type;
-};
-*/
 class graphicsClient {
     sf::Window window;
     GLenum     glewStatus;
@@ -25,7 +18,7 @@ class graphicsClient {
     light light1;
     displaySet display;
 
-    drawSet entities;
+    staticDrawer entities;
 
     //player info
     static const vector3f upDirection;

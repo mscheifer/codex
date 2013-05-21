@@ -4,18 +4,19 @@
 #include <vector>
 #include <map>
 #include <string>
+#include <memory>
+#include "vertexAttrib.h"
 #include "vertexAttribSignature.h"
 
 namespace gx {
-class vertexAttrib;
-
 class vao {
-    GLuint  id;
-    GLsizei numIndices;
-    GLuint  ibo;
+    typedef vertexAttrib::attribsList_t attribsList_t;
+        GLuint id;
+       GLsizei numIndices;
+        GLuint ibo;
+    attribsList_t attribs;
   public:
-    vao(const std::vector<GLuint>,const std::vector<const vertexAttrib*>,
-        std::map<std::string,vertexAttribSignature>);
+    vao(const std::vector<GLuint>,attribsList_t,std::map<std::string,vertexAttribSignature>);
     vao(const vao&);// = delete; //don't copy
     vao& operator=(const vao&);// = delete; //don't assign
     vao(vao&&);

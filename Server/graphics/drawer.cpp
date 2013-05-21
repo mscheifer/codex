@@ -1,0 +1,55 @@
+#include "drawer.h"
+#include "uniformBlock.h"
+
+namespace {
+template<typename T>
+std::vector<typename T::entityClass> setupEntities(std::vector<gx::dynamicEntity> entDatas,
+                                          std::map<std::string,gx::vertexAttribSignature> vars) {
+  std::vector<typename T::entityClass> entityClasses;
+  for(auto entDatap = entDatas.begin(); entDatap != entDatas.end(); ++entDatap){
+    auto& entData = *entDatap;
+    entityClasses.push_back(typename T::entityClass(std::move(entData),vars));
+  }
+  return entityClasses;
+}
+
+} //end unnamed namespace
+
+template<typename T>
+gx::drawer<T>::drawer(std::vector<dynamicEntity> entDatas, std::vector<uniform::block*> globalUnifs)
+  : program(T::vertShader, T::fragShader, globalUnifs), impl(program), 
+    entityClasses(setupEntities<T>(std::move(entDatas),program.vars())), globalUniforms(globalUnifs) {}
+
+template<typename T>
+void gx::drawer<T>::draw() {
+  this->program.use();
+  for(auto unifP = this->globalUniforms.begin(); unifP != this->globalUniforms.end(); unifP++) {
+    (*unifP)->frameUpdate(&(this->program));
+  }
+  for(auto entityCp = entityClasses.begin(); entityCp != entityClasses.end();
+      ++entityCp) {
+    const auto& entityC = *entityCp;
+    for(auto instp = entityC.instances.begin(); instp != entityC.instances.end(); 
+        ++instp) {
+      const auto& inst = *instp;
+      this->impl.setUniforms(inst);
+      entityC.vertData.draw();
+    }
+  }
+}
+
+template<typename T>
+void gx::drawer<T>::reset() {
+  for(auto entityCp = entityClasses.begin(); entityCp != entityClasses.end();
+                                                                 ++entityCp) {
+    auto& entityC = *entityCp;
+    entityC.clear();
+  }
+}
+
+template<typename T>
+void gx::drawer<T>::addInstance(instanceData a) {
+  impl.addInstance(std::move(a),entityClasses);
+}
+
+template class gx::drawer<gx::staticDrawerImpl>;

@@ -1,8 +1,15 @@
 #include "vertexAttrib.h"
 
-gx::vertexAttrib::~vertexAttrib() {
-  glDeleteBuffers(1, &buffer);
-  debugout << "glDeleteBuffers(1, &buffer@" << &buffer << ");" << endl;
+gx::vertexAttrib::vertexAttrib(vertexAttrib&& other) noexcept
+  : varName(std::move(other.varName)), vectorSize(std::move(other.vectorSize)),
+    glType(std::move(other.glType)), byteOffset(std::move(other.byteOffset)),
+    buffer(std::move(other.buffer)) {
+  other.buffer = 0; //destructor won't do anything  
+}
+
+gx::vertexAttrib::~vertexAttrib() noexcept {
+  glDeleteBuffers(1, &(this->buffer));
+  debugout << "vert glDeleteBuffers(1, &(this->buffer): " << this->buffer << ");" << endl;
 }
 
 void gx::vertexAttrib::bindBuffer() const {

@@ -2,37 +2,36 @@
 #define DRAWSET_H
 #include <GL/glew.h>
 #include <vector>
-#include <string>
-#include "shaderProgram.h"
 #include "vao.h"
 #include "matrix.h"
 #include "uniformLocation.h"
+#include "graphicsEntity.h"
 
 namespace gx {
-class displaySet;
-namespace uniform {
-class block;
-} //end namespace uniform
-
-class drawSet {
-   struct entityClass {
-      std::vector<matrix> positions;
-      vao                 vertData;
-      entityClass(std::vector<matrix>,vao);
-      entityClass(entityClass&&);
-    };
-    shaderProgram            program;
-    std::vector<entityClass> entityClasses;
+class staticDrawerImpl {
     uniform::mat4floc        modelToWorldLoc;
-	  std::vector<uniform::block*> globalUniforms;
   public:
-    typedef std::pair<std::vector<GLuint>,
-                      std::vector<const vertexAttrib*>> vaoData_t;
-    drawSet(const std::string, const std::string, const std::vector<vaoData_t>,
-                  std::vector<uniform::block*>);
-    void draw() const;
-    void reset();
-    void addEntity(vector3f,vector3f,unsigned int);
+    static const std::string vertShader;
+    static const std::string fragShader;
+    struct entityClass {
+      typedef matrix        instance;
+      std::vector<instance> instances;
+      vao                   vertData;
+      entityClass(staticEntity,std::map<std::string,vertexAttribSignature>);
+      entityClass(const entityClass&) = delete;
+      entityClass(entityClass&&);
+      entityClass& operator=(const entityClass&) = delete;
+      entityClass& operator=(entityClass&&) = delete;
+      void clear();
+    };
+    void setUniforms(const entityClass::instance&) const;
+    struct instanceData {
+      vector3f pos;
+      vector3f dirY;
+      unsigned int type;
+    };
+    staticDrawerImpl(const shaderProgram&);
+    void addInstance(instanceData,std::vector<entityClass>&);
 };
 
 } //end namespace gx

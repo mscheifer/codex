@@ -1,10 +1,9 @@
 #include "vao.h"
 #include "vertexAttrib.h"
 
-gx::vao::vao(const std::vector<GLuint>                   indices,
-             const std::vector<const vertexAttrib*>      attribs,
+gx::vao::vao(const std::vector<GLuint> indices, attribsList_t attrs,
              std::map<std::string,vertexAttribSignature> sigs)
-       : id(), numIndices(static_cast<GLsizei>(indices.size())), ibo() {
+       : id(), numIndices(static_cast<GLsizei>(indices.size())), ibo(), attribs(std::move(attrs)) {
   glGenVertexArrays(1, &(this->id));
   debugout << "glGenVertexArrays(1, &(this->id));" << endl;
   glBindVertexArray(this->id);
@@ -20,7 +19,7 @@ gx::vao::vao(const std::vector<GLuint>                   indices,
   debugout << indices.size() * sizeof(GLuint);
   debugout << ", indices.data(), GL_STATIC_DRAW);" << endl;
 
-  for(auto attribp = attribs.begin() ; attribp != attribs.end() ; ++attribp) {
+  for(auto attribp = this->attribs.begin() ; attribp != this->attribs.end() ; ++attribp) {
     const auto& attrib = **attribp;
     auto itPos = sigs.find(attrib.name());
     if(itPos != sigs.end()) {
@@ -44,7 +43,7 @@ gx::vao::vao(const std::vector<GLuint>                   indices,
 }
 
 gx::vao::vao(vao&& other): id(other.id), numIndices(other.numIndices),
-                           ibo(other.ibo) {
+                           ibo(other.ibo), attribs(std::move(other.attribs)) {
   other.id  = 0; //delete vertex array won't complain
   other.ibo = 0; //delete buffers won't complain
 }

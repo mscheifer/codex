@@ -1,55 +1,32 @@
 #include "drawSet.h"
-#include "displaySet.h"
 #include "uniformBlock.h"
+#include "util.h"
 
-gx::drawSet::entityClass::entityClass(std::vector<matrix> poses, vao vaostuff)
-  : positions(std::move(poses)), vertData(std::move(vaostuff)) {}
+const std::string gx::staticDrawerImpl::vertShader = readFile("shaders/default.vert");
+const std::string gx::staticDrawerImpl::fragShader = readFile("shaders/default.frag");
 
-gx::drawSet::entityClass::entityClass(entityClass&& other)
-  : positions(std::move(other.positions)), vertData(std::move(other.vertData)) {}
+gx::staticDrawerImpl::entityClass::entityClass(staticEntity drawData,
+                std::map<std::string,vertexAttribSignature> vars)
+  : vertData(std::move(drawData.indices),std::move(drawData.attribs),std::move(vars)) {}
 
-gx::drawSet::drawSet(const std::string vertShader, const std::string fragShader,
-                     const std::vector<vaoData_t> vaoDatas,
-         std::vector<uniform::block*>  globalUnifs)
-  : program(vertShader, fragShader, globalUnifs), entityClasses(),
-    modelToWorldLoc(program,"modelToWorld",1), globalUniforms(globalUnifs) {
-  for(auto vaoDatap = vaoDatas.begin(); vaoDatap != vaoDatas.end(); ++vaoDatap){
-    const auto& vaoData = *vaoDatap;
-    entityClass newEntClass(std::vector<matrix>(),
-                  vao(vaoData.first,vaoData.second,program.vars()));
-    entityClasses.push_back(std::move(newEntClass));
-  }
+gx::staticDrawerImpl::entityClass::entityClass(entityClass&& other)
+  : instances(std::move(other.instances)), vertData(std::move(other.vertData)) {}
+
+void gx::staticDrawerImpl::entityClass::clear() {
+  this->instances.clear();
 }
 
-void gx::drawSet::draw() const {
-  this->program.use();
-  for(auto unifP = this->globalUniforms.begin(); unifP != this->globalUniforms.end(); unifP++) {
-    (*unifP)->frameUpdate(&(this->program));
-  }
-  for(auto entityCp = entityClasses.begin(); entityCp != entityClasses.end();
-                                                                 ++entityCp) {
-    const auto& entityC = *entityCp;
-    for(auto locp = entityC.positions.begin(); locp != entityC.positions.end(); 
-                                                                       ++locp) {
-      const auto& loc = *locp;
-      this->modelToWorldLoc.write(loc.oglmatrix().data());
-      entityC.vertData.draw();
-    }
-  }
+gx::staticDrawerImpl::staticDrawerImpl(const shaderProgram& program)
+  : modelToWorldLoc(program,"modelToWorld",1) {}
+
+void gx::staticDrawerImpl::setUniforms(const entityClass::instance& inst) const {
+  this->modelToWorldLoc.write(inst.oglmatrix().data());
 }
 
-void gx::drawSet::reset() {
-  for(auto entityCp = entityClasses.begin(); entityCp != entityClasses.end();
-                                                                 ++entityCp) {
-    auto& entityC = *entityCp;
-    entityC.positions.clear();
-  }
-}
-
-void gx::drawSet::addEntity(vector3f pos,vector3f dirY,unsigned int type) {
-  dirY.z = 0;
-  dirY.normalize();
+void gx::staticDrawerImpl::addInstance(instanceData d,std::vector<entityClass>& entityClasses) {
+  d.dirY.z = 0;
+  d.dirY.normalize();
   const vector3f up = vector3f(0,0,1);
-  matrix rotAndTrans = translation(pos.x,pos.y,pos.z) * toRightHandBasisFromYandUp(dirY,up);
-  this->entityClasses[type].positions.push_back(rotAndTrans);
+  matrix rotAndTrans = translation(d.pos.x,d.pos.y,d.pos.z) * toRightHandBasisFromYandUp(d.dirY,up);
+  entityClasses[d.type].instances.push_back(rotAndTrans);
 }
