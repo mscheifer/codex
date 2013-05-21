@@ -32,9 +32,18 @@ Weapon::Weapon(float damage, float ran, v3_t pos, float mpcost, Map* m)
 	this->map = m;
 }
 
-bool Weapon::canUseWeapon(bool range_attack) {
-	if(		(range_attack && Range_Cool_Down_Counter.getElapsedTime().asMilliseconds() > Range_Cool_Down_Time)
-		||	(!range_attack && Melee_Cool_Down_Counter.getElapsedTime().asMilliseconds() > Melee_Cool_Down_Time)){
+bool Weapon::canUseWeapon(bool range_attack, Player* Owner) {
+  int range_counter = Range_Cool_Down_Counter.getElapsedTime().asMilliseconds();
+  int melee_counter = Melee_Cool_Down_Counter.getElapsedTime().asMilliseconds();
+  
+  if(Owner->isSpeedUpActive()) {
+    melee_counter/= Owner->getAttackSpeedDiv();
+    range_counter/= Owner->getAttackSpeedDiv();
+  }
+
+
+	if(		(range_attack &&  range_counter > Range_Cool_Down_Time)
+		||	(!range_attack &&  melee_counter > Melee_Cool_Down_Time)){
 			return true;
 	}
 	return false;
@@ -46,7 +55,7 @@ bool Weapon::attackMelee()
 }
 
 //@alvin @allen why is this here?
-Projectile* Weapon::attackRange(v3_t dir , v3_t pos)
+Projectile* Weapon::attackRange(v3_t dir , v3_t pos, Player* owner)
 {
 	Projectile* pj = map->produceProjectile();
   dir.normalize();
@@ -54,11 +63,11 @@ Projectile* Weapon::attackRange(v3_t dir , v3_t pos)
   dir.scale(projectileSpeed);
   pj->setVelocity(dir);
   pj->setPosition(pos);
-
+  pj->setOwner(owner);
 	pj->setStrength(projectileStrength);
 	pj->setRange(projectileRange);
   pj->setFired(true);
-
+  Range_Cool_Down_Counter.restart();
 	return pj;
 }
 

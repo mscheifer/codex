@@ -24,10 +24,9 @@ public:
 protected:
   sf::Clock Respown_Counter;
   int Respown_Time;
-
-private:
 	float healthMutiplyer;
 	float manaMutiplyer;
+  int speedUpTime; // this is in milli sec
 	float speedMutiplyer;
 	bool active;
 };

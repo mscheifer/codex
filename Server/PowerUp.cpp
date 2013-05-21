@@ -31,9 +31,15 @@ void PowerUp::handleCollisions() {
       // std::cout << "collided " << std::endl;
       Player luckyGuy = *(Player*)e;
       luckyGuy.setHealth(luckyGuy.getHealth() + healthMutiplyer);
-	    luckyGuy.setSpeed(luckyGuy.getSpeed() + speedMutiplyer);
+      if(speedMutiplyer > 1 ) {
+	      luckyGuy.setAttackSpeed(luckyGuy.getSpeed() + speedMutiplyer);
+        luckyGuy.activateSpeedUp();
+        luckyGuy.setSpeedUpTime(speedUpTime);
+        luckyGuy.restartSpeedUpCounter();
+      }
 	    luckyGuy.setMana(luckyGuy.getMana() + manaMutiplyer);
       active = false;
+      break;
     }
     
   }

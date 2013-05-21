@@ -58,7 +58,7 @@ void Projectile::handleCollisions() {
 
   for( auto it = entities.begin(); it != entities.end(); it++ ){
     Entity * e = it->first; 
-    if(e != owner) {
+    if(e != owner &&  e->getType() != PROJECTILE) {
        map->destroyProjectile(this);
     }
   }

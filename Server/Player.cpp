@@ -30,9 +30,12 @@ void Player::init(v3_t pos, int assigned_id, Map * m)
 	health = 100;
 	maxHealth = 100;
 	speed = 1;
+  attackSpeed = 1;
 	mana = 100;
 	maxMana = 100;
 	castDownCounter = sf::Clock();
+  speedUpCounter = sf::Clock();
+  speedUp = false;
 	map = m;
 	weapon[0] = new WeaponFist(position, this->map);
 	weapon[1] = new WeaponFire(position, this->map); //TODO add this to entities if we want it to drop
@@ -211,6 +214,12 @@ v3_t Player::correctMovement(v3_t movementDirection, bool slide){
 
 void Player::update(){
 
+  //powerup shit
+  if(speedUp && speedUpCounter.getElapsedTime().asMilliseconds() > speedUpTime) {
+     speedUp = false;
+     attackSpeed = 1.0;
+  }
+
   //pick up weapon stuff
   pickup = nullptr;
   pickupWeaponType = UNK;
@@ -269,15 +278,15 @@ void Player::attack( ClientGameTimeAction a) {
 	Weapon* currentWeapon = weapon[current_weapon_selection];
 
 	if(a.attackRange){
-    if( !currentWeapon->canUseWeapon(true) || currentWeapon->getMpCost() > mana){
+    if( !currentWeapon->canUseWeapon(true, this) || currentWeapon->getMpCost() > mana){
 			return;
 		}
 		mana -= currentWeapon->getMpCost();
-		Projectile* proj = currentWeapon->attackRange(direction, position);
-    proj->setOwner(this);
+		currentWeapon->attackRange(direction, position, this);
+
 	}
 	else if(a.attackMelee){
-		if( !currentWeapon->canUseWeapon(false)){
+		if( !currentWeapon->canUseWeapon(false, this)){
 			return;
 		}
 		currentWeapon->attackMelee();

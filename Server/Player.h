@@ -57,6 +57,12 @@ public:
   void setMana(float);
   float getSpeed(){ return speed;}
   void setSpeed(float);
+  void setSpeedUpTime(int s) { speedUpTime = s; };
+  void activateSpeedUp(void) { speedUp = true ;};
+  bool isSpeedUpActive(void) { return speedUp;};
+  void setAttackSpeed(float s) { attackSpeed = s;};
+  float getAttackSpeedDiv(void) {return attackSpeed;};
+  void restartSpeedUpCounter(void) { speedUpCounter.restart();};
   WeaponType getPickupWeaponType() const{ return pickupWeaponType; }
 
   Entity_Type getType() const {
@@ -65,6 +71,7 @@ public:
   
   void serialize(sf::Packet& packet) const;
   void deserialize(sf::Packet& packet);
+
   
 
 private:
@@ -78,8 +85,12 @@ private:
   float maxMana;
   float defense;
   float speed;
+  int speedUpTime;
+  float attackSpeed;
   float castDownTime;
   sf::Clock castDownCounter;
+  sf::Clock speedUpCounter;
+  bool speedUp;
   int jumpCount;
   bool canJump;
   bool attacking;
