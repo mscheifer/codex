@@ -32,7 +32,7 @@ void Game::evaluate(ClientGameTimeAction a) {
 	
 	for( unsigned int i = 0; i <  currentPlayers.size(); i++ ) {
 		currentPlayers[i]->handleAction(a);
-    //world.separatePlayers(currentPlayers[i]);
+    world.separatePlayers(currentPlayers[i]);
 	}
 }
 

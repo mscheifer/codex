@@ -130,8 +130,8 @@ bool Player::moveTowardDirection(move_t inputDir, bool jump)
 v3_t Player::correctMovement(v3_t movementDirection, bool slide){
   //add the radius to account for collision
   BoundingBox * myBox = (BoundingBox*) boundingObjs[0];
-  v3_t radius = myBox->getMaxRadius( movementDirection );
-  movementDirection += radius;
+  //v3_t radius = myBox->getMaxRadius( movementDirection );
+  //movementDirection += radius;
   Ray movementRay(v4_t(position.x,position.y,position.z), movementDirection);
   
   std::vector<RayCollision> colls = detectCollision(&movementRay);
@@ -366,11 +366,12 @@ bool Player::collideWall(const std::pair<Entity*,BoundingObj::vec3_t>& p){
 
 bool Player::collidePlayer(const std::pair<Entity*,BoundingObj::vec3_t>& p){
   BoundingObj::vec3_t fixVec = p.second;
-  fixVec.scale(0.5f);
+  restartJump(fixVec.z);
+  //fixVec.scale(0.5f);
   position += fixVec;
-  fixVec.negate();
-  p.first->setPosition( p.first->getPosition() + fixVec );
-  p.first->updateBounds();
+  //fixVec.negate();
+  //p.first->setPosition( p.first->getPosition() + fixVec );
+  //p.first->updateBounds();
   updateBounds();
   return true;
 }
