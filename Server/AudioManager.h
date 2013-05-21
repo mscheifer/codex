@@ -14,8 +14,10 @@ private:
   static std::map<std::string, sf::SoundBuffer*> soundBuffers;
   static std::map<std::string, std::string> musics;
   static std::list<sf::Sound> sounds;
-  static sf::Music music;
+  static std::array<sf::Music,4> music;
   static bool useSound;
+  static int trackNo;
+  static const int maxTracks = 2;
 
   //load a sound into the soundBuffers with reference name key
   //and filename sound
@@ -33,7 +35,10 @@ public:
   static void playSound(std::string key, v3_t pos);
 
   //play this music
-  static void playMusic(std::string music);
+  //numPlayers is the players in close proximity
+  static void updateMusic( int numPlayers );
+  static void loadTrack( int i );
+  static void playMusic(std::string music, int index);
 
   static void processPlayerSound(Player& o);
   static void processProjectileSound(Projectile& o);

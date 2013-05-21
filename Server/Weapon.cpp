@@ -41,7 +41,7 @@ bool Weapon::canUseWeapon(bool range_attack, Player* Owner) {
     range_counter/= Owner->getAttackSpeedDiv();
   }
 
-  //TODO set the owner??
+  //TODO set the owner?? @alvin
 
 	if(		(range_attack &&  range_counter > Range_Cool_Down_Time)
 		||	(!range_attack &&  melee_counter > Melee_Cool_Down_Time)){
