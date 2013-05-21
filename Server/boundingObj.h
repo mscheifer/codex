@@ -44,6 +44,7 @@ public:
   virtual bool isRay() const{return false;}
   virtual bool isSphere() const{return false;}
   virtual bool isBox() const{return false;}
+  virtual vec3_t getMaxRadius( vec3_t axis ){return axis;};
   
   //compare the rect pointers
   bool operator==(const BoundingObj &other){

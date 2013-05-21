@@ -128,7 +128,12 @@ bool Player::moveTowardDirection(move_t inputDir, bool jump)
 }
 
 v3_t Player::correctMovement(v3_t movementDirection, bool slide){
+  //add the radius to account for collision
+  BoundingBox * myBox = (BoundingBox*) boundingObjs[0];
+  v3_t radius = myBox->getMaxRadius( movementDirection );
+  movementDirection += radius;
   Ray movementRay(v4_t(position.x,position.y,position.z), movementDirection);
+  
   std::vector<RayCollision> colls = detectCollision(&movementRay);
   bool restart = false;
   int restarts = 0;
@@ -154,29 +159,11 @@ v3_t Player::correctMovement(v3_t movementDirection, bool slide){
           }
           coll->normalAxis.normalize();
 
-          length_t maxRad;
-          length_t rad;
+          //get the max "radius" on teh normal
           //TODO just doing this for now
-          BoundingBox * myBox = (BoundingBox*) boundingObjs[0];
-          v3_t radius = myBox->getAx();
-          radius.scale(myBox->getHw());
-          maxRad = std::fabs(radius.dot(coll->normalAxis));
+          coll->normalAxis = myBox->getMaxRadius(coll->normalAxis);
 
-          radius = myBox->getAy();
-          radius.scale(myBox->getHh());
-          rad = std::fabs(radius.dot(coll->normalAxis));
-          if( rad > maxRad ){
-            maxRad = rad;
-          }
-
-          radius = myBox->getAz();
-          radius.scale(myBox->getHd());
-          rad = std::fabs(radius.dot(coll->normalAxis));
-          if( rad > maxRad ){
-            maxRad = rad;
-          }
-
-          coll->normalAxis.scale(maxRad);
+          //subtract the max radius (normal axis is in opposite direction)
           newDir += coll->normalAxis;
 
           //project extra onto axis parallel and add that
