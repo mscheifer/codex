@@ -178,8 +178,10 @@ void Player::update(){
   //position += velocity * ConfigManager::serverTickLengthSec();
   
   //I disabled health regen and mana regen  (BOWEN)
-  //health = (health+healthRegen > maxHealth? maxHealth : health+5);
-  //mana = (mana+manaRegen > maxMana? maxMana : mana+5);
+  health+=healthRegen;
+  health = (health > maxHealth? maxHealth : health);
+  mana+=manaRegen;
+  mana = (mana > maxMana? maxMana : mana);
   updateBounds();
 }
 

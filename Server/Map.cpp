@@ -190,6 +190,10 @@ std::vector<Entity *> Map::getEntity() {
 	 return players;
  }
 
+ std::vector<Projectile *> Map::getLiveProjectTile(){
+   return liveProjectTile;
+ }
+
  Projectile* Map::produceProjectile()
  {
    if(freeProjectiles->empty())
@@ -201,7 +205,7 @@ std::vector<Entity *> Map::getEntity() {
    }
    Projectile* ret = freeProjectiles->top();
    freeProjectiles->pop();
-   entities.push_back(ret); //TODO shouldn't this be live projecties?
+   liveProjectTile.push_back(ret); //TODO shouldn't this be live projecties?
    addToQtree(ret);
    return ret;
  }
@@ -212,9 +216,9 @@ std::vector<Entity *> Map::getEntity() {
    proj->setOwner(NULL);
    freeProjectiles->push(proj);
    // should probably use a hasmap soon
-   for(unsigned int i = 0; i < entities.size(); i++) {
-	   if(entities.at(i) == proj) {
-			entities.erase(entities.begin() + i);
+   for(unsigned int i = 0; i < liveProjectTile.size(); i++) {
+	   if(liveProjectTile.at(i) == proj) {
+			liveProjectTile.erase(liveProjectTile.begin() + i);
 	   }
    }
    removeFromQtree(proj);
