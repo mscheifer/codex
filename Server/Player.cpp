@@ -127,78 +127,9 @@ bool Player::moveTowardDirection(move_t inputDir, bool jump)
 	return true;
 }
 
-v3_t Player::correctMovement(v3_t movementDirection, bool slide){
-  //add the radius to account for collision
-  BoundingBox * myBox = (BoundingBox*) boundingObjs[0];
-  //v3_t radius = myBox->getMaxRadius( movementDirection );
-  //movementDirection += radius;
-  Ray movementRay(v4_t(position.x,position.y,position.z), movementDirection);
-  
-  std::vector<RayCollision> colls = detectCollision(&movementRay);
-  bool restart = false;
-  int restarts = 0;
-  std::cout << movementDirection << std::endl;
-
-  for(auto coll = colls.begin(); coll != colls.end(); ){
-    Entity * e = coll->e;
-    v3_t acceptedMove = movementRay.getDirection();
-
-    switch(coll->e->getType()){
-    case WALL:
-    case PLAYER:
-      {
-        //scale by tfirst
-        v3_t newDir = acceptedMove;
-        newDir.scale(coll->tfirst);
-        
-        if(slide){
-          //project max "radius" onto normal and add the largest
-          //adjust normal axis to be in opposite direction as movement (pi/2 - -pi/2)
-          if( newDir.dot(coll->normalAxis) > 0 ){
-            coll->normalAxis.negate();
-          }
-          coll->normalAxis.normalize();
-
-          //get the max "radius" on teh normal
-          //TODO just doing this for now
-          coll->normalAxis = myBox->getMaxRadius(coll->normalAxis);
-
-          //subtract the max radius (normal axis is in opposite direction)
-          newDir += coll->normalAxis;
-
-          //project extra onto axis parallel and add that
-          v3_t excess = acceptedMove;
-          excess.scale(1.0f - coll->tfirst);
-          coll->parallelAxis.normalize();
-          length_t slide = excess.dot(coll->parallelAxis);
-          excess = coll->parallelAxis;
-          excess.scale(slide);
-          newDir += excess;
-        }
-
-        movementRay.setDirection(newDir);
-        restart = true;
-        break;
-      }
-    default:
-      break;
-    }
-
-    if(restart){
-      restarts++;
-      restart = false;
-      colls = detectCollision(&movementRay);
-      coll = colls.begin();
-    } else {
-      coll++;
-    }
-
-    if( restarts > 3 ) break;
-  }
-
-    std::cout << "\t corrected " << movementRay.getDirection() << std::endl;
-
-  return movementRay.getDirection();
+bool Player::correctMovementHit( Entity* e ){
+  Entity_Type etype = e->getType();
+  return etype == PLAYER || etype == WALL;
 }
 
 void Player::update(){
@@ -211,8 +142,8 @@ void Player::update(){
   acceleration = getGravity();
   velocity += acceleration * ConfigManager::serverTickLengthSec();
   v3_t attemptMove = velocity * ConfigManager::serverTickLengthSec();
-  //position += correctMovement( attemptMove, false );
-  position += velocity * ConfigManager::serverTickLengthSec();
+  position += correctMovement( attemptMove, false );
+  //position += velocity * ConfigManager::serverTickLengthSec();
   
   //I disabled health regen and mana regen  (BOWEN)
   //health = (health+5 > maxHealth? maxHealth : health+5);

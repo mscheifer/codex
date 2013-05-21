@@ -14,8 +14,21 @@ Projectile::~Projectile(void)
 {
 }
 
+bool Projectile::correctMovementHit( Entity* e ){
+  Entity_Type etype = e->getType();
+  if( etype == WALL || etype == PROJECTILE ){
+    return true;
+  } else if ( etype == PLAYER ){
+    return e != owner;
+  }
+  return false;
+}
+
 void Projectile::update(void) {
   v3_t distanceTravelled = velocity * ConfigManager::serverTickLengthSec();
+  std::cout << distanceTravelled << std::endl;
+  distanceTravelled = correctMovement(distanceTravelled, false);
+    std::cout << "\t corrected: " <<  distanceTravelled << std::endl;
 	position += distanceTravelled;
   
   //see if travelled full range
@@ -72,7 +85,8 @@ void Projectile::serialize(sf::Packet & packet) const {
   Entity::serialize(packet);
   packet << fired;
   //(*owner).serialize(packet);
-} 
+}
+
 void Projectile::deserialize( sf::Packet & packet ) {
   Entity::deserialize(packet);
   packet >> fired;

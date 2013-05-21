@@ -19,10 +19,10 @@
 class Player: public Entity
 {
 public:
-  static const length_t MOVESCALE;// = 2;//ConfigManager::playerMovescale();
-  static const length_t AIRMOVESCALE;// = 2;//ConfigManager::playerAirMovescale();
-  static const length_t JUMPSPEED;// = 2;//ConfigManager::playerJumpSpeed();
-  static const int MAXJUMP;// = 2;//ConfigManager::playerMaxJump();
+  static const length_t MOVESCALE;
+  static const length_t AIRMOVESCALE;
+  static const length_t JUMPSPEED;
+  static const int MAXJUMP;
 
   static const float playerWidth;
   static const float playerHeight;
@@ -87,6 +87,7 @@ private:
   bool attacking;
   Weapon* weapon[MAXWEAPONS]; //0 bare hand, 1 fireball
   int current_weapon_selection; //0 bare hand, 1 fireball
+
   bool damageBy(DeadlyEntity *);
   void handleSelfAction(ClientGameTimeAction a);
   void handleOtherAction(ClientGameTimeAction a);
@@ -94,5 +95,5 @@ private:
   void init(v3_t pos, int assigned_id, Map * m);
   void generateBounds(v3_t pos);
   void restartJump(length_t zPosFix);
-  v3_t correctMovement(v3_t movementDirection, bool slide);
+  bool correctMovementHit( Entity* e );
 };

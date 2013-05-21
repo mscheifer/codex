@@ -30,6 +30,7 @@ public:
 private:
   Player * owner;
   bool fired;
+  bool correctMovementHit( Entity* e );
 
 public:
   bool getFired() const{ return fired; }

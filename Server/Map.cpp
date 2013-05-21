@@ -246,7 +246,6 @@ void Map::separatePlayers(Player* player){
       i = 0;
       restart = false;
     }
-
     if(restarts > 3)
       break;
 

@@ -7,30 +7,23 @@
 #include <stdlib.h> /* srand rand */
 #include <time.h>   /* time */
 
-struct IdPacket
-{
+struct IdPacket{
 public:
   static const int packetType = JOINID;
   int id;
   IdPacket() {}
-  IdPacket(int i)
-  {
-    id = i;
-  }
+  IdPacket(int i){ id = i;}
 
-  void serialize(sf::Packet& packet) const
-  {
+  void serialize(sf::Packet& packet) const{
     packet << id;
   }
 
-  void deserialize(sf::Packet& packet)
-  {
+  void deserialize(sf::Packet& packet){
     packet >> id;
   }
 };
 
-struct InitPacket
-{
+struct InitPacket{
 public:
   static const int packetType = INIT;
   int id;
@@ -38,19 +31,15 @@ public:
   v3_t direction;
 
   InitPacket() {}
-  InitPacket(int idc, v3_t coord, v3_t dir) : id(idc), position(coord), direction(dir)
-  {
-  }
+  InitPacket(int idc, v3_t coord, v3_t dir) : id(idc), position(coord), direction(dir){}
 
-  void serialize(sf::Packet& packet) const
-  {
+  void serialize(sf::Packet& packet) const{
     packet << id;
     position.serialize(packet);
     direction.serialize(packet);
   }
 
-  void deserialize(sf::Packet& packet)
-  {
+  void deserialize(sf::Packet& packet){
     packet >> id;
     position.deserialize(packet);
     direction.deserialize(packet);
