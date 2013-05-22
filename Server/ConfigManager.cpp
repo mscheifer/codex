@@ -67,6 +67,8 @@ void ConfigManager::readConfig() {
 
   size_t ind = 0;
   while( configFile >> line ){
+    if(line.find_first_of("//",0) == 0)
+      continue;
     ind = line.find('=');
     if( ind == std::string::npos )
       continue;
