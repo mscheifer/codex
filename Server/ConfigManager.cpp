@@ -51,8 +51,9 @@ void ConfigManager::setupLog(std::string str){
 }
 
 void ConfigManager::readConfig() {
-  if(read)
+  if(read) {
     return;
+  }
 
   read = true;
   std::ifstream configFile;
@@ -67,18 +68,25 @@ void ConfigManager::readConfig() {
 
   size_t ind = 0;
   while( configFile >> line ){
-    if(line.find_first_of("//",0) == 0)
+    if(line.find_first_of("//",0) == 0) {
       continue;
+    }
     ind = line.find('=');
-    if( ind == std::string::npos )
+    if( ind == std::string::npos ) {
       continue;
+    }
     //std::cout << line << std::endl;
       
     //std::cout << "insert: " << line.substr(0,ind) << " = " << line.substr(ind+1) << std::endl;
-    std::pair<std::string,std::string> s = std::pair<std::string,std::string>(line.substr(0,ind),line.substr(ind+1));
-    if(!ConfigManager::configMap.insert(s).second)
+    std::pair<std::string,std::string> s = std::make_pair(line.substr(0,ind),line.substr(ind+1));
+    if(!ConfigManager::configMap.insert(s).second) {
       std::cout << "Error reading config file" << std::endl;
     //std::cout << "key " << line.substr(0,ind) << " = " << ConfigManager::configMap[line.substr(0,ind)] << std::endl;
-
+    }
   }
 }
+
+const float ConfigManager::playerMovescale() {
+  if(!read) readConfig();
+  return StringToNumber<float>(ConfigManager::configMap["movescale"]);
+ }

@@ -8,10 +8,20 @@ const float Player::playerWidth = 1.0f;
 const float Player::playerHeight = 1.0f;
 const float Player::playerDepth = 3.0f;
 
-const length_t Player::MOVESCALE = ConfigManager::playerMovescale();
-const length_t Player::AIRMOVESCALE = ConfigManager::playerAirMovescale();
-const length_t Player::JUMPSPEED = ConfigManager::playerJumpSpeed();
-const int Player::MAXJUMP = ConfigManager::playerMaxJump();
+//these have to be functions because calling configManager stuff to initialize
+//globals is undefined behavior
+const length_t Player::MOVESCALE() {
+  return ConfigManager::playerMovescale();
+}
+const length_t Player::AIRMOVESCALE() {
+  return ConfigManager::playerAirMovescale();
+}
+const length_t Player::JUMPSPEED() {
+  ConfigManager::playerJumpSpeed();
+}
+const int Player::MAXJUMP() {
+  ConfigManager::playerMaxJump();
+}
 
 Player::Player(){}// this->init(0,0,0,0,NULL);}
 Player::~Player(void){}
@@ -140,7 +150,7 @@ bool Player::moveTowardDirection(move_t inputDir, bool jump)
     //add jump velocity
     v3_t jumpDir = movementDirection;
     jumpDir.z = 1;
-    jumpDir.scale(JUMPSPEED);
+    jumpDir.scale(JUMPSPEED());
     velocity = velocity - oldJumpVelocity;
     velocity += jumpDir;
     velocity.z = jumpDir.z; //reset z velocity (for double jumping)
@@ -149,15 +159,15 @@ bool Player::moveTowardDirection(move_t inputDir, bool jump)
     jumpDir.z = 0;
     oldJumpVelocity = jumpDir;
 
-    if(++jumpCount >= MAXJUMP)
+    if(++jumpCount >= MAXJUMP())
       canJump = false;
   }
   
   //adjust movement
   if(jumpCount > 0) //move less if you are in the air
-    movementDirection.scale(speed * AIRMOVESCALE);
+    movementDirection.scale(speed * AIRMOVESCALE());
   else
-    movementDirection.scale(speed * MOVESCALE);
+    movementDirection.scale(speed * MOVESCALE());
 
   movementDirection = correctMovement(movementDirection, true);
   position += movementDirection;

@@ -42,7 +42,7 @@ public:
   static void setupLog(std::string str = "");
 
   /// Player/Minotaur Related///
-  static const float playerMovescale(){ if(!read) readConfig(); return StringToNumber<float>(ConfigManager::configMap["movescale"]); }
+  static const float playerMovescale();
   static const float playerAirMovescale(){ return StringToNumber<float>(ConfigManager::configMap["airMovescale"]); }
   static const float playerJumpSpeed(){ return StringToNumber<float>(ConfigManager::configMap["jumpSpeed"]); }
   static const int playerMaxJump(){ return StringToNumber<int>(ConfigManager::configMap["maxJump"]); }

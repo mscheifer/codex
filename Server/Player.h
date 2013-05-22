@@ -14,10 +14,10 @@
 class Player: public Entity
 {
 public:
-  static const length_t MOVESCALE;
-  static const length_t AIRMOVESCALE;
-  static const length_t JUMPSPEED;
-  static const int MAXJUMP;
+  static const length_t MOVESCALE();
+  static const length_t AIRMOVESCALE();
+  static const length_t JUMPSPEED();
+  static const int MAXJUMP();
 
   static const float playerWidth;
   static const float playerHeight;
