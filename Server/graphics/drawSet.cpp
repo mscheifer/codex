@@ -5,7 +5,7 @@
 gx::drawSet::entityClass::entityClass(std::vector<matrix> poses, vao vaostuff)
   : positions(std::move(poses)), vertData(std::move(vaostuff)) {}
 
-gx::drawSet::entityClass::entityClass(entityClass&& other)
+gx::drawSet::entityClass::entityClass(entityClass&& other) noexcept
   : positions(std::move(other.positions)), vertData(std::move(other.vertData)) {}
 
 gx::drawSet::drawSet(const std::string vertShader, const std::string fragShader,

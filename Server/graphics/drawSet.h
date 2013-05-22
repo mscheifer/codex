@@ -21,7 +21,7 @@ class drawSet {
       entityClass(std::vector<matrix>,vao);
       entityClass(const entityClass&);// = delete; //don't copy
       entityClass& operator=(const entityClass&);// = delete; //don't assign
-      entityClass(entityClass&&);
+      entityClass(entityClass&&) noexcept;
       entityClass& operator=(entityClass&&);// = delete; //define later
     };
     shaderProgram            program;
