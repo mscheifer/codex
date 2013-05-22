@@ -59,11 +59,21 @@ void Player::setAsMinotaur(bool b)
   minotaur = b;
   if(b)
   {
+    defense = ConfigManager::minotaurDef();
+    health = ConfigManager::minotaurHp();
     healthRegen = ConfigManager::minotaurHpRegen();
+	  maxHealth = ConfigManager::minotaurMaxHp();
+    mana = ConfigManager::minotaurMp();
     manaRegen = ConfigManager::minotaurMpRegen();
+	  maxMana = ConfigManager::minotaurMaxMp();
   } else {
+    defense = ConfigManager::playerDef();
+    health = ConfigManager::playerHp();
     healthRegen = ConfigManager::playerHpRegen();
+	  maxHealth = ConfigManager::playerMaxHp();
+    mana = ConfigManager::playerMp();
     manaRegen = ConfigManager::playerMpRegen();
+	  maxMana = ConfigManager::playerMaxMp();
   }
 }
 

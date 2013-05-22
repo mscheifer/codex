@@ -41,6 +41,7 @@ public:
   //setup the logfile
   static void setupLog(std::string str = "");
 
+  /// Player/Minotaur Related///
   static const float playerMovescale(){ if(!read) readConfig(); return StringToNumber<float>(ConfigManager::configMap["movescale"]); }
   static const float playerAirMovescale(){ return StringToNumber<float>(ConfigManager::configMap["airMovescale"]); }
   static const float playerJumpSpeed(){ return StringToNumber<float>(ConfigManager::configMap["jumpSpeed"]); }
@@ -54,6 +55,15 @@ public:
   static const float playerMaxMp(){ return StringToNumber<float>(ConfigManager::configMap["playerMaxMp"]); }
   static const float minotaurHpRegen(){ return StringToNumber<float>(ConfigManager::configMap["minotaurHpRegen"]); }
   static const float minotaurMpRegen(){ return StringToNumber<float>(ConfigManager::configMap["minotaurMpRegen"]); }
+  static const float minotaurDef(){ return StringToNumber<float>(ConfigManager::configMap["minotaurDef"]); }
+  static const float minotaurHp(){ return StringToNumber<float>(ConfigManager::configMap["minotaurHp"]); }
+  static const float minotaurMaxHp(){ return StringToNumber<float>(ConfigManager::configMap["minotaurMaxHp"]); }
+  static const float minotaurMp(){ return StringToNumber<float>(ConfigManager::configMap["minotaurMp"]); }
+  static const float minotaurMaxMp(){ return StringToNumber<float>(ConfigManager::configMap["minotaurMaxMp"]); }
+
+  /// Projectile ///
   static const float projectileRange(){ return StringToNumber<float>(ConfigManager::configMap["projectileRange"]); }
+
+  /// Physics ///
   static const float gravity(){  return StringToNumber<float>(ConfigManager::configMap["gravity"]); }
 };
