@@ -137,7 +137,7 @@ void NetworkClient::processInput(){
 */
 void NetworkClient::doClient() {
   AudioManager::loadSounds();
-  //AudioManager::playMusic("m1");
+  AudioManager::playMusic("m1");
 
   //std::cout << "Waiting for other players to join" << std::endl;
   //TODO refactor the menu logic 

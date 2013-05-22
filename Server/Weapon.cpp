@@ -72,12 +72,14 @@ Projectile* Weapon::attackRange(v3_t dir , v3_t pos, Player* owner)
   dir.normalize();
   pj->setDirection(dir);
   dir.scale(projectileSpeed);
-  pj->setVelocity(dir);
+  pj->setVelocity(v3_t(0,0,0));
   pj->setPosition(pos);
   pj->setOwner(owner);
 	pj->setStrength(projectileStrength);
 	pj->setRange(projectileRange);
-  pj->setFired(true);
+  pj->setFired(false);
+  pj->setChargeTime(1500);
+
   Range_Cool_Down_Counter.restart();
 	return pj;
 }
