@@ -45,8 +45,8 @@ public:
   static const float playerAirMovescale(){ return StringToNumber<float>(ConfigManager::configMap["airMovescale"]); }
   static const float playerJumpSpeed(){ return StringToNumber<float>(ConfigManager::configMap["jumpSpeed"]); }
   static const int playerMaxJump(){ return StringToNumber<int>(ConfigManager::configMap["maxJump"]); }
-  static const float playerHpRegen(){ return StringToNumber<float>(ConfigManager::configMap["humanHpRegen"]); }
-  static const float playerMpRegen(){ return StringToNumber<float>(ConfigManager::configMap["humanMpRegen"]); }
+  static const float playerHpRegen(){ return StringToNumber<float>(ConfigManager::configMap["playerHpRegen"]); }
+  static const float playerMpRegen(){ return StringToNumber<float>(ConfigManager::configMap["playerMpRegen"]); }
   static const float playerDef(){ return StringToNumber<float>(ConfigManager::configMap["playerDef"]); }
   static const float playerHp(){ return StringToNumber<float>(ConfigManager::configMap["playerHp"]); }
   static const float playerMaxHp(){ return StringToNumber<float>(ConfigManager::configMap["playerMaxHp"]); }
