@@ -14,7 +14,7 @@ gx::dynamicEntity loadModel(const std::string& ModelPath) {
 
 std::vector<gx::dynamicEntity> entitiesData() {
 	// MODEL LOADING
-  auto modelTest   = loadModel("models/boblampclean.md5mesh");
+  auto modelTest   = loadModel("models/boblampclean.md5anim");
   auto modelJack   = loadModel("models/weird_orange_thing.dae");
   auto modelPlayer = loadModel("models/Test_Run.dae");
   auto modelWall   = loadModel("models/wall.dae");
