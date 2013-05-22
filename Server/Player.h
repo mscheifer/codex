@@ -83,6 +83,7 @@ private:
   float maxHealth;
   float mana;
   float maxMana;
+  Projectile* chargedProjectile;
   float defense;
   float speed;
   int speedUpTime;
@@ -104,4 +105,5 @@ private:
   void generateBounds(v3_t pos);
   void restartJump(length_t zPosFix);
   v3_t correctMovement(v3_t movementDirection, bool slide);
+  v3_t getProjectilePosition(void);
 };

@@ -40,7 +40,7 @@ void Player::init(v3_t pos, int assigned_id, Map * m)
 	weapon[0] = new WeaponFist(position, this->map);
 	weapon[1] = new WeaponFire(position, this->map); //TODO add this to entities if we want it to drop
 	current_weapon_selection = 0;
-  
+  chargedProjectile = nullptr;
   generateBounds(position);
   m->addToQtree(this);
 }
@@ -220,6 +220,11 @@ void Player::update(){
      attackSpeed = 1.0;
   }
 
+  //
+  if(chargedProjectile ) {
+    chargedProjectile->setPosition(getProjectilePosition());
+  }
+
   //pick up weapon stuff
   pickup = nullptr;
   pickupWeaponType = UNK;
@@ -266,11 +271,31 @@ void Player::handleSelfAction(ClientGameTimeAction a) {
 	//start of attacking logic
 	if(a.attackRange || a.attackMelee) {
 		attack(a);
-	}
+	} else {
+    if(chargedProjectile) {
+      v3_t v = direction;
+      v.normalize();
+      v.scale(20);
+      chargedProjectile->fire(v);
+      chargedProjectile = nullptr;
+    }
+  }
 }
 
 void Player::handleOtherAction( ClientGameTimeAction) {
 	//since we are modeling projectiles, we are just gonna check for melee
+}
+
+v3_t Player::getProjectilePosition() {
+ 
+  v3_t temp = position;
+
+  v3_t d = direction;
+  d.normalize();
+  d.scale(1.5);
+  temp += d;
+ 
+  return temp;
 }
 
 // this do substraction of stemina, respond to the user to render the attak animation  
@@ -278,11 +303,13 @@ void Player::attack( ClientGameTimeAction a) {
 	Weapon* currentWeapon = weapon[current_weapon_selection];
 
 	if(a.attackRange){
+    
     if( !currentWeapon->canUseWeapon(true, this) || currentWeapon->getMpCost() > mana){
-			return;
-		}
-		mana -= currentWeapon->getMpCost();
-		currentWeapon->attackRange(direction, position, this);
+		  return;
+	  }
+	  mana -= currentWeapon->getMpCost();
+	  chargedProjectile = currentWeapon->attackRange(direction, getProjectilePosition(), this);
+  
 
 	}
 	else if(a.attackMelee){
