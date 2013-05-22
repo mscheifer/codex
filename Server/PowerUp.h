@@ -17,9 +17,7 @@ public:
   void update();
   void updateBounds(); //TODO this maybe should be in inherited (if differen sizes)
 
-  Entity_Type getType() const {
-    return type;
-  }
+  Entity_Type getType() const { return type; }
 
 protected:
   sf::Clock Respown_Counter;

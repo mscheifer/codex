@@ -26,7 +26,7 @@ Weapon::Weapon(float damage, float ran, v3_t pos, float mpcost, Map* m)
 	position = pos;
   direction = v3_t(0,0,1);
 	mpCost = mpcost;
-	projectileSpeed = 20.0; // pending removal
+	projectileSpeed = 100.0; // pending removal
 	projectileRange = 300; //pending removal
 	projectileStrength = 26; //pending removal
 	this->map = m;
@@ -41,6 +41,7 @@ bool Weapon::canUseWeapon(bool range_attack, Player* Owner) {
     range_counter/= Owner->getAttackSpeedDiv();
   }
 
+  //TODO set the owner?? @alvin
 
 	if(		(range_attack &&  range_counter > Range_Cool_Down_Time)
 		||	(!range_attack &&  melee_counter > Melee_Cool_Down_Time)){
@@ -49,12 +50,22 @@ bool Weapon::canUseWeapon(bool range_attack, Player* Owner) {
 	return false;
 }
 
-bool Weapon::attackMelee()
+Projectile* Weapon::attackMelee(v3_t dir , v3_t pos, Player* owner)
 {
-	return false;
+	Projectile* pj = map->produceProjectile();
+  dir.normalize();
+  pj->setDirection(dir);
+  dir.scale(projectileSpeed);
+  pj->setVelocity(dir);
+  pj->setPosition(pos);
+  pj->setOwner(owner);
+	pj->setStrength(projectileStrength);
+	pj->setRange(1);
+  pj->setFired(true);
+  Melee_Cool_Down_Counter.restart();
+	return pj;
 }
 
-//@alvin @allen why is this here?
 Projectile* Weapon::attackRange(v3_t dir , v3_t pos, Player* owner)
 {
 	Projectile* pj = map->produceProjectile();

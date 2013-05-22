@@ -13,3 +13,13 @@ BoundingObj::~BoundingObj(){
   if(rect)
     delete rect;
 }
+
+std::string BoundingObj::toString(){
+  std::stringstream ss;
+  ss << "rectangle " << std::endl
+    << "center " << rect->getCenter() << " w " << rect->getHalfWidth() << " h " << 
+    rect->getHalfHeight() << std::endl 
+    << " object " << std::endl
+    << " center " << center << std::endl;
+  return ss.str();
+}

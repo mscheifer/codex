@@ -14,7 +14,7 @@ void Game::chooseMinotaur()
 {
   srand(static_cast<unsigned int>(time(nullptr)));
   int minotaur = rand() % ConfigManager::numPlayers();
-  world.getPlayers()[minotaur]->minotaur=true;
+  world.getPlayers()[minotaur]->setAsMinotaur(true);
 }
 
 int Game::join()
@@ -34,14 +34,13 @@ void Game::evaluate(ClientGameTimeAction a) {
 		currentPlayers[i]->handleAction(a);
     world.separatePlayers(currentPlayers[i]);
 	}
-  //matt c please take this out
-  std::cout<<"switch weapon? "<<a.switchWeapon<<std::endl;
 }
 
 /* updates & resolve collision for each clock tick */
 void Game::updateAndResolveCollision() {
   std::vector<Player *> currentPlayers =  world.getPlayers();
 	std::vector<Entity *> currentEntities = world.getEntity();
+  std::vector<Projectile*> currentProjectile = world.getLiveProjectTile();
 
   for( unsigned int i = 0; i < currentPlayers.size(); i++ ) {
 		currentPlayers[i]->update();
@@ -51,6 +50,10 @@ void Game::updateAndResolveCollision() {
 		currentEntities[i]->update();
 	}
 
+  for( unsigned int i = 0; i < currentProjectile.size(); i++ ) {
+		currentProjectile[i]->update();
+	}
+
   //run collision fix here
   for( unsigned int i = 0; i <  currentPlayers.size(); i++ ) {
     currentPlayers[i]->handleCollisions();
@@ -58,6 +61,10 @@ void Game::updateAndResolveCollision() {
    
 	for( unsigned int i = 0; i < currentEntities.size(); i++ ) {
 		currentEntities[i]->handleCollisions();
+	}
+
+  for( unsigned int i = 0; i < currentProjectile.size(); i++ ) {
+		currentProjectile[i]->handleCollisions();
 	}
 }
 
@@ -70,13 +77,20 @@ ServerGameTimeRespond Game::prepResponse() {
   s.players.clear();
 	std::vector<Player*>  currentPlayers =  world.getPlayers();
 	std::vector<Entity*> currentEntities = world.getEntity();
+  std::vector<Projectile*> currentProjectiles = world.getLiveProjectTile();
 	for( unsigned int i = 0; i < currentPlayers.size(); i++ ) {
-     //for testing
+     /*for testing
      if (currentPlayers[i]->getHealth() > 0) {
        (currentPlayers[i])->setHealth(currentPlayers[i]->getHealth()-1);
      } else  (currentPlayers[i])->setHealth(100);
+     */
 		 s.players.push_back(*currentPlayers[i]); //add the player to the return struct
 	}
+
+  for( unsigned int i = 0; i < currentProjectiles.size(); i++ ) {
+    if(currentProjectiles[i]->canRender())
+      s.projectiles.push_back(currentProjectiles[i]); 
+  }
 
 	for( unsigned int i = 0; i < currentEntities.size(); i++ ) {
     if( currentEntities[i]->canRender() ) {
@@ -104,7 +118,7 @@ ServerGameTimeRespond Game::prepResponse() {
   bool minotaurLose  = false;
   //determine who wins
   for (unsigned int i = 0; i< currentPlayers.size(); i++ ) {
-     if (!currentPlayers[i]->minotaur) {
+     if (!currentPlayers[i]->isMinotaur()) {
         if (currentPlayers[i]->dead) {
           deadPlayers++;
         }

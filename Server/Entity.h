@@ -19,6 +19,8 @@ protected:
   std::vector<BoundingObj*> boundingObjs;
   // Some kind of state {paralyzed, frozen, blah blah}
   // Power ups {contains MULTIPLERS for health, defense/ elemental weapons}
+  v3_t correctMovement( v3_t movementDirection, bool slide );
+  virtual bool correctMovementHit( Entity* e ){return false;}
 
 public:
   Entity() { render = true; }
@@ -35,11 +37,15 @@ public:
   virtual void updateBoundsSoft(){}
   //return a vector of entites collided with and shortest vector of removal
   std::vector<std::pair<Entity*,v3_t>> detectCollision();
+
+  //movement collision functions
   std::vector<RayCollision> detectCollision(Ray* r);
+
+
 
   bool canRender() const { return render; }
   v3_t getPosition(void) const { return position; }
-  void setPosition(v3_t c) { position = c;}
+  void setPosition(v3_t c) { position = c; }
   v3_t getDirection(void) const { return direction; }
   void setDirection(v3_t d) { direction = d; }
   void setVelocity(v3_t v) { velocity = v; }

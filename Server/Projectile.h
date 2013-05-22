@@ -22,16 +22,15 @@ public:
   void handleCollisions();
   void clearEvents();
   void setChargeTime(int t) { Charge_Time = t ;};
+  Entity_Type getType() const { return type; }
   void fire( v3_t velocity);
-  Entity_Type getType() const {
-    return type;
-  }
   void serialize(sf::Packet & packet) const;
   void deserialize(sf::Packet & packet);
  
 private:
   Player * owner;
   bool fired;
+  bool correctMovementHit( Entity* e );
   bool charging;
   MAGIC_POWER charge_level;
   sf::Clock charge_counter;

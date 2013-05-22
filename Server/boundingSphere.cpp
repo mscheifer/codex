@@ -16,4 +16,10 @@ void BoundingSphere::updateRect(){
  getRect()->setHalfWidth(radius);
 }
 
+BoundingObj::vec3_t BoundingSphere::getMaxRadius( vec3_t axis ){
+  axis.normalize();
+  axis.scale( radius );
+  return axis;
+}
+
 BoundingSphere::~BoundingSphere(void){}

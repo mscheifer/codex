@@ -17,7 +17,9 @@ Wall::Wall(unsigned int w, unsigned int d, unsigned int h, v3_t sc, v3_t direct,
   map = m;
   wallMoveClock = sf::Clock();
   wallMoveTime = 0;
-  BoundingBox* b = new BoundingBox(BoundingObj::vec4_t(direct.x,direct.y,direct.z),
+
+  //TODO direction not taken into accound
+  BoundingBox* b = new BoundingBox(BoundingObj::vec4_t(sc.x,sc.y,sc.z),
     BoundingObj::vec3_t(1,0,0),BoundingObj::vec3_t(0,1,0),BoundingObj::vec3_t(0,0,1),
     w/2.f,h/2.f,d/2.f);
   b->setEntity(this);

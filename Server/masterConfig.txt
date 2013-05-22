@@ -1,5 +1,5 @@
 log=0
-sound=1
+sound=0
 graphicsDebug=false
 players=1
 serverTicksPerSec=30
@@ -8,3 +8,7 @@ airMovescale=1
 maxJump=2
 jumpSpeed=10
 gravity=-20
+humanHpRegen=.1
+humanMpRegen=.08
+minotaurHpRegen=.15
+minotaurMpRegen=.1

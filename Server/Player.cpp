@@ -1,6 +1,13 @@
 #include "Player.h"
 
-const float Player::sphereRadius = 5.0f;
+#include "Projectile.h"
+#include "WeaponFist.h"
+#include "WeaponFire.h"
+
+const float Player::playerWidth = 1.0f;
+const float Player::playerHeight = 1.0f;
+const float Player::playerDepth = 3.0f;
+
 const length_t Player::MOVESCALE = ConfigManager::playerMovescale();
 const length_t Player::AIRMOVESCALE = ConfigManager::playerAirMovescale();
 const length_t Player::JUMPSPEED = ConfigManager::playerJumpSpeed();
@@ -28,10 +35,12 @@ void Player::init(v3_t pos, int assigned_id, Map * m)
   direction = v3_t(0,0,0);
 	defense = 5;
 	health = 100;
+  healthRegen = ConfigManager::playerHpRegen();
 	maxHealth = 100;
 	speed = 1;
   attackSpeed = 1;
 	mana = 100;
+  manaRegen = ConfigManager::playerMpRegen();
 	maxMana = 100;
 	castDownCounter = sf::Clock();
   speedUpCounter = sf::Clock();
@@ -39,10 +48,28 @@ void Player::init(v3_t pos, int assigned_id, Map * m)
 	map = m;
 	weapon[0] = new WeaponFist(position, this->map);
 	weapon[1] = new WeaponFire(position, this->map); //TODO add this to entities if we want it to drop
-	current_weapon_selection = 0;
+	current_weapon_selection = 1;
   chargedProjectile = nullptr;
   generateBounds(position);
   m->addToQtree(this);
+}
+
+void Player::setAsMinotaur(bool b)
+{
+  minotaur = b;
+  if(b)
+  {
+    healthRegen = ConfigManager::minotaurHpRegen();
+    manaRegen = ConfigManager::minotaurMpRegen();
+  } else {
+    healthRegen = ConfigManager::playerHpRegen();
+    manaRegen = ConfigManager::playerMpRegen();
+  }
+}
+
+bool Player::isMinotaur()
+{
+  return minotaur;
 }
 
 void Player::generateBounds(v3_t pos){
@@ -50,7 +77,7 @@ void Player::generateBounds(v3_t pos){
   //BoundingSphere* b = new BoundingSphere(gx::vector4(x,y,z),sphereRadius);
   BoundingBox* b = new BoundingBox(BoundingObj::vec4_t(pos.x,pos.y,pos.z),
     BoundingObj::vec3_t(1,0,0),BoundingObj::vec3_t(0,1,0),BoundingObj::vec3_t(0,0,1),
-    sphereRadius,sphereRadius,sphereRadius);
+    playerWidth,playerHeight,playerDepth);
   b->setEntity(this);
   boundingObjs.push_back(b);
 }
@@ -122,98 +149,17 @@ bool Player::moveTowardDirection(move_t inputDir, bool jump)
   else
     movementDirection.scale(speed * MOVESCALE);
 
-  
   movementDirection = correctMovement(movementDirection, true);
-
   position += movementDirection;
-
 	return true;
 }
 
-v3_t Player::correctMovement(v3_t movementDirection, bool slide){
-  Ray movementRay(v4_t(position.x,position.y,position.z), movementDirection);
-  std::vector<RayCollision> colls = detectCollision(&movementRay);
-  bool restart = false;
-  int restarts = 0;
-
-  for(auto coll = colls.begin(); coll != colls.end(); ){
-    Entity * e = coll->e;
-    v3_t acceptedMove = movementRay.getDirection();
-
-    switch(coll->e->getType()){
-    case WALL:
-    case PLAYER:
-      {
-        //scale by tfirst
-        v3_t newDir = acceptedMove;
-        newDir.scale(coll->tfirst);
-        
-        if(slide){
-          //project max "radius" onto normal and add the largest
-          //adjust normal axis to be in opposite direction as movement (pi/2 - -pi/2)
-          if( movementRay.getDirection().dot(coll->normalAxis) > 0 ){
-            coll->normalAxis.negate();
-          }
-          coll->normalAxis.normalize();
-
-          length_t maxRad;
-          length_t rad;
-          //TODO just doing this for now
-          BoundingBox * myBox = (BoundingBox*) boundingObjs[0];
-          v3_t radius = myBox->getAx();
-          radius.scale(myBox->getHw());
-          maxRad = radius.dot(coll->normalAxis);
-
-          radius = myBox->getAy();
-          radius.scale(myBox->getHh());
-          rad = radius.dot(coll->normalAxis);
-          if( rad > maxRad ){
-            maxRad = rad;
-          }
-
-          radius = myBox->getAz();
-          radius.scale(myBox->getHd());
-          rad = radius.dot(coll->normalAxis);
-          if( rad > maxRad ){
-            maxRad = rad;
-          }
-
-          coll->normalAxis.scale(maxRad);
-          newDir += coll->normalAxis;
-
-          //project extra onto axis parallel and add that
-          v3_t excess = acceptedMove;
-          excess.scale(1.0f - coll->tfirst);
-          coll->parallelAxis.normalize();
-          excess.scale( excess.dot(coll->parallelAxis) );
-          newDir += excess;
-        }
-
-        movementRay.setDirection(newDir);
-        restart = true;
-        break;
-      }
-    default:
-      break;
-    }
-
-    if(restart){
-      restarts++;
-      restart = false;
-      colls = detectCollision(&movementRay);
-      coll = colls.begin();
-    } else {
-      coll++;
-    }
-
-    if( restarts > 3 ) break;
-  }
-
-  return movementRay.getDirection();
+bool Player::correctMovementHit( Entity* e ){
+  Entity_Type etype = e->getType();
+  return etype == PLAYER || etype == WALL;
 }
 
 void Player::update(){
-
   //powerup shit
   if(speedUp && speedUpCounter.getElapsedTime().asMilliseconds() > speedUpTime) {
      speedUp = false;
@@ -232,10 +178,15 @@ void Player::update(){
   //update movement
   acceleration = getGravity();
   velocity += acceleration * ConfigManager::serverTickLengthSec();
-  position += velocity * ConfigManager::serverTickLengthSec();
+  v3_t attemptMove = velocity * ConfigManager::serverTickLengthSec();
+  position += correctMovement( attemptMove, false );
+  //position += velocity * ConfigManager::serverTickLengthSec();
+  
   //I disabled health regen and mana regen  (BOWEN)
-  //health = (health+5 > maxHealth? maxHealth : health+5);
-  //mana = (mana+5 > maxMana? maxMana : mana+5);
+  health+=healthRegen;
+  health = (health > maxHealth? maxHealth : health);
+  mana+=manaRegen;
+  mana = (mana > maxMana? maxMana : mana);
   updateBounds();
 }
 
@@ -280,6 +231,10 @@ void Player::handleSelfAction(ClientGameTimeAction a) {
       chargedProjectile = nullptr;
     }
   }
+
+  if(a.switchWeapon){
+    current_weapon_selection = ++current_weapon_selection % MAXWEAPONS;
+  }
 }
 
 void Player::handleOtherAction( ClientGameTimeAction) {
@@ -316,7 +271,7 @@ void Player::attack( ClientGameTimeAction a) {
 		if( !currentWeapon->canUseWeapon(false, this)){
 			return;
 		}
-		currentWeapon->attackMelee();
+		currentWeapon->attackMelee(direction, position, this);
 	}
 
 	attacking = true;
@@ -402,11 +357,12 @@ bool Player::collideWall(const std::pair<Entity*,BoundingObj::vec3_t>& p){
 
 bool Player::collidePlayer(const std::pair<Entity*,BoundingObj::vec3_t>& p){
   BoundingObj::vec3_t fixVec = p.second;
-  fixVec.scale(0.5f);
+  restartJump(fixVec.z);
+  //fixVec.scale(0.5f);
   position += fixVec;
-  fixVec.negate();
-  p.first->setPosition( p.first->getPosition() + fixVec );
-  p.first->updateBounds();
+  //fixVec.negate();
+  //p.first->setPosition( p.first->getPosition() + fixVec );
+  //p.first->updateBounds();
   updateBounds();
   return true;
 }

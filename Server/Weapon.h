@@ -17,7 +17,7 @@ public:
 
 	bool canUseWeapon(bool range_attack, Player* owner);
 	bool canPickUp() { return pickedUp; }
-	virtual bool attackMelee(); 
+	virtual Projectile* attackMelee(v3_t dir, v3_t pos, Player* owner); 
 	virtual Projectile* attackRange(v3_t dir, v3_t pos, Player* owner);
   //pick up weapon, remove bounding box from map
   virtual bool pickUp();
@@ -32,9 +32,7 @@ public:
   void serialize(sf::Packet & packet) const;
   void deserialize(sf::Packet & packet); 
  
-  Entity_Type getType() const {
-    return type;
-  }
+  Entity_Type getType() const { return type; }
 
 protected:
 	int Range_Cool_Down_Time; //cool down time between uses in milliseconds

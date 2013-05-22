@@ -46,8 +46,6 @@ void NetworkServer::receiveMessages(int i) {
 }
 
 void NetworkServer::doServer() {
-  //ConfigManager::setupLog("server");
-  ConfigManager::log("lol");
   sf::IpAddress myIpAddress = sf::IpAddress::getLocalAddress();
   std::cout << "Server Ip Address: " << myIpAddress.toString() << std::endl;
   sf::Clock clock;
@@ -68,7 +66,7 @@ void NetworkServer::doServer() {
   game.chooseMinotaur();
   
   //Wait for players to start
-  int connectionCount = 0;
+  unsigned int connectionCount = 0;
   while (connectionCount < ConfigManager::numPlayers()) {
     for(unsigned int i = 0; i < server.size(); i++){
       sf::Packet packet;

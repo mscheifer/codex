@@ -3,6 +3,7 @@
 #include "Client.h"
 
 int main() {
+
   std::cout.sync_with_stdio(false); //speed up printing
   ConfigManager::readConfig();
 

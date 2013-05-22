@@ -13,7 +13,7 @@ bool WeaponFist::attackMelee()
   return false;
 }
 
-Projectile* WeaponFist::attackRange()
+Projectile* WeaponFist::attackRange(v3_t dir, v3_t pos)
 {
   return NULL;
   //attackMelee();
