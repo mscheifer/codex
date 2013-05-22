@@ -50,12 +50,22 @@ bool Weapon::canUseWeapon(bool range_attack, Player* Owner) {
 	return false;
 }
 
-bool Weapon::attackMelee()
+Projectile* Weapon::attackMelee(v3_t dir , v3_t pos, Player* owner)
 {
-	return false;
+	Projectile* pj = map->produceProjectile();
+  dir.normalize();
+  pj->setDirection(dir);
+  dir.scale(projectileSpeed);
+  pj->setVelocity(dir);
+  pj->setPosition(pos);
+  pj->setOwner(owner);
+	pj->setStrength(projectileStrength);
+	pj->setRange(1);
+  pj->setFired(true);
+  Melee_Cool_Down_Counter.restart();
+	return pj;
 }
 
-//@alvin @allen why is this here?
 Projectile* Weapon::attackRange(v3_t dir , v3_t pos, Player* owner)
 {
 	Projectile* pj = map->produceProjectile();

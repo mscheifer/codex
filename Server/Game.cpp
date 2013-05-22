@@ -88,7 +88,8 @@ ServerGameTimeRespond Game::prepResponse() {
 	}
 
   for( unsigned int i = 0; i < currentProjectiles.size(); i++ ) {
-     s.projectiles.push_back(currentProjectiles[i]); 
+    if(currentProjectiles[i]->canRender())
+      s.projectiles.push_back(currentProjectiles[i]); 
   }
 
 	for( unsigned int i = 0; i < currentEntities.size(); i++ ) {

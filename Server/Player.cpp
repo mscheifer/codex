@@ -244,7 +244,7 @@ void Player::attack( ClientGameTimeAction a) {
 		if( !currentWeapon->canUseWeapon(false, this)){
 			return;
 		}
-		currentWeapon->attackMelee();
+		currentWeapon->attackMelee(direction, position, this);
 	}
 
 	attacking = true;
