@@ -19,6 +19,7 @@ class graphicsClient {
     displaySet display;
 
     staticDrawer entities;
+    dynamicDrawer animatedDrawer;
 
     //player info
     static const vector3f upDirection;

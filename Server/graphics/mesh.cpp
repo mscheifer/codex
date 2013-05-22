@@ -16,33 +16,24 @@ gx::vector3f toVec3(const aiVector3D& aiVec) {
   return gx::vector3f(aiVec.x,aiVec.y,aiVec.z);
 }
 
-gx::matrix toMat(aiMatrix4x4 m) {
-  return gx::matrix(m.a1, m.a2, m.a3, m.a4,
-                    m.b1, m.b2, m.b3, m.b4,
-                    m.c1, m.c2, m.c3, m.c4,
-                    m.d1, m.d2, m.d3, m.d4);
-}
-
 void printNodes(aiNode* node, int level) {
   if(node == nullptr) return;
   for(int i = 0; i < level; i++) {
-    std::cout << "  ";
+    gx::debugout << "  ";
   }
-  std::cout << node->mName.C_Str() << " meshes ";
-  std::cout << node->mNumMeshes << std::endl;
+  gx::debugout << node->mName.C_Str() << " meshes ";
+  gx::debugout << node->mNumMeshes << gx::endl;
   for(int i = 0; i < level; i++) {
-    std::cout << "  ";
+    gx::debugout << "  ";
   }
-  std::cout << toMat(node->mTransformation) << std::endl;
+  gx::debugout << gx::toMat(node->mTransformation) << gx::endl;
   for(unsigned int i = 0; i < node->mNumChildren; i++) {
     printNodes(node->mChildren[i],level+1);
   }
 }
 
-gx::dynamicEntity initEntitiesData(const aiMesh* paiMesh, const gx::matrix resize) {
+std::vector<GLuint> initIndices(const aiMesh* paiMesh) {
   std::vector<GLuint> Indices;
-
-  const aiVector3D Zero3D(0.0f, 0.0f, 0.0f);
 
   for (unsigned int i = 0 ; i < paiMesh->mNumFaces ; i++) {
       const aiFace& Face = paiMesh->mFaces[i];
@@ -51,6 +42,12 @@ gx::dynamicEntity initEntitiesData(const aiMesh* paiMesh, const gx::matrix resiz
       Indices.push_back(Face.mIndices[1]);
       Indices.push_back(Face.mIndices[2]);
   }
+  return Indices;
+}
+
+gx::Mesh::attribsList_t initAttribs(const gx::Mesh::idMap_t& idMap,
+    const aiMesh* paiMesh, const gx::matrix resize) {
+  const aiVector3D Zero3D(0.0f, 0.0f, 0.0f);
 
   std::vector<GLfloat> positions;
   std::vector<GLfloat> colors;
@@ -78,44 +75,161 @@ gx::dynamicEntity initEntitiesData(const aiMesh* paiMesh, const gx::matrix resiz
 	  normals.push_back(normVec.z);
     //TODO: use texture coordinates
 	}
+  std::vector<std::array<std::pair<GLfloat,GLint>,gx::Mesh::maxBonesPerVertex>>
+    boneGroups(paiMesh->mNumVertices,{{std::make_pair(1,-1),
+                                       std::make_pair(0,-1),
+                                       std::make_pair(0,-1),
+                                       std::make_pair(0,-1)}});
+  for(unsigned int i = 0; i < paiMesh->mNumBones; i++) {
+    for(unsigned int j = 0; j < paiMesh->mBones[i]->mNumWeights; j++) {
+      auto& bg = boneGroups[paiMesh->mBones[i]->mWeights[j].mVertexId];
+      bool good = false;
+      for(auto& a : bg) {
+        if(a.second == -1) {
+          a.first = paiMesh->mBones[i]->mWeights[j].mWeight;
+          a.second = idMap.find(paiMesh->mBones[i]->mName.C_Str())->second;
+          good = true;
+          break;
+        }
+      }
+      if(!good) std::cout << "Error too many bones for one vertex" << std::endl;
+    }
+  }
+  std::vector<GLfloat> boneWeights;
+  std::vector<GLint>   boneIds;
+  for(const auto& b : boneGroups) {
+    float totalWeight = 0;
+    for(const auto& a : b) {
+      boneWeights.push_back(a.first);
+      totalWeight += a.first;
+      boneIds.push_back(a.second);
+    }
+    if(totalWeight - 1.0 >= 0.01 || totalWeight - 1.0 <= -0.01) {
+      std::cout << "error, total weight: " << totalWeight << std::endl;
+    }
+  }
 
 	auto positionsAttrib = std::make_shared<gx::vertexAttrib>(
-    gx::vertexAttrib("position",4,0,positions));
+    gx::vertexAttrib("position"   ,4,0,positions));
 	auto colorsAttrib = std::make_shared<gx::vertexAttrib>(
-    gx::vertexAttrib("color",4,0,colors));
+    gx::vertexAttrib("color"      ,4,0,colors));
   auto normalsAttrib = std::make_shared<gx::vertexAttrib>(
-    gx::vertexAttrib("normal",3,0,normals));
+    gx::vertexAttrib("normal"     ,3,0,normals));
+  auto boneWeightAttrib = std::make_shared<gx::vertexAttrib>(
+    gx::vertexAttrib("boneWeights",4,0,boneWeights));
+  auto boneIdAttrib = std::make_shared<gx::vertexAttrib>(
+    gx::vertexAttrib("boneIDs",4,0,boneIds));
 
-	std::vector<std::shared_ptr<const gx::vertexAttrib>> attribs;
+  gx::Mesh::attribsList_t attribs;
 	attribs.push_back(positionsAttrib);
 	attribs.push_back(colorsAttrib);
 	attribs.push_back(normalsAttrib);
+	attribs.push_back(boneWeightAttrib);
+	attribs.push_back(boneIdAttrib);
 
-	return {Indices,attribs};
+	return attribs;
+}
+
+gx::bone makeBone(gx::Mesh::idMap_t& idMap, int& nextId,
+                  const std::map<std::string,gx::matrix>&                      offsets,
+                  const std::map<std::string,std::vector<const aiNodeAnim*>>&  animations,
+                  const aiNode* bon) {
+  gx::matrix transform = gx::toMat(bon->mTransformation);
+  gx::matrix offset = gx::identity;
+  bool real = false;
+  int id = -1;
+  if(offsets.find(bon->mName.C_Str()) != offsets.end()) {
+    offset = offsets.find(bon->mName.C_Str())->second;
+    real = true;
+    id = nextId++;
+  }
+  idMap.insert(std::make_pair(bon->mName.C_Str(),id));
+  std::vector<std::vector<gx::bone::key>> boneAnimations;
+  const auto& anims = animations.find(bon->mName.C_Str())->second;
+  for(auto itr = anims.begin(); itr != anims.end(); ++itr) {
+    const aiNodeAnim* animation = *itr;
+    std::vector<gx::bone::key> animKeys;
+    if(animation != nullptr) {
+      for(unsigned int i = 0; i < animation->mNumPositionKeys; i++) {
+        gx::bone::key k;
+        k.position = animation->mPositionKeys[i];
+        k.rotation = animation->mRotationKeys[i];
+        k.scaling  = animation->mScalingKeys [i];
+        animKeys.push_back(k);
+      }
+    }
+    boneAnimations.push_back(std::move(animKeys));
+  }
+  std::vector<gx::bone> children;
+  for(unsigned int i = 0; i < bon->mNumChildren; i++) {
+    children.push_back(makeBone(idMap,nextId,offsets,animations,bon->mChildren[i]));
+  }
+  return gx::bone(id,std::move(offset),std::move(transform),real,
+                  std::move(boneAnimations),std::move(children));
+}
+
+//should create an iterator for the node tree
+std::map<std::string,std::vector<const aiNodeAnim*>> walkNodesForAnims(const aiNode* node,unsigned int n){
+  std::map<std::string,std::vector<const aiNodeAnim*>> ret;
+  ret.insert(std::make_pair(node->mName.C_Str(),
+                            std::vector<const aiNodeAnim*>(n,nullptr)));
+  for(unsigned int i = 0; i < node->mNumChildren; i++) {
+    const auto& ch = walkNodesForAnims(node->mChildren[i],n);
+    ret.insert(ch.begin(),ch.end());
+  }
+  return ret;
+}
+
+gx::bone initBones(std::map<std::string,unsigned int>& idMap, const aiScene* scene) {
+  std::map<std::string,gx::matrix>                     offsets;
+  std::map<std::string,std::vector<const aiNodeAnim*>> animations;
+  //just do the first mesh for now
+  animations = walkNodesForAnims(scene->mRootNode,scene->mNumAnimations);
+  for(unsigned int i = 0; i < scene->mMeshes[0]->mNumBones; i++) {
+    const auto& bone = scene->mMeshes[0]->mBones[i];
+    offsets.insert(
+      std::make_pair(bone->mName.C_Str(),gx::toMat(bone->mOffsetMatrix)));
+  }
+  for(unsigned int i = 0; i < scene->mNumAnimations; i++) {
+    const aiAnimation* anim = scene->mAnimations[i];
+    for(unsigned int j = 0; j < anim->mNumChannels; j++) {
+      const aiNodeAnim* nodeAnim = anim->mChannels[j];
+      animations.at(nodeAnim->mNodeName.C_Str()).at(i) = nodeAnim;
+      assert(nodeAnim->mNumPositionKeys == nodeAnim->mNumRotationKeys);
+      assert(nodeAnim->mNumPositionKeys == nodeAnim->mNumScalingKeys);
+    }
+  }
+  int nextIds = 0;
+  auto boneTree = makeBone(idMap,nextIds,std::move(offsets),std::move(animations),
+                           scene->mRootNode);
+  return boneTree;
 }
 } //end unnamed namespace
 
-gx::Mesh::MeshEntry::MeshEntry(const aiMesh* paiMesh, const matrix resize)
-  : entitiesData(initEntitiesData(paiMesh,resize)),
+gx::Mesh::MeshEntry::MeshEntry(idMap_t& ids, const aiMesh* paiMesh, const matrix resize)
+  : attribs(initAttribs(ids,paiMesh,resize)), indices(initIndices(paiMesh)),
     MaterialIndex(paiMesh->mMaterialIndex)                                 {
-  std::cout << "mesh num bones: " << paiMesh->mNumBones << std::endl;
+  debugout << "mesh num bones: " << paiMesh->mNumBones << endl;
   for(unsigned int i = 0; i < paiMesh->mNumBones; i++) {
-    std::cout << "  bone: " << paiMesh->mBones[i]->mName.C_Str();
-    std::cout << " name_length: " << paiMesh->mBones[i]->mName.length;
-    std::cout << " numVerts: " << paiMesh->mBones[i]->mNumWeights << std::endl;
-    std::cout << "  offset: " << toMat(paiMesh->mBones[i]->mOffsetMatrix) << std::endl;
+    debugout << "  bone: " << paiMesh->mBones[i]->mName.C_Str();
+    debugout << " name_length: " << paiMesh->mBones[i]->mName.length;
+    debugout << " numVerts: " << paiMesh->mBones[i]->mNumWeights << endl;
+    debugout << "  offset: " << toMat(paiMesh->mBones[i]->mOffsetMatrix) << endl;
   }
 };
 
 gx::Mesh::MeshEntry::MeshEntry(MeshEntry&& other) noexcept
-  : entitiesData (std::move(other.entitiesData)),
+  : attribs(std::move(other.attribs)), indices(std::move(other.indices)),
     MaterialIndex(std::move(other.MaterialIndex)) {}
 
 gx::Mesh::Mesh(const std::string& Filename, length_t height)
 	: mImporter(), mScene(LoadFile(mImporter, Filename)),
-    m_boundary(CalcBoundBox(mScene, height)),
-    m_Entries(InitFromScene(mScene, m_boundary.centerAndResize)),
-    m_Textures(InitMaterials(mScene, Filename)) {}
+    m_boundary(CalcBoundBox(mScene, height)), idMap(),
+    bones(initBones(idMap,mScene)),
+    m_Entries(InitFromScene(idMap,mScene, m_boundary.centerAndResize)),
+    m_Textures(InitMaterials(mScene, Filename)),
+	//just do the first one unless kangh has a model with more
+    entityData(m_Entries[0].indices,m_Entries[0].attribs,std::move(bones)) {}
 
 const aiScene* gx::Mesh::LoadFile(Assimp::Importer& Importer,const std::string& Filename) {
   const aiScene* pScene = Importer.ReadFile(Filename.c_str(), 
@@ -127,30 +241,30 @@ const aiScene* gx::Mesh::LoadFile(Assimp::Importer& Importer,const std::string& 
     std::cout << Importer.GetErrorString() << std::endl;
   }
   //print
-  std::cout << "num animations: " << pScene->mNumAnimations   << std::endl;
-  std::cout << "num meshes: "     << pScene->mNumMeshes       << std::endl;
-  std::cout << "num textures: "   << pScene->mNumTextures     << std::endl;
-  std::cout << "nodes: "          << std::endl;
+  debugout << "num animations: " << pScene->mNumAnimations   << endl;
+  debugout << "num meshes: "     << pScene->mNumMeshes       << endl;
+  debugout << "num textures: "   << pScene->mNumTextures     << endl;
+  debugout << "nodes: "          << endl;
   printNodes(pScene->mRootNode,0);
   for(unsigned int i = 0; i < pScene->mNumAnimations; i++) {
-    std::cout << "animation: " << pScene->mAnimations[i]->mName.C_Str() << std::endl;
-    std::cout << "duration: " << pScene->mAnimations[i]->mDuration << std::endl;
-    std::cout << "tics per second: " << pScene->mAnimations[i]->mTicksPerSecond << std::endl;
-    std::cout << "meshes: " << pScene->mAnimations[i]->mNumMeshChannels << std::endl;
-    std::cout << "bones: " << pScene->mAnimations[i]->mNumChannels << std::endl;
+    debugout << "animation: " << pScene->mAnimations[i]->mName.C_Str() << endl;
+    debugout << "duration: " << pScene->mAnimations[i]->mDuration << endl;
+    debugout << "tics per second: " << pScene->mAnimations[i]->mTicksPerSecond << endl;
+    debugout << "meshes: " << pScene->mAnimations[i]->mNumMeshChannels << endl;
+    debugout << "bones: " << pScene->mAnimations[i]->mNumChannels << endl;
     for(unsigned int j = 0; j < pScene->mAnimations[i]->mNumChannels; j++) {
-      std::cout << "  bonesName: " << pScene->mAnimations[i]->mChannels[j]->mNodeName.C_Str() << std::endl;
-      std::cout << "    position keys " << pScene->mAnimations[i]->mChannels[j]->mNumPositionKeys << std::endl;
-      std::cout << "    rotation keys " << pScene->mAnimations[i]->mChannels[j]->mNumRotationKeys << std::endl;
-      std::cout << "    scaling keys " << pScene->mAnimations[i]->mChannels[j]->mNumScalingKeys << std::endl;
+      debugout << "  bonesName: " << pScene->mAnimations[i]->mChannels[j]->mNodeName.C_Str() << endl;
+      debugout << "    position keys " << pScene->mAnimations[i]->mChannels[j]->mNumPositionKeys << endl;
+      debugout << "    rotation keys " << pScene->mAnimations[i]->mChannels[j]->mNumRotationKeys << endl;
+      debugout << "    scaling keys " << pScene->mAnimations[i]->mChannels[j]->mNumScalingKeys << endl;
     }
   }
   //end print
   return pScene;
 }
 
-std::vector<gx::Mesh::MeshEntry> gx::Mesh::InitFromScene(const aiScene* pScene,
-                                                         const matrix centerAndResize) {
+std::vector<gx::Mesh::MeshEntry> gx::Mesh::InitFromScene(idMap_t& idMap,
+     const aiScene* pScene, const matrix centerAndResize) {
   if(pScene == nullptr) return std::vector<MeshEntry>();
 
   if(pScene->mNumMeshes > 1) {
@@ -162,7 +276,7 @@ std::vector<gx::Mesh::MeshEntry> gx::Mesh::InitFromScene(const aiScene* pScene,
   // Initialize the meshes in the scene one by one
   for (unsigned int i = 0 ; i < pScene->mNumMeshes ; i++) {
     const aiMesh* paiMesh = pScene->mMeshes[i];
-    Ret.push_back(MeshEntry(paiMesh,centerAndResize));
+    Ret.push_back(MeshEntry(idMap,paiMesh,centerAndResize));
   }
 
   return Ret;
@@ -256,7 +370,7 @@ gx::Mesh::BoundParam gx::Mesh::CalcBoundBox(const aiScene* scene, length_t model
 	Ret.height = maxVec.z - minVec.z;
 
   auto center = Ret.center;
-  std::cout << "scale val: " << modelHeight / Ret.height << std::endl;
+  debugout << "scale val: " << modelHeight / Ret.height << endl;
   Ret.centerAndResize =
     uniformScaling(modelHeight / Ret.height) *
     translation(-center.x,-center.y,-center.z);

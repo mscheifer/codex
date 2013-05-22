@@ -22,7 +22,7 @@ class drawer {
 };
 
 typedef  drawer<staticDrawerImpl> staticDrawer;
-//typedef drawer<dynamicDrawerImpl> dynamicDrawer;
+typedef drawer<dynamicDrawerImpl> dynamicDrawer;
 
 } //end namespace gx
 #endif //DRAWER_H

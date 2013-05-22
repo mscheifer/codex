@@ -6,26 +6,30 @@ gx::staticEntity::staticEntity(std::vector<GLuint> ind, attribsList_t attr)
 gx::staticEntity::staticEntity(staticEntity&& other) noexcept
   : indices(std::move(other.indices)), attribs(std::move(other.attribs)) {}
 
-gx::staticEntity& gx::staticEntity::operator=(staticEntity other) {
+gx::staticEntity& gx::staticEntity::operator=(staticEntity&& other) {
   this->indices = std::move(other.indices);
   this->attribs = std::move(other.attribs);
   return *this;
 }
 
-gx::dynamicEntity::dynamicEntity(std::vector<GLuint> indices, attribsList_t attribs)
-  : staticEntity(std::move(indices),std::move(attribs)) {}
+gx::dynamicEntity::dynamicEntity(std::vector<GLuint> indices, attribsList_t attribs, bone bones)
+  : staticEntity(std::move(indices),std::move(attribs)), rootBone(std::move(bones)) {}
 
 gx::dynamicEntity::dynamicEntity(dynamicEntity&& other) noexcept
-  : staticEntity(std::move(other)) {}
+  : staticEntity(std::move(other)), rootBone(std::move(other.rootBone)) {}
 
 gx::dynamicEntity& gx::dynamicEntity::operator=(dynamicEntity&& other) {
+  this->rootBone = std::move(other.rootBone);
   staticEntity::operator=(std::move(other));
   return *this;
 }
 
-gx::dynamicEntity::dynamicEntity(staticEntity&& other): staticEntity(std::move(other)) {}
+gx::dynamicEntity::dynamicEntity(staticEntity&& other)
+  : staticEntity(std::move(other)),
+    rootBone(-1,identity,identity,false,std::vector<std::vector<bone::key>>(),std::vector<bone>()) {}
 
 gx::dynamicEntity& gx::dynamicEntity::operator=(staticEntity&& other) {
   staticEntity::operator=(std::move(other));
+  rootBone = bone(-1,identity,identity,false,std::vector<std::vector<bone::key>>(),std::vector<bone>());
   return *this;
 }

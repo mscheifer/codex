@@ -3,8 +3,9 @@
 
 namespace {
 template<typename T>
-std::vector<typename T::entityClass> setupEntities(std::vector<gx::dynamicEntity> entDatas,
-                                          std::map<std::string,gx::vertexAttribSignature> vars) {
+std::vector<typename T::entityClass> setupEntities(
+    std::vector<gx::dynamicEntity> entDatas,
+    std::map<std::string,gx::vertexAttribSignature> vars) {
   std::vector<typename T::entityClass> entityClasses;
   for(auto entDatap = entDatas.begin(); entDatap != entDatas.end(); ++entDatap){
     auto& entData = *entDatap;
@@ -16,23 +17,26 @@ std::vector<typename T::entityClass> setupEntities(std::vector<gx::dynamicEntity
 } //end unnamed namespace
 
 template<typename T>
-gx::drawer<T>::drawer(std::vector<dynamicEntity> entDatas, std::vector<uniform::block*> globalUnifs)
+gx::drawer<T>::drawer(std::vector<dynamicEntity> entDatas,
+                      std::vector<uniform::block*> globalUnifs)
   : program(T::vertShader, T::fragShader, globalUnifs), impl(program), 
-    entityClasses(setupEntities<T>(std::move(entDatas),program.vars())), globalUniforms(globalUnifs) {}
+    entityClasses(setupEntities<T>(std::move(entDatas),program.vars())),
+    globalUniforms(globalUnifs) {}
 
 template<typename T>
 void gx::drawer<T>::draw() {
   this->program.use();
-  for(auto unifP = this->globalUniforms.begin(); unifP != this->globalUniforms.end(); unifP++) {
+  for(auto unifP  = this->globalUniforms.begin();
+           unifP != this->globalUniforms.end(); unifP++) {
     (*unifP)->frameUpdate(&(this->program));
   }
   for(auto entityCp = entityClasses.begin(); entityCp != entityClasses.end();
-      ++entityCp) {
+                                                                 ++entityCp) {
     const auto& entityC = *entityCp;
-    for(auto instp = entityC.instances.begin(); instp != entityC.instances.end(); 
-        ++instp) {
+    for(auto instp = entityC.instances.begin();instp != entityC.instances.end();
+                                                                      ++instp) {
       const auto& inst = *instp;
-      this->impl.setUniforms(inst);
+      this->impl.setUniforms(entityC,inst);
       entityC.vertData.draw();
     }
   }
@@ -53,3 +57,4 @@ void gx::drawer<T>::addInstance(instanceData a) {
 }
 
 template class gx::drawer<gx::staticDrawerImpl>;
+template class gx::drawer<gx::dynamicDrawerImpl>;

@@ -43,6 +43,10 @@ constexpr debugStream debugout = {};
 
 const std::string endl = "\n";
 
+inline constexpr GLenum typeVal(GLint) {
+  return GL_INT;
+}
+
 inline constexpr GLenum typeVal(GLuint) {
   return GL_UNSIGNED_INT;
 }
@@ -51,9 +55,10 @@ inline constexpr GLenum typeVal(GLfloat) {
   return GL_FLOAT;
 }
 
-GLint  typeComponents(GLenum type);
-GLuint typeSize      (GLenum type);
-GLenum baseType      (GLenum type);
+GLint       typeComponents(GLenum type);
+GLuint      typeSize      (GLenum type);
+GLenum      baseType      (GLenum type);
+std::string typeToString  (GLenum type);
 
 } //end namespace gx
 #endif

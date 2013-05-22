@@ -9,27 +9,26 @@ const unsigned int defaultWindowWidth  = 800;
 const unsigned int defaultWindowHeight = 600;
 
 gx::dynamicEntity loadModel(const std::string& ModelPath) {
-	//just do the first one unless kangh has a model with more
-	return std::move(gx::Mesh(ModelPath,5).m_Entries[0].entitiesData);
+	return std::move(gx::Mesh(ModelPath,5).entityData);
 }
 
 std::vector<gx::dynamicEntity> entitiesData() {
 	// MODEL LOADING
-  auto model_import  = loadModel("models/boblampclean.md5mesh");
-  //auto model_import  = loadModel("models/weird_orange_thing.dae");
-  auto model_import2 = loadModel("models/Test_Run.dae");
-  auto wallImport    = loadModel("models/wall.dae");
+  auto modelTest   = loadModel("models/boblampclean.md5mesh");
+  auto modelJack   = loadModel("models/weird_orange_thing.dae");
+  auto modelPlayer = loadModel("models/Test_Run.dae");
+  auto modelWall   = loadModel("models/wall.dae");
 
     //setup drawing data
   std::vector<gx::dynamicEntity> entitiesData;
   auto cubes = gx::loadCube();
   auto skybox = gx::loadSkybox();
   entitiesData.push_back(std::move(skybox));
-  entitiesData.push_back(std::move(model_import2));
-  entitiesData.push_back(std::move(wallImport));
+  entitiesData.push_back(std::move(modelPlayer));
+  entitiesData.push_back(std::move(modelWall));
   entitiesData.insert(entitiesData.end(),std::make_move_iterator(cubes.begin()),
                                          std::make_move_iterator(cubes.end()));
-  entitiesData.push_back(std::move(model_import));
+  entitiesData.push_back(std::move(modelTest));
   return entitiesData;
 }
 //must call after window is initialized
@@ -83,6 +82,7 @@ gx::graphicsClient::graphicsClient():
     light1(gx::vector4f(1,1,1),0.5,0.5,0.05f),
     display(),
     entities(entitiesData(),uniforms()),
+    animatedDrawer(entitiesData(),uniforms()),
     playerDirection(0.0, 1.0,0.0),//change to result of init packet
     playerStartDirection(0.0, 1.0,0.0),//change to result of init packet
     playerStartRight(playerStartDirection.y,playerStartDirection.x,playerStartDirection.z),
@@ -141,6 +141,7 @@ void gx::graphicsClient::draw() {
 
     // draw...
 	entities.draw();
+	animatedDrawer.draw();
 
   // end the current frame (internally swaps the front and back buffers)
   window.display();
@@ -161,13 +162,25 @@ void gx::graphicsClient::updatePosition(vector4f pos) {
 
 void gx::graphicsClient::updateEntities(std::vector<Entity*> data) {
   this->entities.reset();
+  this->animatedDrawer.reset();
 
   for(auto entityP = data.begin(); entityP != data.end(); ++entityP) {
     const auto& entity = **entityP;
-    typename staticDrawer::instanceData inst;
-     inst.pos = entity.getPosition();
-    inst.dirY = entity.getDirection();
-    inst.type = entity.getType();
-    entities.addInstance(inst);
+    const auto& type = entity.getType();
+    if(type == POWER_UP) { //TODO: CHANGE BACK TO PLAYER
+      typename dynamicDrawer::instanceData inst;
+      inst. pos = entity.getPosition();
+      inst.dirY = entity.getDirection();
+      inst.type = entity.getType();
+      inst.animation    = 0;
+      inst.timePosition = 0;
+      this->animatedDrawer.addInstance(inst);
+    } else {
+      typename staticDrawer::instanceData inst;
+      inst. pos = entity.getPosition();
+      inst.dirY = entity.getDirection();
+      inst.type = entity.getType();
+      this->entities.addInstance(inst);
+    }
   }
 }
