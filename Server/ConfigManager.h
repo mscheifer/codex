@@ -47,7 +47,13 @@ public:
   static const int playerMaxJump(){ return StringToNumber<int>(ConfigManager::configMap["maxJump"]); }
   static const float playerHpRegen(){ return StringToNumber<float>(ConfigManager::configMap["humanHpRegen"]); }
   static const float playerMpRegen(){ return StringToNumber<float>(ConfigManager::configMap["humanMpRegen"]); }
+  static const float playerDef(){ return StringToNumber<float>(ConfigManager::configMap["playerDef"]); }
+  static const float playerHp(){ return StringToNumber<float>(ConfigManager::configMap["playerHp"]); }
+  static const float playerMaxHp(){ return StringToNumber<float>(ConfigManager::configMap["playerMaxHp"]); }
+  static const float playerMp(){ return StringToNumber<float>(ConfigManager::configMap["playerMp"]); }
+  static const float playerMaxMp(){ return StringToNumber<float>(ConfigManager::configMap["playerMaxMp"]); }
   static const float minotaurHpRegen(){ return StringToNumber<float>(ConfigManager::configMap["minotaurHpRegen"]); }
   static const float minotaurMpRegen(){ return StringToNumber<float>(ConfigManager::configMap["minotaurMpRegen"]); }
+  static const float projectileRange(){ return StringToNumber<float>(ConfigManager::configMap["projectileRange"]); }
   static const float gravity(){  return StringToNumber<float>(ConfigManager::configMap["gravity"]); }
 };
