@@ -75,7 +75,6 @@ void NetworkClient::receiveMessages() {
         if(s.players[this->id].getPosition().y > 10){
           proximity++;
         }
-        std::cout << proximity << std::endl;
         AudioManager::updateMusic(proximity);
         
         break;
