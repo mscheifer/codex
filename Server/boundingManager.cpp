@@ -30,32 +30,32 @@ std::pair<bool,BoundingObj::vec3_t> notSeparatedByAxis(const BoundingBox* a, con
   //Ax*Aw dot L
   BoundingObj::vec3_t axis2 = a->getAx();
   axis2.scale(a->getHw());
-  sumDist += abs(axis2.dot(axis));
+  sumDist += fabs(axis2.dot(axis));
 
   //Ay*Ah dot L
   axis2 = a->getAy();
   axis2.scale(a->getHh());
-  sumDist += abs(axis2.dot(axis));
+  sumDist += fabs(axis2.dot(axis));
 
   //Az*Ad dot L
   axis2 = a->getAz();
   axis2.scale(a->getHd());
-  sumDist += abs(axis2.dot(axis));
+  sumDist += fabs(axis2.dot(axis));
 
   //Bx*Bw dot L
   axis2 = b->getAx();
   axis2.scale(b->getHw());
-  sumDist += abs(axis2.dot(axis));
+  sumDist += fabs(axis2.dot(axis));
 
   //By*Bh dot L
   axis2 = b->getAy();
   axis2.scale(b->getHh());
-  sumDist += abs(axis2.dot(axis));
+  sumDist += fabs(axis2.dot(axis));
 
   //Bz*Bd dot L
   axis2 = b->getAz();
   axis2.scale(b->getHd());
-  sumDist += abs(axis2.dot(axis));
+  sumDist += fabs(axis2.dot(axis));
 
   bool retBool = !(centerDist >= sumDist);
   BoundingObj::vec3_t ret = axis;
@@ -73,8 +73,8 @@ std::pair<bool,BoundingObj::vec3_t> notSeparatedByAxis(const BoundingBox* a, con
 
 //start = start of ray
 //dir   = direction of ray projected on axis
-//start = start of axis
-//end   = end of axis
+//min = start of axis
+//max   = end of axis
 //tfirst = time of first impact
 //tlast  = time of last impact
 bool raySlab(float start, float dir,
@@ -178,8 +178,8 @@ std::pair<bool,BoundingObj::vec3_t> boxRay(const BoundingBox* b,const Ray* r){
 std::pair<bool,BoundingObj::vec3_t> boxRay(const BoundingBox* b,const Ray* r, 
   BoundingObj::unit_t& timeHit, BoundingObj::vec3_t& normAxis, BoundingObj::vec3_t& parallelAxis){
   BoundingObj::vec3_t ax = b->getAx(), 
-  ay = b->getAy(),
-  az = b->getAz();
+    ay = b->getAy(),
+    az = b->getAz();
   BoundingObj::unit_t hw = b->getHw(),
     hh = b->getHh(),
     hd = b->getHd();
@@ -202,7 +202,7 @@ std::pair<bool,BoundingObj::vec3_t> boxRay(const BoundingBox* b,const Ray* r,
   if (!raySlab(origin.dot(ay), r->getDirection().dot(ay), 
     centerBox.dot(ay) - hh, centerBox.dot(ay) + hh, tfirst, tlast))
     return std::pair<bool,BoundingObj::vec3_t>(false,BoundingObj::vec3_t());
-  
+
   if(oldtfirst != tfirst){
     oldtfirst = tfirst;
     normAxis = ay;
@@ -212,11 +212,61 @@ std::pair<bool,BoundingObj::vec3_t> boxRay(const BoundingBox* b,const Ray* r,
   if (!raySlab(origin.dot(az), r->getDirection().dot(az), 
     centerBox.dot(az) - hd, centerBox.dot(az) + hd, tfirst, tlast))
     return std::pair<bool,BoundingObj::vec3_t>(false,BoundingObj::vec3_t());
-  
+
   if(oldtfirst != tfirst){
     oldtfirst = tfirst;
     normAxis = az;
     parallelAxis = BoundingObj::vec3_t(0,0,0);
+  }
+
+  //if tfirst is 0 the normal Axis may be incorrect, this tests each plane
+  if(true){
+  //if(tfirst < 1.0E-8){
+  BoundingObj::vec3_t d = r->getDirection();
+  d.scale(tfirst);
+  BoundingObj::vec3_t testPoint = origin + d; //intersection point
+
+  BoundingObj::vec3_t axis = ax;
+  int i = 0;
+  for( i = 0; i < 3; i++){
+    switch(i){
+    case 0:
+      axis = ax;
+      axis.scale(hw);
+      break;
+    case 1:
+      axis = ay;
+      axis.scale(hh);
+      break;
+    case 2:
+      axis = az;
+      axis.scale(hd);
+      break;
+    }
+
+    BoundingObj::vec3_t planePoint = centerBox + axis;
+    BoundingObj::vec3_t planePoint2 = centerBox - axis;
+    BoundingObj::vec3_t v = testPoint - planePoint;
+    BoundingObj::vec3_t v2 = testPoint - planePoint2;
+    if( fabs(v.dot(axis)) < 1.0E-8 || fabs(v2.dot(axis)) < 1.0E-8){
+      break;
+    }
+  }
+
+  switch(i){
+  case 0:
+    normAxis = ax;
+    parallelAxis = ay;
+    break;
+  case 1:
+    normAxis = ay;
+    parallelAxis = ax;
+    break;
+  case 2:
+    normAxis = az;
+    parallelAxis = BoundingObj::vec3_t(0,0,0);
+    break;
+  }
   }
 
   //the time it hit
@@ -310,19 +360,47 @@ RayCollision rayCollide(const Ray * r,const  BoundingObj * b){
 }
 
 void boxTest(){
-    Ray r1(BoundingObj::vec4_t(0,0,0), BoundingObj::vec3_t(0,50,0));
+  /*
+  //r1 and b1 bad norm
+    Ray r1(BoundingObj::vec4_t(-0.283931f, 9, 2.91043f), 
+      BoundingObj::vec3_t(0.339934f, 0.999422f, 0));
     
-    BoundingBox b1(BoundingObj::vec4_t(0,52,0), 
-    BoundingObj::vec3_t(1,0,0), BoundingObj::vec3_t(0,1,0), BoundingObj::vec3_t(0,0 ,1),
-    5,5,5);
+    BoundingBox b1(BoundingObj::vec4_t(-5,10,2), 
+      BoundingObj::vec3_t(1,0,0), BoundingObj::vec3_t(0,1,0), BoundingObj::vec3_t(0,0 ,1),
+      5,1,2);
 
+    //r1 and b3 bad norm
+    Ray r2(BoundingObj::vec4_t(-11, -3.88816, 2.89663f), 
+      BoundingObj::vec3_t(0.999986f, -0.00520365f, 0));
+
+    BoundingBox b3(BoundingObj::vec4_t(-10,-5,2), 
+      BoundingObj::vec3_t(0,-1,0), BoundingObj::vec3_t(1,0,0), BoundingObj::vec3_t(0,0 ,1),
+      5,1,2);
+    */
+
+    Ray r1(BoundingObj::vec4_t(3.72037,10.9925,2.96507), 
+      BoundingObj::vec3_t(0.0862999f, 0.996269f, 0));
+    
+    BoundingBox b1(BoundingObj::vec4_t(5,10,2), 
+      BoundingObj::vec3_t(1,0,0), BoundingObj::vec3_t(0,1,0), BoundingObj::vec3_t(0,0 ,1),
+      5,1,2);
+    
+    BoundingBox player(BoundingObj::vec4_t(0, 0, 2.99487f), 
+      BoundingObj::vec3_t(-0.1682881,0.985738,0), BoundingObj::vec3_t(-0.30735,-0.951596,0), BoundingObj::vec3_t(0,0 ,1),
+      1,1,3);
+
+    player.rotate(BoundingObj::vec3_t(-0.30735, -0.951596, 0), BoundingObj::vec3_t(0,0,1)); 
+    std::cout << player.toString();
+
+    //std::cout << "1==" << collide(&b1,&b2).first << " vecfix " << collide(&b2,&b1).second << std::endl;
+    /*
     RayCollision f = rayCollide(&r1, &b1);
     std::cout << f.collided << std::endl
       << f.e << std::endl 
-      << f.normalAxis << std::endl
-      << f.parallelAxis << std::endl
+      << "norm " << f.normalAxis << std::endl
+      << "parallel " << f.parallelAxis << std::endl
       << f.tfirst << std::endl;
-
+      */
   /*
 
   BoundingBox b2(BoundingObj::vec4_t(1,0,0), 

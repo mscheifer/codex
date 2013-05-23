@@ -4,8 +4,8 @@
 #include "WeaponFist.h"
 #include "WeaponFire.h"
 
-const float Player::playerWidth = 1.0f;
-const float Player::playerHeight = 1.0f;
+const float Player::playerWidth = 5.0f;
+const float Player::playerHeight = 5.0f;
 const float Player::playerDepth = 3.0f;
 
 const length_t Player::MOVESCALE = ConfigManager::playerMovescale();
@@ -151,6 +151,7 @@ bool Player::moveTowardDirection(move_t inputDir, bool jump)
 
   movementDirection = correctMovement(movementDirection, true);
   position += movementDirection;
+  updateBounds();
 	return true;
 }
 
@@ -173,9 +174,9 @@ void Player::update(){
   //update movement
   acceleration = getGravity();
   velocity += acceleration * ConfigManager::serverTickLengthSec();
-  v3_t attemptMove = velocity * ConfigManager::serverTickLengthSec();
-  position += correctMovement( attemptMove, false );
-  //position += velocity * ConfigManager::serverTickLengthSec();
+  //v3_t attemptMove = velocity * ConfigManager::serverTickLengthSec();
+  //position += correctMovement( attemptMove, false );
+  position += velocity * ConfigManager::serverTickLengthSec();
   
   //I disabled health regen and mana regen  (BOWEN)
   //health = (health+healthRegen > maxHealth? maxHealth : health+5);
@@ -261,6 +262,9 @@ std::string Player::getString()
 
 void Player::updateBounds(){
   //update the bounding objects
+  boundingObjs[0]->setCenter(BoundingObj::vec4_t(position.x, position.y, position.z));
+  BoundingObj::vec3_t direct(direction.x, direction.y,0);
+  boundingObjs[0]->rotate(direct,BoundingObj::vec3_t(0,0,1));
   boundingObjs[0]->setCenterOnTree(BoundingObj::vec4_t(position.x, position.y, position.z));
 }
 
@@ -292,9 +296,6 @@ void Player::handleCollisions(){
       case WEAPON:
         pickup = (Weapon*)e;
         pickupWeaponType = ((Weapon*)e)->getWeaponType();
-        //std::cout << "pick me up plz" << std::endl;
-        //((Weapon*) e)->pickUp();
-        //TODO finish this
         break;
       case POWER_UP:
         //((PowerUp *)&it)->onCollision(this);
@@ -320,6 +321,8 @@ void Player::handleCollisions(){
 
 bool Player::collideWall(const std::pair<Entity*,BoundingObj::vec3_t>& p){
   BoundingObj::vec3_t fixShit = p.second;
+  if(fixShit.z == 0)
+    std::cout << "fixit " << fixShit << std::endl;
   restartJump(fixShit.z);
   position += p.second;
   updateBounds();
@@ -329,11 +332,7 @@ bool Player::collideWall(const std::pair<Entity*,BoundingObj::vec3_t>& p){
 bool Player::collidePlayer(const std::pair<Entity*,BoundingObj::vec3_t>& p){
   BoundingObj::vec3_t fixVec = p.second;
   restartJump(fixVec.z);
-  //fixVec.scale(0.5f);
   position += fixVec;
-  //fixVec.negate();
-  //p.first->setPosition( p.first->getPosition() + fixVec );
-  //p.first->updateBounds();
   updateBounds();
   return true;
 }

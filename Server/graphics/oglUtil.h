@@ -34,14 +34,12 @@ struct debugStream {
       ss << a;
       logString += ss.str();
       if(logString.back() == '\n') {
-        //ConfigManager::log(logString.substr(0,logString.length()-1));
         logString = "";
         GLenum err;
         while((err = glGetError())) {
           std::cout << "OpenGL error: " << err << std::endl;
           std::stringstream ss;
           ss << err;
-          //ConfigManager::log(std::string("OpenGL error: ") + ss.str() + std::string("\n"));
         }
       }
     } 

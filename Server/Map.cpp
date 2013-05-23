@@ -38,11 +38,11 @@ void Map::initWalls(void)
   v3_t facingEast(1,0,0);
   v3_t facingNorth(0,1,0);
   int width = 10;
-  int height = 2; 
+  int height = 5; 
   int depth = 4;
 
-  int wallX = 5;
-  int wallY = 5;
+  int wallX = 7;
+  int wallY = 7;
 
   int centerX = 0;
   int centerY = 0;

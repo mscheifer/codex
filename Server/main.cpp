@@ -2,7 +2,11 @@
 #include "Server.h"
 #include "Client.h"
 
+#include "boundingManager.h" //TODO remove this for testing
+#include "Quadtree.h"
+
 int main() {
+  boxTest();
 
   std::cout.sync_with_stdio(false); //speed up printing
   ConfigManager::readConfig();
