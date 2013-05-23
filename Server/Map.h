@@ -25,6 +25,7 @@ public:
   static const float Item_Pick_Up_Ranges;
   int map_size;
   
+  v3_t getRespawnPosition(std::size_t player_id);
   std::vector<Entity *> getEntity(void);
   std::vector<Player *> getPlayers(void);
   std::vector<Projectile *> getLiveProjectTile(void);
@@ -40,6 +41,7 @@ public:
   void removeFromQtree(Entity* e);
 
 private:
+  std::vector<v3_t> spawnPositions;
 	std::vector<Player *> players;
 	std::vector<Entity *> entities;
 	std::stack<Projectile *>* freeProjectiles;
@@ -47,5 +49,5 @@ private:
   Quadtree q;
   void initWalls(void);
   void initPowerUps(void);
-  void addWallDirection(int startingX, int startingY, int startingZ, v3_t dir, int values[]);
+  void addWallDirection(float startingX, float startingY, float startingZ, v3_t dir, int values[]);
 };
