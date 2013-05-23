@@ -18,7 +18,7 @@ Player::Player(){}// this->init(0,0,0,0,NULL);}
 Player::~Player(void){}
 Player::Player(v3_t pos, int assigned_id, Map * m)
 {
- this->init(pos, assigned_id, m);
+ this->init(pos, assigned_id, m); 
 }
 
 void Player::init(v3_t pos, int assigned_id, Map * m)
@@ -179,7 +179,6 @@ bool Player::correctMovementHit( Entity* e ){
 
 void Player::update(){
   //powerup shit
-  std::cout << "buff size " << buffs.size() << std::endl;
   for(auto buff = buffs.begin(); buff != buffs.end();){
     buff->second--;
     if( buff->second <= 0 ){
@@ -206,9 +205,9 @@ void Player::update(){
   //update movement
   acceleration = getGravity();
   velocity += acceleration * ConfigManager::serverTickLengthSec();
-  //v3_t attemptMove = velocity * ConfigManager::serverTickLengthSec(); TODO use this
-  //position += correctMovement( attemptMove, false );
-  position += velocity * ConfigManager::serverTickLengthSec();
+  v3_t attemptMove = velocity * ConfigManager::serverTickLengthSec();// TODO use this @mc collisions
+  position += correctMovement( attemptMove, false );
+  //position += velocity * ConfigManager::serverTickLengthSec();
   
   //I disabled health regen and mana regen  (BOWEN)
   health+=healthRegen;
@@ -315,10 +314,10 @@ std::string Player::getString()
 }
 
 void Player::updateBounds(){
-  //update the bounding objects
-  //boundingObjs[0]->setCenter(BoundingObj::vec4_t(position.x, position.y, position.z));
-  //BoundingObj::vec3_t direct(direction.x, direction.y,0);
-  //boundingObjs[0]->rotate(direct,BoundingObj::vec3_t(0,0,1));
+  //update the bounding objects @mc collision
+  boundingObjs[0]->setCenter(BoundingObj::vec4_t(position.x, position.y, position.z));
+  BoundingObj::vec3_t direct(direction.x, direction.y,0);
+  boundingObjs[0]->rotate(direct,BoundingObj::vec3_t(0,0,1));
   boundingObjs[0]->setCenterOnTree(BoundingObj::vec4_t(position.x, position.y, position.z));
 }
 
@@ -352,7 +351,6 @@ void Player::handleCollisions(){
         pickupWeaponType = ((Weapon*)e)->getWeaponType();
         break;
       case POWER_UP:
-        std::cout << "hit powerup" << std::endl;
         collidePowerUp(*it);
         //((PowerUp *)&it)->onCollision(this);
         break;
@@ -377,8 +375,6 @@ void Player::handleCollisions(){
 
 bool Player::collideWall(const std::pair<Entity*,BoundingObj::vec3_t>& p){
   BoundingObj::vec3_t fixShit = p.second;
-  if(fixShit.z == 0)
-    std::cout << "fixit " << fixShit << std::endl;
   restartJump(fixShit.z);
   position += p.second;
   updateBounds();

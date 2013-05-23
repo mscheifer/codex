@@ -89,7 +89,8 @@ void AudioManager::updateMusic( int numPlayers ){
 
   //switch tracks
   if(music[0].getStatus() != sf::Sound::Playing){
-    trackNo = ++trackNo % maxTracks;
+    ++trackNo;
+    trackNo = trackNo % maxTracks;
     playMusic( getTrack(trackNo, numPlayers), currentlyPlayingMusic );
     playMusic( getTrack(trackNo, getClosestProx(numPlayers)), notCurrentlyPlaying() );
 

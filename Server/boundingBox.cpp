@@ -57,19 +57,15 @@ void BoundingBox::updateRect(){
 }
 
 void BoundingBox::rotate(vec3_t dir, vec3_t up){
-  ConfigManager::log( "before" );
-  ConfigManager::log( this->toString() );
-  std::stringstream ss;
-  ss << "dir " << dir;
-  ConfigManager::log( ss.str() );
   dir.normalize();
   if(dir.x == 0 && dir.y == 0 && dir.z == 0)
     return;
+
   ay = dir;
   gx::matrix rotAndTrans = gx::translation(center.x,center.y,center.z) * toRightHandBasisFromYandUp(dir,up);
-  ax = gx::multiply(rotAndTrans, ax);
-  az = gx::multiply(rotAndTrans, az);
-  ConfigManager::log( this->toString() );
+  ay = gx::multiply(rotAndTrans, vec3_t(0,1,0));
+  ax = gx::multiply(rotAndTrans, vec3_t(1,0,0));
+  az = gx::multiply(rotAndTrans, vec3_t(0,0,1));
 }
 
 std::string BoundingBox::toString(){

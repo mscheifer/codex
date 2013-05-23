@@ -346,7 +346,6 @@ std::pair<bool,BoundingObj::vec3_t> collide(const BoundingObj * a,const  Boundin
   return std::pair<bool,BoundingObj::vec3_t>(false,BoundingObj::vec3_t());
 }
 
-
 RayCollision rayCollide(const Ray * r,const  BoundingObj * b){
   RayCollision res;
 
