@@ -43,11 +43,11 @@ public:
   void handleAction(ClientGameTimeAction a);
   
   //getters and setters
-  float getHealth() { return health; }
+  float getHealth() const { return health; }
   void setHealth(float);
-  float getMana() {return mana;}
+  float getMana() const {return mana;}
   void setMana(float);
-  float getSpeed(){ return speed;}
+  float getSpeed() const { return speed;}
   void setSpeed(float);
   void setSpeedUpTime(int s) { speedUpTime = s; };
   void activateSpeedUp(void) { speedUp = true ;};

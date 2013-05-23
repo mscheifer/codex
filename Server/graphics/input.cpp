@@ -125,6 +125,7 @@ void gx::input::handleEvent(const sf::Event& event) {
     this->resized = true;
     this->width  = event.size.width,
     this->height = event.size.height;
+    std::cout << "reshape w " << this->width << " h " << this->height << std::endl;
   } else if (event.type == sf::Event::KeyPressed) {
     if(event.key.code == sf::Keyboard::Escape) {
       this->stopped = true; // end the program

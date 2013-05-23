@@ -25,7 +25,7 @@ private :
 public:
   HUD(void);
   ~HUD(void);
-  void updateHUD(Player & player);
+  void updateHUD(const Player& player);
   void draw(sf::RenderWindow & window);
 };
 
