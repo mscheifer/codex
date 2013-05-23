@@ -46,3 +46,23 @@ const std::string WeaponNames[] = {
 enum MAGIC_POWER { FIRE1=0, FIRE2, FIRE3, ICE1, ICE2, ICE3 };
 
 const float magic_mutiplier[3] = { 1.0, 1.5, 3.0};
+
+enum BUFF{ NONE=0, MOVEBOOST };
+
+struct BuffData{
+  BUFF buff;
+  int ticksEffect;
+  bool affectMovement;
+  float movementMultiplier;
+  BuffData( BUFF buff1,
+    int ticksEffect1,
+    bool affectMovement1,
+    float movementMultiplier1)
+  : buff(buff1), ticksEffect(ticksEffect1), 
+  affectMovement(affectMovement1), movementMultiplier(movementMultiplier1){}
+};
+
+const BuffData BuffInfo[] = {
+  BuffData(NONE, 100, false, 2),
+  BuffData(MOVEBOOST, 100, true, 2)
+};

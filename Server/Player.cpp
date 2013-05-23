@@ -1,5 +1,6 @@
 #include "Player.h"
 
+#include "PowerUp.h"
 #include "Projectile.h"
 #include "WeaponFist.h"
 #include "WeaponFire.h"
@@ -159,6 +160,12 @@ bool Player::moveTowardDirection(move_t inputDir, bool jump)
   else
     movementDirection.scale(speed * MOVESCALE);
 
+  for(auto buff = buffs.begin(); buff != buffs.end(); buff++){
+    if( BuffInfo[buff->first].affectMovement ){
+      movementDirection.scale(BuffInfo[buff->first].movementMultiplier);
+    }
+  }
+
   movementDirection = correctMovement(movementDirection, true);
   position += movementDirection;
   updateBounds();
@@ -172,6 +179,16 @@ bool Player::correctMovementHit( Entity* e ){
 
 void Player::update(){
   //powerup shit
+  std::cout << "buff size " << buffs.size() << std::endl;
+  for(auto buff = buffs.begin(); buff != buffs.end();){
+    buff->second--;
+    if( buff->second <= 0 ){
+      buff = buffs.erase(buff);
+    } else {
+      buff++;
+    }
+  }
+
   if(speedUp && speedUpCounter.getElapsedTime().asMilliseconds() > speedUpTime) {
      speedUp = false;
      attackSpeed = 1.0;
@@ -335,6 +352,8 @@ void Player::handleCollisions(){
         pickupWeaponType = ((Weapon*)e)->getWeaponType();
         break;
       case POWER_UP:
+        std::cout << "hit powerup" << std::endl;
+        collidePowerUp(*it);
         //((PowerUp *)&it)->onCollision(this);
         break;
       default:
@@ -380,6 +399,25 @@ bool Player::collideProjectile(const std::pair<Entity*,BoundingObj::vec3_t>& p){
     attackBy((Projectile *)p.first);
     std::cout << health  << " HP left" << " for " << player_id << std::endl;
   }
+  return false;
+}
+
+bool Player::collidePowerUp(const std::pair<Entity*,BoundingObj::vec3_t>& p){
+  BUFF ptype = ((PowerUp*)p.first)->getBuffType();
+  
+  auto buff = buffs.begin();
+  for(; buff != buffs.end(); buff++){
+    if( buff->first == ptype){ //found one that is the same, reset timer
+      buff->second = BuffInfo[ptype].ticksEffect;
+      break;
+    }
+  }
+
+  if(buff == buffs.end()){//didn't find same type
+    buffs.push_front(std::pair<BUFF,int>(ptype,BuffInfo[ptype].ticksEffect));
+  }
+
+  p.first->removeFromMap();
   return false;
 }
 

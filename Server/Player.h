@@ -37,12 +37,8 @@ public:
   void updateBounds();  
   void updateBoundsSoft();
   //void clearEvents();
-  
-  //helper functions for collisions
-  bool collideWall(const std::pair<Entity*,BoundingObj::vec3_t>& p);
   bool collidePlayer(const std::pair<Entity*,BoundingObj::vec3_t>& p);
-  bool collideProjectile(const std::pair<Entity*,BoundingObj::vec3_t>& p);
- 
+  
   bool moveTowardDirection(move_t degree, bool jump); //handle movement input WADS jump
   void handleAction(ClientGameTimeAction a);
   
@@ -70,6 +66,7 @@ public:
 private:
   Weapon* pickup;
   WeaponType pickupWeaponType;
+  std::list<std::pair<BUFF,int>> buffs;
 
   v3_t oldJumpVelocity; //the x,y velocity that should be applied
   bool minotaur; //might be private
@@ -103,4 +100,10 @@ private:
   void restartJump(length_t zPosFix);
   bool correctMovementHit( Entity* e );
   v3_t getProjectilePosition(void);
+
+    //helper functions for collisions
+  bool collideWall(const std::pair<Entity*,BoundingObj::vec3_t>& p);
+  bool collideProjectile(const std::pair<Entity*,BoundingObj::vec3_t>& p);
+  bool collidePowerUp(const std::pair<Entity*,BoundingObj::vec3_t>& p);
+ 
 };

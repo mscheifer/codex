@@ -37,11 +37,9 @@ public:
   virtual void updateBoundsSoft(){}
   //return a vector of entites collided with and shortest vector of removal
   std::vector<std::pair<Entity*,v3_t>> detectCollision();
-
   //movement collision functions
   std::vector<RayCollision> detectCollision(Ray* r);
-
-
+  void removeFromMap();
 
   bool canRender() const { return render; }
   v3_t getPosition(void) const { return position; }

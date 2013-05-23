@@ -183,3 +183,8 @@ v3_t Entity::correctMovement(v3_t movementDirection, bool slide){
   }
   return movementRay.getDirection();
 }
+
+void Entity::removeFromMap(){
+  map->removeFromQtree(this);
+  render = false;
+}
