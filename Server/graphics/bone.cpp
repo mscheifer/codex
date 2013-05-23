@@ -19,7 +19,8 @@ gx::bone::bone(int idnum,matrix off, matrix trans, bool r, std::vector<std::vect
   : id(idnum), offset(std::move(off)), transform(std::move(trans)), real(std::move(r)),
     animations(std::move(anims)), children(std::move(enfants)) {}
 
-gx::bone::bone(bone&& other): id(other.id), offset(std::move(other.offset)),
+gx::bone::bone(bone&& other) noexcept
+  : id(other.id), offset(std::move(other.offset)),
   transform(std::move(other.transform)), real(std::move(other.real)), 
   animations(std::move(other.animations)), children(std::move(other.children)){}
 
