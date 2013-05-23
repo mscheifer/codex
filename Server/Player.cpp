@@ -119,16 +119,16 @@ bool Player::damageBy(DeadlyEntity *deadly)
 	damage = ( damage > 0? damage: 0);
 	float newHealth = (health - damage);
 	health = (newHealth > 0 ? newHealth : 0);
+  dead = health==0;
+  if(dead)
+    die();
 	return true;
 }
 
 void Player::handleAction(ClientGameTimeAction a) {
   //std::cout<<"PLAYER: "<<player_id<<" handling packet from "<< a.player_id<<std::endl;
-	if(a.player_id == player_id) {
+	if(a.player_id == player_id)
 		handleSelfAction(a);
-	} else {
-		//handleOtherAction(a);
-	}
 }
 
 bool Player::moveTowardDirection(move_t inputDir, bool jump)
@@ -187,7 +187,23 @@ bool Player::correctMovementHit( Entity* e ){
   return etype == PLAYER || etype == WALL;
 }
 
+void Player::die()
+{
+  map->removeFromQtree(this);
+  render = false;
+}
+
+void Player::respawn(v3_t pos)
+{
+  this->init(pos, player_id, map);
+  render = true;
+}
+
+
 void Player::update(){
+  // No need to update when user is dead
+  if(dead)
+    return;
   //powerup shit
   //std::cout << "buff size " << buffs.size() << std::endl;
   for(auto buff = buffs.begin(); buff != buffs.end();){

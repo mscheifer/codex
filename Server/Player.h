@@ -100,6 +100,8 @@ private:
   void restartJump(length_t zPosFix);
   bool correctMovementHit( Entity* e );
   v3_t getProjectilePosition(void);
+  void die();
+  void respawn(v3_t pos);
 
     //helper functions for collisions
   bool collideWall(const std::pair<Entity*,BoundingObj::vec3_t>& p);
