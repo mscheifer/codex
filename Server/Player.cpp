@@ -1,5 +1,6 @@
 #include "Player.h"
 
+#include "PowerUp.h"
 #include "Projectile.h"
 #include "WeaponFist.h"
 #include "WeaponFire.h"
@@ -169,8 +170,15 @@ bool Player::moveTowardDirection(move_t inputDir, bool jump)
   else
     movementDirection.scale(speed * MOVESCALE());
 
+  for(auto buff = buffs.begin(); buff != buffs.end(); buff++){
+    if( BuffInfo[buff->first].affectMovement ){
+      movementDirection.scale(BuffInfo[buff->first].movementMultiplier);
+    }
+  }
+
   movementDirection = correctMovement(movementDirection, true);
   position += movementDirection;
+  updateBounds();
 	return true;
 }
 
@@ -181,6 +189,16 @@ bool Player::correctMovementHit( Entity* e ){
 
 void Player::update(){
   //powerup shit
+  std::cout << "buff size " << buffs.size() << std::endl;
+  for(auto buff = buffs.begin(); buff != buffs.end();){
+    buff->second--;
+    if( buff->second <= 0 ){
+      buff = buffs.erase(buff);
+    } else {
+      buff++;
+    }
+  }
+
   if(speedUp && speedUpCounter.getElapsedTime().asMilliseconds() > speedUpTime) {
      speedUp = false;
      attackSpeed = 1.0;
@@ -198,9 +216,9 @@ void Player::update(){
   //update movement
   acceleration = getGravity();
   velocity += acceleration * ConfigManager::serverTickLengthSec();
-  v3_t attemptMove = velocity * ConfigManager::serverTickLengthSec();
-  position += correctMovement( attemptMove, false );
-  //position += velocity * ConfigManager::serverTickLengthSec();
+  //v3_t attemptMove = velocity * ConfigManager::serverTickLengthSec(); TODO use this
+  //position += correctMovement( attemptMove, false );
+  position += velocity * ConfigManager::serverTickLengthSec();
   
   //I disabled health regen and mana regen  (BOWEN)
   health+=healthRegen;
@@ -242,11 +260,11 @@ void Player::handleSelfAction(ClientGameTimeAction a) {
 	//start of attacking logic
 	if(a.attackRange || a.attackMelee) {
 		attack(a);
-	} else {
+	} else { //TODO @alvin, this porbably causes the trail
     if(chargedProjectile) {
       v3_t v = direction;
       v.normalize();
-      v.scale(20);
+      v.scale(ProjInfo[chargedProjectile->getMagicType()].speed); //TODO no magic numbers @alvin, this should be determined by magic type
       chargedProjectile->fire(v);
       chargedProjectile = nullptr;
     }
@@ -254,6 +272,7 @@ void Player::handleSelfAction(ClientGameTimeAction a) {
 
   if(a.switchWeapon){
     current_weapon_selection = ++current_weapon_selection % MAXWEAPONS; //this shit is undefined, fix it
+    std::cout << "switch to " << WeaponNames[weapon[current_weapon_selection]->getWeaponType()] << std::endl;
   }
 }
 
@@ -278,14 +297,11 @@ void Player::attack( ClientGameTimeAction a) {
 	Weapon* currentWeapon = weapon[current_weapon_selection];
 
 	if(a.attackRange){
-    
     if( !currentWeapon->canUseWeapon(true, this) || currentWeapon->getMpCost() > mana){
 		  return;
 	  }
 	  mana -= currentWeapon->getMpCost();
 	  chargedProjectile = currentWeapon->attackRange(direction, getProjectilePosition(), this);
-  
-
 	}
 	else if(a.attackMelee){
 		if( !currentWeapon->canUseWeapon(false, this)){
@@ -310,6 +326,9 @@ std::string Player::getString()
 
 void Player::updateBounds(){
   //update the bounding objects
+  //boundingObjs[0]->setCenter(BoundingObj::vec4_t(position.x, position.y, position.z));
+  //BoundingObj::vec3_t direct(direction.x, direction.y,0);
+  //boundingObjs[0]->rotate(direct,BoundingObj::vec3_t(0,0,1));
   boundingObjs[0]->setCenterOnTree(BoundingObj::vec4_t(position.x, position.y, position.z));
 }
 
@@ -341,11 +360,10 @@ void Player::handleCollisions(){
       case WEAPON:
         pickup = (Weapon*)e;
         pickupWeaponType = ((Weapon*)e)->getWeaponType();
-        //std::cout << "pick me up plz" << std::endl;
-        //((Weapon*) e)->pickUp();
-        //TODO finish this
         break;
       case POWER_UP:
+        std::cout << "hit powerup" << std::endl;
+        collidePowerUp(*it);
         //((PowerUp *)&it)->onCollision(this);
         break;
       default:
@@ -369,6 +387,8 @@ void Player::handleCollisions(){
 
 bool Player::collideWall(const std::pair<Entity*,BoundingObj::vec3_t>& p){
   BoundingObj::vec3_t fixShit = p.second;
+  if(fixShit.z == 0)
+    std::cout << "fixit " << fixShit << std::endl;
   restartJump(fixShit.z);
   position += p.second;
   updateBounds();
@@ -378,11 +398,7 @@ bool Player::collideWall(const std::pair<Entity*,BoundingObj::vec3_t>& p){
 bool Player::collidePlayer(const std::pair<Entity*,BoundingObj::vec3_t>& p){
   BoundingObj::vec3_t fixVec = p.second;
   restartJump(fixVec.z);
-  //fixVec.scale(0.5f);
   position += fixVec;
-  //fixVec.negate();
-  //p.first->setPosition( p.first->getPosition() + fixVec );
-  //p.first->updateBounds();
   updateBounds();
   return true;
 }
@@ -393,6 +409,25 @@ bool Player::collideProjectile(const std::pair<Entity*,BoundingObj::vec3_t>& p){
     attackBy((Projectile *)p.first);
     std::cout << health  << " HP left" << " for " << player_id << std::endl;
   }
+  return false;
+}
+
+bool Player::collidePowerUp(const std::pair<Entity*,BoundingObj::vec3_t>& p){
+  BUFF ptype = ((PowerUp*)p.first)->getBuffType();
+  
+  auto buff = buffs.begin();
+  for(; buff != buffs.end(); buff++){
+    if( buff->first == ptype){ //found one that is the same, reset timer
+      buff->second = BuffInfo[ptype].ticksEffect;
+      break;
+    }
+  }
+
+  if(buff == buffs.end()){//didn't find same type
+    buffs.push_front(std::pair<BUFF,int>(ptype,BuffInfo[ptype].ticksEffect));
+  }
+
+  p.first->removeFromMap();
   return false;
 }
 

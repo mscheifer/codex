@@ -39,7 +39,7 @@ public:
     center = center+v;
     updateOnTree();
   }
-  //virtual void rotate(){} TODO
+  virtual void rotate(vec3_t dir, vec3_t up){}
   virtual std::string toString();
   virtual bool isRay() const{return false;}
   virtual bool isSphere() const{return false;}

@@ -50,7 +50,7 @@ public:
   std::vector<BoundingObj*>& retrieve(std::vector<BoundingObj*> & returnObjects, BoundingObj* pRect);
   std::vector<BoundingObj*>& retrieve(std::vector<BoundingObj*> & returnObjects, Rectangle* pRect);
   
-  /*
+/*  
   static void test(){
     Rectangle worldBounds(BoundingObj::vec4_t(0,0,0),1000,1000);
     Quadtree q(0, worldBounds);
@@ -59,7 +59,7 @@ public:
     BoundingSphere r2(BoundingObj::vec4_t(53,150,0),50);
     BoundingSphere r3(BoundingObj::vec4_t(-400,-400,0),1);
     std::vector<BoundingObj*> l;
-    
+
     //THESE TESTS only work if maxobjects == 1
     q.insert(&r1);
     q.insert(&r1_2);
@@ -145,8 +145,7 @@ public:
     l.clear();
     q.retrieve(l,&b3);
     std::cout << l.size() << "==1 b3 cw: s1." << std::endl;
-    
-  }
-  */
+   
+  }*/
   
 };

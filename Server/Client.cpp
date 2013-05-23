@@ -65,6 +65,7 @@ void NetworkClient::receiveMessages() {
         
         //calculate proximity of players
         //TODO actually base this on proximity of players 
+        //can do -- instead of ++ so we can have more intense if less players
         int proximity = 0;
         if(s.players[this->id].getPosition().x > 0){
           proximity++;

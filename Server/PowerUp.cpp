@@ -1,6 +1,6 @@
 #include "PowerUp.h"
 
-PowerUp::PowerUp(v3_t p, Map* m)
+PowerUp::PowerUp(v3_t p, Map* m, BUFF buff1): buffType(buff1)
 {
   map = m;
   setPosition(p);
@@ -8,7 +8,7 @@ PowerUp::PowerUp(v3_t p, Map* m)
 	Respown_Counter = sf::Clock();
 	active = true;
   BoundingBox* b = new BoundingBox(BoundingObj::vec4_t(0,0,0),BoundingObj::vec3_t(1,0,0),BoundingObj::vec3_t(0,1,0),BoundingObj::vec3_t(0,0,1),
-  5,5,5);
+  1,1,1);
   b->setEntity(this);
   //BoundingSphere* b = new BoundingSphere(gx::vector4(x,y,z),sphereRadius);
   boundingObjs.push_back(b);

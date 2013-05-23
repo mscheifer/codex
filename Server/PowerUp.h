@@ -4,8 +4,8 @@
 
 class PowerUp : public Entity{
 public:
-  PowerUp(){} ;
-  PowerUp(v3_t p, Map* m) ;
+  PowerUp(){};
+  PowerUp(v3_t p, Map* m, BUFF ptype);
   ~PowerUp() {};
   
   static const Entity_Type type = POWER_UP;
@@ -18,8 +18,10 @@ public:
   void updateBounds(); //TODO this maybe should be in inherited (if differen sizes)
 
   Entity_Type getType() const { return type; }
+  BUFF getBuffType() const { return buffType; }
 
 protected:
+  BUFF buffType;
   sf::Clock Respown_Counter;
   int Respown_Time;
 	float healthMutiplyer;
