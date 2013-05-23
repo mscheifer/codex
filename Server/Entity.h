@@ -20,6 +20,7 @@ protected:
   // Some kind of state {paralyzed, frozen, blah blah}
   // Power ups {contains MULTIPLERS for health, defense/ elemental weapons}
   v3_t correctMovement( v3_t movementDirection, bool slide );
+  //return true on which types to "collide with" when moving
   virtual bool correctMovementHit( Entity* ){return false;}
 
 public:

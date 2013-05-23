@@ -16,6 +16,7 @@ PowerUp::PowerUp(v3_t p, Map* m, BUFF buff1): buffType(buff1)
 }
 
 void PowerUp::handleCollisions() {
+  /*
 	//if it's not active, dont do anything
   if(active == false )
 		return ;
@@ -41,14 +42,26 @@ void PowerUp::handleCollisions() {
     }
   }
 	Respown_Counter.restart();
+  */
 }
 
 void PowerUp::update() {
 	if ((Respown_Counter.getElapsedTime().asMilliseconds() >= Respown_Time) && active == false) {
-		active = true;
+		//active = true;
+    //render = true;
 	}
   //std::cout << " it's active? " << active << std::endl;
-  updateBounds();
+  if(active)
+    updateBounds();
+}
+
+void PowerUp::pickUp(){
+  if(!active)
+    return;
+  
+  active = false;
+  render = false;
+  map->removeFromQtree(this);
 }
 
 void PowerUp::updateBounds(){

@@ -219,10 +219,20 @@ void Player::update(){
   position += correctMovement( attemptMove, false );
   //position += velocity * ConfigManager::serverTickLengthSec();
   
+  //calculate regen multipliers
+  float manaMultiplier = 1;
+  float healthMultiplier = 1;
+  for(auto buff = buffs.begin(); buff != buffs.end(); buff++){
+    if( BuffInfo[buff->first].affectManaRegen ){
+      manaMultiplier *= (BuffInfo[buff->first].manaMultiplier);
+    } else if ( BuffInfo[buff->first].affectHealthRegen ){
+      healthMultiplier *= (BuffInfo[buff->first].healthMultiplier);
+    }
+  }
   //I disabled health regen and mana regen  (BOWEN)
-  health+=healthRegen;
+  health+=healthRegen*healthMultiplier;
   health = (health > maxHealth? maxHealth : health);
-  mana+=manaRegen;
+  mana+=manaRegen*manaMultiplier;
   mana = (mana > maxMana? maxMana : mana);
   updateBounds();
 }
@@ -426,7 +436,7 @@ bool Player::collidePowerUp(const std::pair<Entity*,BoundingObj::vec3_t>& p){
     buffs.push_front(std::pair<BUFF,int>(ptype,BuffInfo[ptype].ticksEffect));
   }
 
-  p.first->removeFromMap();
+  ((PowerUp*)p.first)->pickUp();
   return false;
 }
 

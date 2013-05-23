@@ -108,8 +108,6 @@ std::vector<RayCollision> Entity::detectCollision(Ray* r){
 }
 
 v3_t Entity::correctMovement(v3_t movementDirection, bool slide){
-  static int c = 0;
-
   BoundingBox * myBox = (BoundingBox*) boundingObjs[0]; //TODO just doing this for now
   //add the radius to account for collision
   //v3_t radius = myBox->getMaxRadius( movementDirection );
@@ -123,7 +121,6 @@ v3_t Entity::correctMovement(v3_t movementDirection, bool slide){
   //std::cout << movementRay.getDirection() << std::endl;
   for(auto coll = colls.begin(); coll != colls.end(); ){
     Entity * e = coll->e;
-    length_t asdf = coll->tfirst;
 
     if(correctMovementHit(coll->e)){
       //scale by tfirst
@@ -150,7 +147,7 @@ v3_t Entity::correctMovement(v3_t movementDirection, bool slide){
         length_t slide = excess.dot(coll->parallelAxis);
         excess = coll->parallelAxis;
         excess.scale(slide);
-         newDir += excess;
+        newDir += excess;
       }
 
       movementRay.setDirection(newDir);
@@ -173,5 +170,5 @@ v3_t Entity::correctMovement(v3_t movementDirection, bool slide){
 
 void Entity::removeFromMap(){
   map->removeFromQtree(this);
-  render = false;
+  //render = false;
 }
