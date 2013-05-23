@@ -189,7 +189,7 @@ bool Player::correctMovementHit( Entity* e ){
 
 void Player::update(){
   //powerup shit
-  std::cout << "buff size " << buffs.size() << std::endl;
+  //std::cout << "buff size " << buffs.size() << std::endl;
   for(auto buff = buffs.begin(); buff != buffs.end();){
     buff->second--;
     if( buff->second <= 0 ){

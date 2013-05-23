@@ -149,7 +149,7 @@ ClientGameTimeAction gx::graphicsClient::handleInput() {
   if(jumped()) {
     action.jump = true;
   }
-  action.movement = getMovement();
+  action.movement = this->userInput.movePlayer();
   auto dir = getDir();
   action.updated = this->userInput.getUpdated();
   action.facingDirection = dir;
