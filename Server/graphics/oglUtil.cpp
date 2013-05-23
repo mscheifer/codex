@@ -1,6 +1,6 @@
 #include "oglUtil.h"
 
-gx::debugStream gx::debugout = {};
+gx::debugStream gx::debugout = {""};
 
 GLint gx::typeComponents(GLenum type) {
   switch(type) {

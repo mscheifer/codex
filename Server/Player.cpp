@@ -10,17 +10,17 @@ const float Player::playerDepth = 3.0f;
 
 //these have to be functions because calling configManager stuff to initialize
 //globals is undefined behavior
-const length_t Player::MOVESCALE() {
+length_t Player::MOVESCALE() {
   return ConfigManager::playerMovescale();
 }
-const length_t Player::AIRMOVESCALE() {
+length_t Player::AIRMOVESCALE() {
   return ConfigManager::playerAirMovescale();
 }
-const length_t Player::JUMPSPEED() {
-  ConfigManager::playerJumpSpeed();
+length_t Player::JUMPSPEED() {
+  return ConfigManager::playerJumpSpeed();
 }
-const int Player::MAXJUMP() {
-  ConfigManager::playerMaxJump();
+int Player::MAXJUMP() {
+  return ConfigManager::playerMaxJump();
 }
 
 Player::Player(){}// this->init(0,0,0,0,NULL);}
@@ -253,7 +253,7 @@ void Player::handleSelfAction(ClientGameTimeAction a) {
   }
 
   if(a.switchWeapon){
-    current_weapon_selection = ++current_weapon_selection % MAXWEAPONS;
+    current_weapon_selection = ++current_weapon_selection % MAXWEAPONS; //this shit is undefined, fix it
   }
 }
 

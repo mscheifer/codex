@@ -9,15 +9,15 @@
 #include "ClientGameTimeAction.h"
 
 #include "Weapon.h"
-#define MAXWEAPONS 2
+const int MAXWEAPONS = 2;
 
 class Player: public Entity
 {
 public:
-  static const length_t MOVESCALE();
-  static const length_t AIRMOVESCALE();
-  static const length_t JUMPSPEED();
-  static const int MAXJUMP();
+  static length_t MOVESCALE();
+  static length_t AIRMOVESCALE();
+  static length_t JUMPSPEED();
+  static int MAXJUMP();
 
   static const float playerWidth;
   static const float playerHeight;

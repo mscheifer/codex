@@ -39,8 +39,8 @@ struct debugStream {
         GLenum err;
         while((err = glGetError())) {
           std::cout << "OpenGL error: " << err << std::endl;
-          std::stringstream ss;
-          ss << err;
+          std::stringstream sserror;
+          sserror << err;
           //ConfigManager::log(std::string("OpenGL error: ") + ss.str() + std::string("\n"));
         }
       }

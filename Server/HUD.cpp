@@ -19,7 +19,7 @@ HUD::HUD(void):health(100), maxHealth(100), HLossPercentage(0),
   manaBar.setSize(sf::Vector2f(200,25));
   //manaBar.setOutlineColor(sf::Color::Black);
   //manaBar.setOutlineThickness(2);
-  manaBar.setFillColor(sf::Color::Color(100,149,237));
+  manaBar.setFillColor(sf::Color(100,149,237));
   manaBar.setPosition(590 ,550);
   //manaLoss.setOutlineColor(sf::Color::Black);
   //manaLoss.setOutlineThickness(2);

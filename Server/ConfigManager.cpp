@@ -86,7 +86,7 @@ void ConfigManager::readConfig() {
   }
 }
 
-const float ConfigManager::playerMovescale() {
+float ConfigManager::playerMovescale() {
   if(!read) readConfig();
   return StringToNumber<float>(ConfigManager::configMap["movescale"]);
- }
+}
