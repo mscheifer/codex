@@ -51,9 +51,9 @@ unsigned int gx::bone::numBones() const {
   return ret;
 }
 
-void gx::bone::walkBones(std::vector<GLfloat>& result, matrix parent,
+void gx::bone::walkBones(std::vector<GLfloat>& result,const matrix& parent,
                          unsigned int anim, unsigned int time) const {
-  matrix transformAsParent;
+  matrix fullTransformation;
   if(this->animated(anim)) {
     //no interpolation for now
     const auto& frame = this->animations[anim][time];
@@ -62,15 +62,17 @@ void gx::bone::walkBones(std::vector<GLfloat>& result, matrix parent,
     matrix scale    = scaling    (scaleVec.x, scaleVec.y, scaleVec.z);
     matrix rotation = toMat      (frame.rotation.mValue.GetMatrix());
     matrix trans    = translation(transVec.x, transVec.y, transVec.z);
-    transformAsParent = trans * rotation * scale;
+    fullTransformation = parent * trans * rotation * scale;
+    std::cout << "animating " << this->id << std::endl;
   } else {
-    transformAsParent = this->transform;
+    fullTransformation = parent * this->transform;
   }
   if(this->real) {
-    const auto& data = (parent * transformAsParent * this->offset).oglmatrix();
+    const auto& data = (fullTransformation * this->offset).oglmatrix();
+    std::cout << this->id << " at " << result.size() << std::endl;
     result.insert(result.end(),data.begin(),data.end());
   } 
   for(const auto& ch : this->children) {
-    ch.walkBones(result,transformAsParent,anim,time);
+    ch.walkBones(result,fullTransformation,anim,time);
   }
 }

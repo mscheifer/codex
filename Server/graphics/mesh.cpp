@@ -195,8 +195,15 @@ gx::bone initBones(std::map<std::string,unsigned int>& idMap, const aiScene* sce
     for(unsigned int j = 0; j < anim->mNumChannels; j++) {
       const aiNodeAnim* nodeAnim = anim->mChannels[j];
       animations.at(nodeAnim->mNodeName.C_Str()).at(i) = nodeAnim;
-      assert(nodeAnim->mNumPositionKeys == nodeAnim->mNumRotationKeys);
-      assert(nodeAnim->mNumPositionKeys == nodeAnim->mNumScalingKeys);
+      //TODO: fix for different numbers of keys
+      if(nodeAnim->mNumPositionKeys != nodeAnim->mNumRotationKeys) {
+        std::cout << "Error " << nodeAnim->mNumPositionKeys << " != ";
+        std::cout << nodeAnim->mNumRotationKeys << std::endl;
+      }
+      if(nodeAnim->mNumPositionKeys != nodeAnim->mNumScalingKeys) {
+        std::cout << "Error " << nodeAnim->mNumPositionKeys << " != ";
+        std::cout << nodeAnim->mNumScalingKeys << std::endl;
+      }
     }
   }
   int nextIds = 0;

@@ -4,7 +4,7 @@
 namespace {
 template<typename T>
 std::vector<typename T::entityClass> setupEntities(
-    std::vector<gx::dynamicEntity> entDatas,
+    std::vector<typename T::entity_t> entDatas,
     std::map<std::string,gx::vertexAttribSignature> vars) {
   std::vector<typename T::entityClass> entityClasses;
   for(auto entDatap = entDatas.begin(); entDatap != entDatas.end(); ++entDatap){
@@ -17,7 +17,7 @@ std::vector<typename T::entityClass> setupEntities(
 } //end unnamed namespace
 
 template<typename T>
-gx::drawer<T>::drawer(std::vector<dynamicEntity> entDatas,
+gx::drawer<T>::drawer(std::vector<typename T::entity_t> entDatas,
                       std::vector<uniform::block*> globalUnifs)
   : program(T::vertShader, T::fragShader, globalUnifs), impl(program), 
     entityClasses(setupEntities<T>(std::move(entDatas),program.vars())),

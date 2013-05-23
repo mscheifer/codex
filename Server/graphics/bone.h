@@ -44,7 +44,7 @@ struct bone {
   //getBonesData().size() / 16
           unsigned int numBones() const;
   private:
-    void walkBones(std::vector<GLfloat>&,matrix,unsigned int,unsigned int) const;
+    void walkBones(std::vector<GLfloat>&,const matrix&,unsigned int,unsigned int) const;
 };
 
 } //end namespace gx

@@ -12,23 +12,30 @@ gx::dynamicEntity loadModel(const std::string& ModelPath) {
 	return std::move(gx::Mesh(ModelPath,5).entityData);
 }
 
-std::vector<gx::dynamicEntity> entitiesData() {
-	// MODEL LOADING
-  auto modelTest   = loadModel("models/boblampclean.md5anim");
+std::vector<gx::staticEntity> staticModels() {
   auto modelJack   = loadModel("models/weird_orange_thing.dae");
-  auto modelPlayer = loadModel("models/Test_Run.dae");
   auto modelWall   = loadModel("models/wall.dae");
-
-    //setup drawing data
-  std::vector<gx::dynamicEntity> entitiesData;
+  auto modelPlayer = loadModel("models/Test_Run.dae");
   auto cubes = gx::loadCube();
   auto skybox = gx::loadSkybox();
+  std::vector<gx::staticEntity> entitiesData;
   entitiesData.push_back(std::move(skybox));
   entitiesData.push_back(std::move(modelPlayer));
   entitiesData.push_back(std::move(modelWall));
   entitiesData.insert(entitiesData.end(),std::make_move_iterator(cubes.begin()),
                                          std::make_move_iterator(cubes.end()));
-  entitiesData.push_back(std::move(modelTest));
+  entitiesData.push_back(std::move(modelJack));
+  return entitiesData;
+}
+
+std::vector<gx::dynamicEntity> dynamicModels() {
+	// MODEL LOADING
+  //auto modelTest   = loadModel("models/boblampclean.md5anim");
+  auto modelPlayer = loadModel("models/Test_Run.dae");
+
+    //setup drawing data
+  std::vector<gx::dynamicEntity> entitiesData;
+  entitiesData.push_back(std::move(modelPlayer));
   return entitiesData;
 }
 //must call after window is initialized
@@ -81,8 +88,8 @@ gx::graphicsClient::graphicsClient():
     userInput(),
     light1(gx::vector4f(1,1,1),0.5,0.5,0.05f),
     display(),
-    entities(entitiesData(),uniforms()),
-    animatedDrawer(entitiesData(),uniforms()),
+    entities(staticModels(),uniforms()),
+    animatedDrawer(dynamicModels(),uniforms()),
     playerDirection(0.0, 1.0,0.0),//change to result of init packet
     playerStartDirection(0.0, 1.0,0.0),//change to result of init packet
     playerStartRight(playerStartDirection.y,playerStartDirection.x,playerStartDirection.z),
@@ -167,11 +174,11 @@ void gx::graphicsClient::updateEntities(std::vector<Entity*> data) {
   for(auto entityP = data.begin(); entityP != data.end(); ++entityP) {
     const auto& entity = **entityP;
     const auto& type = entity.getType();
-    if(type == POWER_UP) { //TODO: CHANGE BACK TO PLAYER
+    if(false) { //TODO: change back to type == PLAYER
       typename dynamicDrawer::instanceData inst;
       inst. pos = entity.getPosition();
       inst.dirY = entity.getDirection();
-      inst.type = entity.getType();
+      inst.type = 0; //TODO: somehow set this based on type but it can't be absolute type?
       inst.animation    = 0;
       inst.timePosition = 0;
       this->animatedDrawer.addInstance(inst);

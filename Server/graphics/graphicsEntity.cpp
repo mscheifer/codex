@@ -12,8 +12,8 @@ gx::staticEntity& gx::staticEntity::operator=(staticEntity&& other) {
   return *this;
 }
 
-gx::dynamicEntity::dynamicEntity(std::vector<GLuint> indices, attribsList_t attribs, bone bones)
-  : staticEntity(std::move(indices),std::move(attribs)), rootBone(std::move(bones)) {}
+gx::dynamicEntity::dynamicEntity(std::vector<GLuint> is, attribsList_t attrs, bone bones)
+  : staticEntity(std::move(is),std::move(attrs)), rootBone(std::move(bones)) {}
 
 gx::dynamicEntity::dynamicEntity(dynamicEntity&& other) noexcept
   : staticEntity(std::move(other)), rootBone(std::move(other.rootBone)) {}

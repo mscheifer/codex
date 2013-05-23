@@ -3,6 +3,7 @@ DEBUGNAME = Server/drchao-debug
 ECHO	    = @echo
 CC        = @g++
 BINFLAGS  = -O3 -DNDEBUG
+DEBUGFLAGS = -g -DGRAPHICSDEBUG
 WARNINGS  = -Wall -Wextra -Wstrict-overflow=5 -Wshadow #-Wconversion
 INCLUDE   = -IServer/
 CCFLAGS   = $(WARNINGS) $(INCLUDE) -std=c++11
@@ -24,12 +25,12 @@ debug: $(DEBUGNAME)
 
 $(DEBUGOBJS): $(DEBUGDIR)%.o: %.cpp
 	$(ECHO) "Compiling $< debug"
-	$(CC) -MMD -MP -g $(CCFLAGS) -c -o $@ $<
+	$(CC) -MMD -MP $(DEBUGFLAGS) $(CCFLAGS) -c -o $@ $<
 
 $(DEBUGNAME): $(DEBUGOBJS)
 	$(ECHO) "Linking $@..."
 	$(ECHO) $(CC) -o $@ $(DEBUGOBJS) -g $(LDFLAGS)
-	$(CC) -o $@ $(DEBUGOBJS) -g $(LDFLAGS)
+	$(CC) -o $@ $(DEBUGOBJS) $(DEBUGFLAGS) $(LDFLAGS)
 	$(ECHO) "Built $@!"
 
 $(OBJS): $(OBJDIR)%.o: %.cpp
@@ -46,7 +47,7 @@ $(NAME): $(OBJS)
 	$(ECHO) "Built $@!"
 
 clean:
-	$(RM) core $(OBJS) $(DEPENDENCIES) $(NAME) $(DEBUGNAME)
+	$(RM) core $(OBJS) $(DEBUGOBJS) $(DEPENDENCIES) $(NAME) $(DEBUGNAME)
 	$(ECHO) "All clean!"
 
 new:

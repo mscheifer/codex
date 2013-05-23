@@ -11,13 +11,14 @@ namespace gx {
 class staticDrawerImpl {
     uniform::mat4floc modelToWorldLoc;
   public:
+    typedef staticEntity entity_t;
     static const std::string vertShader;
     static const std::string fragShader;
     struct entityClass {
       typedef matrix        instance;
       std::vector<instance> instances;
       vao                   vertData;
-      entityClass(staticEntity,std::map<std::string,vertexAttribSignature>);
+      entityClass(entity_t,std::map<std::string,vertexAttribSignature>);
       entityClass(const entityClass&) = delete;
       entityClass(entityClass&&);
       entityClass& operator=(const entityClass&) = delete;
@@ -40,6 +41,7 @@ class dynamicDrawerImpl {
     staticDrawerImpl staticBase;
     uniform::mat4floc boneTransforms;
   public:
+    typedef dynamicEntity entity_t;
     static const std::string vertShader;
     static const std::string fragShader;
     struct entityClass {
@@ -51,7 +53,7 @@ class dynamicDrawerImpl {
       std::vector<instance> instances;
       vao                   vertData;
       bone                  rootBone;
-      entityClass(dynamicEntity,std::map<std::string,vertexAttribSignature>);
+      entityClass(entity_t,std::map<std::string,vertexAttribSignature>);
       entityClass(const entityClass&) = delete;
       entityClass(entityClass&&);
       entityClass& operator=(const entityClass&) = delete;
