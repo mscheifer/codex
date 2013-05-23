@@ -15,14 +15,14 @@ bool gx::vertexAttribSignature::checkAndBind(const vertexAttrib& attr) {
       glVertexAttribIPointer(this->shaderLocation, attr.vecSize(), attr.type(),
         attr.stride(), 0);
       debugout << "glVertexAttribIPointer(" << this->shaderLocation << ", ";
-      debugout << attr.vecSize() << ", attrib.type(), ";
+      debugout << attr.vecSize() << ", " << typeToString(attr.type()) << ", ";
       debugout << attr.stride() << ", 0);" << endl;
     } else {
       glVertexAttribPointer(this->shaderLocation, attr.vecSize(), attr.type(),
         GL_FALSE, attr.stride(), 0);
       debugout << "glVertexAttribPointer(" << this->shaderLocation << ", ";
-      debugout << attr.vecSize() << ", attrib.type(), GL_FALSE, ";
-      debugout << attr.stride() << ", 0);" << endl;
+      debugout << attr.vecSize() << ", " << typeToString(attr.type());
+      debugout << ", GL_FALSE, " << attr.stride() << ", 0);" << endl;
     }
     return true;
   } else {

@@ -146,16 +146,15 @@ void AudioManager::loadTrack(int i){
     playMusic("m1_2", 1);
     playMusic("m1_3", 2);
     playMusic("m1_4", 3);
-  }
-  else if( i == 1 ){
+  } else if( i == 1 ){
     playMusic("m2_1", 0);
     playMusic("m2_2", 1);
     playMusic("m2_3", 2);
     playMusic("m2_4", 3);
   }
 
-  for(unsigned int i = 0; i < music.size(); i++){
-    music[i].setVolume(0);
+  for(auto itr = music.begin(); itr != music.end(); itr++) {
+    itr->setVolume(0);
   }
 }
 

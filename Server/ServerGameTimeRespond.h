@@ -16,7 +16,7 @@ struct ServerGameTimeRespond
   Game_State state;
   ServerGameTimeRespond():state(PLAYING) {}
   //Client's constructor
-  ServerGameTimeRespond(EntityPool* pool): state(PLAYING), objPool(pool){}
+  ServerGameTimeRespond(EntityPool* pool): objPool(pool), state(PLAYING) {}
 
   void serialize(sf::Packet & packet) const {
     sf::Uint32 size = static_cast<sf::Uint32>(players.size());

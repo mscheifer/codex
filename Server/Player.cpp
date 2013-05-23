@@ -9,10 +9,20 @@ const float Player::playerWidth = 1.0f;
 const float Player::playerHeight = 1.0f;
 const float Player::playerDepth = 3.0f;
 
-const length_t Player::MOVESCALE = ConfigManager::playerMovescale();
-const length_t Player::AIRMOVESCALE = ConfigManager::playerAirMovescale();
-const length_t Player::JUMPSPEED = ConfigManager::playerJumpSpeed();
-const int Player::MAXJUMP = ConfigManager::playerMaxJump();
+//these have to be functions because calling configManager stuff to initialize
+//globals is undefined behavior
+length_t Player::MOVESCALE() {
+  return ConfigManager::playerMovescale();
+}
+length_t Player::AIRMOVESCALE() {
+  return ConfigManager::playerAirMovescale();
+}
+length_t Player::JUMPSPEED() {
+  return ConfigManager::playerJumpSpeed();
+}
+int Player::MAXJUMP() {
+  return ConfigManager::playerMaxJump();
+}
 
 Player::Player(){}// this->init(0,0,0,0,NULL);}
 Player::~Player(void){}
@@ -141,7 +151,7 @@ bool Player::moveTowardDirection(move_t inputDir, bool jump)
     //add jump velocity
     v3_t jumpDir = movementDirection;
     jumpDir.z = 1;
-    jumpDir.scale(JUMPSPEED);
+    jumpDir.scale(JUMPSPEED());
     velocity = velocity - oldJumpVelocity;
     velocity += jumpDir;
     velocity.z = jumpDir.z; //reset z velocity (for double jumping)
@@ -150,15 +160,15 @@ bool Player::moveTowardDirection(move_t inputDir, bool jump)
     jumpDir.z = 0;
     oldJumpVelocity = jumpDir;
 
-    if(++jumpCount >= MAXJUMP)
+    if(++jumpCount >= MAXJUMP())
       canJump = false;
   }
   
   //adjust movement
   if(jumpCount > 0) //move less if you are in the air
-    movementDirection.scale(speed * AIRMOVESCALE);
+    movementDirection.scale(speed * AIRMOVESCALE());
   else
-    movementDirection.scale(speed * MOVESCALE);
+    movementDirection.scale(speed * MOVESCALE());
 
   for(auto buff = buffs.begin(); buff != buffs.end(); buff++){
     if( BuffInfo[buff->first].affectMovement ){
@@ -259,8 +269,9 @@ void Player::handleSelfAction(ClientGameTimeAction a) {
     }
   }
 
-  if(a.switchWeapon){
-    current_weapon_selection = ++current_weapon_selection % MAXWEAPONS;
+  if(a.switchWeapon) {
+    ++current_weapon_selection;
+    current_weapon_selection = current_weapon_selection % MAXWEAPONS;
     std::cout << "switch to " << WeaponNames[weapon[current_weapon_selection]->getWeaponType()] << std::endl;
   }
 }
@@ -314,7 +325,6 @@ std::string Player::getString()
 }
 
 void Player::updateBounds(){
-  static int c = 0;
   //update the bounding objects 
   boundingObjs[0]->setCenter(BoundingObj::vec4_t(position.x, position.y, position.z));
   BoundingObj::vec3_t direct(direction.x, direction.y,0);

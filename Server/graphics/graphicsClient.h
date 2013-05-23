@@ -2,7 +2,7 @@
 #define GRAPHICS_CLEINT_H
 #include <SFML/Window.hpp>
 #include "displaySet.h"
-#include "drawSet.h"
+#include "drawer.h"
 #include "light.h"
 #include "input.h"
 #include "HUD.h"
@@ -14,13 +14,6 @@
 class Entity;
 
 namespace gx {
-/*
-struct graphicEntity {
-  vector4f position;
-  vector3f direction;
-  unsigned int type;
-};
-*/
 class graphicsClient {
     sf::RenderWindow window;
     GLenum     glewStatus;
@@ -29,7 +22,8 @@ class graphicsClient {
     light light1;
     displaySet display;
 
-    drawSet entities;
+    staticDrawer entities;
+    dynamicDrawer animatedDrawer;
 
     //player info
     static const vector3f upDirection;
@@ -69,7 +63,6 @@ class graphicsClient {
     bool jumped()        { return this->userInput.getJump(); }
     bool fire1 ()        { return this->userInput.fire1  (); }
     bool fire2 ()        { return this->userInput.fire2  (); }
-    move_t getMovement() { return this->userInput.movePlayer(); }
     vector3f getDir()     { return this->playerDirection; }
 };
 

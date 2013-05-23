@@ -15,7 +15,11 @@ namespace gx {
 //don't set to true or it will break on Matt, Alvin and Bowen's machines
 constexpr bool sharedUniformsOn = false;
 
+#ifdef GRAPHICSDEBUG
+constexpr bool debugOn = true;
+#else
 constexpr bool debugOn = false;
+#endif
 
 const std::string shaderExtensions = 
   sharedUniformsOn ? "#extension GL_ARB_uniform_buffer_object : require\n" : "";
@@ -38,8 +42,9 @@ struct debugStream {
         GLenum err;
         while((err = glGetError())) {
           std::cout << "OpenGL error: " << err << std::endl;
-          std::stringstream ss;
-          ss << err;
+          std::stringstream sserror;
+          sserror << err;
+          ConfigManager::log(std::string("OpenGL error: ") + ss.str() + std::string("\n"));
         }
       }
     } 
@@ -51,6 +56,10 @@ extern debugStream debugout;
 
 const std::string endl = "\n";
 
+inline constexpr GLenum typeVal(GLint) {
+  return GL_INT;
+}
+
 inline constexpr GLenum typeVal(GLuint) {
   return GL_UNSIGNED_INT;
 }
@@ -59,9 +68,10 @@ inline constexpr GLenum typeVal(GLfloat) {
   return GL_FLOAT;
 }
 
-GLint  typeComponents(GLenum type);
-GLuint typeSize      (GLenum type);
-GLenum baseType      (GLenum type);
+GLint       typeComponents(GLenum type);
+GLuint      typeSize      (GLenum type);
+GLenum      baseType      (GLenum type);
+std::string typeToString  (GLenum type);
 
 } //end namespace gx
 #endif

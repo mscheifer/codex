@@ -1,5 +1,4 @@
 #include "graphicsClient.h"
-#include <fstream>
 #include "oglUtil.h"
 #include "mesh.h"
 #include "loadCube.h"
@@ -9,54 +8,36 @@ namespace {
 const unsigned int defaultWindowWidth  = 800;
 const unsigned int defaultWindowHeight = 600;
 
-std::string readFile(const std::string fileName) {
-  std::ifstream vsFile(fileName);
-  std::string fullSource = "";
-
-  if(vsFile.is_open()) {
-    std::string line;
-    while(vsFile.good()) {
-      getline(vsFile,line);
-      fullSource += line + "\n";
-    }
-    vsFile.close();
-  } else {
-    std::cout << "error: cannot open file: " << fileName << std::endl;
-  }
-  return fullSource;
+gx::dynamicEntity loadModel(const std::string& ModelPath) {
+	return std::move(gx::Mesh(ModelPath,5).entityData);
 }
 
-std::vector<gx::drawSet::vaoData_t> loadModel(const std::string& ModelPath) {
-	gx::Mesh model(ModelPath,1);
-
-	std::vector<gx::drawSet::vaoData_t> entities;
-	//just do the first one until we get loading working
-	entities.push_back(model.m_Entries[0].entitiesData);
-
-	return entities;
-}
-
-std::vector<gx::drawSet::vaoData_t> entitiesData() {
-	// MODEL LOADING
-  
-  std::vector<gx::drawSet::vaoData_t> model_import  = loadModel("models/weird_orange_thing.dae");
-  
-  std::vector<gx::drawSet::vaoData_t> model_import2 = loadModel("models/Model_rotate.dae");
-  std::vector<gx::drawSet::vaoData_t> wallImport    = loadModel("models/wall.dae");
-  
-    //setup drawing data
-  std::vector<gx::drawSet::vaoData_t> entitiesData;
- 
+std::vector<gx::staticEntity> staticModels() {
+  auto modelJack   = loadModel("models/weird_orange_thing.dae");
+  auto modelWall   = loadModel("models/wall.dae");
+  auto modelPlayer = loadModel("models/Test_Run.dae");
   auto cubes = gx::loadCube();
   auto skybox = gx::loadSkybox();
-  entitiesData.insert(entitiesData.end(),skybox.begin(),skybox.end());
-  entitiesData.insert(entitiesData.end(),model_import2.begin(),model_import2.end());
-  entitiesData.insert(entitiesData.end(),wallImport.begin(),wallImport.end());
-  entitiesData.insert(entitiesData.end(),cubes.begin(),cubes.end());
-  entitiesData.insert(entitiesData.end(),model_import.begin(),model_import.end());
-   
+  std::vector<gx::staticEntity> entitiesData;
+  entitiesData.push_back(std::move(skybox));
+  entitiesData.push_back(std::move(modelPlayer));
+  entitiesData.push_back(std::move(modelWall));
+  entitiesData.insert(entitiesData.end(),std::make_move_iterator(cubes.begin()),
+                                         std::make_move_iterator(cubes.end()));
+  entitiesData.push_back(std::move(modelJack));
   return entitiesData;
-  }
+}
+
+std::vector<gx::dynamicEntity> dynamicModels() {
+	// MODEL LOADING
+  //auto modelTest   = loadModel("models/boblampclean.md5anim");
+  auto modelPlayer = loadModel("models/Test_Run.dae");
+
+    //setup drawing data
+  std::vector<gx::dynamicEntity> entitiesData;
+  entitiesData.push_back(std::move(modelPlayer));
+  return entitiesData;
+}
 //must call after window is initialized
 GLenum initGlew() {
   //should glew be done per context?? if so, move to static method
@@ -86,6 +67,7 @@ void gx::graphicsClient::reshape(unsigned int w, unsigned int h) {
   const elem_t nearPlane = 1.0f;
   const elem_t farPlane  = 3000.0f;
   // adjust the viewport when the window is resized
+  //this->window.setView(w,h); //maybe better?
   glViewport(0, 0, w, h);
   gx::debugout << "glViewport(0, 0, " << w << ", " << h << ");" << gx::endl;
   this->display.setProjection(fov,ratio,nearPlane,farPlane);
@@ -107,8 +89,8 @@ gx::graphicsClient::graphicsClient():
     userInput(),
     light1(gx::vector4f(1,1,1),0.5,0.5,0.05f),
     display(),
-    entities(readFile("shaders/default.vert"),readFile("shaders/default.frag"),
-                       entitiesData(),uniforms()),
+    entities(staticModels(),uniforms()),
+    animatedDrawer(dynamicModels(),uniforms()),
     playerDirection(0.0, 1.0,0.0),//change to result of init packet
     playerStartDirection(0.0, 1.0,0.0),//change to result of init packet
     playerStartRight(playerStartDirection.y,playerStartDirection.x,playerStartDirection.z),
@@ -149,7 +131,7 @@ ClientGameTimeAction gx::graphicsClient::handleInput() {
   if(jumped()) {
     action.jump = true;
   }
-  action.movement = getMovement();
+  action.movement = this->userInput.movePlayer();
   auto dir = getDir();
   action.updated = this->userInput.getUpdated();
   action.facingDirection = dir;
@@ -168,6 +150,7 @@ void gx::graphicsClient::draw() {
   
   // draw...
 	entities.draw();
+	animatedDrawer.draw();
   
   //render sfml please don't comment or uncomment anything from the following block
   glBindVertexArray(0);
@@ -201,10 +184,26 @@ void gx::graphicsClient::updatePosition(vector4f pos) {
 
 void gx::graphicsClient::updateEntities(std::vector<Entity*> data) {
   this->entities.reset();
+  this->animatedDrawer.reset();
 
   for(auto entityP = data.begin(); entityP != data.end(); ++entityP) {
     const auto& entity = **entityP;
-    entities.addEntity(entity.getPosition(), entity.getDirection(), entity.getType());
+    const auto& type = entity.getType();
+    if(false) { //TODO: change back to type == PLAYER
+      dynamicDrawer::instanceData inst;
+      inst. pos = entity.getPosition();
+      inst.dirY = entity.getDirection();
+      inst.type = 0; //TODO: somehow set this based on type but it can't be absolute type?
+      inst.animation    = 0;
+      inst.timePosition = 0;
+      this->animatedDrawer.addInstance(inst);
+    } else {
+      staticDrawer::instanceData inst;
+      inst. pos = entity.getPosition();
+      inst.dirY = entity.getDirection();
+      inst.type = entity.getType();
+      this->entities.addInstance(inst);
+    }
   }
 }
 

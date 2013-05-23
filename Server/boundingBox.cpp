@@ -1,6 +1,7 @@
 #include "boundingBox.h"
+#include <cmath>
 #include "Quadtree.h"
-#include "graphics\matrix.h"
+#include "graphics/matrix.h"
 
 void BoundingBox::updateRect(){
   vec4_t c[8]; //8 corners

@@ -16,6 +16,7 @@ class loc<GL_FLOAT_MAT4> {
   public:
     loc(const shaderProgram&,std::string,GLsizei);
     void write(const GLfloat*) const;
+    void write(const GLfloat*,GLsizei) const;
     void write(const GLfloat) const;
 };
 template <>
@@ -25,6 +26,7 @@ class loc<GL_FLOAT_VEC4> {
   public:
     loc(const shaderProgram&,std::string,GLsizei);
     void write(const GLfloat*) const;
+    void write(const GLfloat*,GLsizei) const;
     void write(const GLfloat) const;
 };
 template <>
@@ -34,6 +36,7 @@ class loc<GL_FLOAT> {
   public:
     loc(const shaderProgram&,std::string,GLsizei);
     void write(const GLfloat*) const;
+    void write(const GLfloat*,GLsizei) const;
     void write(const GLfloat) const;
 };
 

@@ -171,13 +171,12 @@ void NetworkClient::doClient() {
   }
   this->gxClient.disableCursor();
   std::cout << "game started" << std::endl;
-  //  main run loop
-  //for(int i = 0; i < 4; i++) {
   /*sf::Clock profilerTime;
   float processInputTime;
   float receiveMessagesTime;
   float drawTime;
   float sendPackTime;*/
+  //  main run loop
   while(this->running) {
     //process input and send events
   

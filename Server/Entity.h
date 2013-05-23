@@ -3,7 +3,7 @@
 #include "Map.h"
 #include "boundingManager.h"
 #include "StaticEnums.h"
-#include "graphics\matrix.h"
+#include "graphics/matrix.h"
 
 class Entity {
 public:
@@ -20,7 +20,7 @@ protected:
   // Some kind of state {paralyzed, frozen, blah blah}
   // Power ups {contains MULTIPLERS for health, defense/ elemental weapons}
   v3_t correctMovement( v3_t movementDirection, bool slide );
-  virtual bool correctMovementHit( Entity* e ){return false;}
+  virtual bool correctMovementHit( Entity* ){return false;}
 
 public:
   Entity() { render = true; }

@@ -2,40 +2,71 @@
 #define DRAWSET_H
 #include <GL/glew.h>
 #include <vector>
-#include <string>
-#include "shaderProgram.h"
 #include "vao.h"
 #include "matrix.h"
 #include "uniformLocation.h"
+#include "graphicsEntity.h"
 
 namespace gx {
-class displaySet;
-namespace uniform {
-class block;
-} //end namespace uniform
-
-class drawSet {
-   struct entityClass {
-      std::vector<matrix> positions;
-      vao                 vertData;
-      entityClass(std::vector<matrix>,vao);
-      entityClass(const entityClass&);// = delete; //don't copy
-      entityClass& operator=(const entityClass&);// = delete; //don't assign
-      entityClass(entityClass&&);
-      entityClass& operator=(entityClass&&);// = delete; //define later
-    };
-    shaderProgram            program;
-    std::vector<entityClass> entityClasses;
-    uniform::mat4floc        modelToWorldLoc;
-	  std::vector<uniform::block*> globalUniforms;
+class staticDrawerImpl {
+    uniform::mat4floc modelToWorldLoc;
   public:
-    typedef std::pair<std::vector<GLuint>,
-                      std::vector<const vertexAttrib*>> vaoData_t;
-    drawSet(const std::string, const std::string, const std::vector<vaoData_t>,
-                  std::vector<uniform::block*>);
-    void draw() const;
-    void reset();
-    void addEntity(vector3f,vector3f,unsigned int);
+    typedef staticEntity entity_t;
+    static const std::string vertShader;
+    static const std::string fragShader;
+    struct entityClass {
+      typedef matrix        instance;
+      std::vector<instance> instances;
+      vao                   vertData;
+      entityClass(entity_t,std::map<std::string,vertexAttribSignature>);
+      entityClass(const entityClass&);// = delete;
+      entityClass& operator=(const entityClass&);// = delete;
+      entityClass(entityClass&&) noexcept;
+      entityClass& operator=(entityClass&&);// = delete;
+      void clear();
+    };
+    staticDrawerImpl(const shaderProgram&);
+    void setUniforms(const entityClass&,const entityClass::instance&) const;
+    void setUniforms(const entityClass::instance&) const;
+    struct instanceData {
+      vector3f pos;
+      vector3f dirY;
+      unsigned int type;
+    };
+    void addInstance(instanceData,std::vector<entityClass>&);
+};
+
+class dynamicDrawerImpl {
+    static const unsigned int maxBones = 30;
+    staticDrawerImpl staticBase;
+    uniform::mat4floc boneTransforms;
+  public:
+    typedef dynamicEntity entity_t;
+    static const std::string vertShader;
+    static const std::string fragShader;
+    struct entityClass {
+      struct instance {
+        matrix position;
+        unsigned int animation;
+        unsigned int timePos;
+      };
+      std::vector<instance> instances;
+      vao                   vertData;
+      bone                  rootBone;
+      entityClass(entity_t,std::map<std::string,vertexAttribSignature>);
+      entityClass(const entityClass&);// = delete;
+      entityClass(entityClass&&);
+      entityClass& operator=(const entityClass&);// = delete;
+      entityClass& operator=(entityClass&&);// = delete;
+      void clear();
+    };
+    dynamicDrawerImpl(const shaderProgram&);
+    void setUniforms(const entityClass&,const entityClass::instance&) const;
+    struct instanceData : public staticDrawerImpl::instanceData {
+      unsigned int animation;
+      unsigned int timePosition;
+    };
+    void addInstance(instanceData,std::vector<entityClass>&);
 };
 
 } //end namespace gx

@@ -1,10 +1,10 @@
 #ifndef VERTEXATTRIB_H
 #define VERTEXATTRIB_H
 #include <vector>
+#include <memory>
 #include "oglUtil.h"
 
 namespace gx {
-
 class vertexAttrib {
     std::string varName;
     GLint       vectorSize;
@@ -12,6 +12,7 @@ class vertexAttrib {
     GLsizei     byteOffset;
     GLuint      buffer;
   public:
+    typedef std::vector<std::shared_ptr<const vertexAttrib>> attribsList_t;
     template<typename T>
     vertexAttrib(std::string n, GLint vs, GLsizei st, std::vector<T> d)
           : varName(n), vectorSize(vs), glType(typeVal(d[0])), byteOffset(st),
@@ -26,9 +27,9 @@ class vertexAttrib {
     }
     vertexAttrib(const vertexAttrib&);// = delete; //don't copy
     vertexAttrib& operator=(const vertexAttrib&);// = delete; //don't assign
-    vertexAttrib(vertexAttrib&&);// = delete; //define later
+    vertexAttrib(vertexAttrib&&) noexcept;
     vertexAttrib& operator=(vertexAttrib&&);// = delete; //define later
-    ~vertexAttrib();
+    ~vertexAttrib() noexcept;
     void bindBuffer()     const;
     std::string name()    const;
     GLint       vecSize() const;
