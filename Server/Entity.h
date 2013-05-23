@@ -42,6 +42,7 @@ public:
   void removeFromMap();
 
   bool canRender() const { return render; }
+  void setRender(bool b) { render = b; }
   v3_t getPosition(void) const { return position; }
   void setPosition(v3_t c) { position = c; }
   v3_t getDirection(void) const { return direction; }

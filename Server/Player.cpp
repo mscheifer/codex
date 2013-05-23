@@ -205,7 +205,7 @@ void Player::update(){
   //update movement
   acceleration = getGravity();
   velocity += acceleration * ConfigManager::serverTickLengthSec();
-  v3_t attemptMove = velocity * ConfigManager::serverTickLengthSec();// TODO use this @mc collisions
+  v3_t attemptMove = velocity * ConfigManager::serverTickLengthSec();
   position += correctMovement( attemptMove, false );
   //position += velocity * ConfigManager::serverTickLengthSec();
   
@@ -314,7 +314,8 @@ std::string Player::getString()
 }
 
 void Player::updateBounds(){
-  //update the bounding objects @mc collision
+  static int c = 0;
+  //update the bounding objects 
   boundingObjs[0]->setCenter(BoundingObj::vec4_t(position.x, position.y, position.z));
   BoundingObj::vec3_t direct(direction.x, direction.y,0);
   boundingObjs[0]->rotate(direct,BoundingObj::vec3_t(0,0,1));
@@ -333,6 +334,8 @@ void Player::handleCollisions(){
 
   for( auto it = entities.begin(); it != entities.end(); ){
     Entity * e = it->first;
+
+    //has already been processed //TODO @mc collision look at fix it vector, should never reprocess
     switch( e->getType() ) {
       case WALL:
         //std::cout << "wall" << std::endl;

@@ -19,6 +19,8 @@ std::vector<std::pair<Entity*,BoundingObj::vec3_t>> Entity::detectCollision(){
       if((*it2)->getEntity() == this)
         continue;
 
+      Entity_Type f = (*it2)->getEntity()->getType();
+
       //check if I have already collided with this entity //TODO maybe no entity check 
       //[for 2 objs collide with 1 of my bboxes] shortest dist changes
       auto finder = res.begin();
@@ -123,7 +125,6 @@ v3_t Entity::correctMovement(v3_t movementDirection, bool slide){
     length_t asdf = coll->tfirst;
 
     if(correctMovementHit(coll->e)){
-
       //scale by tfirst
       v3_t newDir = movementRay.getDirection();
       newDir.scale(coll->tfirst);
