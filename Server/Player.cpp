@@ -4,8 +4,8 @@
 #include "WeaponFist.h"
 #include "WeaponFire.h"
 
-const float Player::playerWidth = 5.0f;
-const float Player::playerHeight = 5.0f;
+const float Player::playerWidth = 1.0f;
+const float Player::playerHeight = 1.0f;
 const float Player::playerDepth = 3.0f;
 
 const length_t Player::MOVESCALE = ConfigManager::playerMovescale();
@@ -174,7 +174,7 @@ void Player::update(){
   //update movement
   acceleration = getGravity();
   velocity += acceleration * ConfigManager::serverTickLengthSec();
-  //v3_t attemptMove = velocity * ConfigManager::serverTickLengthSec();
+  //v3_t attemptMove = velocity * ConfigManager::serverTickLengthSec(); TODO use this
   //position += correctMovement( attemptMove, false );
   position += velocity * ConfigManager::serverTickLengthSec();
   
@@ -262,9 +262,9 @@ std::string Player::getString()
 
 void Player::updateBounds(){
   //update the bounding objects
-  boundingObjs[0]->setCenter(BoundingObj::vec4_t(position.x, position.y, position.z));
-  BoundingObj::vec3_t direct(direction.x, direction.y,0);
-  boundingObjs[0]->rotate(direct,BoundingObj::vec3_t(0,0,1));
+  //boundingObjs[0]->setCenter(BoundingObj::vec4_t(position.x, position.y, position.z));
+  //BoundingObj::vec3_t direct(direction.x, direction.y,0);
+  //boundingObjs[0]->rotate(direct,BoundingObj::vec3_t(0,0,1));
   boundingObjs[0]->setCenterOnTree(BoundingObj::vec4_t(position.x, position.y, position.z));
 }
 

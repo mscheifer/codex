@@ -2,15 +2,17 @@
 #include "ConfigManager.h"
 #include "util.h"
 
-std::array<sf::Music,4> AudioManager::music;
+std::array<sf::Music,2> AudioManager::music;
+std::array<int,2> AudioManager::musicProx;
 std::map<std::string, sf::SoundBuffer*> AudioManager::soundBuffers;
 std::map<std::string, std::string> AudioManager::musics;
 std::list<sf::Sound> AudioManager::sounds;
 bool AudioManager::useSound;
 int AudioManager::trackNo;
+int AudioManager::currentlyPlayingMusic;
 
 void AudioManager::loadSound(std::string key, std::string sound){
-  if(useSound) 
+  if(!useSound) 
     return;
 
   sf::SoundBuffer *buffer = new sf::SoundBuffer;
@@ -20,11 +22,16 @@ void AudioManager::loadSound(std::string key, std::string sound){
 }
 
 void AudioManager::loadSounds(){
-  useSound = StringToNumber<int>(ConfigManager::configMap["sound"]) == 0;
-  if(useSound)
+  useSound = StringToNumber<int>(ConfigManager::configMap["sound"]) == 1;
+  if(!useSound)
     return;
   
   trackNo = 0;
+  currentlyPlayingMusic = 0;
+  for(unsigned int i = 0; i < musicProx.size(); i++){
+    musicProx[i] = -1;
+  }
+
   loadSound("s1", "sounds/sound_1.wav");
   loadSound("s2", "sounds/sound_2.wav");
   loadSound("s3", "sounds/sound_3.wav");
@@ -48,7 +55,7 @@ void AudioManager::loadSounds(){
 }
 
 void AudioManager::playSound(std::string key, v3_t pos){
-  if(useSound) 
+  if(!useSound) 
     return;
 
   std::map<std::string,sf::SoundBuffer*>::iterator it;
@@ -77,20 +84,45 @@ void AudioManager::playSoundHelper(std::list<sf::Sound>::iterator index, v3_t po
 }
 
 void AudioManager::updateMusic( int numPlayers ){
+  if(!useSound)
+    return;
 
   //switch tracks
   if(music[0].getStatus() != sf::Sound::Playing){
     trackNo = ++trackNo % maxTracks;
-    loadTrack(trackNo);
+    playMusic( getTrack(trackNo, numPlayers), currentlyPlayingMusic );
+    playMusic( getTrack(trackNo, getClosestProx(numPlayers)), notCurrentlyPlaying() );
 
     //set the track to currently play
-    music[numPlayers].setVolume(100);
+    music[currentlyPlayingMusic].setVolume(100);
+    music[notCurrentlyPlaying()].setVolume(0);
+    musicProx[currentlyPlayingMusic] = numPlayers;
+    musicProx[currentlyPlayingMusic] = getClosestProx(numPlayers);
+  }
+
+  //get the one taht is playing the right prox song
+  int keepPlaying = -1;
+  for( unsigned int i = 0; i < musicProx.size(); i++){
+    if (musicProx[i] == numPlayers)
+      keepPlaying = i;
+  }
+
+  //switch the songs if needed
+  if(keepPlaying == -1){
+    sf::Time offset = music[notCurrentlyPlaying()].getPlayingOffset();
+    playMusic( getTrack(trackNo, numPlayers), notCurrentlyPlaying() );
+    music[notCurrentlyPlaying()].setPlayingOffset(offset);
+    music[notCurrentlyPlaying()].setVolume(0);
+    musicProx[notCurrentlyPlaying()] = numPlayers;
+    currentlyPlayingMusic = notCurrentlyPlaying();
+  } else {
+    currentlyPlayingMusic = keepPlaying;
   }
 
   //update the volumes
   float volume = 0;
   for( unsigned int i = 0; i < music.size(); i++ ){
-    if( i == numPlayers ){ //FADE IN
+    if( i == currentlyPlayingMusic ){ //FADE IN
       volume = music[i].getVolume();
       volume += 5;
       if(volume > 100)
@@ -105,7 +137,6 @@ void AudioManager::updateMusic( int numPlayers ){
       music[i].setVolume(volume);
     }
   }
-  
 }
 
 void AudioManager::loadTrack(int i){
@@ -128,7 +159,7 @@ void AudioManager::loadTrack(int i){
 }
 
 void AudioManager::playMusic(std::string musicN, int index){
-  if(useSound) 
+  if(!useSound) 
     return;
 
   if (music[index].openFromFile(musics[musicN])){
@@ -145,6 +176,47 @@ void AudioManager::processProjectileSound(Projectile& o){
   if(o.getFired()){
     playSound("f1", o.getPosition());
   }
+}
+
+int AudioManager::notCurrentlyPlaying(){
+  if(currentlyPlayingMusic == 0)
+    return 1;
+  return 0;
+}
+
+std::string AudioManager::getTrack( int track, int prox ){
+  if( track == 0 ){
+    switch(prox){
+    case 0:
+      return "m1_1";
+    case 1:
+      return "m1_2";
+    case 2:
+      return "m1_3";
+    case 3:
+      return "m1_4";
+    }
+  }
+  else if( track == 1 ){
+    switch(prox){
+    case 0:
+      return "m2_1";
+    case 1:
+      return "m2_2";
+    case 2:
+      return "m2_3";
+    case 3:
+      return "m2_4";
+    }
+  }
+  std::cout << "error, trying to load track that does not exist" << std::endl;
+}
+
+int AudioManager::getClosestProx( int prox ){
+  ++prox;
+  if(prox > 3)
+    prox = 2;
+  return prox;
 }
 
 /*
