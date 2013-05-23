@@ -14,7 +14,7 @@ void Game::chooseMinotaur()
 {
   srand(static_cast<unsigned int>(time(nullptr)));
   int minotaur = rand() % ConfigManager::numPlayers();
-  world.getPlayers()[minotaur]->minotaur=true;
+  world.getPlayers()[minotaur]->setAsMinotaur(true);
 }
 
 int Game::join()
@@ -31,7 +31,8 @@ void Game::evaluate(ClientGameTimeAction a) {
 	std::vector<Entity *> currentEntities = world.getEntity();
 	
 	for( unsigned int i = 0; i <  currentPlayers.size(); i++ ) {
-		 currentPlayers[i]->handleAction(a);
+		currentPlayers[i]->handleAction(a);
+    world.separatePlayers(currentPlayers[i]);
 	}
 }
 
@@ -39,15 +40,18 @@ void Game::evaluate(ClientGameTimeAction a) {
 void Game::updateAndResolveCollision() {
   std::vector<Player *> currentPlayers =  world.getPlayers();
 	std::vector<Entity *> currentEntities = world.getEntity();
+  std::vector<Projectile*> currentProjectile = world.getLiveProjectTile();
 
   for( unsigned int i = 0; i < currentPlayers.size(); i++ ) {
-		 //std::cout << " hello nigga, updating entities" << std::endl;
-		 currentPlayers[i]->update();
-     world.separatePlayers(currentPlayers[i]);
+		currentPlayers[i]->update();
 	}
 
   for( unsigned int i = 0; i < currentEntities.size(); i++ ) {
-		 currentEntities[i]->update();
+		currentEntities[i]->update();
+	}
+
+  for( unsigned int i = 0; i < currentProjectile.size(); i++ ) {
+		currentProjectile[i]->update();
 	}
 
   //run collision fix here
@@ -58,6 +62,10 @@ void Game::updateAndResolveCollision() {
 	for( unsigned int i = 0; i < currentEntities.size(); i++ ) {
 		currentEntities[i]->handleCollisions();
 	}
+
+  for( unsigned int i = 0; i < currentProjectile.size(); i++ ) {
+		currentProjectile[i]->handleCollisions();
+	}
 }
 
 ServerGameTimeRespond Game::prepResponse() {
@@ -67,11 +75,22 @@ ServerGameTimeRespond Game::prepResponse() {
 	s.walls.clear();
 	s.powerups.clear();
   s.players.clear();
-	std::vector<Player*> currentPlayers =  world.getPlayers();
+	std::vector<Player*>  currentPlayers =  world.getPlayers();
 	std::vector<Entity*> currentEntities = world.getEntity();
+  std::vector<Projectile*> currentProjectiles = world.getLiveProjectTile();
 	for( unsigned int i = 0; i < currentPlayers.size(); i++ ) {
+     /*for testing
+     if (currentPlayers[i]->getHealth() > 0) {
+       (currentPlayers[i])->setHealth(currentPlayers[i]->getHealth()-1);
+     } else  (currentPlayers[i])->setHealth(100);
+     */
 		 s.players.push_back(*currentPlayers[i]); //add the player to the return struct
 	}
+
+  for( unsigned int i = 0; i < currentProjectiles.size(); i++ ) {
+    if(currentProjectiles[i]->canRender())
+      s.projectiles.push_back(currentProjectiles[i]); 
+  }
 
 	for( unsigned int i = 0; i < currentEntities.size(); i++ ) {
     if( currentEntities[i]->canRender() ) {
@@ -92,14 +111,14 @@ ServerGameTimeRespond Game::prepResponse() {
         std::cout<<"Error for Entity type!!!!!!"<<std::endl;
         break;
       }
-    }  
+    }
   }
 	  
 	unsigned int deadPlayers = 0;
   bool minotaurLose  = false;
   //determine who wins
   for (unsigned int i = 0; i< currentPlayers.size(); i++ ) {
-     if (!currentPlayers[i]->minotaur) {
+     if (!currentPlayers[i]->isMinotaur()) {
         if (currentPlayers[i]->dead) {
           deadPlayers++;
         }
@@ -119,15 +138,25 @@ ServerGameTimeRespond Game::prepResponse() {
 }
 
 InitPacket Game::getInitPacket(int playerId) {
-  Player* player = nullptr;
   std::vector<Player*> players = world.getPlayers();
-  for(auto playerP = players.begin(); playerP != players.end(); playerP++) {
-    if( (*playerP)->player_id == playerId ){
-      player = *playerP;
-      return InitPacket(player->player_id, player->getPosition(), player->getDirection());
-    }
+  for(auto playerIt = players.begin(); playerIt != players.end(); playerIt++) {
+    if( (*playerIt)->player_id == playerId ) //if id match
+      return InitPacket((*playerIt)->player_id, (*playerIt)->getPosition(), (*playerIt)->getDirection());
   }
 
   std::cout << "ERROR init packet, player id not found" << std::endl;
-  return InitPacket(player->player_id, player->getPosition(), player->getDirection());
+  return InitPacket(0, v3_t(0,0,0), v3_t(0,0,0));
+}
+
+void Game::clearEvents(){
+  std::vector<Player *> currentPlayers =  world.getPlayers();
+	std::vector<Entity *> currentEntities = world.getEntity();
+
+  for( unsigned int i = 0; i < currentPlayers.size(); i++ ) {
+    currentPlayers[i]->clearEvents();
+	}
+   
+	for( unsigned int i = 0; i < currentEntities.size(); i++ ) {
+		currentEntities[i]->clearEvents();
+	}
 }

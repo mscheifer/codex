@@ -18,6 +18,7 @@ public:
   bool isSphere() const{return true;}
 
   unit_t getRadius()const{return radius;}
+  vec3_t getMaxRadius( vec3_t axis );
   
   /*
   static void test(){

@@ -14,8 +14,10 @@ public:
   }
   void updateRect();
   bool isRay() const{return true;}
+  std::string toString();
 
   vec3_t getDirection() const {return direction;}
+  void setDirection(vec3_t v){direction = v;}
   vec4_t getOrigin() const {return getCenter();}
   void setOrigin(vec4_t o) {center = o;}
 };

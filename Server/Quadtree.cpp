@@ -43,8 +43,7 @@ void Quadtree::split(){
      subWidth, subHeight));
 }
 
-int Quadtree::getIndex(BoundingObj* o){
-  Rectangle pRect = *(o->getRect());
+int Quadtree::getIndex(Rectangle& pRect) const{
   int index = -1;
   float x = pRect.getCenter().x - pRect.getHalfWidth(); //lowest x
   float y = pRect.getCenter().y - pRect.getHalfHeight(); //lowest y
@@ -84,7 +83,7 @@ void Quadtree::insert(BoundingObj* o){
     o->setQuadtree(this);
   }
   if (nodes[0] != nullptr) {
-    int index = getIndex(o);
+    int index = getIndex(*o->getRect());
  
     if (index != -1) {
       nodes[index]->insert(o);
@@ -102,7 +101,7 @@ void Quadtree::insert(BoundingObj* o){
     }
  
     for(auto it = objects.begin(); it != objects.end(); ){
-      int index = getIndex(*it);
+      int index = getIndex(*((*it)->getRect()));
       if( index != -1 ){
         nodes[index]->insert(*it);
         it = objects.erase(it);
@@ -114,7 +113,7 @@ void Quadtree::insert(BoundingObj* o){
 }
 
 void Quadtree::remove(BoundingObj* o) {
-  int index = getIndex(o);
+  int index = getIndex(*o->getRect());
   if( index != -1 && nodes[0] != nullptr) {
     nodes[index]->remove(o);
   } else {
@@ -122,8 +121,8 @@ void Quadtree::remove(BoundingObj* o) {
   }
 }
 
-std::vector<BoundingObj*> & Quadtree::retrieve(std::vector<BoundingObj*> & returnObjects, BoundingObj* pRect){
-  int index = getIndex(pRect);
+std::vector<BoundingObj*> & Quadtree::retrieve(std::vector<BoundingObj*> & returnObjects, Rectangle* pRect){
+  int index = getIndex(*pRect);
   if( index == -1 && nodes[0] != nullptr){
     nodes[0]->retrieve(returnObjects, pRect);
     nodes[1]->retrieve(returnObjects, pRect);
@@ -135,10 +134,14 @@ std::vector<BoundingObj*> & Quadtree::retrieve(std::vector<BoundingObj*> & retur
   }
  
   for( auto it = objects.begin(); it != objects.end(); it++){
-    if(*it != pRect)
+    if((*it)->getRect() != pRect)
       returnObjects.push_back(*it);
   }
   return returnObjects;
+}
+
+std::vector<BoundingObj*> & Quadtree::retrieve(std::vector<BoundingObj*> & returnObjects, BoundingObj* pRect){
+  return retrieve(returnObjects, pRect->getRect());
 }
 
 int Quadtree::size(){

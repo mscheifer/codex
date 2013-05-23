@@ -6,30 +6,27 @@
 #include <algorithm>
 #include <string>
 #include "Entity.h"
-#include "Physics.h"
-#include "Weapon.h"
-#include "WeaponFist.h"
-#include "WeaponFire.h"
 #include "ClientGameTimeAction.h"
-#include "boundingManager.h"
-#include "PowerUp.h"
 
-const int MOVESCALE = 3;
-const length_t AIRMOVESCALE = 1;
-const length_t JUMPSPEED = 20;
-const int MAXJUMP = 5;
-
-#define MAXWEAPONS 2
+#include "Weapon.h"
+const int MAXWEAPONS = 2;
 
 class Player: public Entity
 {
 public:
-  static const float sphereRadius;
+  static length_t MOVESCALE();
+  static length_t AIRMOVESCALE();
+  static length_t JUMPSPEED();
+  static int MAXJUMP();
+
+  static const float playerWidth;
+  static const float playerHeight;
+  static const float playerDepth;
   static const Entity_Type type = PLAYER;
   bool dead; //might be private. should be determined in handleAction
-  bool minotaur; //might be private
   int player_id;
   std::string name;
+
   Player();
   Player(v3_t pos, int assigned_id, Map *);
   ~Player(void);
@@ -38,7 +35,8 @@ public:
   void update();
   void handleCollisions();  
   void updateBounds();  
-  void updateBoundsSoft(); 
+  void updateBoundsSoft();
+  //void clearEvents();
   
   //helper functions for collisions
   bool collideWall(const std::pair<Entity*,BoundingObj::vec3_t>& p);
@@ -55,84 +53,47 @@ public:
   void setMana(float);
   float getSpeed(){ return speed;}
   void setSpeed(float);
+  void setSpeedUpTime(int s) { speedUpTime = s; };
+  void activateSpeedUp(void) { speedUp = true ;};
+  bool isSpeedUpActive(void) { return speedUp;};
+  void setAttackSpeed(float s) { attackSpeed = s;};
+  float getAttackSpeedDiv(void) {return attackSpeed;};
+  void restartSpeedUpCounter(void) { speedUpCounter.restart();};
   WeaponType getPickupWeaponType() const{ return pickupWeaponType; }
-
-  Entity_Type getType() const {
-    return type;
-  }
-
-  void serialize(sf::Packet& packet) const {
-    Entity::serialize(packet);
-    packet << this->player_id;
-    //acceleration.serialize(packet);
-    //velocity.serialize(packet);
-    //oldJumpVelocity.serialize(packet);
-    packet << dead; 
-    packet << minotaur; //might be private
-    packet << name;
-    packet << health;
-    packet << maxHealth;
-    packet << mana;
-    packet << maxMana;
-    packet << defense;
-    packet << speed;
-    packet << castDownTime; //not needed on client ?
-    //sf::Clock castDownCounter;
-    packet << jumpCount; // not needed on client ?
-    packet << canJump; //not needed on client ?
-    packet << attacking;  //not neede on client ?
-    //Weapon* weapon[MAXWEAPONS]; 
-    // change the array to vector ?
-    packet << static_cast<sf::Uint32>(pickupWeaponType);
-    packet << current_weapon_selection; 
-  }
-
-  void deserialize(sf::Packet& packet) {
-    Entity::deserialize(packet);
-    packet >> this->player_id;
-    //acceleration.deserialize(packet);
-    //velocity.deserialize(packet);
-    //oldJumpVelocity.deserialize(packet);
-    packet >>dead; 
-    packet >>minotaur; //might be private
-    packet >> name;
-    packet >> health;
-    packet >> maxHealth;
-    packet >> mana;
-    packet >> maxMana;
-    packet >> defense;
-    packet >> speed;
-    packet >> castDownTime; //not needed on client ?
-    //sf::Clock castDownCounter;
-    packet >> jumpCount; // not needed on client ?
-    packet >> canJump; //not needed on client ?
-    packet >> attacking;  //not neede on client ?
-    //Weapon* weapon[MAXWEAPONS]; 
-    // change the array to vector ?
-    sf::Uint32 pickupWeaponTypeUint32;
-    packet >> pickupWeaponTypeUint32;
-    pickupWeaponType = static_cast<WeaponType>(pickupWeaponTypeUint32);
-    packet >> current_weapon_selection; 
-  }
+  void setAsMinotaur(bool b);
+  bool isMinotaur();
+  Entity_Type getType() const { return type; }
+  
+  void serialize(sf::Packet& packet) const;
+  void deserialize(sf::Packet& packet);
 
 private:
   Weapon* pickup;
   WeaponType pickupWeaponType;
 
   v3_t oldJumpVelocity; //the x,y velocity that should be applied
+  bool minotaur; //might be private
   float health;
+  float healthRegen;
   float maxHealth;
   float mana;
+  float manaRegen;
   float maxMana;
+  Projectile* chargedProjectile;
   float defense;
   float speed;
+  int speedUpTime;
+  float attackSpeed;
   float castDownTime;
   sf::Clock castDownCounter;
+  sf::Clock speedUpCounter;
+  bool speedUp;
   int jumpCount;
   bool canJump;
   bool attacking;
   Weapon* weapon[MAXWEAPONS]; //0 bare hand, 1 fireball
   int current_weapon_selection; //0 bare hand, 1 fireball
+
   bool damageBy(DeadlyEntity *);
   void handleSelfAction(ClientGameTimeAction a);
   void handleOtherAction(ClientGameTimeAction a);
@@ -140,4 +101,6 @@ private:
   void init(v3_t pos, int assigned_id, Map * m);
   void generateBounds(v3_t pos);
   void restartJump(length_t zPosFix);
+  bool correctMovementHit( Entity* e );
+  v3_t getProjectilePosition(void);
 };

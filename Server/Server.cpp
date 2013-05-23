@@ -9,6 +9,7 @@ void NetworkServer::combinePackets(ClientGameTimeAction & a) {
 	pPacket.weapon2 |= a.weapon2;
 	pPacket.jump |= a.jump;
   pPacket.pickup |= a.pickup;
+  pPacket.switchWeapon |= a.switchWeapon;
   pPacket.facingDirection = a.facingDirection;
 }
 
@@ -36,8 +37,8 @@ void NetworkServer::receiveMessages(int i) {
     }
   }
   if (packetReceived) {
-    ConfigManager::log("------------------------------------");
-    ConfigManager::log(pPacket.toString()); 
+    //ConfigManager::log("------------------------------------");
+    //ConfigManager::log(pPacket.toString()); 
     game.evaluate(pPacket);
 
     pPacket.clear();
@@ -45,8 +46,6 @@ void NetworkServer::receiveMessages(int i) {
 }
 
 void NetworkServer::doServer() {
-  ConfigManager::setupLog("server");
-  ConfigManager::log("lol");
   sf::IpAddress myIpAddress = sf::IpAddress::getLocalAddress();
   std::cout << "Server Ip Address: " << myIpAddress.toString() << std::endl;
   sf::Clock clock;
@@ -65,6 +64,21 @@ void NetworkServer::doServer() {
   }
   //choose minotaur
   game.chooseMinotaur();
+  
+  //Wait for players to start
+  unsigned int connectionCount = 0;
+  while (connectionCount < ConfigManager::numPlayers()) {
+    for(unsigned int i = 0; i < server.size(); i++){
+      sf::Packet packet;
+      if (this->server.receiveMessage(packet,i)) {
+        sf::Uint32 packetType;
+        packet >> packetType;
+        if (packetType == INIT) {
+            connectionCount++;
+        }
+      }
+    }
+  }
 
   //send init packet to the players
   for(unsigned int i = 0; i < server.size(); i++){
@@ -81,6 +95,7 @@ void NetworkServer::doServer() {
   while(true) {
     clock.restart();
     
+    game.clearEvents();
     // don't fuck with this order here
 
     //1. handle incoming packet

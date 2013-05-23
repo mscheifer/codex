@@ -8,16 +8,6 @@ WeaponFist::~WeaponFist(void)
 {
 }
 
-bool WeaponFist::attackMelee()
-{
-  return false;
-}
-
-Projectile* WeaponFist::attackRange()
-{
-  return NULL;
-  //attackMelee();
-}
 /*
 bool WeaponFist::pickUp()
 {

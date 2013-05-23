@@ -27,6 +27,7 @@ public:
   
   std::vector<Entity *> getEntity(void);
   std::vector<Player *> getPlayers(void);
+  std::vector<Projectile *> getLiveProjectTile(void);
   Projectile* produceProjectile(void);
   void destroyProjectile(Projectile *);
   bool addPlayer(Player *);

@@ -5,13 +5,17 @@
 #include "drawer.h"
 #include "light.h"
 #include "input.h"
+#include "HUD.h"
+#include "lobby.h"
 #include "ClientGameTimeAction.h" 
+#include <SFML/Graphics.hpp>
+#include "Player.h"
 
 class Entity;
 
 namespace gx {
 class graphicsClient {
-    sf::Window window;
+    sf::RenderWindow window;
     GLenum     glewStatus;
     input      userInput;
     //scene data
@@ -34,7 +38,8 @@ class graphicsClient {
 
     sf::Clock fpsClock;
     int fpsFrames;
-
+    HUD Hud;
+    lobby Lobby;
     void setCamera();
     void reshape(unsigned int, unsigned int);
     std::vector<gx::uniform::block*> uniforms();
@@ -48,6 +53,10 @@ class graphicsClient {
     void draw();
     void updatePosition(vector4f);
     void updateEntities(std::vector<Entity*>);
+    void updateHUD(Player & player);
+    void drawLobby();
+    void disableCursor();
+    bool gameStart() const;
 
     //input functions
     bool closed()        { return this->userInput.getStop(); }

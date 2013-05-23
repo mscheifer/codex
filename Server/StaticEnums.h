@@ -42,3 +42,8 @@ const std::string WeaponNames[] = {
   "STAFF OF FIRE",
   "FIST"
 };
+
+
+enum MAGIC_POWER { FIREONE = 0 , FIRETWO = 1, FIRETHREE = 2 };
+
+const double magic_mutiplier[3] = { 1.0, 1.5, 3.0};

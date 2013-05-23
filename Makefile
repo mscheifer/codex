@@ -2,8 +2,16 @@ NAME	    = Server/drchao
 DEBUGNAME = Server/drchao-debug
 ECHO	    = @echo
 CC        = @g++
-BINFLAGS  = -O3 -DNDEBUG
-DEBUGFLAGS = -g -DGRAPHICSDEBUG
+BINFLAGS  = -O3 -flto -DNDEBUG
+#possible optimizations to consider: fmodulo-sched fmodulo-sched-allow-regmoves
+#  fgcse-sm fgcse-las fgcse-after-reload 
+#  (funsafe-loop-optimizations Wfunsafe-loop-optimizations) 
+#  fsched-pressure fsched-spec-load fsched-spec-load-dangerous
+#  fipa-pta (excessive memory) Ofast mfpmath (architecture related, for SSE)
+#list all optimizations enabled: -Q --help=optimizers
+#diagnostic flags: -fmudflap
+#there's also profling optimization options
+DEBUGFLAGS= -g -DGRAPHICSDEBUG
 WARNINGS  = -Wall -Wextra -Wstrict-overflow=5 -Wshadow #-Wconversion
 INCLUDE   = -IServer/
 CCFLAGS   = $(WARNINGS) $(INCLUDE) -std=c++11
@@ -36,7 +44,7 @@ $(DEBUGNAME): $(DEBUGOBJS)
 $(OBJS): $(OBJDIR)%.o: %.cpp
 	$(ECHO) "Compiling $<"
 #	$(ECHO) $(CC) $(CPPFLAGS) -c -o $@ $<
-	$(CC) -MMD -MP $(CCFLAGS) -c -o $@ $<
+	$(CC) -MMD -MP $(BINFLAGS) $(CCFLAGS) -c -o $@ $<
 
 -include $(DEPENDENCIES)
 

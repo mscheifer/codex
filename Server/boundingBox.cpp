@@ -1,5 +1,7 @@
 #include "boundingBox.h"
+#include <cmath>
 #include "Quadtree.h"
+#include "graphics/matrix.h"
 
 void BoundingBox::updateRect(){
   vec4_t c[8]; //8 corners
@@ -50,7 +52,49 @@ void BoundingBox::updateRect(){
     //  minZ = c[i].z;
   }
 
-  getRect()->setCenter(BoundingObj::vec4_t((minX+maxX)/2,(minY+maxY)/2,0));
+  getRect()->setCenter(vec4_t((minX+maxX)/2,(minY+maxY)/2,0));
   getRect()->setHalfWidth((maxX-minX)/2);
   getRect()->setHalfHeight((maxY-minY)/2);
+}
+
+//TODO how to do this???
+void BoundingBox::rotate(vec3_t dir, vec3_t up){
+  dir.z = 0;
+  dir.normalize();
+  gx::matrix rotAndTrans = gx::translation(center.x,center.y,center.z) * toRightHandBasisFromYandUp(dir,up);
+  ax = gx::multiply(rotAndTrans, ax);
+  ay = gx::multiply(rotAndTrans, ay);
+}
+
+std::string BoundingBox::toString(){
+  std::stringstream ss;
+  ss << BoundingObj::toString();
+  ss << "axis x " << ax << " axis y " << ay << " axis z " << az << std::endl;
+  ss << "hw " << hw << " hh " << hh << " hd " << hd << std::endl;
+  return ss.str();
+}
+
+BoundingObj::vec3_t BoundingBox::getMaxRadius( vec3_t axis ){
+  axis.normalize();
+
+  vec3_t radius = ax;
+  radius.scale(hw);
+  unit_t maxRad = std::fabs(radius.dot(axis));
+
+  radius = ay;
+  radius.scale(hh);
+  unit_t rad = std::fabs(radius.dot(axis));
+  if( rad > maxRad ){
+    maxRad = rad;
+  }
+
+  radius = az;
+  radius.scale(hd);
+  rad = std::fabs(radius.dot(axis));
+  if( rad > maxRad ){
+    maxRad = rad;
+  }
+
+  axis.scale(maxRad);
+  return axis;
 }

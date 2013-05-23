@@ -28,7 +28,7 @@ gx::staticDrawerImpl::entityClass::entityClass(staticEntity drawData,
   : vertData(std::move(drawData.indices),std::move(drawData.attribs),
              std::move(vars)) {}
 
-gx::staticDrawerImpl::entityClass::entityClass(entityClass&& other)
+gx::staticDrawerImpl::entityClass::entityClass(entityClass&& other) noexcept
   : instances(std::move(other.instances)), vertData(std::move(other.vertData)){}
 
 void gx::staticDrawerImpl::entityClass::clear() {
@@ -78,9 +78,9 @@ void gx::dynamicDrawerImpl::addInstance(
     instanceData d,std::vector<entityClass>& entityClasses) {
   auto type = d.type;
   entityClass::instance newInst;
-  newInst.   animation = d.animation;
-  newInst.timePos = d.timePosition;
-  newInst.position = makePositionMatrix(std::move(d));
+  newInst.animation = d.animation;
+  newInst.  timePos = d.timePosition;
+  newInst. position = makePositionMatrix(std::move(d));
 
   entityClasses[type].instances.push_back(std::move(newInst));
 }

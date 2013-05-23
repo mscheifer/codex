@@ -27,3 +27,10 @@ void Ray::updateRect(){
   getRect()->setHalfWidth((maxX-minX)/2);
   getRect()->setHalfHeight((maxY-minY)/2);
 }
+
+std::string Ray::toString(){
+  std::stringstream ss;
+  ss << BoundingObj::toString();
+  ss << getDirection() << std::endl;
+  return ss.str();
+}

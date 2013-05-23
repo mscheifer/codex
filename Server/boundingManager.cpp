@@ -5,6 +5,10 @@ bool sortEntity(std::pair<Entity*,BoundingObj::vec3_t> a, std::pair<Entity*,Boun
   return a.second.magnitudesq() < b.second.magnitudesq();
 }
 
+bool sortRayCollision(RayCollision a, RayCollision b){
+  return a.tfirst < b.tfirst;
+}
+
 int sign( float number)
 {
   if(number > 0)
@@ -67,6 +71,12 @@ std::pair<bool,BoundingObj::vec3_t> notSeparatedByAxis(const BoundingBox* a, con
   return std::pair<bool,BoundingObj::vec3_t>(retBool, ret);
 }
 
+//start = start of ray
+//dir   = direction of ray projected on axis
+//start = start of axis
+//end   = end of axis
+//tfirst = time of first impact
+//tlast  = time of last impact
 bool raySlab(float start, float dir,
   float min, float max, float& tfirst, float& tlast) {
 
@@ -160,6 +170,13 @@ std::pair<bool,BoundingObj::vec3_t> boxBox(const BoundingBox* a,const  BoundingB
 }
 
 std::pair<bool,BoundingObj::vec3_t> boxRay(const BoundingBox* b,const Ray* r){
+  BoundingObj::vec3_t axis(0,0,0);
+  BoundingObj::unit_t thit = 0;
+  return boxRay(b,r,thit,axis,axis);
+}
+
+std::pair<bool,BoundingObj::vec3_t> boxRay(const BoundingBox* b,const Ray* r, 
+  BoundingObj::unit_t& timeHit, BoundingObj::vec3_t& normAxis, BoundingObj::vec3_t& parallelAxis){
   BoundingObj::vec3_t ax = b->getAx(), 
   ay = b->getAy(),
   az = b->getAz();
@@ -174,18 +191,37 @@ std::pair<bool,BoundingObj::vec3_t> boxRay(const BoundingBox* b,const Ray* r){
   BoundingObj::vec3_t origin(r->getOrigin().x,r->getOrigin().y,r->getOrigin().z);
   BoundingObj::vec3_t centerBox(b->getCenter().x, b->getCenter().y, b->getCenter().z);
 
+  BoundingObj::unit_t oldtfirst = tfirst;
+  normAxis = ax;
+  parallelAxis = ay;
+
   if (!raySlab(origin.dot(ax), r->getDirection().dot(ax), 
     centerBox.dot(ax) - hw, centerBox.dot(ax) + hw, tfirst, tlast)) 
     return std::pair<bool,BoundingObj::vec3_t>(false,BoundingObj::vec3_t());
+
   if (!raySlab(origin.dot(ay), r->getDirection().dot(ay), 
     centerBox.dot(ay) - hh, centerBox.dot(ay) + hh, tfirst, tlast))
     return std::pair<bool,BoundingObj::vec3_t>(false,BoundingObj::vec3_t());
+  
+  if(oldtfirst != tfirst){
+    oldtfirst = tfirst;
+    normAxis = ay;
+    parallelAxis = ax;
+  }
+
   if (!raySlab(origin.dot(az), r->getDirection().dot(az), 
     centerBox.dot(az) - hd, centerBox.dot(az) + hd, tfirst, tlast))
     return std::pair<bool,BoundingObj::vec3_t>(false,BoundingObj::vec3_t());
+  
+  if(oldtfirst != tfirst){
+    oldtfirst = tfirst;
+    normAxis = az;
+    parallelAxis = BoundingObj::vec3_t(0,0,0);
+  }
 
   //the time it hit
   t = tfirst;
+  timeHit = t;
   BoundingObj::vec3_t ret = r->getDirection();
   ret.scale(1.0f-t);
   //ret.scale(1.0-tfirst);
@@ -260,10 +296,35 @@ std::pair<bool,BoundingObj::vec3_t> collide(const BoundingObj * a,const  Boundin
   return std::pair<bool,BoundingObj::vec3_t>(false,BoundingObj::vec3_t());
 }
 
+
+RayCollision rayCollide(const Ray * r,const  BoundingObj * b){
+  RayCollision res;
+
+  if(b->isBox()){ //TODO right now this only works for boxes
+    std::pair<bool,BoundingObj::vec3_t> res2 = 
+      boxRay((const BoundingBox *)b, r, res.tfirst, res.normalAxis, res.parallelAxis);
+    res.collided = res2.first;
+  }
+
+  return res;
+}
+
 void boxTest(){
-  BoundingBox b1(BoundingObj::vec4_t(0,0,0), 
-    BoundingObj::vec3_t(1,0,0), BoundingObj::vec3_t(0,1,0), BoundingObj::vec3_t(0,0,1),
+    Ray r1(BoundingObj::vec4_t(0,0,0), BoundingObj::vec3_t(0,50,0));
+    
+    BoundingBox b1(BoundingObj::vec4_t(0,52,0), 
+    BoundingObj::vec3_t(1,0,0), BoundingObj::vec3_t(0,1,0), BoundingObj::vec3_t(0,0 ,1),
     5,5,5);
+
+    RayCollision f = rayCollide(&r1, &b1);
+    std::cout << f.collided << std::endl
+      << f.e << std::endl 
+      << f.normalAxis << std::endl
+      << f.parallelAxis << std::endl
+      << f.tfirst << std::endl;
+
+  /*
+
   BoundingBox b2(BoundingObj::vec4_t(1,0,0), 
     BoundingObj::vec3_t(1,0,0), BoundingObj::vec3_t(0,1,0), BoundingObj::vec3_t(0,0,1),
     5,5,5);
@@ -301,6 +362,7 @@ void boxTest(){
     std::cout << "" << collide(&b3,&r1).second << collide(&r1,&b3).second << std::endl;
   std::cout << "0==" << collide(&b5,&r2).first << collide(&b5,&r2).first << std::endl;
     std::cout << "" << collide(&b5,&r2).second << collide(&b5,&r2).second << std::endl;
+    */
 }
 
 void sphereTest(){

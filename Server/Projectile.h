@@ -7,7 +7,7 @@ public DeadlyEntity
 {
 public:
   static const Entity_Type type =PROJECTILE;
-  Projectile():fired(false),firedGuard(false) {/*TODO initialize */ }
+  Projectile():fired(false) {/*TODO initialize */ }
   Projectile(Map* m);
   ~Projectile(void);
   void update(void);
@@ -21,30 +21,24 @@ public:
   void updateBoundsSoft();
   void handleCollisions();
   void clearEvents();
-  Entity_Type getType() const {
-    return type;
-  }
-  void serialize(sf::Packet & packet) const {
-    Entity::serialize(packet);
-    packet << fired;
-    //(*owner).serialize(packet);
-  } 
-  void deserialize( sf::Packet & packet ) {
-    Entity::deserialize(packet);
-    packet >> fired;
-    //delete owner; this segfaults
-    //Player* owner = new Player();
-    //(*owner).deserialize(packet);
-  }
+  void setChargeTime(int t) { Charge_Time = t ;};
+  Entity_Type getType() const { return type; }
+  void fire( v3_t velocity);
+  void serialize(sf::Packet & packet) const;
+  void deserialize(sf::Packet & packet);
+ 
 private:
   Player * owner;
   bool fired;
-  bool firedGuard; //because fired will get set to false the frame it spawns
+  bool correctMovementHit( Entity* e );
+  bool charging;
+  MAGIC_POWER charge_level;
+  sf::Clock charge_counter;
+  int Charge_Time; 
 
 public:
-  bool getFired() const{ return fired; }
+  bool getFired() const { return fired; }
   void setFired(bool f) { fired = f; }
-  bool getFiredGuard() const{ return firedGuard; }
-  void setFiredGuard(bool f){ firedGuard = f; }
+  float getStrength();
 };
 

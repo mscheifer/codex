@@ -1,8 +1,27 @@
 #include "Player.h"
+
 #include "Projectile.h"
+#include "WeaponFist.h"
+#include "WeaponFire.h"
 
+const float Player::playerWidth = 1.0f;
+const float Player::playerHeight = 1.0f;
+const float Player::playerDepth = 3.0f;
 
-const float Player::sphereRadius = 5.0f;
+//these have to be functions because calling configManager stuff to initialize
+//globals is undefined behavior
+length_t Player::MOVESCALE() {
+  return ConfigManager::playerMovescale();
+}
+length_t Player::AIRMOVESCALE() {
+  return ConfigManager::playerAirMovescale();
+}
+length_t Player::JUMPSPEED() {
+  return ConfigManager::playerJumpSpeed();
+}
+int Player::MAXJUMP() {
+  return ConfigManager::playerMaxJump();
+}
 
 Player::Player(){}// this->init(0,0,0,0,NULL);}
 Player::~Player(void){}
@@ -13,6 +32,7 @@ Player::Player(v3_t pos, int assigned_id, Map * m)
 
 void Player::init(v3_t pos, int assigned_id, Map * m)
 {
+  //std::cout<<"a player is created"<<std::endl;
   velocity = v3_t(0,0,0);
   acceleration = v3_t(0,0,0);
   oldJumpVelocity = v3_t(0,0,0);
@@ -23,20 +43,53 @@ void Player::init(v3_t pos, int assigned_id, Map * m)
 	player_id = assigned_id;
 	position = pos;
   direction = v3_t(0,0,0);
-	defense = 5;
-	health = 100;
-	maxHealth = 100;
+  defense = ConfigManager::playerDef();
+  health = ConfigManager::playerHp();
+  healthRegen = ConfigManager::playerHpRegen();
+	maxHealth = ConfigManager::playerMaxHp();
 	speed = 1;
-	mana = 100;
-	maxMana = 100;
+  attackSpeed = 1;
+  mana = ConfigManager::playerMp();
+  manaRegen = ConfigManager::playerMpRegen();
+	maxMana = ConfigManager::playerMaxMp();
 	castDownCounter = sf::Clock();
+  speedUpCounter = sf::Clock();
+  speedUp = false;
 	map = m;
 	weapon[0] = new WeaponFist(position, this->map);
-	weapon[1] = new WeaponFire(position, this->map); //TODO add this to entities if we want it
-	current_weapon_selection = 0;
-  
+	weapon[1] = new WeaponFire(position, this->map); //TODO add this to entities if we want it to drop
+	current_weapon_selection = 1;
+  chargedProjectile = nullptr;
   generateBounds(position);
   m->addToQtree(this);
+}
+
+void Player::setAsMinotaur(bool b)
+{
+  minotaur = b;
+  if(b)
+  {
+    defense = ConfigManager::minotaurDef();
+    health = ConfigManager::minotaurHp();
+    healthRegen = ConfigManager::minotaurHpRegen();
+	  maxHealth = ConfigManager::minotaurMaxHp();
+    mana = ConfigManager::minotaurMp();
+    manaRegen = ConfigManager::minotaurMpRegen();
+	  maxMana = ConfigManager::minotaurMaxMp();
+  } else {
+    defense = ConfigManager::playerDef();
+    health = ConfigManager::playerHp();
+    healthRegen = ConfigManager::playerHpRegen();
+	  maxHealth = ConfigManager::playerMaxHp();
+    mana = ConfigManager::playerMp();
+    manaRegen = ConfigManager::playerMpRegen();
+	  maxMana = ConfigManager::playerMaxMp();
+  }
+}
+
+bool Player::isMinotaur()
+{
+  return minotaur;
 }
 
 void Player::generateBounds(v3_t pos){
@@ -44,7 +97,7 @@ void Player::generateBounds(v3_t pos){
   //BoundingSphere* b = new BoundingSphere(gx::vector4(x,y,z),sphereRadius);
   BoundingBox* b = new BoundingBox(BoundingObj::vec4_t(pos.x,pos.y,pos.z),
     BoundingObj::vec3_t(1,0,0),BoundingObj::vec3_t(0,1,0),BoundingObj::vec3_t(0,0,1),
-    sphereRadius,sphereRadius,sphereRadius);
+    playerWidth,playerHeight,playerDepth);
   b->setEntity(this);
   boundingObjs.push_back(b);
 }
@@ -90,12 +143,14 @@ bool Player::moveTowardDirection(move_t inputDir, bool jump)
     movementDirection.normalize();
   }
 
-  //if jump add jump velocity
-  if(jump && canJump){
+  //if jump add jump velocity, 
+  // and not free fall with no jumps
+  if(jump && canJump && 
+    !(jumpCount == 0 && velocity.z < getGravity().z * ConfigManager::serverTickLengthSec() * 5)){
     //add jump velocity
     v3_t jumpDir = movementDirection;
     jumpDir.z = 1;
-    jumpDir.scale(JUMPSPEED);
+    jumpDir.scale(JUMPSPEED());
     velocity = velocity - oldJumpVelocity;
     velocity += jumpDir;
     velocity.z = jumpDir.z; //reset z velocity (for double jumping)
@@ -104,32 +159,54 @@ bool Player::moveTowardDirection(move_t inputDir, bool jump)
     jumpDir.z = 0;
     oldJumpVelocity = jumpDir;
 
-    if(++jumpCount >= MAXJUMP)
+    if(++jumpCount >= MAXJUMP())
       canJump = false;
   }
   
-  //move
+  //adjust movement
   if(jumpCount > 0) //move less if you are in the air
-    movementDirection.scale(speed * AIRMOVESCALE);
+    movementDirection.scale(speed * AIRMOVESCALE());
   else
-    movementDirection.scale(speed * MOVESCALE);
+    movementDirection.scale(speed * MOVESCALE());
+
+  movementDirection = correctMovement(movementDirection, true);
   position += movementDirection;
 	return true;
 }
 
+bool Player::correctMovementHit( Entity* e ){
+  Entity_Type etype = e->getType();
+  return etype == PLAYER || etype == WALL;
+}
+
 void Player::update(){
-  clearEvents();
+  //powerup shit
+  if(speedUp && speedUpCounter.getElapsedTime().asMilliseconds() > speedUpTime) {
+     speedUp = false;
+     attackSpeed = 1.0;
+  }
+
+  //
+  if(chargedProjectile ) {
+    chargedProjectile->setPosition(getProjectilePosition());
+  }
 
   //pick up weapon stuff
   pickup = nullptr;
   pickupWeaponType = UNK;
 
   //update movement
-  acceleration = GRAVITY;
+  acceleration = getGravity();
   velocity += acceleration * ConfigManager::serverTickLengthSec();
-  position += velocity * ConfigManager::serverTickLengthSec();
-  health = (health+5 > maxHealth? maxHealth : health+5);
-  mana = (mana+5 > maxMana? maxMana : mana+5);
+  v3_t attemptMove = velocity * ConfigManager::serverTickLengthSec();
+  position += correctMovement( attemptMove, false );
+  //position += velocity * ConfigManager::serverTickLengthSec();
+  
+  //I disabled health regen and mana regen  (BOWEN)
+  health+=healthRegen;
+  health = (health > maxHealth? maxHealth : health);
+  mana+=manaRegen;
+  mana = (mana > maxMana? maxMana : mana);
   updateBounds();
 }
 
@@ -155,8 +232,6 @@ void Player::handleSelfAction(ClientGameTimeAction a) {
   direction = v3_t(a.facingDirection.x, a.facingDirection.y, a.facingDirection.z);
 	updateBounds();
 
-  std::cout << a.pickup << std::endl;
-
   //try pick up
   if(a.pickup && pickup ){
     weapon[current_weapon_selection]->dropDown(position);
@@ -167,11 +242,35 @@ void Player::handleSelfAction(ClientGameTimeAction a) {
 	//start of attacking logic
 	if(a.attackRange || a.attackMelee) {
 		attack(a);
-	}
+	} else {
+    if(chargedProjectile) {
+      v3_t v = direction;
+      v.normalize();
+      v.scale(20);
+      chargedProjectile->fire(v);
+      chargedProjectile = nullptr;
+    }
+  }
+
+  if(a.switchWeapon){
+    current_weapon_selection = ++current_weapon_selection % MAXWEAPONS; //this shit is undefined, fix it
+  }
 }
 
 void Player::handleOtherAction( ClientGameTimeAction) {
 	//since we are modeling projectiles, we are just gonna check for melee
+}
+
+v3_t Player::getProjectilePosition() {
+ 
+  v3_t temp = position;
+
+  v3_t d = direction;
+  d.normalize();
+  d.scale(1.5);
+  temp += d;
+ 
+  return temp;
 }
 
 // this do substraction of stemina, respond to the user to render the attak animation  
@@ -179,18 +278,20 @@ void Player::attack( ClientGameTimeAction a) {
 	Weapon* currentWeapon = weapon[current_weapon_selection];
 
 	if(a.attackRange){
-    if( !currentWeapon->canUseWeapon(true) || currentWeapon->getMpCost() > mana){
-			return;
-		}
-		mana -= currentWeapon->getMpCost();
-		Projectile* proj = currentWeapon->attackRange(direction, position);
-    proj->setOwner(this);
+    
+    if( !currentWeapon->canUseWeapon(true, this) || currentWeapon->getMpCost() > mana){
+		  return;
+	  }
+	  mana -= currentWeapon->getMpCost();
+	  chargedProjectile = currentWeapon->attackRange(direction, getProjectilePosition(), this);
+  
+
 	}
 	else if(a.attackMelee){
-		if( !currentWeapon->canUseWeapon(false)){
+		if( !currentWeapon->canUseWeapon(false, this)){
 			return;
 		}
-		currentWeapon->attackMelee();
+		currentWeapon->attackMelee(direction, position, this);
 	}
 
 	attacking = true;
@@ -276,11 +377,12 @@ bool Player::collideWall(const std::pair<Entity*,BoundingObj::vec3_t>& p){
 
 bool Player::collidePlayer(const std::pair<Entity*,BoundingObj::vec3_t>& p){
   BoundingObj::vec3_t fixVec = p.second;
-  fixVec.scale(0.5f);
+  restartJump(fixVec.z);
+  //fixVec.scale(0.5f);
   position += fixVec;
-  fixVec.negate();
-  p.first->setPosition( p.first->getPosition() + fixVec );
-  p.first->updateBounds();
+  //fixVec.negate();
+  //p.first->setPosition( p.first->getPosition() + fixVec );
+  //p.first->updateBounds();
   updateBounds();
   return true;
 }
@@ -296,6 +398,7 @@ bool Player::collideProjectile(const std::pair<Entity*,BoundingObj::vec3_t>& p){
 
 void Player::setHealth(float h) {
 	health = h;
+//  std::cout<<"health set to "<<health<<std::endl;
 }
 
 void Player::setSpeed(float s) {
@@ -306,3 +409,56 @@ void Player::setMana(float m) {
 	mana = m;
 }
 
+void Player::serialize(sf::Packet& packet) const {
+    Entity::serialize(packet);
+    packet << this->player_id;
+    //acceleration.serialize(packet);
+    //velocity.serialize(packet);
+    //oldJumpVelocity.serialize(packet);
+    packet << dead; 
+    packet << minotaur; //might be private
+    packet << name;
+    packet << health;
+    packet << maxHealth;
+    packet << mana;
+    packet << maxMana;
+    packet << defense;
+    packet << speed;
+    packet << castDownTime; //not needed on client ?
+    //sf::Clock castDownCounter;
+    packet << jumpCount; // not needed on client ?
+    packet << canJump; //not needed on client ?
+    packet << attacking;  //not neede on client ?
+    //Weapon* weapon[MAXWEAPONS]; 
+    // change the array to vector ?
+    packet << static_cast<sf::Uint32>(pickupWeaponType);
+    packet << current_weapon_selection; 
+  }
+
+  void Player::deserialize(sf::Packet& packet) {
+    Entity::deserialize(packet);
+    packet >> this->player_id;
+    //acceleration.deserialize(packet);
+    //velocity.deserialize(packet);
+    //oldJumpVelocity.deserialize(packet);
+    packet >>dead; 
+    packet >>minotaur; //might be private
+    packet >> name;
+    packet >> health;
+    packet >> maxHealth;
+    packet >> mana;
+    packet >> maxMana;
+    packet >> defense;
+    packet >> speed;
+    packet >> castDownTime; //not needed on client ?
+    //sf::Clock castDownCounter;
+    packet >> jumpCount; // not needed on client ?
+    packet >> canJump; //not needed on client ?
+    packet >> attacking;  //not neede on client ?
+    //Weapon* weapon[MAXWEAPONS]; 
+    // change the array to vector ?
+    sf::Uint32 pickupWeaponTypeUint32;
+    packet >> pickupWeaponTypeUint32;
+    pickupWeaponType = static_cast<WeaponType>(pickupWeaponTypeUint32);
+    packet >> current_weapon_selection; 
+  }
