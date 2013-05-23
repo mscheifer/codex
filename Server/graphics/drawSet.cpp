@@ -31,6 +31,11 @@ gx::staticDrawerImpl::entityClass::entityClass(staticEntity drawData,
 gx::staticDrawerImpl::entityClass::entityClass(entityClass&& other) noexcept
   : instances(std::move(other.instances)), vertData(std::move(other.vertData)){}
 
+gx::staticDrawerImpl::entityClass& gx::staticDrawerImpl::entityClass::operator=(entityClass&& other) {
+  *((int*) nullptr) = 1;
+  return *this;
+}
+
 void gx::staticDrawerImpl::entityClass::clear() {
   this->instances.clear();
 }
@@ -59,6 +64,11 @@ gx::dynamicDrawerImpl::entityClass::entityClass(dynamicEntity drawData,
 
 gx::dynamicDrawerImpl::entityClass::entityClass(entityClass&& other)
   : vertData(std::move(other.vertData)), rootBone(std::move(other.rootBone)) {}
+
+gx::dynamicDrawerImpl::entityClass& gx::dynamicDrawerImpl::entityClass::operator=(entityClass&& other) {
+  *((int*) nullptr) = 1;
+  return *this;
+}
 
 void gx::dynamicDrawerImpl::entityClass::clear() {
   this->instances.clear();

@@ -29,8 +29,8 @@ struct bone {
   std::vector<bone>             children;
 
   bone(int,matrix,matrix,bool,std::vector<std::vector<key>>,std::vector<bone>);
-  bone(const bone&) = delete;
-  bone& operator=(const bone&) = delete;
+  bone(const bone&);// = delete;
+  bone& operator=(const bone&);// = delete;
   bone(bone&&);
   bone& operator=(bone&&);
 

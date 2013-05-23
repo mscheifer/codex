@@ -75,19 +75,22 @@ gx::Mesh::attribsList_t initAttribs(const gx::Mesh::idMap_t& idMap,
 	  normals.push_back(normVec.z);
     //TODO: use texture coordinates
 	}
+  const std::array<std::pair<GLfloat,GLint>,gx::Mesh::maxBonesPerVertex>
+	                           defaultBones = {{std::make_pair(1,-1),
+                                                std::make_pair(0,-1),
+                                                std::make_pair(0,-1),
+                                                std::make_pair(0,-1)}};
   std::vector<std::array<std::pair<GLfloat,GLint>,gx::Mesh::maxBonesPerVertex>>
-    boneGroups(paiMesh->mNumVertices,{{std::make_pair(1,-1),
-                                       std::make_pair(0,-1),
-                                       std::make_pair(0,-1),
-                                       std::make_pair(0,-1)}});
+    boneGroups(paiMesh->mNumVertices,defaultBones);
   for(unsigned int i = 0; i < paiMesh->mNumBones; i++) {
     for(unsigned int j = 0; j < paiMesh->mBones[i]->mNumWeights; j++) {
       auto& bg = boneGroups[paiMesh->mBones[i]->mWeights[j].mVertexId];
       bool good = false;
-      for(auto& a : bg) {
-        if(a.second == -1) {
-          a.first = paiMesh->mBones[i]->mWeights[j].mWeight;
-          a.second = idMap.find(paiMesh->mBones[i]->mName.C_Str())->second;
+	    for(auto bgitr = bg.begin(); bgitr != bg.end(); bgitr++) {
+		    auto& b = *bgitr;
+        if(b.second == -1) {
+          b.first = paiMesh->mBones[i]->mWeights[j].mWeight;
+          b.second = idMap.find(paiMesh->mBones[i]->mName.C_Str())->second;
           good = true;
           break;
         }
@@ -97,9 +100,11 @@ gx::Mesh::attribsList_t initAttribs(const gx::Mesh::idMap_t& idMap,
   }
   std::vector<GLfloat> boneWeights;
   std::vector<GLint>   boneIds;
-  for(const auto& b : boneGroups) {
+  for(auto bgitr = boneGroups.begin(); bgitr != boneGroups.end(); bgitr++) {
+    const auto& b = *bgitr;
     float totalWeight = 0;
-    for(const auto& a : b) {
+    for(auto bitr = b.begin(); bitr != b.end(); bitr++) {
+      const auto& a = *bitr;
       boneWeights.push_back(a.first);
       totalWeight += a.first;
       boneIds.push_back(a.second);
@@ -228,6 +233,11 @@ gx::Mesh::MeshEntry::MeshEntry(idMap_t& ids, const aiMesh* paiMesh, const matrix
 gx::Mesh::MeshEntry::MeshEntry(MeshEntry&& other) noexcept
   : attribs(std::move(other.attribs)), indices(std::move(other.indices)),
     MaterialIndex(std::move(other.MaterialIndex)) {}
+
+gx::Mesh::MeshEntry& gx::Mesh::MeshEntry::operator=(MeshEntry&& other){
+  *((int*) nullptr) = 1;
+  return *this;
+}
 
 gx::Mesh::Mesh(const std::string& Filename, length_t height)
 	: mImporter(), mScene(LoadFile(mImporter, Filename)),

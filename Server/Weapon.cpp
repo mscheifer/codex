@@ -37,8 +37,8 @@ bool Weapon::canUseWeapon(bool range_attack, Player* Owner) {
   int melee_counter = Melee_Cool_Down_Counter.getElapsedTime().asMilliseconds();
   
   if(Owner->isSpeedUpActive()) {
-    melee_counter/= Owner->getAttackSpeedDiv();
-    range_counter/= Owner->getAttackSpeedDiv();
+    melee_counter /= Owner->getAttackSpeedDiv();
+    range_counter /= Owner->getAttackSpeedDiv();
   }
 
   //TODO set the owner?? @alvin

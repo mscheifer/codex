@@ -11,8 +11,8 @@ struct staticEntity {
         attribsList_t attribs;
 
   staticEntity(std::vector<GLuint>, attribsList_t);
-  staticEntity(const staticEntity&) = delete; //don't copy
-  staticEntity& operator=(const staticEntity&) = delete; //don't copy
+  staticEntity(const staticEntity&);// = delete; //don't copy
+  staticEntity& operator=(const staticEntity&);// = delete; //don't copy
   staticEntity(staticEntity&&) noexcept;
   staticEntity& operator=(staticEntity&&);
 };
@@ -21,7 +21,7 @@ struct dynamicEntity : public staticEntity {
   //bone tree
   bone rootBone;
   dynamicEntity(std::vector<GLuint>, attribsList_t, bone);
-  dynamicEntity(const dynamicEntity&) = delete; //don't copy
+  dynamicEntity(const dynamicEntity&);// = delete; //don't copy
   dynamicEntity& operator=(const dynamicEntity&);// = delete; //don't assign
   dynamicEntity(dynamicEntity&&) noexcept;
   dynamicEntity& operator=(dynamicEntity&&);

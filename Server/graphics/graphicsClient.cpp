@@ -189,7 +189,7 @@ void gx::graphicsClient::updateEntities(std::vector<Entity*> data) {
     const auto& entity = **entityP;
     const auto& type = entity.getType();
     if(false) { //TODO: change back to type == PLAYER
-      typename dynamicDrawer::instanceData inst;
+      dynamicDrawer::instanceData inst;
       inst. pos = entity.getPosition();
       inst.dirY = entity.getDirection();
       inst.type = 0; //TODO: somehow set this based on type but it can't be absolute type?
@@ -197,7 +197,7 @@ void gx::graphicsClient::updateEntities(std::vector<Entity*> data) {
       inst.timePosition = 0;
       this->animatedDrawer.addInstance(inst);
     } else {
-      typename staticDrawer::instanceData inst;
+      staticDrawer::instanceData inst;
       inst. pos = entity.getPosition();
       inst.dirY = entity.getDirection();
       inst.type = entity.getType();

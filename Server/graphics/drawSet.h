@@ -19,10 +19,10 @@ class staticDrawerImpl {
       std::vector<instance> instances;
       vao                   vertData;
       entityClass(entity_t,std::map<std::string,vertexAttribSignature>);
-      entityClass(const entityClass&) = delete;
-      entityClass& operator=(const entityClass&) = delete;
+      entityClass(const entityClass&);// = delete;
+      entityClass& operator=(const entityClass&);// = delete;
       entityClass(entityClass&&) noexcept;
-      entityClass& operator=(entityClass&&) = delete;
+      entityClass& operator=(entityClass&&);// = delete;
       void clear();
     };
     staticDrawerImpl(const shaderProgram&);
@@ -54,10 +54,10 @@ class dynamicDrawerImpl {
       vao                   vertData;
       bone                  rootBone;
       entityClass(entity_t,std::map<std::string,vertexAttribSignature>);
-      entityClass(const entityClass&) = delete;
+      entityClass(const entityClass&);// = delete;
       entityClass(entityClass&&);
-      entityClass& operator=(const entityClass&) = delete;
-      entityClass& operator=(entityClass&&) = delete;
+      entityClass& operator=(const entityClass&);// = delete;
+      entityClass& operator=(entityClass&&);// = delete;
       void clear();
     };
     dynamicDrawerImpl(const shaderProgram&);

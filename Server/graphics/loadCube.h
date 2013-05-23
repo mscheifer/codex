@@ -80,8 +80,8 @@ std::vector<gx::staticEntity> loadCube() {
   redCubeAttribs.push_back(normDiffAttrib);
 
   std::vector<staticEntity> ret;
-  ret.push_back({indices,blueCubeAttribs});
-  ret.push_back({indices,redCubeAttribs});
+  ret.push_back(staticEntity(indices,blueCubeAttribs));
+  ret.push_back(staticEntity(indices,redCubeAttribs));
 
   return ret;
 }
@@ -138,6 +138,6 @@ gx::staticEntity loadSkybox() {
   skyboxAttribs.push_back(skyboxColorAttrib);
   skyboxAttribs.push_back(skyboxNormalsAttrib);
 
-  return {skyboxindices,skyboxAttribs};
+  return staticEntity(skyboxindices,skyboxAttribs);
 }
 } //end namespace gx

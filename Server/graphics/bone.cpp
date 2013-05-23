@@ -45,8 +45,8 @@ std::vector<GLfloat> gx::bone::getBonesData(unsigned int anim, unsigned int time
 
 unsigned int gx::bone::numBones() const {
   unsigned int ret = this->real ? 1 : 0;
-  for(const auto& b : this->children) {
-    ret += b.numBones();
+  for(auto boneItr = this->children.begin(); boneItr != this->children.end(); boneItr++) {
+    ret += boneItr->numBones();
   }
   return ret;
 }
@@ -72,7 +72,7 @@ void gx::bone::walkBones(std::vector<GLfloat>& result,const matrix& parent,
     std::cout << this->id << " at " << result.size() << std::endl;
     result.insert(result.end(),data.begin(),data.end());
   } 
-  for(const auto& ch : this->children) {
-    ch.walkBones(result,fullTransformation,anim,time);
+  for(auto boneItr = this->children.begin(); boneItr != this->children.end(); boneItr++) {
+    boneItr->walkBones(result,fullTransformation,anim,time);
   }
 }

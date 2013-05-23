@@ -252,8 +252,9 @@ void Player::handleSelfAction(ClientGameTimeAction a) {
     }
   }
 
-  if(a.switchWeapon){
-    current_weapon_selection = ++current_weapon_selection % MAXWEAPONS; //this shit is undefined, fix it
+  if(a.switchWeapon) {
+	++current_weapon_selection;
+    current_weapon_selection = current_weapon_selection % MAXWEAPONS;
   }
 }
 
