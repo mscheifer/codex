@@ -40,6 +40,7 @@ void Game::evaluate(ClientGameTimeAction a) {
 void Game::updateAndResolveCollision() {
   std::vector<Player *> currentPlayers =  world.getPlayers();
 	std::vector<Entity *> currentEntities = world.getEntity();
+  std::vector<Projectile*> currentProjectile = world.getLiveProjectTile();
 
   for( unsigned int i = 0; i < currentPlayers.size(); i++ ) {
 		currentPlayers[i]->update();
@@ -49,6 +50,10 @@ void Game::updateAndResolveCollision() {
 		currentEntities[i]->update();
 	}
 
+  for( unsigned int i = 0; i < currentProjectile.size(); i++ ) {
+		currentProjectile[i]->update();
+	}
+
   //run collision fix here
   for( unsigned int i = 0; i <  currentPlayers.size(); i++ ) {
     currentPlayers[i]->handleCollisions();
@@ -56,6 +61,10 @@ void Game::updateAndResolveCollision() {
    
 	for( unsigned int i = 0; i < currentEntities.size(); i++ ) {
 		currentEntities[i]->handleCollisions();
+	}
+
+  for( unsigned int i = 0; i < currentProjectile.size(); i++ ) {
+		currentProjectile[i]->handleCollisions();
 	}
 }
 
@@ -68,6 +77,7 @@ ServerGameTimeRespond Game::prepResponse() {
   s.players.clear();
 	std::vector<Player*>  currentPlayers =  world.getPlayers();
 	std::vector<Entity*> currentEntities = world.getEntity();
+  std::vector<Projectile*> currentProjectiles = world.getLiveProjectTile();
 	for( unsigned int i = 0; i < currentPlayers.size(); i++ ) {
      /*for testing
      if (currentPlayers[i]->getHealth() > 0) {
@@ -76,6 +86,11 @@ ServerGameTimeRespond Game::prepResponse() {
      */
 		 s.players.push_back(*currentPlayers[i]); //add the player to the return struct
 	}
+
+  for( unsigned int i = 0; i < currentProjectiles.size(); i++ ) {
+    if(currentProjectiles[i]->canRender())
+      s.projectiles.push_back(currentProjectiles[i]); 
+  }
 
 	for( unsigned int i = 0; i < currentEntities.size(); i++ ) {
     if( currentEntities[i]->canRender() ) {

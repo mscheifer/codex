@@ -21,7 +21,9 @@ public:
   void updateBoundsSoft();
   void handleCollisions();
   void clearEvents();
+  void setChargeTime(int t) { Charge_Time = t ;};
   Entity_Type getType() const { return type; }
+  void fire( v3_t velocity);
   void serialize(sf::Packet & packet) const;
   void deserialize(sf::Packet & packet);
  
@@ -29,9 +31,14 @@ private:
   Player * owner;
   bool fired;
   bool correctMovementHit( Entity* e );
+  bool charging;
+  MAGIC_POWER charge_level;
+  sf::Clock charge_counter;
+  int Charge_Time; 
 
 public:
-  bool getFired() const{ return fired; }
+  bool getFired() const { return fired; }
   void setFired(bool f) { fired = f; }
+  float getStrength();
 };
 

@@ -110,8 +110,6 @@ void gx::input::handle(sf::Window& window) {
   this->stopped = false;
   this->jumped  = false;
   this->resized = false;
-  this->fired1  = false;
-  this->fired2  = false;
   this->pickup = false;
   this->switchWeapon = false;
   sf::Event event;
@@ -146,6 +144,13 @@ void gx::input::handleEvent(const sf::Event& event) {
       this->fired1 = true;
 	  } else if(event.mouseButton.button == sf::Mouse::Right) {
       this->fired2 = true;
+    }
+  } else if(event.type == sf::Event::MouseButtonReleased) {
+    this->updated = true;
+	  if(event.mouseButton.button == sf::Mouse::Left) {
+      this->fired1 = false;
+	  } else if(event.mouseButton.button == sf::Mouse::Right) {
+      this->fired2 = false;
     }
   }
 }

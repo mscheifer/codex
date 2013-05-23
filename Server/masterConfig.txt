@@ -1,14 +1,32 @@
+// System configuration
 log=0
 sound=0
 graphicsDebug=false
-players=1
 serverTicksPerSec=30
+
+// Physics
+gravity=-20
+
+// Player configuration
+players=1
 movescale=2
 airMovescale=1
 maxJump=2
 jumpSpeed=10
-gravity=-20
-humanHpRegen=.21
-humanMpRegen=.15
-minotaurHpRegen=.42
-minotaurMpRegen=.30
+playerHpRegen=.1
+playerMpRegen=.08
+playerDef=5
+playerHp=5
+playerMaxHp=100
+playerMp=5
+playerMaxMp=100
+minotaurHpRegen=.15
+minotaurMpRegen=.1
+minotaurDef=5
+minotaurHp=5
+minotaurMaxHp=100
+minotaurMp=5
+minotaurMaxMp=100
+
+// Projectile
+projectileRange=300

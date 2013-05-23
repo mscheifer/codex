@@ -33,15 +33,15 @@ void Player::init(v3_t pos, int assigned_id, Map * m)
 	player_id = assigned_id;
 	position = pos;
   direction = v3_t(0,0,0);
-	defense = 5;
-	health = 100;
+  defense = ConfigManager::playerDef();
+  health = ConfigManager::playerHp();
   healthRegen = ConfigManager::playerHpRegen();
-	maxHealth = 100;
+	maxHealth = ConfigManager::playerMaxHp();
 	speed = 1;
   attackSpeed = 1;
-	mana = 100;
+  mana = ConfigManager::playerMp();
   manaRegen = ConfigManager::playerMpRegen();
-	maxMana = 100;
+	maxMana = ConfigManager::playerMaxMp();
 	castDownCounter = sf::Clock();
   speedUpCounter = sf::Clock();
   speedUp = false;
@@ -49,7 +49,7 @@ void Player::init(v3_t pos, int assigned_id, Map * m)
 	weapon[0] = new WeaponFist(position, this->map);
 	weapon[1] = new WeaponFire(position, this->map); //TODO add this to entities if we want it to drop
 	current_weapon_selection = 1;
-  
+  chargedProjectile = nullptr;
   generateBounds(position);
   m->addToQtree(this);
 }
@@ -59,11 +59,21 @@ void Player::setAsMinotaur(bool b)
   minotaur = b;
   if(b)
   {
+    defense = ConfigManager::minotaurDef();
+    health = ConfigManager::minotaurHp();
     healthRegen = ConfigManager::minotaurHpRegen();
+	  maxHealth = ConfigManager::minotaurMaxHp();
+    mana = ConfigManager::minotaurMp();
     manaRegen = ConfigManager::minotaurMpRegen();
+	  maxMana = ConfigManager::minotaurMaxMp();
   } else {
+    defense = ConfigManager::playerDef();
+    health = ConfigManager::playerHp();
     healthRegen = ConfigManager::playerHpRegen();
+	  maxHealth = ConfigManager::playerMaxHp();
+    mana = ConfigManager::playerMp();
     manaRegen = ConfigManager::playerMpRegen();
+	  maxMana = ConfigManager::playerMaxMp();
   }
 }
 
@@ -167,6 +177,11 @@ void Player::update(){
      attackSpeed = 1.0;
   }
 
+  //
+  if(chargedProjectile ) {
+    chargedProjectile->setPosition(getProjectilePosition());
+  }
+
   //pick up weapon stuff
   pickup = nullptr;
   pickupWeaponType = UNK;
@@ -179,8 +194,10 @@ void Player::update(){
   position += velocity * ConfigManager::serverTickLengthSec();
   
   //I disabled health regen and mana regen  (BOWEN)
-  //health = (health+healthRegen > maxHealth? maxHealth : health+5);
-  //mana = (mana+manaRegen > maxMana? maxMana : mana+5);
+  health+=healthRegen;
+  health = (health > maxHealth? maxHealth : health);
+  mana+=manaRegen;
+  mana = (mana > maxMana? maxMana : mana);
   updateBounds();
 }
 
@@ -216,7 +233,15 @@ void Player::handleSelfAction(ClientGameTimeAction a) {
 	//start of attacking logic
 	if(a.attackRange || a.attackMelee) {
 		attack(a);
-	}
+	} else {
+    if(chargedProjectile) {
+      v3_t v = direction;
+      v.normalize();
+      v.scale(20);
+      chargedProjectile->fire(v);
+      chargedProjectile = nullptr;
+    }
+  }
 
   if(a.switchWeapon){
     current_weapon_selection = ++current_weapon_selection % MAXWEAPONS;
@@ -227,23 +252,37 @@ void Player::handleOtherAction( ClientGameTimeAction) {
 	//since we are modeling projectiles, we are just gonna check for melee
 }
 
+v3_t Player::getProjectilePosition() {
+ 
+  v3_t temp = position;
+
+  v3_t d = direction;
+  d.normalize();
+  d.scale(1.5);
+  temp += d;
+ 
+  return temp;
+}
+
 // this do substraction of stemina, respond to the user to render the attak animation  
 void Player::attack( ClientGameTimeAction a) {
 	Weapon* currentWeapon = weapon[current_weapon_selection];
 
 	if(a.attackRange){
+    
     if( !currentWeapon->canUseWeapon(true, this) || currentWeapon->getMpCost() > mana){
-			return;
-		}
-		mana -= currentWeapon->getMpCost();
-		currentWeapon->attackRange(direction, position, this);
+		  return;
+	  }
+	  mana -= currentWeapon->getMpCost();
+	  chargedProjectile = currentWeapon->attackRange(direction, getProjectilePosition(), this);
+  
 
 	}
 	else if(a.attackMelee){
 		if( !currentWeapon->canUseWeapon(false, this)){
 			return;
 		}
-		currentWeapon->attackMelee();
+		currentWeapon->attackMelee(direction, position, this);
 	}
 
 	attacking = true;

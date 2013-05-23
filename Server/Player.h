@@ -79,6 +79,7 @@ private:
   float mana;
   float manaRegen;
   float maxMana;
+  Projectile* chargedProjectile;
   float defense;
   float speed;
   int speedUpTime;
@@ -101,4 +102,5 @@ private:
   void generateBounds(v3_t pos);
   void restartJump(length_t zPosFix);
   bool correctMovementHit( Entity* e );
+  v3_t getProjectilePosition(void);
 };
