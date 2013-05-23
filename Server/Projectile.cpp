@@ -4,7 +4,6 @@ Projectile::Projectile(Map* m)
 {
 	this->map = m;
   fired = false;
-  charge_level = FIREONE;
   charging = true;
   charge_counter = sf::Clock();
   BoundingBox* b = new BoundingBox(BoundingObj::vec4_t(0,0,0),BoundingObj::vec3_t(1,0,0),BoundingObj::vec3_t(0,1,0),BoundingObj::vec3_t(0,0,1),
@@ -28,26 +27,24 @@ bool Projectile::correctMovementHit( Entity* e ){
 }
 
 void Projectile::update(void) {
-
-    if(charging && charge_level != FIRETHREE ) {
-      if(charge_counter.getElapsedTime().asMilliseconds() > Charge_Time ) {
-        charge_counter.restart();
-        charge_level = (MAGIC_POWER)(charge_level  + 1);
-        std::cout << "increase level heeeeer !" << std::endl;
-      }
-      return;
+  if(charging) {
+    if(charge_counter.getElapsedTime().asMilliseconds() > Charge_Time ) {
+      charge_counter.restart();
+      magicType = upgrade(magicType);
+      std::cout << "increase level heeeeer !" << std::endl;
     }
-    v3_t distanceTravelled = velocity * ConfigManager::serverTickLengthSec();
+    return;
+  }
+  v3_t distanceTravelled = velocity * ConfigManager::serverTickLengthSec();
   distanceTravelled = correctMovement(distanceTravelled, false);
-	  position += distanceTravelled;
+	position += distanceTravelled;
   
-    //see if travelled full range
-    distanceLeftToTravel -= distanceTravelled.magnitude();
-    if(distanceLeftToTravel <= 0.0){
-      map->destroyProjectile(this);
-      return;
-    }
-
+  //see if travelled full range
+  distanceLeftToTravel -= distanceTravelled.magnitude();
+  if(distanceLeftToTravel <= 0.0){
+    map->destroyProjectile(this);
+    return;
+  }
   
 	updateBounds();
 	// some collision detection
@@ -62,7 +59,7 @@ void Projectile::setStrength(float f) {
 }
 
 float Projectile::getStrength() {
-  return strength*magic_mutiplier[charge_level];
+  return strength*magic_mutiplier[magicType]; //TODO fix this @alvin
 }
 
 void Projectile::setRange(length_t r) {
@@ -84,6 +81,7 @@ void Projectile::handleCollisions() {
   
   std::vector<std::pair<Entity*,BoundingObj::vec3_t>> entities =  detectCollision();
 
+  //TODO fix this @alvin you can collide with power ups
   for( auto it = entities.begin(); it != entities.end(); it++ ){
     Entity * e = it->first; 
     if(e != owner &&  e->getType() != PROJECTILE) {
@@ -100,6 +98,26 @@ void Projectile::fire(v3_t v) {
   velocity = v;
   fired = true;
   charging = false;
+}
+
+MAGIC_POWER Projectile::upgrade( const MAGIC_POWER m ){
+  switch( m ){
+  case FIRE1:
+    return FIRE2;
+  case FIRE2:
+    return FIRE3;
+  case ICE1:
+    return ICE2;
+  case ICE2:
+    return ICE3;
+  default:
+    return m;
+  }
+}
+
+MAGIC_POWER Projectile::combine( const MAGIC_POWER m1, const MAGIC_POWER m2 ){
+  //TODO this
+  return m1;
 }
 
 void Projectile::serialize(sf::Packet & packet) const {

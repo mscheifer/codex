@@ -210,6 +210,7 @@ std::string AudioManager::getTrack( int track, int prox ){
     }
   }
   std::cout << "error, trying to load track that does not exist" << std::endl;
+  return "";
 }
 
 int AudioManager::getClosestProx( int prox ){

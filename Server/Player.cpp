@@ -233,11 +233,11 @@ void Player::handleSelfAction(ClientGameTimeAction a) {
 	//start of attacking logic
 	if(a.attackRange || a.attackMelee) {
 		attack(a);
-	} else {
+	} else { //TODO @alvin, this porbably causes the trail
     if(chargedProjectile) {
       v3_t v = direction;
       v.normalize();
-      v.scale(20);
+      v.scale(ProjInfo[chargedProjectile->getMagicType()].speed); //TODO no magic numbers @alvin, this should be determined by magic type
       chargedProjectile->fire(v);
       chargedProjectile = nullptr;
     }
@@ -245,6 +245,7 @@ void Player::handleSelfAction(ClientGameTimeAction a) {
 
   if(a.switchWeapon){
     current_weapon_selection = ++current_weapon_selection % MAXWEAPONS;
+    std::cout << "switch to " << WeaponNames[weapon[current_weapon_selection]->getWeaponType()] << std::endl;
   }
 }
 
@@ -269,14 +270,11 @@ void Player::attack( ClientGameTimeAction a) {
 	Weapon* currentWeapon = weapon[current_weapon_selection];
 
 	if(a.attackRange){
-    
     if( !currentWeapon->canUseWeapon(true, this) || currentWeapon->getMpCost() > mana){
 		  return;
 	  }
 	  mana -= currentWeapon->getMpCost();
 	  chargedProjectile = currentWeapon->attackRange(direction, getProjectilePosition(), this);
-  
-
 	}
 	else if(a.attackMelee){
 		if( !currentWeapon->canUseWeapon(false, this)){
