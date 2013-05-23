@@ -67,6 +67,7 @@ void gx::graphicsClient::reshape(unsigned int w, unsigned int h) {
   const elem_t nearPlane = 1.0f;
   const elem_t farPlane  = 3000.0f;
   // adjust the viewport when the window is resized
+  //this->window.setView(w,h); //maybe better?
   glViewport(0, 0, w, h);
   gx::debugout << "glViewport(0, 0, " << w << ", " << h << ");" << gx::endl;
   this->display.setProjection(fov,ratio,nearPlane,farPlane);
@@ -130,7 +131,7 @@ ClientGameTimeAction gx::graphicsClient::handleInput() {
   if(jumped()) {
     action.jump = true;
   }
-  action.movement = getMovement();
+  action.movement = this->userInput.movePlayer();
   auto dir = getDir();
   action.updated = this->userInput.getUpdated();
   action.facingDirection = dir;

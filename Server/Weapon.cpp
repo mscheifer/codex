@@ -41,10 +41,8 @@ bool Weapon::canUseWeapon(bool range_attack, Player* Owner) {
     range_counter /= Owner->getAttackSpeedDiv();
   }
 
-  //TODO set the owner?? @alvin
-
-	if(		(range_attack &&  range_counter > Range_Cool_Down_Time)
-		||	(!range_attack &&  melee_counter > Melee_Cool_Down_Time)){
+	if(		( getHasRangedAttack() && range_attack &&  range_counter > Range_Cool_Down_Time)
+		||	( getHasMeleeAttack() && !range_attack &&  melee_counter > Melee_Cool_Down_Time)){
 			return true;
 	}
 	return false;
@@ -63,24 +61,6 @@ Projectile* Weapon::attackMelee(v3_t dir , v3_t pos, Player* owner)
 	pj->setRange(1);
   pj->setFired(true);
   Melee_Cool_Down_Counter.restart();
-	return pj;
-}
-
-Projectile* Weapon::attackRange(v3_t dir , v3_t pos, Player* owner)
-{
-	Projectile* pj = map->produceProjectile();
-  dir.normalize();
-  pj->setDirection(dir);
-  dir.scale(projectileSpeed);
-  pj->setVelocity(v3_t(0,0,0));
-  pj->setPosition(pos);
-  pj->setOwner(owner);
-	pj->setStrength(projectileStrength);
-	pj->setRange(projectileRange);
-  pj->setFired(false);
-  pj->setChargeTime(1500);
-
-  Range_Cool_Down_Counter.restart();
 	return pj;
 }
 

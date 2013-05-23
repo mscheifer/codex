@@ -63,7 +63,6 @@ class graphicsClient {
     bool jumped()        { return this->userInput.getJump(); }
     bool fire1 ()        { return this->userInput.fire1  (); }
     bool fire2 ()        { return this->userInput.fire2  (); }
-    move_t getMovement() { return this->userInput.movePlayer(); }
     vector3f getDir()     { return this->playerDirection; }
 };
 

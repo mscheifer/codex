@@ -10,6 +10,8 @@ class Weapon : public DeadlyEntity
 public:
   static const Entity_Type type = WEAPON;
   static const WeaponType wtype = UNK;
+  static const bool hasRangedAttack = false;
+  static const bool hasMeleeAttack = false;
   Weapon() {/*TODO initialzie*/}
 	Weapon(Map*);
 	~Weapon(void);
@@ -18,7 +20,7 @@ public:
 	bool canUseWeapon(bool range_attack, Player* owner);
 	bool canPickUp() { return pickedUp; }
 	virtual Projectile* attackMelee(v3_t dir, v3_t pos, Player* owner); 
-	virtual Projectile* attackRange(v3_t dir, v3_t pos, Player* owner);
+  virtual Projectile* attackRange(v3_t dir, v3_t pos, Player* owner){return nullptr;}
   //pick up weapon, remove bounding box from map
   virtual bool pickUp();
   //add the bounding box again
@@ -28,6 +30,8 @@ public:
 	int getDamage(void);
 	float getMpCost(){ return mpCost; }
   virtual WeaponType getWeaponType() const{ return wtype; }
+  virtual bool getHasRangedAttack() const { return hasRangedAttack; }
+  virtual bool getHasMeleeAttack() const { return hasMeleeAttack; }
   
   void serialize(sf::Packet & packet) const;
   void deserialize(sf::Packet & packet); 

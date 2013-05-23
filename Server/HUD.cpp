@@ -60,7 +60,7 @@ void HUD::draw(sf::RenderWindow & window) {
   window.draw(manaText);
 }
 
-void HUD::updateHUD(Player & player) {
+void HUD::updateHUD(const Player& player) {
   HLossPercentage = (maxHealth-player.getHealth()) / maxHealth;
   MLossPercentage = (maxMana-player.getMana()) / maxMana;
   health = player.getHealth();
