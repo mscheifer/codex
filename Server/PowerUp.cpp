@@ -17,8 +17,6 @@ PowerUp::PowerUp(v3_t p, Map* m, BUFF buff1): buffType(buff1)
 
 void PowerUp::handleCollisions() {
 	//if it's not active, dont do anything
-
- 
   if(active == false )
 		return ;
     
@@ -41,12 +39,7 @@ void PowerUp::handleCollisions() {
       active = false;
       break;
     }
-    
   }
-	
-	
-	
-	
 	Respown_Counter.restart();
 }
 

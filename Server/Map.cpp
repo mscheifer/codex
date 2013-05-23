@@ -30,10 +30,10 @@ void Map::initWalls(void)
   w1->dropDown(v3_t(10,10,0));
   w1->setDirection(v3_t(0,1,0));
   entities.push_back(w1);
-  WeaponFire* w2 = new WeaponFire(v3_t(120,120,0), this);
-  w2->dropDown(v3_t(10,-10,0));
-  w2->setDirection(v3_t(0,1,0));
-  entities.push_back(w2);
+  //WeaponFire* w2 = new WeaponFire(v3_t(120,120,0), this);
+  //w2->dropDown(v3_t(10,-10,0));
+  //w2->setDirection(v3_t(0,1,0));
+  //entities.push_back(w2);
 
   spawnPositions.push_back(v3_t(1,1,1));
   spawnPositions.push_back(v3_t(1,2,1));
@@ -43,7 +43,7 @@ void Map::initWalls(void)
   v3_t facingEast(1,0,0);
   v3_t facingNorth(0,1,0);
   unsigned int width = 10;
-  unsigned int height = 5; 
+  unsigned int height = 1; 
   unsigned int depth = 4;
 
   float wallX = 7;
@@ -97,6 +97,7 @@ void Map::initWalls(void)
   this->entities.push_back(moveableWall);
   Wall * floor = new Wall(1000, 10, 1000, v3_t(0,0,-5), facingEast, this);
   this->entities.push_back(floor);
+  floor->setRender(false);
 
   return; // REMOVE THIS TO KILL GRAPHICS
   // Creating facing north walls. DO NOT TOUCH THIS
