@@ -60,7 +60,8 @@ public:
   static float minotaurMaxHp(){ return StringToNumber<float>(ConfigManager::configMap["minotaurMaxHp"]); }
   static float minotaurMp(){ return StringToNumber<float>(ConfigManager::configMap["minotaurMp"]); }
   static float minotaurMaxMp(){ return StringToNumber<float>(ConfigManager::configMap["minotaurMaxMp"]); }
-
+  static bool gameRestart(){ return StringToNumber<bool>(ConfigManager::configMap["gameRestart"]); }
+  
   /// Projectile ///
   static float projectileRange(){ return StringToNumber<float>(ConfigManager::configMap["projectileRange"]); }
 

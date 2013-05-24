@@ -22,7 +22,7 @@ void NetworkClient::receiveMessages() {
         break;
       case SGTR:
         this->s.deserialize(packet);
-        if (s.state != Game_State::PLAYING) 
+        if (s.state != Game_State::PLAYING && ConfigManager::gameRestart()) 
           gameRestart = true;
         std::cout<<s.state<<std::endl;
         for(auto playerP = s.players.begin(); playerP != s.players.end(); playerP++) {

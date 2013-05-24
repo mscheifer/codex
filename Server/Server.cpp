@@ -120,7 +120,7 @@ void NetworkServer::doServer() {
       }
 
       // Go back to the lobby to wait for the game to restart
-      if(gtr.state != Game_State::PLAYING)
+      if(gtr.state != Game_State::PLAYING && ConfigManager::gameRestart())
         break;
 
       //4. go back to sleep slave.
