@@ -56,6 +56,7 @@ class graphicsClient {
     void updateHUD(Player & player);
     void drawLobby();
     void disableCursor();
+    void enableCursor();
     bool gameStart() const;
 
     //input functions

@@ -224,6 +224,10 @@ void gx::graphicsClient::disableCursor() {
   this->window.setMouseCursorVisible(false);
 }
 
+void gx::graphicsClient::enableCursor() {
+  this->window.setMouseCursorVisible(true);
+}
+
 bool gx::graphicsClient::gameStart() const {
   return (this->Lobby).getStart();
 }

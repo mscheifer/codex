@@ -191,6 +191,7 @@ void Player::die()
 {
   map->removeFromQtree(this);
   render = false;
+  dead = true;
 }
 
 void Player::respawn(v3_t pos)
@@ -235,11 +236,12 @@ void Player::update(){
   position += correctMovement( attemptMove, false );
   //position += velocity * ConfigManager::serverTickLengthSec();
   
-  //I disabled health regen and mana regen  (BOWEN)
   health+=healthRegen;
   health = (health > maxHealth? maxHealth : health);
   mana+=manaRegen;
   mana = (mana > maxMana? maxMana : mana);
+  if(health <= 0)
+    die();
   updateBounds();
 }
 
