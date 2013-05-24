@@ -70,7 +70,6 @@ void gx::bone::walkBones(std::vector<GLfloat>& result,const matrix& parent,
   }
   if(this->real) {
     const auto& data = (fullTransformation * this->offset).oglmatrix();
-    //const auto& data = identity.oglmatrix();
     //std::cout << this->id << " at " << result.size() << std::endl;
     result.insert(result.end(),data.begin(),data.end());
   } 

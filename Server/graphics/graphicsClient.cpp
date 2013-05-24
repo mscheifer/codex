@@ -181,7 +181,7 @@ void gx::graphicsClient::updatePosition(vector4f pos) {
   this->playerPosition = pos;
   this->setCamera();
 }
-
+int aniFrame = 0;
 void gx::graphicsClient::updateEntities(std::vector<Entity*> data) {
   this->entities.reset();
   this->animatedDrawer.reset();
@@ -189,13 +189,13 @@ void gx::graphicsClient::updateEntities(std::vector<Entity*> data) {
   for(auto entityP = data.begin(); entityP != data.end(); ++entityP) {
     const auto& entity = **entityP;
     const auto& type = entity.getType();
-    if(type == PLAYER) { //TODO: change back to type == PLAYER
+    if(type == POWER_UP) { //TODO: change back to type == PLAYER
       dynamicDrawer::instanceData inst;
       inst. pos = entity.getPosition();
       inst.dirY = entity.getDirection();
       inst.type = 0; //TODO: somehow set this based on type but it can't be absolute type?
       inst.animation    = 0;
-      inst.timePosition = 0;
+      inst.timePosition = (++aniFrame % 120) / 2;
       this->animatedDrawer.addInstance(inst);
     } else {
       staticDrawer::instanceData inst;
