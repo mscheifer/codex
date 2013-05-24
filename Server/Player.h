@@ -26,8 +26,8 @@ public:
   bool dead; //might be private. should be determined in handleAction
   int player_id;
   std::string name;
-
   Player();
+  void reset(v3_t pos);
   Player(v3_t pos, int assigned_id, Map *);
   ~Player(void);
   std::string getString();

@@ -163,6 +163,5 @@ void Game::clearEvents(){
 
 void Game::restartGame()
 {
-  std::cout<<"Game restarted"<<std::endl;
-  // ZHENTODO: do this
+  world.mapReset();
 }

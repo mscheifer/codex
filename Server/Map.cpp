@@ -19,6 +19,20 @@ Map::Map(void): freeProjectiles(),q(0,Rectangle(BoundingObj::vec4_t(0,0,0),1000,
   initPowerUps();
 }
 
+void Map::mapReset()
+{
+  this->q.clear();
+  spawnPositions.clear();
+  entities.clear();
+  liveProjectTile.clear();
+  initWalls();
+  initPowerUps();
+  for(unsigned int i = 0; i < players.size(); i++)
+  {
+    players[i]->reset(this->getRespawnPosition(players[i]->player_id));
+  }
+}
+
 void Map::initPowerUps() {
   PowerUp* superPower = new PowerUp(v3_t(2,9,0), this, MOVEBOOST);
   superPower->setRespownTime(5000);
@@ -35,10 +49,10 @@ void Map::initWalls(void)
   //w2->setDirection(v3_t(0,1,0));
   //entities.push_back(w2);
 
-  spawnPositions.push_back(v3_t(1,1,1));
-  spawnPositions.push_back(v3_t(1,2,1));
-  spawnPositions.push_back(v3_t(2,1,1));
-  spawnPositions.push_back(v3_t(2,2,1));
+  spawnPositions.push_back(v3_t(4,-4,1));
+  spawnPositions.push_back(v3_t(4,4,1));
+  spawnPositions.push_back(v3_t(-4,-4,1));
+  spawnPositions.push_back(v3_t(-4,4,1));
 
   v3_t facingEast(1,0,0);
   v3_t facingNorth(0,1,0);
