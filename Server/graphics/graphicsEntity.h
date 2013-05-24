@@ -9,8 +9,9 @@ struct staticEntity {
   typedef vertexAttrib::attribsList_t attribsList_t;
   std::vector<GLuint> indices;
         attribsList_t attribs;
+               matrix centerAndResize;
 
-  staticEntity(std::vector<GLuint>, attribsList_t);
+  staticEntity(std::vector<GLuint>, attribsList_t, matrix);
   staticEntity(const staticEntity&);// = delete; //don't copy
   staticEntity& operator=(const staticEntity&);// = delete; //don't copy
   staticEntity(staticEntity&&) noexcept;

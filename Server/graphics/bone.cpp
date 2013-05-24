@@ -19,7 +19,8 @@ gx::bone::bone(int idnum,matrix off, matrix trans, bool r, std::vector<std::vect
   : id(idnum), offset(std::move(off)), transform(std::move(trans)), real(std::move(r)),
     animations(std::move(anims)), children(std::move(enfants)) {}
 
-gx::bone::bone(bone&& other): id(other.id), offset(std::move(other.offset)),
+gx::bone::bone(bone&& other) noexcept
+  : id(other.id), offset(std::move(other.offset)),
   transform(std::move(other.transform)), real(std::move(other.real)), 
   animations(std::move(other.animations)), children(std::move(other.children)){}
 
@@ -63,13 +64,14 @@ void gx::bone::walkBones(std::vector<GLfloat>& result,const matrix& parent,
     matrix rotation = toMat      (frame.rotation.mValue.GetMatrix());
     matrix trans    = translation(transVec.x, transVec.y, transVec.z);
     fullTransformation = parent * trans * rotation * scale;
-    std::cout << "animating " << this->id << std::endl;
+    //std::cout << "animating " << this->id << std::endl;
   } else {
     fullTransformation = parent * this->transform;
   }
   if(this->real) {
     const auto& data = (fullTransformation * this->offset).oglmatrix();
-    std::cout << this->id << " at " << result.size() << std::endl;
+    //const auto& data = identity.oglmatrix();
+    //std::cout << this->id << " at " << result.size() << std::endl;
     result.insert(result.end(),data.begin(),data.end());
   } 
   for(auto boneItr = this->children.begin(); boneItr != this->children.end(); boneItr++) {
