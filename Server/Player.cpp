@@ -199,7 +199,6 @@ void Player::respawn(v3_t pos)
   render = true;
 }
 
-
 void Player::update(){
   // No need to update when user is dead
   if(dead)
@@ -284,13 +283,20 @@ void Player::handleSelfAction(ClientGameTimeAction a) {
   }
 
 	//start of attacking logic
+  //std::cout << " attackRng " << a.attackRange << " chrg " << (chargedProjectile == nullptr) << std::endl;
 	if( (a.attackRange && chargedProjectile == nullptr) || a.attackMelee) {
 		attack(a);
-	} else if ( chargedProjectile && !a.attackRange ) {
+	} else if ( chargedProjectile && !a.attackRange ) { //Fire the projectile!
     v3_t v = direction;
     v.normalize();
-    v.scale(ProjInfo[chargedProjectile->getMagicType()].speed); //TODO no magic numbers @alvin, this should be determined by magic type
-    chargedProjectile->fire(v);
+    float strMult = 1;
+    for(auto buff = buffs.begin(); buff != buffs.end(); buff++){
+      if( BuffInfo[buff->first].affectStrength ){
+        strMult *= (BuffInfo[buff->first].strengthMultiplier);
+      }
+    }
+
+    chargedProjectile->fire(v,strMult);
     chargedProjectile = nullptr;
   }
 
@@ -335,7 +341,6 @@ void Player::attack( ClientGameTimeAction a) {
 	attacking = true;
 	return;
 }
-
 
 std::string Player::getString()
 {
@@ -463,6 +468,26 @@ void Player::setSpeed(float s) {
 
 void Player::setMana(float m) {
 	mana = m;
+}
+
+float Player::getAttackCD() const{
+  float cdMult = 1;
+  for(auto buff = buffs.begin(); buff != buffs.end(); buff++){
+    if( BuffInfo[buff->first].affectAttackCD ){
+      cdMult *= (BuffInfo[buff->first].attackCDMultiplier);
+    }
+  }
+  return cdMult;
+}
+
+float Player::getChargeCD() const{
+  float cdMult = 1;
+  for(auto buff = buffs.begin(); buff != buffs.end(); buff++){
+    if( BuffInfo[buff->first].affectChargeCD ){
+      cdMult *= (BuffInfo[buff->first].chargeCDMult);
+    }
+  }
+  return cdMult;
 }
 
 void Player::serialize(sf::Packet& packet) const {

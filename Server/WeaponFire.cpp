@@ -26,15 +26,15 @@ void WeaponFire::updateBounds(){
 Projectile* WeaponFire::attackRange(v3_t dir , v3_t pos, Player* owner)
 {
 	Projectile* pj = map->produceProjectile();
-  dir.normalize();
-  pj->setDirection(dir);
+  //dir.normalize();
+  //pj->setDirection(dir);
   //dir.scale(projectileSpeed); //TODO @alvin I took these out becasuse 
   pj->setVelocity(ZEROVEC);
-  pj->setPosition(pos);
+  //pj->setPosition(pos);
   pj->setOwner(owner);
 	//pj->setStrength(projectileStrength); it should be determined at the fire time
-	pj->setRange(100); //      based on the magic it is
-  pj->setFired(false);
+	//pj->setRange(100); //      based on the magic it is
+  //pj->setFired(false); //defaults to false
   // pj->setChargeTime(1500);
   pj->setMagicType(FIRE1);
 
