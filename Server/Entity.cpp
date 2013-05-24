@@ -20,6 +20,8 @@ std::vector<std::pair<Entity*,BoundingObj::vec3_t>> Entity::detectCollision(){
       if((*it2)->getEntity() == this)
         continue;
 
+      Entity_Type f = (*it2)->getEntity()->getType();
+
       //check if I have already collided with this entity //TODO maybe no entity check 
       //[for 2 objs collide with 1 of my bboxes] shortest dist changes
       auto finder = res.begin();
@@ -106,8 +108,6 @@ std::vector<RayCollision> Entity::detectCollision(Ray* r){
 }
 
 v3_t Entity::correctMovement(v3_t movementDirection, bool slide){
-  static int c = 0;
-
   BoundingBox * myBox = (BoundingBox*) boundingObjs[0]; //TODO just doing this for now
   //add the radius to account for collision
   //v3_t radius = myBox->getMaxRadius( movementDirection );
@@ -121,15 +121,8 @@ v3_t Entity::correctMovement(v3_t movementDirection, bool slide){
   //std::cout << movementRay.getDirection() << std::endl;
   for(auto coll = colls.begin(); coll != colls.end(); ){
     Entity * e = coll->e;
-  length_t asdf = coll->tfirst;
 
     if(correctMovementHit(coll->e)){
-      //std::cout << c << std::endl;
-      //      std::stringstream ss;
-     //       ss << "before #" << c;
-     // ConfigManager::log(ss.str());
-     // ConfigManager::log(movementRay.toString());
-
       //scale by tfirst
       v3_t newDir = movementRay.getDirection();
       newDir.scale(coll->tfirst);
@@ -154,21 +147,11 @@ v3_t Entity::correctMovement(v3_t movementDirection, bool slide){
         length_t slide = excess.dot(coll->parallelAxis);
         excess = coll->parallelAxis;
         excess.scale(slide);
-         newDir += excess;
+        newDir += excess;
       }
 
       movementRay.setDirection(newDir);
       restart = true;
-      //std::stringstream s;
-      //s<< "tfirst " << coll->tfirst;
-
-       // ConfigManager::log("\t after");
-       // ConfigManager::log(s.str());
-       // ConfigManager::log(movementRay.toString());
-      //std::cout << "\t corrected: " << movementRay.getDirection() << std::endl;
-      //std::cout << coll->e->getBoundingObjs()[0]->toString() << std::endl;
-        //        ConfigManager::log(coll->e->getBoundingObjs()[0]->toString());
-                c++;
     }
 
     if(restart){
@@ -187,5 +170,5 @@ v3_t Entity::correctMovement(v3_t movementDirection, bool slide){
 
 void Entity::removeFromMap(){
   map->removeFromQtree(this);
-  render = false;
+  //render = false;
 }

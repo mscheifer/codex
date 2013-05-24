@@ -20,6 +20,7 @@ protected:
   // Some kind of state {paralyzed, frozen, blah blah}
   // Power ups {contains MULTIPLERS for health, defense/ elemental weapons}
   v3_t correctMovement( v3_t movementDirection, bool slide );
+  //return true on which types to "collide with" when moving
   virtual bool correctMovementHit( Entity* ){return false;}
 
 public:
@@ -42,6 +43,7 @@ public:
   void removeFromMap();
 
   bool canRender() const { return render; }
+  void setRender(bool b) { render = b; }
   v3_t getPosition(void) const { return position; }
   void setPosition(v3_t c) { position = c; }
   v3_t getDirection(void) const { return direction; }

@@ -28,7 +28,7 @@ Player::Player(){}// this->init(0,0,0,0,NULL);}
 Player::~Player(void){}
 Player::Player(v3_t pos, int assigned_id, Map * m)
 {
- this->init(pos, assigned_id, m);
+ this->init(pos, assigned_id, m); 
 }
 
 void Player::init(v3_t pos, int assigned_id, Map * m)
@@ -119,16 +119,16 @@ bool Player::damageBy(DeadlyEntity *deadly)
 	damage = ( damage > 0? damage: 0);
 	float newHealth = (health - damage);
 	health = (newHealth > 0 ? newHealth : 0);
+  dead = health==0;
+  if(dead)
+    die();
 	return true;
 }
 
 void Player::handleAction(ClientGameTimeAction a) {
   //std::cout<<"PLAYER: "<<player_id<<" handling packet from "<< a.player_id<<std::endl;
-	if(a.player_id == player_id) {
+	if(a.player_id == player_id)
 		handleSelfAction(a);
-	} else {
-		//handleOtherAction(a);
-	}
 }
 
 bool Player::moveTowardDirection(move_t inputDir, bool jump)
@@ -187,9 +187,24 @@ bool Player::correctMovementHit( Entity* e ){
   return etype == PLAYER || etype == WALL;
 }
 
+void Player::die()
+{
+  map->removeFromQtree(this);
+  render = false;
+}
+
+void Player::respawn(v3_t pos)
+{
+  this->init(pos, player_id, map);
+  render = true;
+}
+
+
 void Player::update(){
+  // No need to update when user is dead
+  if(dead)
+    return;
   //powerup shit
-  //std::cout << "buff size " << buffs.size() << std::endl;
   for(auto buff = buffs.begin(); buff != buffs.end();){
     buff->second--;
     if( buff->second <= 0 ){
@@ -216,14 +231,24 @@ void Player::update(){
   //update movement
   acceleration = getGravity();
   velocity += acceleration * ConfigManager::serverTickLengthSec();
-  //v3_t attemptMove = velocity * ConfigManager::serverTickLengthSec(); TODO use this
-  //position += correctMovement( attemptMove, false );
-  position += velocity * ConfigManager::serverTickLengthSec();
+  v3_t attemptMove = velocity * ConfigManager::serverTickLengthSec();
+  position += correctMovement( attemptMove, false );
+  //position += velocity * ConfigManager::serverTickLengthSec();
   
+  //calculate regen multipliers
+  float manaMultiplier = 1;
+  float healthMultiplier = 1;
+  for(auto buff = buffs.begin(); buff != buffs.end(); buff++){
+    if( BuffInfo[buff->first].affectManaRegen ){
+      manaMultiplier *= (BuffInfo[buff->first].manaMultiplier);
+    } else if ( BuffInfo[buff->first].affectHealthRegen ){
+      healthMultiplier *= (BuffInfo[buff->first].healthMultiplier);
+    }
+  }
   //I disabled health regen and mana regen  (BOWEN)
-  health+=healthRegen;
+  health+=healthRegen*healthMultiplier;
   health = (health > maxHealth? maxHealth : health);
-  mana+=manaRegen;
+  mana+=manaRegen*manaMultiplier;
   mana = (mana > maxMana? maxMana : mana);
   updateBounds();
 }
@@ -326,10 +351,10 @@ std::string Player::getString()
 }
 
 void Player::updateBounds(){
-  //update the bounding objects
-  //boundingObjs[0]->setCenter(BoundingObj::vec4_t(position.x, position.y, position.z));
-  //BoundingObj::vec3_t direct(direction.x, direction.y,0);
-  //boundingObjs[0]->rotate(direct,BoundingObj::vec3_t(0,0,1));
+  //update the bounding objects 
+  boundingObjs[0]->setCenter(BoundingObj::vec4_t(position.x, position.y, position.z));
+  BoundingObj::vec3_t direct(direction.x, direction.y,0);
+  boundingObjs[0]->rotate(direct,BoundingObj::vec3_t(0,0,1));
   boundingObjs[0]->setCenterOnTree(BoundingObj::vec4_t(position.x, position.y, position.z));
 }
 
@@ -345,6 +370,8 @@ void Player::handleCollisions(){
 
   for( auto it = entities.begin(); it != entities.end(); ){
     Entity * e = it->first;
+
+    //has already been processed //TODO @mc collision look at fix it vector, should never reprocess
     switch( e->getType() ) {
       case WALL:
         //std::cout << "wall" << std::endl;
@@ -363,7 +390,6 @@ void Player::handleCollisions(){
         pickupWeaponType = ((Weapon*)e)->getWeaponType();
         break;
       case POWER_UP:
-        std::cout << "hit powerup" << std::endl;
         collidePowerUp(*it);
         //((PowerUp *)&it)->onCollision(this);
         break;
@@ -388,8 +414,6 @@ void Player::handleCollisions(){
 
 bool Player::collideWall(const std::pair<Entity*,BoundingObj::vec3_t>& p){
   BoundingObj::vec3_t fixShit = p.second;
-  if(fixShit.z == 0)
-    std::cout << "fixit " << fixShit << std::endl;
   restartJump(fixShit.z);
   position += p.second;
   updateBounds();
@@ -428,7 +452,7 @@ bool Player::collidePowerUp(const std::pair<Entity*,BoundingObj::vec3_t>& p){
     buffs.push_front(std::pair<BUFF,int>(ptype,BuffInfo[ptype].ticksEffect));
   }
 
-  p.first->removeFromMap();
+  ((PowerUp*)p.first)->pickUp();
   return false;
 }
 

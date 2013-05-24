@@ -20,8 +20,7 @@ void Game::chooseMinotaur()
 int Game::join()
 {
   unsigned int userID = world.getPlayers().size();
-  Player * newPlayer = new Player(v3_t(0,0,0), 0, &world);
-  newPlayer->player_id = userID;
+  Player * newPlayer = new Player(world.getRespawnPosition(userID), userID, &world);
   world.addPlayer(newPlayer);
   return userID;
 }

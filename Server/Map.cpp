@@ -11,7 +11,7 @@
 const float Map::Item_Pick_Up_Ranges = 1.0f;
 
 //TODO the rectangle should be the actual world bounds
-Map::Map(void): freeProjectiles(),q(0,Rectangle(BoundingObj::vec4_t(0,0,0),1000,1000))
+Map::Map(void): freeProjectiles(),q(0,Rectangle(BoundingObj::vec4_t(0,0,0),1000,1000)), spawnPositions()
 {
 	map_size = 15;
 	freeProjectiles = new std::stack<Projectile *>();
@@ -23,9 +23,16 @@ void Map::initPowerUps() {
   PowerUp* superPower = new PowerUp(v3_t(2,9,0), this, MOVEBOOST);
   superPower->setRespownTime(5000);
   this->entities.push_back(superPower);
+
+  PowerUp* p2 = new PowerUp(v3_t(10,-9,0), this, MANABOOST);//TOOD set respawn timer
+  this->entities.push_back(p2);
+
+  PowerUp* p3 = new PowerUp(v3_t(-10,-9,0), this, HEALTHBOOST);
+  this->entities.push_back(p3);
 }
 void Map::initWalls(void)
 {
+  //TODO move this
   WeaponFire* w1 = new WeaponFire(v3_t(100,100,0), this);
   w1->dropDown(v3_t(10,10,0));
   w1->setDirection(v3_t(0,1,0));
@@ -35,23 +42,28 @@ void Map::initWalls(void)
   w2->setDirection(v3_t(0,1,0));
   entities.push_back(w2);
 
+  spawnPositions.push_back(v3_t(1,1,1));
+  spawnPositions.push_back(v3_t(1,2,1));
+  spawnPositions.push_back(v3_t(2,1,1));
+  spawnPositions.push_back(v3_t(2,2,1));
+
   v3_t facingEast(1,0,0);
   v3_t facingNorth(0,1,0);
-  int width = 10;
-  int height = 5; 
-  int depth = 4;
+  unsigned int width = 10;
+  unsigned int height = 1; 
+  unsigned int depth = 4;
 
-  int wallX = 7;
-  int wallY = 7;
+  float wallX = 7;
+  float wallY = 7;
 
-  int centerX = 0;
-  int centerY = 0;
+  float centerX = 0;
+  float centerY = 0;
   int i;
-  int startingX;
-  int startingXNeg;
-  int startingY;
-  int startingYNeg;
-  int startingZ = depth/2;
+  float startingX;
+  float startingXNeg;
+  float startingY;
+  float startingYNeg;
+  float startingZ = depth/2.0f;
 
   // Create the top and bottom perimeter from left to right.
   for( i = 0,
@@ -92,6 +104,7 @@ void Map::initWalls(void)
   this->entities.push_back(moveableWall);
   Wall * floor = new Wall(1000, 10, 1000, v3_t(0,0,-5), facingEast, this);
   this->entities.push_back(floor);
+  floor->setRender(false);
 
   return; // REMOVE THIS TO KILL GRAPHICS
   // Creating facing north walls. DO NOT TOUCH THIS
@@ -148,21 +161,28 @@ void Map::initWalls(void)
                      column13, column14, column15, column16, column17, column18};
   for( i = 0,
     startingX = ((wallX*width)/-2)+width+centerX,
-    startingY = ((wallY*width)/2)-(width*1.5)+centerY;
+    startingY = ((wallY*width)/2)-(width*1.5f)+centerY;
     i < 18; i++, startingY -= width)
   {
     addWallDirection(startingX, startingY, startingZ, facingEast, columns[i]);
   }
 }
 
+v3_t Map::getRespawnPosition(std::size_t player_id)
+{
+  if(player_id > spawnPositions.size())
+    return spawnPositions[0];
+  return spawnPositions[player_id];
+}
+
 /*
  * Add walls from left to right. Assumes array ends with -1
  */
-void Map::addWallDirection(int startingX, int startingY, int startingZ, v3_t dir, int values[])
+void Map::addWallDirection(float startingX, float startingY, float startingZ, v3_t dir, int values[])
 {
   int width = 10;
-  int height = 4; 
-  int depth = 1;
+  int height = 1; 
+  int depth = 4;
   int x = 0;
   int j = 0;
   while(values[j] != -1)

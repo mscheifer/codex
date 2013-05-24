@@ -1,8 +1,16 @@
 #include "boundingManager.h"
+#include "Entity.h"
 
 //////////////////////helper functions/////////////////
+//return true if b goes before a
 bool sortEntity(std::pair<Entity*,BoundingObj::vec3_t> a, std::pair<Entity*,BoundingObj::vec3_t> b){
-  return a.second.magnitudesq() < b.second.magnitudesq();
+  if( a.first->getType() == WALL && b.first->getType() != WALL){ //set walls at the end
+    return false;
+  }
+  if( b.first->getType() == WALL && a.first->getType() != WALL){ //set walls at the end
+    return true;
+  }
+  return a.second.magnitudesq() > b.second.magnitudesq();
 }
 
 bool sortRayCollision(RayCollision a, RayCollision b){
@@ -63,7 +71,7 @@ std::pair<bool,BoundingObj::vec3_t> notSeparatedByAxis(const BoundingBox* a, con
     //calculate the return vec
     ret.normalize();
     ret.scale( sumDist - centerDist );   
-    if( sign( t.dot(axis) ) < 0 ){
+    if( t.dot(axis) < 0 ){
       ret.negate();
     }
   }
@@ -346,7 +354,6 @@ std::pair<bool,BoundingObj::vec3_t> collide(const BoundingObj * a,const  Boundin
   return std::pair<bool,BoundingObj::vec3_t>(false,BoundingObj::vec3_t());
 }
 
-
 RayCollision rayCollide(const Ray * r,const  BoundingObj * b){
   RayCollision res;
 
@@ -378,21 +385,15 @@ void boxTest(){
       5,1,2);
     */
 
-    Ray r1(BoundingObj::vec4_t(3.72037,10.9925,2.96507), 
-      BoundingObj::vec3_t(0.0862999f, 0.996269f, 0));
-    
-    BoundingBox b1(BoundingObj::vec4_t(5,10,2), 
+    BoundingBox b2(BoundingObj::vec4_t(10,10,0), 
       BoundingObj::vec3_t(1,0,0), BoundingObj::vec3_t(0,1,0), BoundingObj::vec3_t(0,0 ,1),
-      5,1,2);
+      3,3,3);
     
-    BoundingBox player(BoundingObj::vec4_t(0, 0, 2.99487f), 
-      BoundingObj::vec3_t(-0.1682881,0.985738,0), BoundingObj::vec3_t(-0.30735,-0.951596,0), BoundingObj::vec3_t(0,0 ,1),
+    BoundingBox player(BoundingObj::vec4_t(10.0349, 9.64931, 2.99833), 
+      BoundingObj::vec3_t(0.616899, -0.787042,0), BoundingObj::vec3_t(0.787042, 0.616899,0), BoundingObj::vec3_t(0,0 ,1),
       1,1,3);
 
-    player.rotate(BoundingObj::vec3_t(-0.30735, -0.951596, 0), BoundingObj::vec3_t(0,0,1)); 
-    std::cout << player.toString();
-
-    //std::cout << "1==" << collide(&b1,&b2).first << " vecfix " << collide(&b2,&b1).second << std::endl;
+    std::cout << "1==" << collide(&player,&b2).first << " vecfix " << collide(&player,&b2).second << std::endl;
     /*
     RayCollision f = rayCollide(&r1, &b1);
     std::cout << f.collided << std::endl
