@@ -57,8 +57,8 @@ void Player::init(v3_t pos, int assigned_id, Map * m)
   speedUpCounter = sf::Clock();
   speedUp = false;
 	map = m;
-	weapon[0] = new WeaponFist(position, this->map);
-	weapon[1] = new WeaponFire(position, this->map); //TODO add this to entities if we want it to drop
+	weapon[0] = new WeaponFist(position, this->map); //has no bounds so it doesnt drop
+	weapon[1] = new WeaponFire(position, this->map, FIR1); //TODO add this to entities, or it won't be able render
 	current_weapon_selection = 1;
   chargedProjectile = nullptr;
   generateBounds(position);
