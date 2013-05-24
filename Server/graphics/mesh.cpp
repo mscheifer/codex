@@ -46,7 +46,7 @@ std::vector<GLuint> initIndices(const aiMesh* paiMesh) {
 }
 
 gx::Mesh::attribsList_t initAttribs(const gx::Mesh::idMap_t& idMap,
-    const aiMesh* paiMesh, const gx::matrix resize) {
+    const aiMesh* paiMesh) {
   const aiVector3D Zero3D(0.0f, 0.0f, 0.0f);
 
   std::vector<GLfloat> positions;
@@ -57,7 +57,7 @@ gx::Mesh::attribsList_t initAttribs(const gx::Mesh::idMap_t& idMap,
     const aiVector3D* pNormal   = &(paiMesh->mNormals[i]);
     const aiVector3D* pTexCoord =
       paiMesh->HasTextureCoords(0) ? &(paiMesh->mTextureCoords[0][i]) : &Zero3D;
-    gx::vector4f posVec = resize * toVec4(*pPos);
+    gx::vector4f posVec = /*resize **/ toVec4(*pPos);
 	  positions.push_back(posVec.x);
 	  positions.push_back(posVec.y);
 	  positions.push_back(posVec.z);
@@ -69,28 +69,30 @@ gx::Mesh::attribsList_t initAttribs(const gx::Mesh::idMap_t& idMap,
 	  colors.push_back(0.0f);
 	  colors.push_back(1.0f);
     //resize works for normals too because we're doing uniform scaling
-    gx::vector3f normVec = resize * toVec3(*pNormal);
+    gx::vector3f normVec = /*resize **/ toVec3(*pNormal);
     normals.push_back(normVec.x);
 	  normals.push_back(normVec.y);
 	  normals.push_back(normVec.z);
     //TODO: use texture coordinates
 	}
   const std::array<std::pair<GLfloat,GLint>,gx::Mesh::maxBonesPerVertex>
-	                           defaultBones = {{std::make_pair(1,-1),
-                                                std::make_pair(0,-1),
-                                                std::make_pair(0,-1),
-                                                std::make_pair(0,-1)}};
+	                           defaultBones = {{std::make_pair(1.0f,-1),
+                                              std::make_pair(0.0f,-1),
+                                              std::make_pair(0.0f,-1),
+                                              std::make_pair(0.0f,-1)}};
   std::vector<std::array<std::pair<GLfloat,GLint>,gx::Mesh::maxBonesPerVertex>>
     boneGroups(paiMesh->mNumVertices,defaultBones);
   for(unsigned int i = 0; i < paiMesh->mNumBones; i++) {
-    for(unsigned int j = 0; j < paiMesh->mBones[i]->mNumWeights; j++) {
-      auto& bg = boneGroups[paiMesh->mBones[i]->mWeights[j].mVertexId];
+    const auto& paiBone = paiMesh->mBones[i];
+    for(unsigned int j = 0; j < paiBone->mNumWeights; j++) {
+      const auto& paiWeight = paiBone->mWeights[j];
+      auto& bg = boneGroups[paiWeight.mVertexId];
       bool good = false;
 	    for(auto bgitr = bg.begin(); bgitr != bg.end(); bgitr++) {
 		    auto& b = *bgitr;
         if(b.second == -1) {
-          b.first = paiMesh->mBones[i]->mWeights[j].mWeight;
-          b.second = idMap.find(paiMesh->mBones[i]->mName.C_Str())->second;
+          b.first = paiWeight.mWeight;
+          b.second = idMap.find(paiBone->mName.C_Str())->second;
           good = true;
           break;
         }
@@ -123,7 +125,7 @@ gx::Mesh::attribsList_t initAttribs(const gx::Mesh::idMap_t& idMap,
   auto boneWeightAttrib = std::make_shared<gx::vertexAttrib>(
     gx::vertexAttrib("boneWeights",4,0,boneWeights));
   auto boneIdAttrib = std::make_shared<gx::vertexAttrib>(
-    gx::vertexAttrib("boneIDs",4,0,boneIds));
+    gx::vertexAttrib("boneIDs"    ,4,0,boneIds));
 
   gx::Mesh::attribsList_t attribs;
 	attribs.push_back(positionsAttrib);
@@ -185,15 +187,16 @@ std::map<std::string,std::vector<const aiNodeAnim*>> walkNodesForAnims(const aiN
   return ret;
 }
 
-gx::bone initBones(std::map<std::string,unsigned int>& idMap, const aiScene* scene) {
+gx::bone initBones(std::map<std::string,unsigned int>& idMap,
+    const aiScene* scene, const gx::matrix resize) {
   std::map<std::string,gx::matrix>                     offsets;
   std::map<std::string,std::vector<const aiNodeAnim*>> animations;
   //just do the first mesh for now
   animations = walkNodesForAnims(scene->mRootNode,scene->mNumAnimations);
   for(unsigned int i = 0; i < scene->mMeshes[0]->mNumBones; i++) {
-    const auto& bone = scene->mMeshes[0]->mBones[i];
+    const auto& meshBone = scene->mMeshes[0]->mBones[i];
     offsets.insert(
-      std::make_pair(bone->mName.C_Str(),gx::toMat(bone->mOffsetMatrix)));
+      std::make_pair(meshBone->mName.C_Str(),gx::toMat(meshBone->mOffsetMatrix)));
   }
   for(unsigned int i = 0; i < scene->mNumAnimations; i++) {
     const aiAnimation* anim = scene->mAnimations[i];
@@ -214,12 +217,13 @@ gx::bone initBones(std::map<std::string,unsigned int>& idMap, const aiScene* sce
   int nextIds = 0;
   auto boneTree = makeBone(idMap,nextIds,std::move(offsets),std::move(animations),
                            scene->mRootNode);
+  boneTree.transform = resize * boneTree.transform;
   return boneTree;
 }
 } //end unnamed namespace
 
-gx::Mesh::MeshEntry::MeshEntry(idMap_t& ids, const aiMesh* paiMesh, const matrix resize)
-  : attribs(initAttribs(ids,paiMesh,resize)), indices(initIndices(paiMesh)),
+gx::Mesh::MeshEntry::MeshEntry(idMap_t& ids, const aiMesh* paiMesh)
+  : attribs(initAttribs(ids,paiMesh)), indices(initIndices(paiMesh)),
     MaterialIndex(paiMesh->mMaterialIndex)                                 {
   debugout << "mesh num bones: " << paiMesh->mNumBones << endl;
   for(unsigned int i = 0; i < paiMesh->mNumBones; i++) {
@@ -242,8 +246,8 @@ gx::Mesh::MeshEntry& gx::Mesh::MeshEntry::operator=(MeshEntry&& other){
 gx::Mesh::Mesh(const std::string& Filename, length_t height)
 	: mImporter(), mScene(LoadFile(mImporter, Filename)),
     m_boundary(CalcBoundBox(mScene, height)), idMap(),
-    bones(initBones(idMap,mScene)),
-    m_Entries(InitFromScene(idMap,mScene, m_boundary.centerAndResize)),
+    bones(initBones(idMap,mScene, m_boundary.centerAndResize)),
+    m_Entries(InitFromScene(idMap,mScene)),
     m_Textures(InitMaterials(mScene, Filename)),
 	//just do the first one unless kangh has a model with more
     entityData(m_Entries[0].indices,m_Entries[0].attribs,std::move(bones)) {}
@@ -281,7 +285,7 @@ const aiScene* gx::Mesh::LoadFile(Assimp::Importer& Importer,const std::string& 
 }
 
 std::vector<gx::Mesh::MeshEntry> gx::Mesh::InitFromScene(idMap_t& idMap,
-     const aiScene* pScene, const matrix centerAndResize) {
+     const aiScene* pScene) {
   if(pScene == nullptr) return std::vector<MeshEntry>();
 
   if(pScene->mNumMeshes > 1) {
@@ -293,7 +297,7 @@ std::vector<gx::Mesh::MeshEntry> gx::Mesh::InitFromScene(idMap_t& idMap,
   // Initialize the meshes in the scene one by one
   for (unsigned int i = 0 ; i < pScene->mNumMeshes ; i++) {
     const aiMesh* paiMesh = pScene->mMeshes[i];
-    Ret.push_back(MeshEntry(idMap,paiMesh,centerAndResize));
+    Ret.push_back(MeshEntry(idMap,paiMesh));
   }
 
   return Ret;

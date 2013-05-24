@@ -34,20 +34,29 @@ void Map::mapReset()
 }
 
 void Map::initPowerUps() {
-  PowerUp* superPower = new PowerUp(v3_t(2,9,0), this, MOVEBOOST);
+  PowerUp* superPower = new PowerUp(v3_t(2,9,0), this, CHARGECD);
   superPower->setRespownTime(5000);
   this->entities.push_back(superPower);
+
+  //PowerUp* p2 = new PowerUp(v3_t(10,-9,0), this, STRBOOST);//TOOD set respawn timer
+  //p2->setRespownTime(5000);
+  //this->entities.push_back(p2);
+
+  //PowerUp* p3 = new PowerUp(v3_t(-10,-9,0), this, ATTACKCD);
+  //p3->setRespownTime(5000);
+  //this->entities.push_back(p3);
 }
 void Map::initWalls(void)
 {
+  //TODO move this
   WeaponFire* w1 = new WeaponFire(v3_t(100,100,0), this);
   w1->dropDown(v3_t(10,10,0));
   w1->setDirection(v3_t(0,1,0));
   entities.push_back(w1);
-  //WeaponFire* w2 = new WeaponFire(v3_t(120,120,0), this);
-  //w2->dropDown(v3_t(10,-10,0));
-  //w2->setDirection(v3_t(0,1,0));
-  //entities.push_back(w2);
+  WeaponFire* w2 = new WeaponFire(v3_t(120,120,0), this);
+  w2->dropDown(v3_t(10,-10,0));
+  w2->setDirection(v3_t(0,1,0));
+  entities.push_back(w2);
 
   spawnPositions.push_back(v3_t(4,-4,1));
   spawnPositions.push_back(v3_t(4,4,1));
@@ -188,8 +197,8 @@ v3_t Map::getRespawnPosition(std::size_t player_id)
 void Map::addWallDirection(float startingX, float startingY, float startingZ, v3_t dir, int values[])
 {
   int width = 10;
-  int height = 4; 
-  int depth = 1;
+  int height = 1; 
+  int depth = 4;
   int x = 0;
   int j = 0;
   while(values[j] != -1)
@@ -240,6 +249,12 @@ std::vector<Entity *> Map::getEntity() {
  //TODO should we just process all live projectiles, thenw e can remove
  void Map::destroyProjectile(Projectile * proj)
  {
+   if(proj->getOwner() == nullptr) //has already been removed
+     return;
+
+   if(proj->getOwner()->chargedProjectile == proj )
+     proj->getOwner()->chargedProjectile = nullptr;
+
    proj->setOwner(NULL);
    freeProjectiles->push(proj);
    // should probably use a hasmap soon

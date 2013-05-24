@@ -189,7 +189,7 @@ void gx::graphicsClient::updateEntities(std::vector<Entity*> data) {
   for(auto entityP = data.begin(); entityP != data.end(); ++entityP) {
     const auto& entity = **entityP;
     const auto& type = entity.getType();
-    if(false) { //TODO: change back to type == PLAYER
+    if(type == PLAYER) { //TODO: change back to type == PLAYER
       dynamicDrawer::instanceData inst;
       inst. pos = entity.getPosition();
       inst.dirY = entity.getDirection();

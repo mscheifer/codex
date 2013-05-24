@@ -207,7 +207,6 @@ void Player::respawn(v3_t pos)
   render = true;
 }
 
-
 void Player::update(){
   // No need to update when user is dead
   if(dead)
@@ -228,7 +227,8 @@ void Player::update(){
   }
 
   //
-  if(chargedProjectile ) {
+  if( chargedProjectile ) {
+    chargedProjectile->setDirection(direction);
     chargedProjectile->setPosition(getProjectilePosition());
   }
 
@@ -243,9 +243,19 @@ void Player::update(){
   position += correctMovement( attemptMove, false );
   //position += velocity * ConfigManager::serverTickLengthSec();
   
-  health+=healthRegen;
+  //calculate regen multipliers
+  float manaMultiplier = 1;
+  float healthMultiplier = 1;
+  for(auto buff = buffs.begin(); buff != buffs.end(); buff++){
+    if( BuffInfo[buff->first].affectManaRegen ){
+      manaMultiplier *= (BuffInfo[buff->first].manaMultiplier);
+    } else if ( BuffInfo[buff->first].affectHealthRegen ){
+      healthMultiplier *= (BuffInfo[buff->first].healthMultiplier);
+    }
+  }
+  health+=healthRegen*healthMultiplier;
   health = (health > maxHealth? maxHealth : health);
-  mana+=manaRegen;
+  mana+=manaRegen*manaMultiplier;
   mana = (mana > maxMana? maxMana : mana);
   if(health <= 0)
     die();
@@ -282,16 +292,21 @@ void Player::handleSelfAction(ClientGameTimeAction a) {
   }
 
 	//start of attacking logic
-	if(a.attackRange || a.attackMelee) {
+  //std::cout << " attackRng " << a.attackRange << " chrg " << (chargedProjectile == nullptr) << std::endl;
+	if( (a.attackRange && chargedProjectile == nullptr) || a.attackMelee) {
 		attack(a);
-	} else { //TODO @alvin, this porbably causes the trail
-    if(chargedProjectile) {
-      v3_t v = direction;
-      v.normalize();
-      v.scale(ProjInfo[chargedProjectile->getMagicType()].speed); //TODO no magic numbers @alvin, this should be determined by magic type
-      chargedProjectile->fire(v);
-      chargedProjectile = nullptr;
+	} else if ( chargedProjectile && !a.attackRange ) { //Fire the projectile!
+    v3_t v = direction;
+    v.normalize();
+    float strMult = 1;
+    for(auto buff = buffs.begin(); buff != buffs.end(); buff++){
+      if( BuffInfo[buff->first].affectStrength ){
+        strMult *= (BuffInfo[buff->first].strengthMultiplier);
+      }
     }
+
+    chargedProjectile->fire(v,strMult);
+    chargedProjectile = nullptr;
   }
 
   if(a.switchWeapon) {
@@ -306,14 +321,11 @@ void Player::handleOtherAction( ClientGameTimeAction) {
 }
 
 v3_t Player::getProjectilePosition() {
- 
   v3_t temp = position;
-
   v3_t d = direction;
   d.normalize();
-  d.scale(1.5);
+  d.scale(1.5); //how far away from the player
   temp += d;
- 
   return temp;
 }
 
@@ -330,15 +342,14 @@ void Player::attack( ClientGameTimeAction a) {
 	}
 	else if(a.attackMelee){
 		if( !currentWeapon->canUseWeapon(false, this)){
-			return;
+		  return;
 		}
-		currentWeapon->attackMelee(direction, position, this);
+	  currentWeapon->attackMelee(direction, position, this);
 	}
 
 	attacking = true;
 	return;
 }
-
 
 std::string Player::getString()
 {
@@ -451,7 +462,7 @@ bool Player::collidePowerUp(const std::pair<Entity*,BoundingObj::vec3_t>& p){
     buffs.push_front(std::pair<BUFF,int>(ptype,BuffInfo[ptype].ticksEffect));
   }
 
-  p.first->removeFromMap();
+  ((PowerUp*)p.first)->pickUp();
   return false;
 }
 
@@ -466,6 +477,26 @@ void Player::setSpeed(float s) {
 
 void Player::setMana(float m) {
 	mana = m;
+}
+
+float Player::getAttackCD() const{
+  float cdMult = 1;
+  for(auto buff = buffs.begin(); buff != buffs.end(); buff++){
+    if( BuffInfo[buff->first].affectAttackCD ){
+      cdMult *= (BuffInfo[buff->first].attackCDMultiplier);
+    }
+  }
+  return cdMult;
+}
+
+float Player::getChargeCD() const{
+  float cdMult = 1;
+  for(auto buff = buffs.begin(); buff != buffs.end(); buff++){
+    if( BuffInfo[buff->first].affectChargeCD ){
+      cdMult *= (BuffInfo[buff->first].chargeCDMult);
+    }
+  }
+  return cdMult;
 }
 
 void Player::serialize(sf::Packet& packet) const {

@@ -71,7 +71,7 @@ std::pair<bool,BoundingObj::vec3_t> notSeparatedByAxis(const BoundingBox* a, con
     //calculate the return vec
     ret.normalize();
     ret.scale( sumDist - centerDist );   
-    if( sign( t.dot(axis) ) < 0 ){
+    if( t.dot(axis) < 0 ){
       ret.negate();
     }
   }

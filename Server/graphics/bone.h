@@ -31,7 +31,7 @@ struct bone {
   bone(int,matrix,matrix,bool,std::vector<std::vector<key>>,std::vector<bone>);
   bone(const bone&);// = delete;
   bone& operator=(const bone&);// = delete;
-  bone(bone&&);
+  bone(bone&&) noexcept;
   bone& operator=(bone&&);
 
   bool animated(unsigned int) const;
