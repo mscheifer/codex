@@ -49,6 +49,7 @@ void lobby::drawLobby(sf::RenderWindow & window) {
   //TODO @Matt S do I want to draw it everytime?
   handleInput(window);
   if (start) welcome.setString("Waiting for other players to start");
+  else welcome.setString("Please click join to start.");
   window.draw(welcome);
   window.draw(buttonRect);
   window.draw(button);

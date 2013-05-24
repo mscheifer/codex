@@ -231,3 +231,8 @@ void gx::graphicsClient::enableCursor() {
 bool gx::graphicsClient::gameStart() const {
   return (this->Lobby).getStart();
 }
+
+void gx::graphicsClient::gameEnd()
+{
+  Lobby.endGame();
+}

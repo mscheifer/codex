@@ -8,7 +8,7 @@ serverTicksPerSec=30
 gravity=-20
 
 // Player configuration
-players=1
+players=2
 movescale=2
 airMovescale=1
 maxJump=2
@@ -16,7 +16,7 @@ jumpSpeed=10
 playerHpRegen=-.1
 playerMpRegen=.08
 playerDef=5
-playerHp=5
+playerHp=10
 playerMaxHp=100
 playerMp=5
 playerMaxMp=100

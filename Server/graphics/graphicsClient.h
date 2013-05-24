@@ -58,6 +58,7 @@ class graphicsClient {
     void disableCursor();
     void enableCursor();
     bool gameStart() const;
+    void gameEnd();
 
     //input functions
     bool closed()        { return this->userInput.getStop(); }

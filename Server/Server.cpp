@@ -62,59 +62,71 @@ void NetworkServer::doServer() {
       }
     }
   }
-  //choose minotaur
-  game.chooseMinotaur();
-  
-  //Wait for players to start
-  unsigned int connectionCount = 0;
-  while (connectionCount < ConfigManager::numPlayers()) {
-    for(unsigned int i = 0; i < server.size(); i++){
-      sf::Packet packet;
-      if (this->server.receiveMessage(packet,i)) {
-        sf::Uint32 packetType;
-        packet >> packetType;
-        if (packetType == INIT) {
-            connectionCount++;
+
+  StartGamePacket startTheGame;
+  while(true)
+  {
+    this->server.sendPacketToAll<StartGamePacket>(startTheGame);
+    //Wait for players to start
+    unsigned int connectionCount = 0;
+    while (connectionCount < ConfigManager::numPlayers()) {
+      for(unsigned int i = 0; i < server.size(); i++){
+        sf::Packet packet;
+        if (this->server.receiveMessage(packet,i)) {
+          sf::Uint32 packetType;
+          packet >> packetType;
+          if (packetType == INIT) {
+              connectionCount++;
+          }
         }
       }
     }
-  }
 
-  //send init packet to the players
-  for(unsigned int i = 0; i < server.size(); i++){
-    //TODO this relies on server i to match the player_id
-    if(!server.sendPacket<InitPacket>(game.getInitPacket(i),i)) {
-        std::cout << "Error sending init packet" << std::endl;
-	    }
-  }
+    game.restartGame();
+    //choose minotaur
+    game.chooseMinotaur();
 
-  //if(!server.sendToAll(initPacket)) {
-	//  std::cout << "Error sending game start packet" << std::endl;
-  //}
-  std::cout << "server start game" << std::endl;
-  while(true) {
-    clock.restart();
-    
-    game.clearEvents();
-    // don't fuck with this order here
-
-    //1. handle incoming packet
+    //send init packet to the players
     for(unsigned int i = 0; i < server.size(); i++){
-      this->receiveMessages(i);
-      /* maybe put this in a method just like in client*/
+      //TODO this relies on server i to match the player_id
+      if(!server.sendPacket<InitPacket>(game.getInitPacket(i),i)) {
+          std::cout << "Error sending init packet" << std::endl;
+	      }
     }
 
-    //2. update all entities and resolve collision
-    game.updateAndResolveCollision();
+    //if(!server.sendToAll(initPacket)) {
+	  //  std::cout << "Error sending game start packet" << std::endl;
+    //}
+    std::cout << "server start game" << std::endl;
+    while(true) {
+      clock.restart();
+    
+      game.clearEvents();
+      // don't fuck with this order here
 
-    //3. prep and send response to everyone
-	  if(!this->server.sendPacketToAll<ServerGameTimeRespond>( game.prepResponse() ) ) {
-      std::cout << "Error sending sgtr to everybody" << std::endl;
+      //1. handle incoming packet
+      for(unsigned int i = 0; i < server.size(); i++){
+        this->receiveMessages(i);
+        /* maybe put this in a method just like in client*/
+      }
+
+      //2. update all entities and resolve collision
+      game.updateAndResolveCollision();
+
+      ServerGameTimeRespond gtr = game.prepResponse();
+      //3. prep and send response to everyone
+	    if(!this->server.sendPacketToAll<ServerGameTimeRespond>( gtr ) ) {
+        std::cout << "Error sending sgtr to everybody" << std::endl;
+      }
+
+      // Go back to the lobby to wait for the game to restart
+      if(gtr.state != Game_State::PLAYING)
+        break;
+
+      //4. go back to sleep slave.
+      sf::sleep( sf::milliseconds( static_cast<sf::Int32>(ConfigManager::serverTickLengthMilli()) -
+                                   clock.getElapsedTime().asMilliseconds()) );
     }
-
-    //4. go back to sleep slave.
-    sf::sleep( sf::milliseconds( static_cast<sf::Int32>(ConfigManager::serverTickLengthMilli()) -
-                                 clock.getElapsedTime().asMilliseconds()) );
   }
 } 
 

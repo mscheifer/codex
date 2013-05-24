@@ -22,6 +22,9 @@ void NetworkClient::receiveMessages() {
         break;
       case SGTR:
         this->s.deserialize(packet);
+        if (s.state != Game_State::PLAYING) 
+          gameRestart = true;
+        std::cout<<s.state<<std::endl;
         for(auto playerP = s.players.begin(); playerP != s.players.end(); playerP++) {
           if(playerP->player_id != this->id) {
             //make sure the SGTR stays in scope
@@ -141,62 +144,76 @@ void NetworkClient::doClient() {
 
   //std::cout << "Waiting for other players to join" << std::endl;
   //TODO refactor the menu logic 
-  bool joined = false;
-  while(true) {
-    cycle++;
-	  sf::Packet initPacket;
-    this->gxClient.drawLobby();
-    if (joined && this->gxClient.gameStart()) {
-      initPacket << static_cast<sf::Uint32>(INIT); 
-      netRecv.sendMessage(initPacket);
-      joined =false; //only send packet once
+  while(true)
+  {
+    gameRestart = false;
+    bool joined = false;
+    while(true) {
+      cycle++;
+	    sf::Packet initPacket;
+      this->gxClient.drawLobby();
+      if (joined && this->gxClient.gameStart()) {
+        initPacket << static_cast<sf::Uint32>(INIT); 
+        netRecv.sendMessage(initPacket);
+        joined =false; //only send packet once
+      }
+      initPacket.clear();
+      if (netRecv.receiveMessage(initPacket)) {
+        std::cout << "received message" << std::endl;
+        sf::Uint32 packetType;
+        initPacket >> packetType;
+        if (packetType == JOINID) {
+          IdPacket newId(0);
+          newId.deserialize(initPacket);
+          this->id = newId.id;
+          std::cout << "USERID: " << this->id << std::endl;
+          this->action.player_id = id;
+        } else if (packetType == INIT) {
+           //TODO: init the position
+          break;
+        } else if(packetType==STARTGAME){
+          std::cout<<"CLIENT RECEIVED START GAME"<<std::endl;
+          joined = true;
+        }
+	    }
     }
-    initPacket.clear();
-    if (netRecv.receiveMessage(initPacket)) {
-      std::cout << "received message" << std::endl;
-      sf::Uint32 packetType;
-      initPacket >> packetType;
-      if (packetType == JOINID) {
-        IdPacket newId(0);
-        newId.deserialize(initPacket);
-        this->id = newId.id;
-        std::cout << "USERID: " << this->id << std::endl;
-        this->action.player_id = id;
-        joined = true;
-      } else if (packetType == INIT) {
-         //TODO: init the position
+    this->gxClient.disableCursor();
+    std::cout << "game started" << std::endl;
+    /*sf::Clock profilerTime;
+    float processInputTime;
+    float receiveMessagesTime;
+    float drawTime;
+    float sendPackTime;*/
+    //  main run loop
+    while(this->running) {
+      //process input and send events
+  
+      //profilerTime.restart();
+      this->processInput();
+      //processInputTime = profilerTime.getElapsedTime().asMilliseconds();
+      //profilerTime.restart();
+      this->receiveMessages();
+      //receiveMessagesTime = profilerTime.getElapsedTime().asMilliseconds();
+
+      if(gameRestart)
+      {
+        gxClient.enableCursor();
+        gxClient.gameEnd();
         break;
       }
-	  }
-  }
-  this->gxClient.disableCursor();
-  std::cout << "game started" << std::endl;
-  /*sf::Clock profilerTime;
-  float processInputTime;
-  float receiveMessagesTime;
-  float drawTime;
-  float sendPackTime;*/
-  //  main run loop
-  while(this->running) {
-    //process input and send events
-  
-    //profilerTime.restart();
-    this->processInput();
-    //processInputTime = profilerTime.getElapsedTime().asMilliseconds();
-    //profilerTime.restart();
-    this->receiveMessages();
-    //receiveMessagesTime = profilerTime.getElapsedTime().asMilliseconds();
-    //profilerTime.restart();
-    this->gxClient.draw();
-    //drawTime = profilerTime.getElapsedTime().asMilliseconds();
-    //profilerTime.restart();
-    if(this->sendPacket) {//if dead player still should be able to chat?
-      //this->action.print();
-      this->netRecv.sendPacket<ClientGameTimeAction>(action);
-      this->sendPacket = false;
+
+      //profilerTime.restart();
+      this->gxClient.draw();
+      //drawTime = profilerTime.getElapsedTime().asMilliseconds();
+      //profilerTime.restart();
+      if(this->sendPacket) {//if dead player still should be able to chat?
+        //this->action.print();
+        this->netRecv.sendPacket<ClientGameTimeAction>(action);
+        this->sendPacket = false;
+      }
+      //sendPackTime = profilerTime.getElapsedTime().asMilliseconds();
+      //std::cout<<"processInput: "<< processInputTime <<"ms\treceiveMessagesTime: "<<
+        //receiveMessagesTime <<"ms\tdrawTime: "<< drawTime <<"ms\tsendPackTime: "<< sendPackTime <<std::endl;
     }
-    //sendPackTime = profilerTime.getElapsedTime().asMilliseconds();
-    //std::cout<<"processInput: "<< processInputTime <<"ms\treceiveMessagesTime: "<<
-      //receiveMessagesTime <<"ms\tdrawTime: "<< drawTime <<"ms\tsendPackTime: "<< sendPackTime <<std::endl;
   }
 }
