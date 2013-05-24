@@ -58,7 +58,8 @@ enum MAGIC_POWER {
   B1
 }; 
 
-enum BUFF{ NONE=0, MOVEBOOST, MANABOOST, HEALTHBOOST, STRBOOST, ATTACKCD, CHARGECD };
+enum BUFF{ NONE=0, MOVEBOOST, MANABOOST, HEALTHBOOST, STRBOOST, ATTACKCD, CHARGECD,
+ FIR1DEBUFF};
 
 //cd less than one means you cd is reduced that much
 struct BuffData{
@@ -108,11 +109,13 @@ struct BuffData{
 };
 
 const BuffData BuffInfo[] = {
+  //                time|  move  |mpRegen| hpRegen | str     | atkCD |  chargeCD  
   BuffData(NONE, 100, false, 0, false, 0, false, 0, false, 0, false, 0, false, 0),
   BuffData(MOVEBOOST, 100, true, 2, false, 0, false, 0, false, 0, false, 0, false, 0),
   BuffData(MANABOOST, 100, false, 0, true, 5, false, 0, false, 0, false, 0, false, 0),
   BuffData(HEALTHBOOST, 100, false, 0, false, 0, true, 5, false, 0, false, 0, false, 0),
   BuffData(STRBOOST, 100, false, 0, false, 0, false, 0, true, 2, false, 0, false, 0),
   BuffData(ATTACKCD, 100, false, 0, false, 0, false, 0, false, 0, true, 0.25, false, 0),
-  BuffData(CHARGECD, 100, false, 0, false, 0, false, 0, false, 0, false, 0, true, 0.25)
+  BuffData(CHARGECD, 100, false, 0, false, 0, false, 0, false, 0, false, 0, true, 0.25),
+  BuffData(FIR1DEBUFF, 100, true, 0, false, 0, false, 0, false, 0, false, 0, true, 0.25)
 };

@@ -104,6 +104,7 @@ private:
   v3_t getProjectilePosition(void);
   void die();
   void respawn(v3_t pos);
+  void applyBuff( BUFF b);
 
     //helper functions for collisions
   bool collideWall(const std::pair<Entity*,BoundingObj::vec3_t>& p);
