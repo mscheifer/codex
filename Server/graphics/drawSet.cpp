@@ -26,10 +26,11 @@ const std::string gx::dynamicDrawerImpl::fragShader =
 gx::staticDrawerImpl::entityClass::entityClass(staticEntity drawData,
                 std::map<std::string,vertexAttribSignature> vars)
   : vertData(std::move(drawData.indices),std::move(drawData.attribs),
-             std::move(vars)) {}
+  std::move(vars)), centerAndResize(std::move(drawData.centerAndResize)) {}
 
 gx::staticDrawerImpl::entityClass::entityClass(entityClass&& other) noexcept
-  : instances(std::move(other.instances)), vertData(std::move(other.vertData)){}
+  : instances(std::move(other.instances)), vertData(std::move(other.vertData)),
+    centerAndResize(std::move(other.centerAndResize)) {}
 
 gx::staticDrawerImpl::entityClass& gx::staticDrawerImpl::entityClass::operator=(entityClass&&) {
   *((int*) nullptr) = 1; //this is to fail hard if this is actually called
@@ -43,10 +44,12 @@ void gx::staticDrawerImpl::entityClass::clear() {
 gx::staticDrawerImpl::staticDrawerImpl(const shaderProgram& program)
   : modelToWorldLoc(program,"modelToWorld",1) {}
 
-void gx::staticDrawerImpl::setUniforms(const entityClass&,
+void gx::staticDrawerImpl::setUniforms(const entityClass& entC,
                                        const entityClass::instance& inst) const{
-  this->setUniforms(inst);
+  //see if there is a way to not write centerAndResize every frame
+  this->modelToWorldLoc.write((inst * entC.centerAndResize).oglmatrix().data());
 }
+
 void gx::staticDrawerImpl::setUniforms(const entityClass::instance& inst) const{
   this->modelToWorldLoc.write(inst.oglmatrix().data());
 }

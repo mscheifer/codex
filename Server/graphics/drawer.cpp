@@ -13,7 +13,6 @@ std::vector<typename T::entityClass> setupEntities(
   }
   return entityClasses;
 }
-
 } //end unnamed namespace
 
 template<typename T>

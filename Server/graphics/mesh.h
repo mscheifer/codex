@@ -26,7 +26,7 @@ class Mesh {
     typedef std::map<std::string,unsigned int> idMap_t;
 
     struct MeshEntry {
-        MeshEntry(idMap_t&,const aiMesh*,const matrix);
+        MeshEntry(idMap_t&,const aiMesh*);
         MeshEntry(const MeshEntry&);// = delete; //don't copy
         MeshEntry& operator=(const MeshEntry&);// = delete; //don't assign
         MeshEntry(MeshEntry&&) noexcept;
@@ -59,7 +59,7 @@ class Mesh {
     bool                   m_Good();
   private:
     static const aiScene*        LoadFile(Assimp::Importer&,const std::string&);
-    static std::vector<MeshEntry> InitFromScene(idMap_t&, const aiScene*, const matrix);
+    static std::vector<MeshEntry> InitFromScene(idMap_t&, const aiScene*);
     static std::vector<Texture>   InitMaterials(const aiScene*,
                                                 const std::string& Filename);
 	  // fill in our m_boundary object with the boundary info
