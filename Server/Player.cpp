@@ -220,7 +220,8 @@ void Player::update(){
   }
 
   //
-  if(chargedProjectile ) {
+  if( chargedProjectile ) {
+    chargedProjectile->setDirection(direction);
     chargedProjectile->setPosition(getProjectilePosition());
   }
 
@@ -283,16 +284,14 @@ void Player::handleSelfAction(ClientGameTimeAction a) {
   }
 
 	//start of attacking logic
-	if(a.attackRange || a.attackMelee) {
+	if( (a.attackRange && chargedProjectile == nullptr) || a.attackMelee) {
 		attack(a);
-	} else { //TODO @alvin, this porbably causes the trail
-    if(chargedProjectile) {
-      v3_t v = direction;
-      v.normalize();
-      v.scale(ProjInfo[chargedProjectile->getMagicType()].speed); //TODO no magic numbers @alvin, this should be determined by magic type
-      chargedProjectile->fire(v);
-      chargedProjectile = nullptr;
-    }
+	} else if ( chargedProjectile && !a.attackRange ) {
+    v3_t v = direction;
+    v.normalize();
+    v.scale(ProjInfo[chargedProjectile->getMagicType()].speed); //TODO no magic numbers @alvin, this should be determined by magic type
+    chargedProjectile->fire(v);
+    chargedProjectile = nullptr;
   }
 
   if(a.switchWeapon) {
@@ -307,14 +306,11 @@ void Player::handleOtherAction( ClientGameTimeAction) {
 }
 
 v3_t Player::getProjectilePosition() {
- 
   v3_t temp = position;
-
   v3_t d = direction;
   d.normalize();
-  d.scale(1.5);
+  d.scale(1.5); //how far away from the player
   temp += d;
- 
   return temp;
 }
 
@@ -331,9 +327,9 @@ void Player::attack( ClientGameTimeAction a) {
 	}
 	else if(a.attackMelee){
 		if( !currentWeapon->canUseWeapon(false, this)){
-			return;
+		  return;
 		}
-		currentWeapon->attackMelee(direction, position, this);
+	  currentWeapon->attackMelee(direction, position, this);
 	}
 
 	attacking = true;
