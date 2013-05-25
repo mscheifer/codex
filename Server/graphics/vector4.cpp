@@ -3,14 +3,16 @@
 
 template<typename T>
 gx::vector4<T>::vector4(): x(elems[0]), y(elems[1]), z(elems[2]), w(elems[3]) {
-  this->elems[0] = 0; this->elems[1] = 0; this->elems[2] = 0; this->elems[3] = 1;
+  this->elems[0] = 0; this->elems[1] = 0; this->elems[2] = 0; this->elems[3]= 1;
 }
 template<typename T>
-gx::vector4<T>::vector4(const vector4<T>& other): x(elems[0]), y(elems[1]), z(elems[2]), w(elems[3]) {
+gx::vector4<T>::vector4(const vector4<T>& other)
+  : x(elems[0]), y(elems[1]), z(elems[2]), w(elems[3]) {
   this->elems = other.elems;
 }
 template<typename T>
-gx::vector4<T>::vector4(vector4<T>&& other): x(elems[0]), y(elems[1]), z(elems[2]), w(elems[3]) {
+gx::vector4<T>::vector4(vector4<T>&& other)
+  : x(elems[0]), y(elems[1]), z(elems[2]), w(elems[3]) {
   this->elems = std::move(other.elems);
 }
 template<typename T>
@@ -24,8 +26,9 @@ gx::vector4<T>& gx::vector4<T>::operator=(vector4<T>&& other) {
   return *this;
 }
 template<typename T>
-gx::vector4<T>::vector4(elem_t x0, elem_t y0, elem_t z0): x(elems[0]), y(elems[1]), z(elems[2]), w(elems[3]) {
-  this->elems[0] = x0; this->elems[1] = y0; this->elems[2] = z0; this->elems[3] = 1;
+gx::vector4<T>::vector4(elem_t x0, elem_t y0, elem_t z0)
+  : x(elems[0]), y(elems[1]), z(elems[2]), w(elems[3]) {
+  this->elems[0]= x0; this->elems[1]= y0; this->elems[2]= z0; this->elems[3]= 1;
 }
 template<typename T>
 gx::vector4<T>::vector4(const std::initializer_list<elem_t> l)
@@ -76,19 +79,19 @@ void gx::vector4<T>::dehomogenize() {
   this->w = 1;
 }
 template<typename T>
-typename gx::vector4<T>::elem_t& gx::vector4<T>::get(int i) {
+typename gx::vector4<T>::elem_t& gx::vector4<T>::get(index_type i) {
   return this->elems[i];
 }  
 template<typename T>
-const typename gx::vector4<T>::elem_t& gx::vector4<T>::get(int i) const {
+const typename gx::vector4<T>::elem_t& gx::vector4<T>::get(index_type i) const {
   return this->elems[i];
 }
 template<typename T>
-typename gx::vector4<T>::elem_t& gx::vector4<T>::operator[](int i) {
+typename gx::vector4<T>::elem_t& gx::vector4<T>::operator[](index_type i) {
   return this->get(i);
 }
 template<typename T>
-const typename gx::vector4<T>::elem_t& gx::vector4<T>::operator[](int i) const {
+const typename gx::vector4<T>::elem_t& gx::vector4<T>::operator[](index_type i) const {
   return this->get(i);
 }
 template<typename T>
@@ -142,4 +145,5 @@ std::ostream& gx::operator<< (std::ostream& out, const vector4<T>& v) {
 
 template class gx::vector4<GLfloat>;
 template gx::vector4<GLfloat> gx::dehomogenize<GLfloat>(vector4<GLfloat>);
-template std::ostream& gx::operator<<<GLfloat> (std::ostream&, const vector4<GLfloat>&);
+template std::ostream&
+gx::operator<<<GLfloat> (std::ostream&, const vector4<GLfloat>&);

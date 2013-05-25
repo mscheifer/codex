@@ -14,7 +14,7 @@ struct ProjectileData{
     length_t speed1,
     float strength1,
     int chargeTime1)
-    : magicType(magicType), range(range1), speed(speed1), 
+    : magicType(magicType1), range(range1), speed(speed1), 
     strength(strength1), chargeTime(chargeTime1){}
 };
 

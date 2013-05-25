@@ -1,7 +1,7 @@
 #ifndef BONE_H
 #define BONE_H
 #include <memory>
-#include <assimp/scene.h>			    // Output data structure
+#include <assimp/scene.h>          // Output data structure
 #include "matrix.h"
 
 namespace gx {
@@ -44,7 +44,8 @@ struct bone {
   //getBonesData().size() / 16
           unsigned int numBones() const;
   private:
-    void walkBones(std::vector<GLfloat>&,const matrix&,unsigned int,unsigned int) const;
+    void walkBones(std::vector<GLfloat>&,const matrix&,unsigned int,
+                                                       unsigned int) const;
 };
 
 } //end namespace gx

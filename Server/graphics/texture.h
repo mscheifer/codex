@@ -1,5 +1,5 @@
 #ifndef TEXTURE_H
-#define	TEXTURE_H
+#define  TEXTURE_H
 #include <GL/glew.h>
 #include <string>
 #include <SFML/Graphics.hpp>
@@ -22,5 +22,5 @@ private:
 };
 
 } //end namespace gx
-#endif	/* TEXTURE_H */
+#endif  /* TEXTURE_H */
 

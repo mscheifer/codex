@@ -1,5 +1,5 @@
 #ifndef MESH_H
-#define	MESH_H
+#define  MESH_H
 #include <GL/glew.h>
 #include <vector>
 #include <assimp/Importer.hpp>    // C++ importer interface
@@ -41,13 +41,13 @@ class Mesh {
     Assimp::Importer mImporter;
       const aiScene* mScene;
 
-	  struct BoundParam {
+    struct BoundParam {
       matrix centerAndResize;
-		  vector3f center;	// center coord of model
-		  length_t width;	  // width  (along x axis)
-		  length_t depth;	  // width  (along y axis)
-		  length_t height;	// height (along z axis)
-	  } m_boundary;
+      vector3f center;  // center coord of model
+      length_t width;    // width  (along x axis)
+      length_t depth;    // width  (along y axis)
+      length_t height;  // height (along z axis)
+    } m_boundary;
 
     idMap_t idMap;
        bone bones;
@@ -62,8 +62,8 @@ class Mesh {
     static std::vector<MeshEntry> InitFromScene(idMap_t&, const aiScene*);
     static std::vector<Texture>   InitMaterials(const aiScene*,
                                                 const std::string& Filename);
-	  // fill in our m_boundary object with the boundary info
-	  static BoundParam CalcBoundBox(const aiScene* scene,length_t);
+    // fill in our m_boundary object with the boundary info
+    static BoundParam CalcBoundBox(const aiScene* scene,length_t);
 };
 } //end namespace gx
-#endif	/* MESH_H */
+#endif  /* MESH_H */

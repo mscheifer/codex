@@ -2,8 +2,9 @@
 #include "vertexAttrib.h"
 
 gx::vao::vao(const std::vector<GLuint> indices, attribsList_t attrs,
-             std::map<std::string,vertexAttribSignature> sigs)
-       : id(), numIndices(static_cast<GLsizei>(indices.size())), ibo(), attribs(std::move(attrs)) {
+             varSigs_t sigs)
+       : id(), numIndices(static_cast<GLsizei>(indices.size())), ibo(),
+         attribs(std::move(attrs)) {
   glGenVertexArrays(1, &(this->id));
   debugout << "glGenVertexArrays(1, &(this->id));" << endl;
   glBindVertexArray(this->id);
@@ -19,7 +20,8 @@ gx::vao::vao(const std::vector<GLuint> indices, attribsList_t attrs,
   debugout << indices.size() * sizeof(GLuint);
   debugout << ", indices.data(), GL_STATIC_DRAW);" << endl;
 
-  for(auto attribp = this->attribs.begin() ; attribp != this->attribs.end() ; ++attribp) {
+  for(auto attribp = this->attribs.begin(); attribp != this->attribs.end();
+                                                           ++attribp) {
     const auto& attrib = **attribp;
     auto itPos = sigs.find(attrib.name());
     if(itPos != sigs.end()) {

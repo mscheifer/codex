@@ -9,7 +9,7 @@ std::map<std::string, std::string> AudioManager::musics;
 std::list<sf::Sound> AudioManager::sounds;
 bool AudioManager::useSound;
 int AudioManager::trackNo;
-int AudioManager::currentlyPlayingMusic;
+unsigned int AudioManager::currentlyPlayingMusic;
 
 void AudioManager::loadSound(std::string key, std::string sound){
   if(!useSound) 
@@ -167,7 +167,7 @@ void AudioManager::playMusic(std::string musicN, int index){
   }
 }
 
-void AudioManager::processPlayerSound(Player& o){
+void AudioManager::processPlayerSound(Player&){
 
 
 }

@@ -19,7 +19,7 @@ class staticDrawerImpl {
       std::vector<instance> instances;
       vao                   vertData;
       matrix                centerAndResize;
-      entityClass(entity_t,std::map<std::string,vertexAttribSignature>);
+      entityClass(entity_t,varSigs_t);
       entityClass(const entityClass&);// = delete;
       entityClass& operator=(const entityClass&);// = delete;
       entityClass(entityClass&&) noexcept;
@@ -54,7 +54,7 @@ class dynamicDrawerImpl {
       std::vector<instance> instances;
       vao                   vertData;
       bone                  rootBone;
-      entityClass(entity_t,std::map<std::string,vertexAttribSignature>);
+      entityClass(entity_t,varSigs_t);
       entityClass(const entityClass&);// = delete;
       entityClass& operator=(const entityClass&);// = delete;
       entityClass(entityClass&&) noexcept;

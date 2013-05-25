@@ -24,7 +24,7 @@ const std::string gx::dynamicDrawerImpl::fragShader =
   readFile("shaders/animated.frag");
 
 gx::staticDrawerImpl::entityClass::entityClass(staticEntity drawData,
-                std::map<std::string,vertexAttribSignature> vars)
+                                               varSigs_t vars)
   : vertData(std::move(drawData.indices),std::move(drawData.attribs),
   std::move(vars)), centerAndResize(std::move(drawData.centerAndResize)) {}
 
@@ -32,8 +32,9 @@ gx::staticDrawerImpl::entityClass::entityClass(entityClass&& other) noexcept
   : instances(std::move(other.instances)), vertData(std::move(other.vertData)),
     centerAndResize(std::move(other.centerAndResize)) {}
 
-gx::staticDrawerImpl::entityClass& gx::staticDrawerImpl::entityClass::operator=(entityClass&&) {
-  *((int*) nullptr) = 1; //this is to fail hard if this is actually called
+gx::staticDrawerImpl::entityClass&
+gx::staticDrawerImpl::entityClass::operator=(entityClass&&) {
+  exit(-1); //fail hard
   return *this;
 }
 
@@ -61,15 +62,16 @@ void gx::staticDrawerImpl::addInstance(
 }
 
 gx::dynamicDrawerImpl::entityClass::entityClass(dynamicEntity drawData,
-                  std::map<std::string,vertexAttribSignature> vars)
+                                                varSigs_t vars)
   : vertData(std::move(drawData.indices),std::move(drawData.attribs),
              std::move(vars)), rootBone(std::move(drawData.rootBone)) {}
 
 gx::dynamicDrawerImpl::entityClass::entityClass(entityClass&& other) noexcept
   : vertData(std::move(other.vertData)), rootBone(std::move(other.rootBone)) {}
 
-gx::dynamicDrawerImpl::entityClass& gx::dynamicDrawerImpl::entityClass::operator=(entityClass&&) {
-  *((int*) nullptr) = 1;
+gx::dynamicDrawerImpl::entityClass&
+gx::dynamicDrawerImpl::entityClass::operator=(entityClass&&) {
+  exit(-1); //fail hard
   return *this;
 }
 
@@ -78,13 +80,15 @@ void gx::dynamicDrawerImpl::entityClass::clear() {
 }
 
 gx::dynamicDrawerImpl::dynamicDrawerImpl(const shaderProgram& program)
-  : staticBase(program), boneTransforms(program,"boneTransformations",maxBones) {}
+  : staticBase(program), boneTransforms(program,"boneTransformations",maxBones) 
+  {}
 
 void gx::dynamicDrawerImpl::setUniforms(const entityClass& entC,
                                         const entityClass::instance& inst)const{
   this->staticBase.setUniforms(inst.position);
   const auto& bones = entC.rootBone.getBonesData(inst.animation,inst.timePos);
-  this->boneTransforms.write(bones.data(),entC.rootBone.numBones());
+  this->boneTransforms.write(bones.data(),
+                             static_cast<GLsizei>(entC.rootBone.numBones()));
 }
 
 void gx::dynamicDrawerImpl::addInstance(

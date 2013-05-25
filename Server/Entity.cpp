@@ -20,7 +20,7 @@ std::vector<std::pair<Entity*,BoundingObj::vec3_t>> Entity::detectCollision(){
       if((*it2)->getEntity() == this)
         continue;
 
-      Entity_Type f = (*it2)->getEntity()->getType();
+      Entity_Type f = (*it2)->getEntity()->getType(); //why unused?
 
       //check if I have already collided with this entity //TODO maybe no entity check 
       //[for 2 objs collide with 1 of my bboxes] shortest dist changes
@@ -120,7 +120,7 @@ v3_t Entity::correctMovement(v3_t movementDirection, bool slide){
 
   //std::cout << movementRay.getDirection() << std::endl;
   for(auto coll = colls.begin(); coll != colls.end(); ){
-    Entity * e = coll->e;
+    Entity * e = coll->e; //why unused?
 
     if(correctMovementHit(coll->e)){
       //scale by tfirst
@@ -144,9 +144,9 @@ v3_t Entity::correctMovement(v3_t movementDirection, bool slide){
         v3_t excess = movementRay.getDirection();
         excess.scale(1.0f - coll->tfirst);
         coll->parallelAxis.normalize();
-        length_t slide = excess.dot(coll->parallelAxis);
+        length_t slideLen = excess.dot(coll->parallelAxis);
         excess = coll->parallelAxis;
-        excess.scale(slide);
+        excess.scale(slideLen);
         newDir += excess;
       }
 

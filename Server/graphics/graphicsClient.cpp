@@ -9,7 +9,7 @@ const unsigned int defaultWindowWidth  = 800;
 const unsigned int defaultWindowHeight = 600;
 
 gx::dynamicEntity loadModel(const std::string& ModelPath) {
-	return std::move(gx::Mesh(ModelPath,5).entityData);
+  return std::move(gx::Mesh(ModelPath,5).entityData);
 }
 
 std::vector<gx::staticEntity> staticModels() {
@@ -29,7 +29,7 @@ std::vector<gx::staticEntity> staticModels() {
 }
 
 std::vector<gx::dynamicEntity> dynamicModels() {
-	// MODEL LOADING
+  // MODEL LOADING
   //auto modelTest   = loadModel("models/boblampclean.md5anim");
   auto modelPlayer = loadModel("models/Test_Run.dae");
 
@@ -149,8 +149,8 @@ void gx::graphicsClient::draw() {
   gx::debugout << "| GL_STENCIL_BUFFER_BIT);" << gx::endl;
   
   // draw...
-	entities.draw();
-	animatedDrawer.draw();
+  entities.draw();
+  animatedDrawer.draw();
   
   //render sfml please don't comment or uncomment anything from the following block
   glBindVertexArray(0);

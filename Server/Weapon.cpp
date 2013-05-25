@@ -3,12 +3,12 @@
 
 Weapon::Weapon(Map* m)
 {
-	Range_Cool_Down_Time = 0;
-	Melee_Cool_Down_Time = 0;
-	mpCost = 0;
-	Range_Cool_Down_Counter = sf::Clock();
-	Melee_Cool_Down_Counter = sf::Clock();
-	this->map = m;
+  Range_Cool_Down_Time = 0;
+  Melee_Cool_Down_Time = 0;
+  mpCost = 0;
+  Range_Cool_Down_Counter = sf::Clock();
+  Melee_Cool_Down_Counter = sf::Clock();
+  this->map = m;
 }
 
 Weapon::~Weapon()
@@ -17,19 +17,19 @@ Weapon::~Weapon()
 
 Weapon::Weapon(float damage, float ran, v3_t pos, float mpcost, Map* m)
 {
-	Range_Cool_Down_Time = 0;
-	Melee_Cool_Down_Time = 0;
-	Range_Cool_Down_Counter = sf::Clock();
-	Melee_Cool_Down_Counter = sf::Clock();
-	strength = damage;
-	range = ran;
-	position = pos;
+  Range_Cool_Down_Time = 0;
+  Melee_Cool_Down_Time = 0;
+  Range_Cool_Down_Counter = sf::Clock();
+  Melee_Cool_Down_Counter = sf::Clock();
+  strength = damage;
+  range = ran;
+  position = pos;
   direction = v3_t(0,0,1);
-	mpCost = mpcost;
-	projectileSpeed = 100.0; // pending removal
-	projectileRange = 300; //pending removal
-	projectileStrength = 26; //pending removal
-	this->map = m;
+  mpCost = mpcost;
+  projectileSpeed = 100.0; // pending removal
+  projectileRange = 300; //pending removal
+  projectileStrength = 26; //pending removal
+  this->map = m;
 }
 
 bool Weapon::canUseWeapon(bool range_attack, Player* Owner) {
@@ -41,27 +41,27 @@ bool Weapon::canUseWeapon(bool range_attack, Player* Owner) {
     range_counter /= Owner->getAttackSpeedDiv();
   }
 
-	if(		( getHasRangedAttack() && range_attack &&  range_counter > Range_Cool_Down_Time)
-		||	( getHasMeleeAttack() && !range_attack &&  melee_counter > Melee_Cool_Down_Time)){
-			return true;
-	}
-	return false;
+  if(    ( getHasRangedAttack() && range_attack &&  range_counter > Range_Cool_Down_Time)
+    ||  ( getHasMeleeAttack() && !range_attack &&  melee_counter > Melee_Cool_Down_Time)){
+      return true;
+  }
+  return false;
 }
 
 Projectile* Weapon::attackMelee(v3_t dir , v3_t pos, Player* owner)
 {
-	Projectile* pj = map->produceProjectile();
+  Projectile* pj = map->produceProjectile();
   dir.normalize();
   pj->setDirection(dir);
   dir.scale(projectileSpeed);
   pj->setVelocity(dir);
   pj->setPosition(pos);
   pj->setOwner(owner);
-	pj->setStrength(projectileStrength);
-	pj->setRange(1);
+  pj->setStrength(projectileStrength);
+  pj->setRange(1);
   pj->setFired(true);
   Melee_Cool_Down_Counter.restart();
-	return pj;
+  return pj;
 }
 
 bool Weapon::pickUp(){
@@ -95,7 +95,7 @@ void Weapon::serialize(sf::Packet & packet) const {
     //sf::Clock Melee_Cool_Down_Counter;
   }
   void Weapon::deserialize(sf::Packet & packet) {
-	  Entity::deserialize(packet);
+    Entity::deserialize(packet);
     //int Range_Cool_Down_Time; 
     //int Melee_Cool_Down_Time; 
     //float projectileStrength;
@@ -109,11 +109,11 @@ void Weapon::serialize(sf::Packet & packet) const {
 
 //
 //void Weapon::useWeapon( bool range_attack){
-//	if(range_attack) {
-//		Range_Cool_Down_Counter.restart();
-//	} else {
-//		Melee_Cool_Down_Counter.restart();
-//	}
+//  if(range_attack) {
+//    Range_Cool_Down_Counter.restart();
+//  } else {
+//    Melee_Cool_Down_Counter.restart();
+//  }
 //}
 //void Weapon::handleAction(ClientGameTimeAction){
 //

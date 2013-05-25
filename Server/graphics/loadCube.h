@@ -89,11 +89,11 @@ std::vector<gx::staticEntity> loadCube() {
 gx::staticEntity loadSkybox() {
   //sky box
   std::array<GLfloat,8*4> skyboxVtArr = {{ 1000.0f, 1000.0f, 500.0f, 1.0f,
-	                                        -1000.0f, 1000.0f, 500.0f, 1.0f,
+                                          -1000.0f, 1000.0f, 500.0f, 1.0f,
                                           -1000.0f,-1000.0f, 500.0f, 1.0f,
                                            1000.0f,-1000.0f, 500.0f, 1.0f,
                                            1000.0f, 1000.0f,   0.0f, 1.0f,
-	                                        -1000.0f, 1000.0f,   0.0f, 1.0f,
+                                          -1000.0f, 1000.0f,   0.0f, 1.0f,
                                           -1000.0f,-1000.0f,   0.0f, 1.0f,
                                            1000.0f,-1000.0f,   0.0f, 1.0f }};
   std::array<GLfloat,8*3> skyboxNormA = {{-1.0f,-1.0f,-1.0f,

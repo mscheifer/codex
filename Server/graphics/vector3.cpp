@@ -114,19 +114,19 @@ std::array<typename gx::vector3<T>::elem_t,3> gx::vector3<T>::oglVec3() const {
   return elems;
 }
 template<typename T>
-typename gx::vector3<T>::elem_t& gx::vector3<T>::get(int i) {
+typename gx::vector3<T>::elem_t& gx::vector3<T>::get(index_type i) {
   return elems[i];
 }
 template<typename T>
-const typename gx::vector3<T>::elem_t& gx::vector3<T>::get(int i) const {
+const typename gx::vector3<T>::elem_t& gx::vector3<T>::get(index_type i) const {
   return elems[i];
 }
 template<typename T>
-typename gx::vector3<T>::elem_t& gx::vector3<T>::operator[](int i) {
+typename gx::vector3<T>::elem_t& gx::vector3<T>::operator[](index_type i) {
   return get(i);
 }
 template<typename T>
-const typename gx::vector3<T>::elem_t& gx::vector3<T>::operator[](int i) const {
+const typename gx::vector3<T>::elem_t& gx::vector3<T>::operator[](index_type i) const {
   return get(i);
 }
 template<typename T>
@@ -189,7 +189,8 @@ bool gx::vector3<T>::operator!=(const vector3<T>& o) const {
 }
 
 template<typename T>
-gx::vector3<T> gx::operator*(typename gx::vector3<T>::elem_t f, const gx::vector3<T>& v) {
+gx::vector3<T> gx::operator*(typename gx::vector3<T>::elem_t f,
+                                       const gx::vector3<T>& v) {
   return v * f;
 }
 
@@ -214,9 +215,13 @@ void gx::vector3<T>::deserialize(sf::Packet & packet) {
 }
 
 template class gx::vector3<GLfloat>;
-template gx::vector3<GLfloat> gx::operator*<GLfloat>(vector3<GLfloat>::elem_t, const vector3<GLfloat>&);
-template std::ostream& gx::operator<<<GLfloat> (std::ostream&, const vector3<GLfloat>&);
+template gx::vector3<GLfloat>
+gx::operator*<GLfloat>(vector3<GLfloat>::elem_t, const vector3<GLfloat>&);
+template std::ostream&
+gx::operator<<<GLfloat> (std::ostream&, const vector3<GLfloat>&);
 
 //template class gx::vector3<double>;
-//template gx::vector3<double> gx::operator*<double>(vector3<double>::elem_t, const vector3<double>&);
-//template std::ostream& gx::operator<<<double> (std::ostream& out, const vector3<double>& v);
+//template gx::vector3<double>
+//gx::operator*<double>(vector3<double>::elem_t, const vector3<double>&);
+//template std::ostream&
+//gx::operator<<<double> (std::ostream& out, const vector3<double>& v);

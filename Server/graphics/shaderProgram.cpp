@@ -138,12 +138,12 @@ gx::shaderProgram::shaderProgram(   const std::string vsSource,
 }
 
 gx::shaderProgram::shaderProgram(gx::shaderProgram&& other): prog(other.prog) {
-	other.prog = 0; //glDeleteProgram wont do anything
+  other.prog = 0; //glDeleteProgram wont do anything
 }
 
 gx::shaderProgram& gx::shaderProgram::operator=(gx::shaderProgram&& other) {
-	this->prog = other.prog;
-	other.prog = 0; //glDeleteProgram wont do anything
+  this->prog = other.prog;
+  other.prog = 0; //glDeleteProgram wont do anything
   return *this;
 }
 

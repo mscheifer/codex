@@ -13,6 +13,8 @@ private:
   //this is row major
   std::array<std::array<elem_t,4>,4> elems;
 public:
+  typedef typename std::array<std::array<elem_t,4>,4>::size_type row_index_type;
+  typedef typename            std::array<elem_t,4>::size_type column_index_type;
   matrix();
   matrix(std::array<std::array<elem_t,4>,4> a);
   matrix(elem_t a, elem_t b, elem_t c, elem_t d, elem_t e, elem_t f, elem_t g,
@@ -20,8 +22,8 @@ public:
     elem_t o, elem_t p);
   void print(std::ostream& o) const;
   void print() const;
-  std::array<elem_t,4>& operator[](int i);
-  const std::array<elem_t,4>& operator[](int i) const;
+  std::array<elem_t,4>& operator[](row_index_type i);
+  const std::array<elem_t,4>& operator[](row_index_type i) const;
   void identify();
   void oglmatrix(elem_t a[16]) const;
   void oglmatrix(elem_t a[4][4]) const;

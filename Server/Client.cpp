@@ -144,7 +144,7 @@ void NetworkClient::doClient() {
   bool joined = false;
   while(true) {
     cycle++;
-	  sf::Packet initPacket;
+    sf::Packet initPacket;
     this->gxClient.drawLobby();
     if (joined && this->gxClient.gameStart()) {
       initPacket << static_cast<sf::Uint32>(INIT); 
@@ -167,7 +167,7 @@ void NetworkClient::doClient() {
          //TODO: init the position
         break;
       }
-	  }
+    }
   }
   this->gxClient.disableCursor();
   std::cout << "game started" << std::endl;
