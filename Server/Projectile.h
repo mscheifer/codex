@@ -25,7 +25,7 @@ struct ProjectileData{
 
 const ProjectileData ProjInfo[] = { //TODO fix all these numbers
   //             type,  rng, spd str mp buff chrgTime
-  ProjectileData(FIR1,  300, 30, 10, 2, FIR1DEBUFF, -1),
+  ProjectileData(FIR1,  300, 30, 10, 2, FIR1DEBUFF, 1500),
   ProjectileData(FIR2,  300, 30, 12, 0, NONE, 5000),
   ProjectileData(FIR3,  300, 30, 20, 0, NONE, -1),
   ProjectileData(ICE1,  300, 30, 10, 0, NONE, 1500),

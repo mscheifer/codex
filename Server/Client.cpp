@@ -24,7 +24,6 @@ void NetworkClient::receiveMessages() {
         this->s.deserialize(packet);
         if (s.state != Game_State::PLAYING && ConfigManager::gameRestart()) 
           gameRestart = true;
-        std::cout<<s.state<<std::endl;
         for(auto playerP = s.players.begin(); playerP != s.players.end(); playerP++) {
           if(playerP->player_id != this->id) {
             //make sure the SGTR stays in scope
