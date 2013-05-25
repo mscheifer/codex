@@ -4,6 +4,7 @@
 #include "Projectile.h"
 #include "WeaponFist.h"
 #include "WeaponFire.h"
+#include "Wall.h"
 
 const float Player::playerWidth = 1.0f;
 const float Player::playerHeight = 1.0f;
@@ -28,7 +29,14 @@ Player::Player(){}// this->init(0,0,0,0,NULL);}
 Player::~Player(void){}
 Player::Player(v3_t pos, int assigned_id, Map * m)
 {
+ generateBounds(position);
  this->init(pos, assigned_id, m); 
+}
+
+void Player::reset(v3_t pos)
+{
+  map->removeFromQtree(this);
+  this->init(pos, player_id, map);
 }
 
 void Player::init(v3_t pos, int assigned_id, Map * m)
@@ -61,7 +69,6 @@ void Player::init(v3_t pos, int assigned_id, Map * m)
 	weapon[1] = new WeaponFire(position, this->map, FIR1); //TODO add this to entities, or it won't be able render
 	current_weapon_selection = 1;
   chargedProjectile = nullptr;
-  generateBounds(position);
   m->addToQtree(this);
 }
 
@@ -191,6 +198,7 @@ void Player::die()
 {
   map->removeFromQtree(this);
   render = false;
+  dead = true;
 }
 
 void Player::respawn(v3_t pos)
@@ -245,11 +253,12 @@ void Player::update(){
       healthMultiplier *= (BuffInfo[buff->first].healthMultiplier);
     }
   }
-  //I disabled health regen and mana regen  (BOWEN)
   health+=healthRegen*healthMultiplier;
   health = (health > maxHealth? maxHealth : health);
   mana+=manaRegen*manaMultiplier;
   mana = (mana > maxMana? maxMana : mana);
+  if(health <= 0)
+    die();
   updateBounds();
 }
 
@@ -375,11 +384,11 @@ void Player::handleCollisions(){
     //has already been processed //TODO @mc collision look at fix it vector, should never reprocess
     switch( e->getType() ) {
       case WALL:
-        //std::cout << "wall" << std::endl;
+       // std::cout << "wall" << << std::endl;
         restart = collideWall(*it);
         break;
       case PLAYER:
-        ////std::cout << "player" << std::endl;
+        //std::cout << "player" << std::endl;
         restart = collidePlayer(*it);
         break;
       case PROJECTILE:

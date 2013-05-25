@@ -27,8 +27,8 @@ public:
   int player_id;
   std::string name;
   Projectile* chargedProjectile;
-
   Player();
+  void reset(v3_t pos);
   Player(v3_t pos, int assigned_id, Map *);
   ~Player(void);
   std::string getString();
