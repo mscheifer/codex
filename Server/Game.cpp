@@ -69,6 +69,7 @@ void Game::updateAndResolveCollision() {
 
 ServerGameTimeRespond Game::prepResponse() {
 	ServerGameTimeRespond s;
+  s.state = Game_State::PLAYING;
 	s.weapons.clear();
 	s.projectiles.clear();
 	s.walls.clear();
@@ -158,4 +159,9 @@ void Game::clearEvents(){
 	for( unsigned int i = 0; i < currentEntities.size(); i++ ) {
 		currentEntities[i]->clearEvents();
 	}
+}
+
+void Game::restartGame()
+{
+  world.mapReset();
 }

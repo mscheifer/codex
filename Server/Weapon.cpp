@@ -26,7 +26,7 @@ Weapon::Weapon(float damage, float ran, v3_t pos, float mpcost, Map* m)
   position = pos;
   direction = v3_t(0,0,1);
   mpCost = mpcost;
-  projectileSpeed = 100.0; // pending removal
+  projectileSpeed = 100.0; // TODO pending removal
   projectileRange = 300; //pending removal
   projectileStrength = 26; //pending removal
   this->map = m;
@@ -36,13 +36,10 @@ bool Weapon::canUseWeapon(bool range_attack, Player* Owner) {
   int range_counter = Range_Cool_Down_Counter.getElapsedTime().asMilliseconds();
   int melee_counter = Melee_Cool_Down_Counter.getElapsedTime().asMilliseconds();
   
-  if(Owner->isSpeedUpActive()) {
-    melee_counter /= Owner->getAttackSpeedDiv();
-    range_counter /= Owner->getAttackSpeedDiv();
-  }
+  float cdMult = Owner->getAttackCD();
 
-  if(    ( getHasRangedAttack() && range_attack &&  range_counter > Range_Cool_Down_Time)
-    ||  ( getHasMeleeAttack() && !range_attack &&  melee_counter > Melee_Cool_Down_Time)){
+  if(   ( getHasRangedAttack() && range_attack &&  range_counter > Range_Cool_Down_Time*cdMult)
+    ||  ( getHasMeleeAttack() && !range_attack &&  melee_counter > Melee_Cool_Down_Time*cdMult)){
       return true;
   }
   return false;
@@ -59,7 +56,7 @@ Projectile* Weapon::attackMelee(v3_t dir , v3_t pos, Player* owner)
   pj->setOwner(owner);
   pj->setStrength(projectileStrength);
   pj->setRange(1);
-  pj->setFired(true);
+  //pj->setFired(true); //TODO add a sound event for melee
   Melee_Cool_Down_Counter.restart();
   return pj;
 }

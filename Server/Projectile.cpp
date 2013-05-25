@@ -28,22 +28,23 @@ bool Projectile::correctMovementHit( Entity* e ){
 
 void Projectile::update(void) {
   if(charging) {
-    if(charge_counter.getElapsedTime().asMilliseconds() > Charge_Time ) {
+    float cdr = owner->getChargeCD();
+    if(charge_counter.getElapsedTime().asMilliseconds() > ProjInfo[magicType].chargeTime*cdr ) {
       charge_counter.restart();
-      magicType = upgrade(magicType);
+      setMagicType(upgrade(magicType));
       std::cout << "increase level heeeeer !" << std::endl;
     }
-    return;
-  }
-  v3_t distanceTravelled = velocity * ConfigManager::serverTickLengthSec();
-  distanceTravelled = correctMovement(distanceTravelled, false);
-	position += distanceTravelled;
+  } else {
+    v3_t distanceTravelled = velocity * ConfigManager::serverTickLengthSec();
+    distanceTravelled = correctMovement(distanceTravelled, false);
+	  position += distanceTravelled;
   
-  //see if travelled full range
-  distanceLeftToTravel -= distanceTravelled.magnitude();
-  if(distanceLeftToTravel <= 0.0){
-    map->destroyProjectile(this);
-    return;
+    //see if travelled full range
+    distanceLeftToTravel -= distanceTravelled.magnitude();
+    if(distanceLeftToTravel <= 0.0){
+      map->destroyProjectile(this);
+      return;
+    }
   }
   
 	updateBounds();
@@ -59,7 +60,7 @@ void Projectile::setStrength(float f) {
 }
 
 float Projectile::getStrength() {
-  return strength*magic_mutiplier[magicType]; //TODO fix this @alvin
+  return strength;
 }
 
 void Projectile::setRange(length_t r) {
@@ -78,14 +79,30 @@ void Projectile::updateBoundsSoft(){
 }
 
 void Projectile::handleCollisions() {
-  
   std::vector<std::pair<Entity*,BoundingObj::vec3_t>> entities =  detectCollision();
 
-  //TODO fix this @alvin you can collide with power ups
   for( auto it = entities.begin(); it != entities.end(); it++ ){
     Entity * e = it->first; 
-    if(e != owner &&  e->getType() != PROJECTILE) {
-       map->destroyProjectile(this);
+    switch(e->getType()){
+    case PLAYER:
+      if(e == owner)
+        break;
+    case WALL:
+      map->destroyProjectile(this);
+      break;
+    case PROJECTILE:
+      Projectile * proj = (Projectile*) e;
+      if(charging){      //TODO add combine sound
+        setMagicType(combine(proj->getMagicType(), magicType));
+        map->destroyProjectile(proj);
+      } else if ( proj->charging ){
+        proj->setMagicType(combine(proj->getMagicType(), magicType));
+        map->destroyProjectile(this);
+      } else {
+        map->destroyProjectile(proj);
+        map->destroyProjectile(this);
+      }
+      break;
     }
   }
 }
@@ -94,8 +111,13 @@ void Projectile::clearEvents(){
   fired = false;
 }
 
-void Projectile::fire(v3_t v) {
-  velocity = v;
+void Projectile::fire(v3_t v, float strengthMultiplier) {
+  velocity = v * ProjInfo[magicType].speed;
+  setRange(ProjInfo[magicType].range); //this also sets travel distance left
+  strength = ProjInfo[magicType].strength * strengthMultiplier;
+
+  std::cout << toString();
+
   fired = true;
   charging = false;
 }
@@ -116,7 +138,7 @@ MAGIC_POWER Projectile::upgrade( const MAGIC_POWER m ){
 }
 
 MAGIC_POWER Projectile::combine( const MAGIC_POWER m1, const MAGIC_POWER m2 ){
-  //TODO this
+  //TODO this @mc
   return m1;
 }
 
@@ -133,3 +155,11 @@ void Projectile::deserialize( sf::Packet & packet ) {
   //Player* owner = new Player();
   //(*owner).deserialize(packet);
  }
+
+std::string Projectile::toString(){
+  std::stringstream ss;
+  ss << "mtype " << magicType << std::endl
+  << "range " << range << std::endl
+  << "strength " << strength << std::endl;
+  return ss.str();
+}

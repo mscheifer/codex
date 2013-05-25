@@ -19,7 +19,9 @@ struct ProjectileData{
 };
 
 const ProjectileData ProjInfo[] = {
-  ProjectileData(FIRE1, 300, 100, 26, 1500)
+  ProjectileData(FIRE1, 300, 30, 26, 1500),
+  ProjectileData(FIRE2, 300, 30, 26, 1500),
+  ProjectileData(FIRE3, 300, 30, 26, 1500)
 };
 
 class Projectile :
@@ -41,7 +43,8 @@ public:
   void updateBoundsSoft();
   void handleCollisions();
   void clearEvents();
-  void fire( v3_t velocity);
+  void fire(v3_t velocity, float strengthMultiplier);
+  std::string toString();
  
 private:
   Player * owner;
@@ -60,7 +63,7 @@ public:
   void setRange(length_t r);
   void setOwner(Player *);
   MAGIC_POWER getMagicType(){ return magicType; }
-  void setMagicType( MAGIC_POWER m ) { magicType = m; }
+  void setMagicType( MAGIC_POWER m ) { magicType = m; charge_counter.restart(); }
   Player* getOwner(){return owner;}
   void setChargeTime(int t) { Charge_Time = t ;};
   Entity_Type getType() const { return type; }
