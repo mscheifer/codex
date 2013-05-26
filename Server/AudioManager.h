@@ -12,7 +12,7 @@ class AudioManager{
 private:
   static std::map<std::string, sf::SoundBuffer*> soundBuffers;
   static std::map<std::string, std::string> musics;
-  static std::list<sf::Sound> sounds;
+  static std::map<int, sf::Sound> sounds;
   static std::array<sf::Music,2> music;
   static std::array<int,2> musicProx;
   static bool useSound;
@@ -23,7 +23,7 @@ private:
   //load a sound into the soundBuffers with reference name key
   //and filename sound
   static void loadSound(std::string key, std::string sound);
-  static void playSoundHelper(std::list<sf::Sound>::iterator index, v3_t pos, sf::SoundBuffer* sbuff);
+  static void playSoundHelper(sf::Sound* s, v3_t pos, sf::SoundBuffer* sbuff);
   
   //this is for music
   static int notCurrentlyPlaying(); //return the index of the not currently playing music
@@ -40,7 +40,7 @@ public:
   //play the given sound at given position
   //replace = try to replace the same sound
   //force = if no free sounds, kick one out
-  static void playSound(std::string key, v3_t pos);
+  static void playSound(std::string key, int id,  v3_t pos);
 
   //play this music
   //numPlayers is the players in close proximity

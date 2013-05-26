@@ -1,6 +1,6 @@
 // System configuration
 log=0
-sound=0
+sound=1
 graphicsDebug=false
 serverTicksPerSec=30
 gameRestart=false

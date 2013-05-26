@@ -25,7 +25,7 @@ void Map::mapReset()
   spawnPositions.clear();
   entities.clear();
   liveProjectTile.clear();
-  initWallsOne();
+  initWalls();
   initPowerUps();
   for(unsigned int i = 0; i < players.size(); i++)
   {
