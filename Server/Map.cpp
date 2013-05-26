@@ -19,16 +19,32 @@ Map::Map(void): freeProjectiles(),q(0,Rectangle(BoundingObj::vec4_t(0,0,0),1000,
   initPowerUps();
 }
 
+void Map::mapReset()
+{
+  this->q.clear();
+  spawnPositions.clear();
+  entities.clear();
+  liveProjectTile.clear();
+  initWalls();
+  initPowerUps();
+  for(unsigned int i = 0; i < players.size(); i++)
+  {
+    players[i]->reset(this->getRespawnPosition(players[i]->player_id));
+  }
+}
+
 void Map::initPowerUps() {
   PowerUp* superPower = new PowerUp(v3_t(2,9,0), this, MOVEBOOST);
   superPower->setRespownTime(5000);
   this->entities.push_back(superPower);
 
-  PowerUp* p2 = new PowerUp(v3_t(10,-9,0), this, MANABOOST);//TOOD set respawn timer
-  this->entities.push_back(p2);
+  //PowerUp* p2 = new PowerUp(v3_t(10,-9,0), this, STRBOOST);//TOOD set respawn timer
+  //p2->setRespownTime(5000);
+  //this->entities.push_back(p2);
 
-  PowerUp* p3 = new PowerUp(v3_t(-10,-9,0), this, HEALTHBOOST);
-  this->entities.push_back(p3);
+  //PowerUp* p3 = new PowerUp(v3_t(-10,-9,0), this, ATTACKCD);
+  //p3->setRespownTime(5000);
+  //this->entities.push_back(p3);
 }
 
 void Map::initWallsOne(void)
@@ -188,19 +204,23 @@ void Map::initWallsOne(void)
 void Map::initWalls(void)
 {
   //TODO move this
-  WeaponFire* w1 = new WeaponFire(v3_t(100,100,0), this);
+  WeaponFire* w1 = new WeaponFire(v3_t(100,100,0), this, FIR1);
   w1->dropDown(v3_t(10,10,0));
   w1->setDirection(v3_t(0,1,0));
   entities.push_back(w1);
-  WeaponFire* w2 = new WeaponFire(v3_t(120,120,0), this);
+  WeaponFire* w2 = new WeaponFire(v3_t(120,120,0), this, THU1);
   w2->dropDown(v3_t(10,-10,0));
   w2->setDirection(v3_t(0,1,0));
   entities.push_back(w2);
+  WeaponFire* w3 = new WeaponFire(v3_t(120,120,0), this, ICE1);
+  w3->dropDown(v3_t(-10,-10,0));
+  w3->setDirection(v3_t(0,1,0));
+  entities.push_back(w3);
 
-  spawnPositions.push_back(v3_t(1,1,1));
-  spawnPositions.push_back(v3_t(1,2,1));
-  spawnPositions.push_back(v3_t(2,1,1));
-  spawnPositions.push_back(v3_t(2,2,1));
+  spawnPositions.push_back(v3_t(4,-4,1));
+  spawnPositions.push_back(v3_t(4,4,1));
+  spawnPositions.push_back(v3_t(-4,-4,1));
+  spawnPositions.push_back(v3_t(-4,4,1));
 
   v3_t facingEast(1,0,0);
   v3_t facingNorth(0,1,0);
@@ -380,7 +400,8 @@ std::vector<Entity *> Map::getEntity() {
    }
    Projectile* ret = freeProjectiles->top();
    freeProjectiles->pop();
-   liveProjectTile.push_back(ret); //TODO shouldn't this be live projecties?
+   liveProjectTile.push_back(ret);
+   ret->reset();
    addToQtree(ret);
    return ret;
  }
@@ -388,6 +409,12 @@ std::vector<Entity *> Map::getEntity() {
  //TODO should we just process all live projectiles, thenw e can remove
  void Map::destroyProjectile(Projectile * proj)
  {
+   if(proj->getOwner() == nullptr) //has already been removed
+     return;
+
+   if(proj->getOwner()->chargedProjectile == proj )
+     proj->getOwner()->chargedProjectile = nullptr;
+
    proj->setOwner(NULL);
    freeProjectiles->push(proj);
    // should probably use a hasmap soon

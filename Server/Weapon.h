@@ -9,13 +9,13 @@ class Weapon : public DeadlyEntity
 {
 public:
   static const Entity_Type type = WEAPON;
-  static const WeaponType wtype = UNK;
+  static const WeaponType wtype = UNK; //this is to get the weapon name
   static const bool hasRangedAttack = false;
   static const bool hasMeleeAttack = false;
   Weapon() {/*TODO initialzie*/}
 	Weapon(Map*);
 	~Weapon(void);
-	Weapon(float damage, float range, v3_t pos, float mpcost, Map*);
+	Weapon(float damage, float range, v3_t pos, Map*);
 
 	bool canUseWeapon(bool range_attack, Player* owner);
 	bool canPickUp() { return pickedUp; }
@@ -28,7 +28,7 @@ public:
   
   int getRange(void);
 	int getDamage(void);
-	float getMpCost(){ return mpCost; }
+  virtual float getMpCost(){return 0;}
   virtual WeaponType getWeaponType() const{ return wtype; }
   virtual bool getHasRangedAttack() const { return hasRangedAttack; }
   virtual bool getHasMeleeAttack() const { return hasMeleeAttack; }

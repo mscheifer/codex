@@ -47,8 +47,9 @@ void PowerUp::handleCollisions() {
 
 void PowerUp::update() {
 	if ((Respown_Counter.getElapsedTime().asMilliseconds() >= Respown_Time) && active == false) {
-		//active = true;
-    //render = true;
+		active = true;
+    map->addToQtree(this);
+    render = true;
 	}
   //std::cout << " it's active? " << active << std::endl;
   if(active)
@@ -61,6 +62,7 @@ void PowerUp::pickUp(){
   
   active = false;
   render = false;
+  Respown_Counter.restart();
   map->removeFromQtree(this);
 }
 

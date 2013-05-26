@@ -3,6 +3,7 @@ log=0
 sound=0
 graphicsDebug=false
 serverTicksPerSec=30
+gameRestart=false
 
 // Physics
 gravity=-20
@@ -16,7 +17,7 @@ jumpSpeed=10
 playerHpRegen=.1
 playerMpRegen=.08
 playerDef=5
-playerHp=5
+playerHp=10
 playerMaxHp=100
 playerMp=5
 playerMaxMp=100

@@ -1,19 +1,23 @@
 #include "Projectile.h"
 
-Projectile::Projectile(Map* m)
+Projectile::Projectile(Map* m):fired(false)
 {
 	this->map = m;
-  fired = false;
-  charging = true;
   charge_counter = sf::Clock();
   BoundingBox* b = new BoundingBox(BoundingObj::vec4_t(0,0,0),BoundingObj::vec3_t(1,0,0),BoundingObj::vec3_t(0,1,0),BoundingObj::vec3_t(0,0,1),
   1,1,1);
   b->setEntity(this);
   boundingObjs.push_back(b);
+  reset();
 }
 
 Projectile::~Projectile(void)
 {
+}
+
+void Projectile::reset(){
+  charge_counter.restart();
+  charging = true;
 }
 
 bool Projectile::correctMovementHit( Entity* e ){
@@ -28,22 +32,25 @@ bool Projectile::correctMovementHit( Entity* e ){
 
 void Projectile::update(void) {
   if(charging) {
-    if(charge_counter.getElapsedTime().asMilliseconds() > Charge_Time ) {
+    float cdr = owner->getChargeCD();
+    int chargeTime = ProjInfo[magicType].chargeTime;
+    //-1 means no upgrades
+    if(chargeTime != -1 && charge_counter.getElapsedTime().asMilliseconds() > chargeTime*cdr ) {
       charge_counter.restart();
-      magicType = upgrade(magicType);
-      std::cout << "increase level heeeeer !" << std::endl;
+      setMagicType(upgrade(magicType));
+      std::cout << "increase level to " << magicType <<  std::endl;
     }
-    return;
-  }
-  v3_t distanceTravelled = velocity * ConfigManager::serverTickLengthSec();
-  distanceTravelled = correctMovement(distanceTravelled, false);
-	position += distanceTravelled;
+  } else {
+    v3_t distanceTravelled = velocity * ConfigManager::serverTickLengthSec();
+    distanceTravelled = correctMovement(distanceTravelled, false);
+	  position += distanceTravelled;
   
-  //see if travelled full range
-  distanceLeftToTravel -= distanceTravelled.magnitude();
-  if(distanceLeftToTravel <= 0.0){
-    map->destroyProjectile(this);
-    return;
+    //see if travelled full range
+    distanceLeftToTravel -= distanceTravelled.magnitude();
+    if(distanceLeftToTravel <= 0.0){
+      map->destroyProjectile(this);
+      return;
+    }
   }
   
 	updateBounds();
@@ -59,7 +66,7 @@ void Projectile::setStrength(float f) {
 }
 
 float Projectile::getStrength() {
-  return strength*magic_mutiplier[magicType]; //TODO fix this @alvin
+  return strength;
 }
 
 void Projectile::setRange(length_t r) {
@@ -78,14 +85,30 @@ void Projectile::updateBoundsSoft(){
 }
 
 void Projectile::handleCollisions() {
-  
   std::vector<std::pair<Entity*,BoundingObj::vec3_t>> entities =  detectCollision();
 
-  //TODO fix this @alvin you can collide with power ups
   for( auto it = entities.begin(); it != entities.end(); it++ ){
     Entity * e = it->first; 
-    if(e != owner &&  e->getType() != PROJECTILE) {
-       map->destroyProjectile(this);
+    switch(e->getType()){
+    case PLAYER:
+      if(e == owner)
+        break;
+    case WALL:
+      map->destroyProjectile(this);
+      break;
+    case PROJECTILE:
+      Projectile * proj = (Projectile*) e;
+      if(charging){      //TODO add combine sound
+        setMagicType(combine(proj->getMagicType(), magicType));
+        map->destroyProjectile(proj);
+      } else if ( proj->charging ){
+        proj->setMagicType(combine(proj->getMagicType(), magicType));
+        map->destroyProjectile(this);
+      } else {
+        map->destroyProjectile(proj);
+        map->destroyProjectile(this);
+      }
+      break;
     }
   }
 }
@@ -94,30 +117,44 @@ void Projectile::clearEvents(){
   fired = false;
 }
 
-void Projectile::fire(v3_t v) {
-  velocity = v;
+void Projectile::fire(v3_t v, float strengthMultiplier) {
+  velocity = v * ProjInfo[magicType].speed;
+  setRange(ProjInfo[magicType].range); //this also sets travel distance left
+  strength = ProjInfo[magicType].strength * strengthMultiplier;
+
+  std::cout << toString();
+
   fired = true;
   charging = false;
 }
 
 MAGIC_POWER Projectile::upgrade( const MAGIC_POWER m ){
   switch( m ){
-  case FIRE1:
-    return FIRE2;
-  case FIRE2:
-    return FIRE3;
+  case FIR1:
+    return FIR2;
+  case FIR2:
+    return FIR3;
   case ICE1:
     return ICE2;
   case ICE2:
     return ICE3;
+  case THU1:
+    return THU2;
+  case THU2:
+    return THU3;
   default:
     return m;
   }
 }
 
-MAGIC_POWER Projectile::combine( const MAGIC_POWER m1, const MAGIC_POWER m2 ){
-  //TODO this
-  return m1;
+MAGIC_POWER Projectile::combine( MAGIC_POWER m1, MAGIC_POWER m2 ){
+  if(m1 < m2){
+    MAGIC_POWER temp = m2;
+    m2 = m1;
+    m1 = temp;
+  }
+  //switch so the row is m1
+  return combinations[m1][m2];
 }
 
 void Projectile::serialize(sf::Packet & packet) const {
@@ -133,3 +170,32 @@ void Projectile::deserialize( sf::Packet & packet ) {
   //Player* owner = new Player();
   //(*owner).deserialize(packet);
  }
+
+std::string Projectile::toString(){
+  std::stringstream ss;
+  ss << "mtype " << magicType << std::endl
+  << "range " << range << std::endl
+  << "strength " << strength << std::endl;
+  return ss.str();
+}
+
+const MAGIC_POWER Projectile::combinations[18][18] = {
+  {FIR2},
+  {FIR2,FIR3},
+  {FIR3,FIR3,FIR3},
+  {G_FI,G_FI,G_FI,ICE2},
+  {G_FI,G_FI2,G_FI2,ICE2,ICE3},
+  {G_FI,G_FI2,G_FI2,ICE3,ICE3,ICE3},
+  {G_FT,G_FT,G_FT,G_IT,G_IT,G_IT,THU2},
+  {G_FT,G_FT2,G_FT2,G_IT,G_IT2,G_IT2,THU2,THU3},
+  {G_FT,G_FT2,G_FT2,G_IT,G_IT2,G_IT2,THU3,THU3,THU3},
+  {G2,G2,G2,G_IT,G_IT,G_IT,G_IT,G_IT,G_IT,G_IT},
+  {G_FT,G_FT,G_FT,G2,G2,G2,G_FT,G_FT,G_FT,G2,G_FT},
+  {G_FI,G_FI,G_FI,G_FI,G_FI,G_FI,G2,G2,G2,G2,G2,G_FI},
+  {G2,G2,G2,G2,G2,G2,G2,G2,G2,G2,G2,G2,G2},
+  {G_IT2,G3,G3,G_IT2,G_IT2,G_IT2,G_IT2,G_IT2,G_IT2,G_IT2,G_IT2,G_IT2,G2,G_IT2},
+  {G_FT2,G_FT2,G_FT2,G_FT2,G3,G3,G_FT2,G_FT2,G_FT2,G_FT2,G_FT2,G_FT2,G2,G3,G_FT2},
+  {G_FI2,G_FI2,G_FI2,G_FI2,G_FI2,G_FI2,G_FI2,G3,G3,G_FI2,G_FI2,G_FI2,G2,G3,G3,G_FI2},
+  {G3,G3,G3,G3,G3,G3,G3,G3,G3,G3,G3,G3,G3,G3,G3,G3,G3},
+  {B1,B1,B1,B1,B1,B1,B1,B1,B1,B1,B1,B1,B1,B1,B1,B1,B1,B1}
+};

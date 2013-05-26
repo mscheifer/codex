@@ -45,6 +45,8 @@ struct ServerGameTimeRespond
     for(unsigned int i = 0; i < size; i++) {
       weapons[i]->serialize(packet);
     }
+    size = static_cast<sf::Uint32>(state);
+    packet<<size;
   }
 
   //make sure to clear the packet's sizes
@@ -87,5 +89,8 @@ struct ServerGameTimeRespond
       newWeapon->deserialize(packet);
       this->weapons.push_back(newWeapon);
     }
+    sf::Uint32 temp;
+    packet >> temp;
+    state = static_cast<Game_State>(temp);
   }
 };

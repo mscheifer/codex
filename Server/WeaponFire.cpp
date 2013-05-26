@@ -5,10 +5,11 @@ WeaponFire::~WeaponFire(void)
 {
 }
 
-WeaponFire::WeaponFire(v3_t c, Map* m):Weapon(2.0,300, c, 20.0, m) {
+WeaponFire::WeaponFire(v3_t c, Map* m, MAGIC_POWER basicAttack1)
+  : Weapon(2.0, 300, c, m), basicAttack(basicAttack1) {
+
 	Range_Cool_Down_Time = 500;
 	Melee_Cool_Down_Time = 200;
-	mpCost = 0; //TODO revert this value was 20 WTF this is already set in weapon @allen @alvin
 
   BoundingBox* b = new BoundingBox(BoundingObj::vec4_t(c.x,c.y,c.z),
   BoundingObj::vec3_t(1,0,0),BoundingObj::vec3_t(0,1,0),BoundingObj::vec3_t(0,0,1),
@@ -26,18 +27,36 @@ void WeaponFire::updateBounds(){
 Projectile* WeaponFire::attackRange(v3_t dir , v3_t pos, Player* owner)
 {
 	Projectile* pj = map->produceProjectile();
-  dir.normalize();
-  pj->setDirection(dir);
+  //dir.normalize();
+  //pj->setDirection(dir);
   //dir.scale(projectileSpeed); //TODO @alvin I took these out becasuse 
   pj->setVelocity(ZEROVEC);
-  pj->setPosition(pos);
+  //pj->setPosition(pos);
   pj->setOwner(owner);
 	//pj->setStrength(projectileStrength); it should be determined at the fire time
-	pj->setRange(100); //      based on the magic it is
-  pj->setFired(false);
+	//pj->setRange(100); //      based on the magic it is
+  //pj->setFired(false); //defaults to false
   // pj->setChargeTime(1500);
-  pj->setMagicType(FIRE1);
+  pj->setMagicType(basicAttack);
 
   Range_Cool_Down_Counter.restart();
 	return pj;
+}
+
+WeaponType WeaponFire::getWeaponType() const{
+  switch(basicAttack){
+    case FIR1:
+      return FIRE;
+    case ICE1:
+      return ICE;
+    case THU1:
+      return THUNDER;
+    case B1:
+      return BASIC;
+  }
+  return UNK;
+}
+
+float WeaponFire::getMpCost(){
+  return ProjInfo[basicAttack].mpCost;
 }

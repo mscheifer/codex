@@ -39,7 +39,7 @@ public:
   //of an entity
   void addToQtree(Entity* e); 
   void removeFromQtree(Entity* e);
-
+  void mapReset();
 private:
   std::vector<v3_t> spawnPositions;
 	std::vector<Player *> players;
