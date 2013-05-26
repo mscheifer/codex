@@ -25,7 +25,7 @@ void Map::mapReset()
   spawnPositions.clear();
   entities.clear();
   liveProjectTile.clear();
-  initWalls();
+  initWallsOne();
   initPowerUps();
   for(unsigned int i = 0; i < players.size(); i++)
   {
@@ -49,20 +49,23 @@ void Map::initPowerUps() {
 
 void Map::initWallsOne(void)
 {
-  //TODO move this
-  WeaponFire* w1 = new WeaponFire(v3_t(100,100,0), this);
+    WeaponFire* w1 = new WeaponFire(v3_t(100,100,0), this, FIR1);
   w1->dropDown(v3_t(10,10,0));
   w1->setDirection(v3_t(0,1,0));
   entities.push_back(w1);
-  WeaponFire* w2 = new WeaponFire(v3_t(120,120,0), this);
+  WeaponFire* w2 = new WeaponFire(v3_t(120,120,0), this, THU1);
   w2->dropDown(v3_t(10,-10,0));
   w2->setDirection(v3_t(0,1,0));
   entities.push_back(w2);
+  WeaponFire* w3 = new WeaponFire(v3_t(120,120,0), this, ICE1);
+  w3->dropDown(v3_t(-10,-10,0));
+  w3->setDirection(v3_t(0,1,0));
+  entities.push_back(w3);
 
-  spawnPositions.push_back(v3_t(1,1,1));
-  spawnPositions.push_back(v3_t(1,2,1));
-  spawnPositions.push_back(v3_t(2,1,1));
-  spawnPositions.push_back(v3_t(2,2,1));
+  spawnPositions.push_back(v3_t(4,-4,1));
+  spawnPositions.push_back(v3_t(4,4,1));
+  spawnPositions.push_back(v3_t(-4,-4,1));
+  spawnPositions.push_back(v3_t(-4,4,1));
 
   v3_t facingEast(1,0,0);
   v3_t facingNorth(0,1,0);
