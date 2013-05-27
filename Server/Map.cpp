@@ -271,6 +271,7 @@ std::vector<Entity *> Map::getEntity() {
    removeFromQtree(proj);
  }
 
+ //@mc 2box
 void Map::separatePlayers(Player* player){
   std::vector<BoundingObj*> myObjs = player->getBoundingObjs();
   int restart = false;

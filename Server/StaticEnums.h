@@ -71,7 +71,7 @@ enum BUFF{ NONE=0, MOVEBOOST, MANABOOST, HEALTHBOOST, STRBOOST, ATTACKCD, CHARGE
 //cd less than one means you cd is reduced that much
 struct BuffData{
   BUFF buff;
-  int ticksEffect; //amount of ticks  that buff will last
+  int milliEffect; //amount of ticks  that buff will last
   bool affectMovement;
   float movementMultiplier; //how much to multiply movement by ex. 2 will increase speed 2x
   bool affectManaRegen;
@@ -86,7 +86,7 @@ struct BuffData{
   float chargeCDMult;
 
   BuffData( BUFF buff1,
-    int ticksEffect1,
+    int milliEffect1,
     bool affectMovement1,
     float movementMultiplier1,
     bool affectManaRegen1,
@@ -100,7 +100,7 @@ struct BuffData{
     bool affectChargeCD1,
     float chargeCDMult1)
   : buff(buff1),
-    ticksEffect(ticksEffect1), 
+    milliEffect(milliEffect1), 
     affectMovement(affectMovement1),
     movementMultiplier(movementMultiplier1),
     affectManaRegen(affectManaRegen1),
@@ -118,7 +118,7 @@ struct BuffData{
 const BuffData BuffInfo[] = {
   //                   time|  move  |mpRegen| hpRegen | str     | atkCD |  chargeCD  
   BuffData(NONE,       100, false, 0, false, 0, false, 0, false, 0, false, 0, false, 0),
-  BuffData(MOVEBOOST,  100, true, 2, false, 0, false, 0, false, 0, false, 0, false, 0),
+  BuffData(MOVEBOOST,  1000, true, 2, false, 0, false, 0, false, 0, false, 0, false, 0),
   BuffData(MANABOOST,  100, false, 0, true, 5, false, 0, false, 0, false, 0, false, 0),
   BuffData(HEALTHBOOST, 100, false, 0, false, 0, true, 5, false, 0, false, 0, false, 0),
   BuffData(STRBOOST,   100, false, 0, false, 0, false, 0, true, 2, false, 0, false, 0),

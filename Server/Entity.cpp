@@ -2,6 +2,7 @@
 #include <algorithm>
 #include <iostream>
 
+//@mc 2box
 std::vector<std::pair<Entity*,BoundingObj::vec3_t>> Entity::detectCollision(){
   std::vector<std::pair<Entity*,BoundingObj::vec3_t>> res;
   std::vector<BoundingObj*> potentialCollisions;
@@ -112,7 +113,7 @@ v3_t Entity::correctMovement(v3_t movementDirection, bool slide){
   //add the radius to account for collision
   //v3_t radius = myBox->getMaxRadius( movementDirection );
   //movementDirection += radius;
-  Ray movementRay(v4_t(position.x,position.y,position.z), movementDirection);
+  Ray movementRay(v4_t(position.x,position.y,position.z), movementDirection);//TODO @mc ray movement adjust origin
   
   std::vector<RayCollision> colls = detectCollision(&movementRay);
   bool restart = false;

@@ -213,20 +213,14 @@ void Player::update(){
     return;
   //powerup shit
   for(auto buff = buffs.begin(); buff != buffs.end();){
-    buff->second--;
+    buff->second -= (int)ConfigManager::serverTickLengthMilli();
     if( buff->second <= 0 ){
       buff = buffs.erase(buff);
     } else {
       buff++;
     }
   }
-
-  if(speedUp && speedUpCounter.getElapsedTime().asMilliseconds() > speedUpTime) {
-     speedUp = false;
-     attackSpeed = 1.0;
-  }
-
-  //
+  
   if( chargedProjectile ) {
     chargedProjectile->setDirection(direction);
     chargedProjectile->setPosition(getProjectilePosition());
@@ -466,13 +460,13 @@ void Player::applyBuff( BUFF b){
   auto buff = buffs.begin();
   for(; buff != buffs.end(); buff++){
     if( buff->first == b){ //found one that is the same, reset timer
-      buff->second = BuffInfo[b].ticksEffect;
+      buff->second = BuffInfo[b].milliEffect;
       break;
     }
   }
 
   if(buff == buffs.end()){//didn't find same type
-    buffs.push_front(std::pair<BUFF,int>(b,BuffInfo[b].ticksEffect));
+    buffs.push_front(std::pair<BUFF,int>(b,BuffInfo[b].milliEffect));
   }
 }
 

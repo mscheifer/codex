@@ -31,7 +31,7 @@ public:
   }
   
   static float serverTickLengthSec() {
-    static float ret = serverTickLengthMilli() / 1000.f;
+    static float ret = 1.f / serverTicksPerSec();
     return ret;
   }
 
