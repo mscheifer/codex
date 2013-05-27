@@ -61,7 +61,7 @@ class graphicsClient {
     void enableCursor();
     bool gameStart() const;
     void gameEnd();
-    void updateScores();
+    void updateScores(std::vector<int> & pwins, std::vector<int> & pkills);
 
     //input functions
     bool closed()        { return this->userInput.getStop(); }

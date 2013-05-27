@@ -239,6 +239,6 @@ void gx::graphicsClient::gameEnd()
   Lobby.endGame();
 }
 
-void gx::graphicsClient::updateScores() {
-  // call update scores here
+void gx::graphicsClient::updateScores(std::vector<int> & pwins, std::vector<int> & pkills) {
+  Score.updateScores(pwins,pkills);
 }

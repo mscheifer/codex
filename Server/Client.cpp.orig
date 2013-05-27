@@ -31,9 +31,12 @@ void NetworkClient::receiveMessages() {
           if(playerP->player_id != this->id) {
             //make sure the SGTR stays in scope
             entities.push_back(&(*playerP));
+<<<<<<< HEAD
            
+=======
             kills.push_back((*playerP).kills);
             wins.push_back((*playerP).wins);
+>>>>>>> 03bea1dd4ce16a142e8f29813932f33179c9fbad
           }
           AudioManager::processPlayerSound(*playerP);
           

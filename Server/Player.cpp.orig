@@ -534,9 +534,12 @@ void Player::serialize(sf::Packet& packet) const {
     // change the array to vector ?
     packet << static_cast<sf::Uint32>(pickupWeaponType);
     packet << current_weapon_selection; 
+<<<<<<< HEAD
     packet << charging;
+=======
     packet << kills;
     packet << wins;
+>>>>>>> 03bea1dd4ce16a142e8f29813932f33179c9fbad
   }
 
   void Player::deserialize(sf::Packet& packet) {
@@ -565,7 +568,10 @@ void Player::serialize(sf::Packet& packet) const {
     packet >> pickupWeaponTypeUint32;
     pickupWeaponType = static_cast<WeaponType>(pickupWeaponTypeUint32);
     packet >> current_weapon_selection; 
+<<<<<<< HEAD
     packet >> charging;
+=======
     packet >> kills;
     packet >> wins;
+>>>>>>> 03bea1dd4ce16a142e8f29813932f33179c9fbad
   }

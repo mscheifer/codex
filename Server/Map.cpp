@@ -49,7 +49,7 @@ void Map::initPowerUps() {
 
 void Map::initWallsOne(void)
 {
-    WeaponFire* w1 = new WeaponFire(v3_t(100,100,0), this, FIR1);
+  WeaponFire* w1 = new WeaponFire(v3_t(100,100,0), this, FIR1);
   w1->dropDown(v3_t(10,10,0));
   w1->setDirection(v3_t(0,1,0));
   entities.push_back(w1);
@@ -484,5 +484,12 @@ void Map::removeFromQtree(Entity* e){
   std::vector<BoundingObj*> vec = e->getBoundingObjs();
   for( auto it = vec.begin(); it != vec.end(); ++it){
       q.remove(*it);
+  }
+}
+
+void Map::initScores() {
+  for (int i=0;i<ConfigManager::numPlayers();i++) {
+    kills.push_back(0);
+    wins.push_back(0);
   }
 }
