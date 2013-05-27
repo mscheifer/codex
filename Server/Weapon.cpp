@@ -15,7 +15,7 @@ Weapon::~Weapon()
 {
 }
 
-Weapon::Weapon(float damage, float ran, v3_t pos, float mpcost, Map* m)
+Weapon::Weapon(float damage, float ran, v3_t pos, Map* m)
 {
   Range_Cool_Down_Time = 0;
   Melee_Cool_Down_Time = 0;
@@ -25,7 +25,6 @@ Weapon::Weapon(float damage, float ran, v3_t pos, float mpcost, Map* m)
   range = ran;
   position = pos;
   direction = v3_t(0,0,1);
-  mpCost = mpcost;
   projectileSpeed = 100.0; // TODO pending removal
   projectileRange = 300; //pending removal
   projectileStrength = 26; //pending removal

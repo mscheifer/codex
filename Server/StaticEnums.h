@@ -35,22 +35,36 @@ enum Opcode {INIT,JOINID,STARTGAME, CHAT, T1, T2, CGTA, SGTR, ERROR};
 
 enum Entity_Type {UNDEFINED=0, PLAYER, WALL, PROJECTILE, WEAPON, POWER_UP};
 
-enum WeaponType{UNK=0, FIRE, FIST};
+//used to determine names
+enum WeaponType{UNK=0, FIRE, ICE, THUNDER, FIST, BASIC};
 
 const std::string WeaponNames[] = {
   "UNKNOWN",
   "STAFF OF FIRE",
-  "FIST"
+  "ICE",
+  "MJORLNIR",
+  "FIST",
+  "BASIC"
 };
 
-enum MAGIC_POWER { FIRE1=0, FIRE2, FIRE3, ICE1, ICE2, ICE3 };
+enum MAGIC_POWER { 
+  FIR1=0, FIR2, FIR3, 
+  ICE1, ICE2, ICE3,
+  THU1, THU2, THU3,
+  G_IT, G_FT, G_FI, //gravity and what it is missing
+  G2,
+  G_IT2, G_FT2, G_FI2,
+  G3,
+  B1
+}; 
 
-enum BUFF{ NONE=0, MOVEBOOST, MANABOOST, HEALTHBOOST, STRBOOST, ATTACKCD, CHARGECD };
+enum BUFF{ NONE=0, MOVEBOOST, MANABOOST, HEALTHBOOST, STRBOOST, ATTACKCD, CHARGECD,
+ FIR1DEBUFF};
 
 //cd less than one means you cd is reduced that much
 struct BuffData{
   BUFF buff;
-  int ticksEffect;
+  int ticksEffect; //amount of ticks  that buff will last
   bool affectMovement;
   float movementMultiplier;
   bool affectManaRegen;
@@ -95,11 +109,13 @@ struct BuffData{
 };
 
 const BuffData BuffInfo[] = {
+  //                time|  move  |mpRegen| hpRegen | str     | atkCD |  chargeCD  
   BuffData(NONE, 100, false, 0, false, 0, false, 0, false, 0, false, 0, false, 0),
   BuffData(MOVEBOOST, 100, true, 2, false, 0, false, 0, false, 0, false, 0, false, 0),
   BuffData(MANABOOST, 100, false, 0, true, 5, false, 0, false, 0, false, 0, false, 0),
   BuffData(HEALTHBOOST, 100, false, 0, false, 0, true, 5, false, 0, false, 0, false, 0),
   BuffData(STRBOOST, 100, false, 0, false, 0, false, 0, true, 2, false, 0, false, 0),
   BuffData(ATTACKCD, 100, false, 0, false, 0, false, 0, false, 0, true, 0.25, false, 0),
-  BuffData(CHARGECD, 100, false, 0, false, 0, false, 0, false, 0, false, 0, true, 0.25)
+  BuffData(CHARGECD, 100, false, 0, false, 0, false, 0, false, 0, false, 0, true, 0.25),
+  BuffData(FIR1DEBUFF, 100, true, 0, false, 0, false, 0, false, 0, false, 0, true, 0.25)
 };

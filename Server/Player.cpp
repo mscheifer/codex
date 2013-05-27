@@ -65,8 +65,8 @@ void Player::init(v3_t pos, int assigned_id, Map * m)
   speedUpCounter = sf::Clock();
   speedUp = false;
 	map = m;
-	weapon[0] = new WeaponFist(position, this->map);
-	weapon[1] = new WeaponFire(position, this->map); //TODO add this to entities if we want it to drop
+	weapon[0] = new WeaponFist(position, this->map); //has no bounds so it doesnt drop
+	weapon[1] = new WeaponFire(position, this->map, FIR1); //TODO add this to entities, or it won't be able render
 	current_weapon_selection = 1;
   chargedProjectile = nullptr;
   m->addToQtree(this);
@@ -439,9 +439,11 @@ bool Player::collidePlayer(const std::pair<Entity*,BoundingObj::vec3_t>& p){
 }
 
 bool Player::collideProjectile(const std::pair<Entity*,BoundingObj::vec3_t>& p){
-  if(((Projectile *)p.first)->getOwner() != this) {
+  Projectile * proj = ((Projectile *)p.first);
+  if(proj->getOwner() != this) {
     std::cout << "OW hit "<< player_id << std::endl;
-    attackBy((Projectile *)p.first);
+    attackBy(proj);
+    applyBuff(ProjInfo[proj->getMagicType()].debuff);
     std::cout << health  << " HP left" << " for " << player_id << std::endl;
   }
   return false;
@@ -449,21 +451,24 @@ bool Player::collideProjectile(const std::pair<Entity*,BoundingObj::vec3_t>& p){
 
 bool Player::collidePowerUp(const std::pair<Entity*,BoundingObj::vec3_t>& p){
   BUFF ptype = ((PowerUp*)p.first)->getBuffType();
-  
+  applyBuff(ptype);
+  ((PowerUp*)p.first)->pickUp();
+  return false;
+}
+
+void Player::applyBuff( BUFF b){
+  //TODO FIR1 and FIR2 debuff? applied at same time
   auto buff = buffs.begin();
   for(; buff != buffs.end(); buff++){
-    if( buff->first == ptype){ //found one that is the same, reset timer
-      buff->second = BuffInfo[ptype].ticksEffect;
+    if( buff->first == b){ //found one that is the same, reset timer
+      buff->second = BuffInfo[b].ticksEffect;
       break;
     }
   }
 
   if(buff == buffs.end()){//didn't find same type
-    buffs.push_front(std::pair<BUFF,int>(ptype,BuffInfo[ptype].ticksEffect));
+    buffs.push_front(std::pair<BUFF,int>(b,BuffInfo[b].ticksEffect));
   }
-
-  ((PowerUp*)p.first)->pickUp();
-  return false;
 }
 
 void Player::setHealth(float h) {
