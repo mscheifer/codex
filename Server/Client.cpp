@@ -25,10 +25,14 @@ void NetworkClient::receiveMessages() {
         if (s.state != Game_State::PLAYING && ConfigManager::gameRestart()) 
           gameRestart = true;
         std::cout<<s.state<<std::endl;
+        std::vector<int> kills;
+        std::vector<int> wins;
         for(auto playerP = s.players.begin(); playerP != s.players.end(); playerP++) {
           if(playerP->player_id != this->id) {
             //make sure the SGTR stays in scope
             entities.push_back(&(*playerP));
+            kills.push_back((*playerP).kills);
+            wins.push_back((*playerP).wins);
           }
           
           if(cycle  == 100 ) {
@@ -55,6 +59,7 @@ void NetworkClient::receiveMessages() {
         entities.push_back(&(this->skybox)); //add skybox
         gxClient.updateEntities(entities);
         gxClient.updateHUD(s.players[id]);
+        gxClient.updateScores(wins,kills);
         //std::cout << "num entities received: " << entities.size() << std::endl;
         if (s.players[id].dead) { /*render death everytime ? */}
         //render WIN OR LOSE based on s.state

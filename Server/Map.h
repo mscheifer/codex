@@ -24,6 +24,8 @@ public:
   ~Map(void);
   static const float Item_Pick_Up_Ranges;
   int map_size;
+  std::vector<int> kills; //TODO make them private
+  std::vector<int> wins;
   
   v3_t getRespawnPosition(std::size_t player_id);
   std::vector<Entity *> getEntity(void);
@@ -40,6 +42,7 @@ public:
   void addToQtree(Entity* e); 
   void removeFromQtree(Entity* e);
   void mapReset();
+  void initScores();
 private:
   std::vector<v3_t> spawnPositions;
 	std::vector<Player *> players;

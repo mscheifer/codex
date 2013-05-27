@@ -63,6 +63,7 @@ void NetworkServer::doServer() {
     }
   }
 
+  game.initScores();
   StartGamePacket startTheGame;
   while(true)
   {

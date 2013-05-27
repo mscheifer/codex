@@ -27,7 +27,7 @@ int Player::MAXJUMP() {
 
 Player::Player(){}// this->init(0,0,0,0,NULL);}
 Player::~Player(void){}
-Player::Player(v3_t pos, int assigned_id, Map * m)
+Player::Player(v3_t pos, int assigned_id, Map * m): kills(0), wins(0)
 {
  generateBounds(position);
  this->init(pos, assigned_id, m); 
@@ -127,8 +127,11 @@ bool Player::damageBy(DeadlyEntity *deadly)
 	float newHealth = (health - damage);
 	health = (newHealth > 0 ? newHealth : 0);
   dead = health==0;
-  if(dead)
+  if(dead) {
     die();
+    //This is a hack
+    map->kills[((Projectile *) deadly)->getOwner()->player_id]++;
+  }
 	return true;
 }
 
@@ -528,6 +531,8 @@ void Player::serialize(sf::Packet& packet) const {
     // change the array to vector ?
     packet << static_cast<sf::Uint32>(pickupWeaponType);
     packet << current_weapon_selection; 
+    packet << kills;
+    packet << wins;
   }
 
   void Player::deserialize(sf::Packet& packet) {
@@ -556,4 +561,6 @@ void Player::serialize(sf::Packet& packet) const {
     packet >> pickupWeaponTypeUint32;
     pickupWeaponType = static_cast<WeaponType>(pickupWeaponTypeUint32);
     packet >> current_weapon_selection; 
+    packet >> kills;
+    packet >> wins;
   }
