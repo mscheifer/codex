@@ -326,7 +326,7 @@
     <ClInclude Include="Wall.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="graphics\loadCube.h">
+    <ClInclude Include="graphics\loadCustom.h">
       <Filter>Header Files\graphics</Filter>
     </ClInclude>
     <ClInclude Include="util.h">

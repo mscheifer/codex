@@ -16,25 +16,23 @@ void printNodes(aiNode* node, int level) {
   }
   gx::debugout << node->mName.C_Str() << " meshes ";
   gx::debugout << node->mNumMeshes << gx::endl;
-  for(int i = 0; i < level; i++) {
-    gx::debugout << "  ";
-  }
-  gx::debugout << gx::toMat(node->mTransformation) << gx::endl;
+  //for(int i = 0; i < level; i++) {
+  //  gx::debugout << "  ";
+  //}
+  //gx::debugout << gx::toMat(node->mTransformation) << gx::endl;
   for(unsigned int i = 0; i < node->mNumChildren; i++) {
     printNodes(node->mChildren[i],level+1);
   }
 }
 
 gx::bone makeBone(gx::Mesh::idMap_t& idMap, int& nextId,
-        const std::map<std::string,gx::matrix>&                      offsets,
-        const std::map<std::string,std::vector<const aiNodeAnim*>>&  animations,
+                                       const std::set<std::string>& realBones,
+        const std::map<std::string,std::vector<const aiNodeAnim*>>& animations,
         const aiNode* bon) {
   gx::matrix transform = gx::toMat(bon->mTransformation);
-  gx::matrix offset = gx::identity;
   bool real = false;
   int id = -1;
-  if(offsets.find(bon->mName.C_Str()) != offsets.end()) {
-    offset = offsets.find(bon->mName.C_Str())->second;
+  if(realBones.count(bon->mName.C_Str()) > 0) {
     real = true;
     id = nextId++;
   }
@@ -57,11 +55,11 @@ gx::bone makeBone(gx::Mesh::idMap_t& idMap, int& nextId,
   }
   std::vector<gx::bone> children;
   for(unsigned int i = 0; i < bon->mNumChildren; i++) {
-    children.push_back(makeBone(idMap,nextId,offsets,animations,
+    children.push_back(makeBone(idMap,nextId,realBones,animations,
                        bon->mChildren[i]));
   }
-  return gx::bone(id,std::move(offset),std::move(transform),real,
-                  std::move(boneAnimations),std::move(children));
+  return gx::bone(id,std::move(transform),real,std::move(boneAnimations),
+                     std::move(children));
 }
 
 //should create an iterator for the node tree
@@ -78,15 +76,15 @@ std::map<std::string,std::vector<const aiNodeAnim*>>
 }
 
 gx::bone initBones(std::map<std::string,unsigned int>& idMap,
-    const aiScene* scene, const gx::matrix resize) {
-  std::map<std::string,gx::matrix>                     offsets;
+                                        const aiScene* scene) {
+  std::set<std::string>                                realBones;
   std::map<std::string,std::vector<const aiNodeAnim*>> animations;
-  //just do the first mesh for now
   animations = walkNodesForAnims(scene->mRootNode,scene->mNumAnimations);
-  for(unsigned int i = 0; i < scene->mMeshes[0]->mNumBones; i++) {
-    const auto& meshBone = scene->mMeshes[0]->mBones[i];
-    offsets.insert(std::make_pair(
-      meshBone->mName.C_Str(),gx::toMat(meshBone->mOffsetMatrix)));
+  for(unsigned int i = 0; i < scene->mNumMeshes; i++) {
+    for(unsigned int j = 0; j < scene->mMeshes[i]->mNumBones; j++) {
+      const auto& meshBone = scene->mMeshes[i]->mBones[j];
+      realBones.insert(meshBone->mName.C_Str());
+    }
   }
   for(unsigned int i = 0; i < scene->mNumAnimations; i++) {
     const aiAnimation* anim = scene->mAnimations[i];
@@ -105,9 +103,8 @@ gx::bone initBones(std::map<std::string,unsigned int>& idMap,
     }
   }
   int nextIds = 0;
-  auto boneTree=makeBone(idMap,nextIds,std::move(offsets),std::move(animations),
-                         scene->mRootNode);
-  boneTree.transform = resize * boneTree.transform;
+  auto boneTree = makeBone(idMap,nextIds,std::move(realBones),
+                           std::move(animations), scene->mRootNode);
   return boneTree;
 }
 } //end unnamed namespace
@@ -115,13 +112,18 @@ gx::bone initBones(std::map<std::string,unsigned int>& idMap,
 gx::Mesh::Mesh(const std::string& Filename, length_t height)
   : mImporter(), mScene(LoadFile(mImporter, Filename)),
     m_boundary(CalcBoundBox(mScene, height)), idMap(),
-    bones(initBones(idMap,mScene, m_boundary.centerAndResize)),
+    bones(initBones(idMap,mScene)),
     m_Entries(InitFromScene(idMap,mScene)),
     m_Textures(InitMaterials(mScene, Filename)),
   //just do the first one unless kangh has a model with more
-    entityData(m_Entries[0].indices,m_Entries[0].attribs,std::move(bones)) {}
+    entityData(std::move(m_Entries[0].positions),std::move(m_Entries[0].normals),
+      std::move(m_Entries[0].colors), std::move(m_Entries[0].boneWeights.first),
+      std::move(m_Entries[0].boneWeights.second),
+      std::move(m_Entries[0].indices), std::move(m_Entries[0].offsets),
+      std::move(bones), std::move(m_boundary.centerAndResize)) {}
 
-const aiScene* gx::Mesh::LoadFile(Assimp::Importer& Importer,const std::string& Filename) {
+const aiScene* gx::Mesh::LoadFile(Assimp::Importer& Importer,
+                                 const std::string& Filename) {
   const aiScene* pScene = Importer.ReadFile(Filename.c_str(), 
         aiProcess_Triangulate       |
         aiProcess_GenSmoothNormals |

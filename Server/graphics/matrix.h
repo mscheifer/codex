@@ -30,13 +30,16 @@ public:
   std::array<elem_t,16> oglmatrix() const;
   bool operator==(const matrix& right) const;
   bool operator!=(const matrix& right) const;
+  matrix& operator+=(const matrix& right);
 };
 
 //note mathematical ordering
 matrix multiply(const matrix& left,const matrix& right);
+matrix multiply(matrix left,matrix::elem_t right);
 vector4f multiply(const matrix& left,const vector4f& right);
 vector3f multiply(const matrix& left,const vector3f& right);
 matrix operator*(const matrix& left,const matrix& right);
+matrix operator*(matrix left,matrix::elem_t right);
 vector4f operator*(const matrix& left,const vector4f& right);
 vector3f operator*(const matrix& left,const vector3f& right);
 

@@ -123,8 +123,26 @@ bool gx::matrix::operator!=(const matrix& right) const {
   return !((*this) == right);
 }
 
+gx::matrix& gx::matrix::operator+=(const matrix& right) {
+  for(row_index_type i = 0; i < 4; i++) {
+    for(column_index_type j = 0; j < 4; j++) {
+      (*this)[i][j] += right[i][j];
+    }
+  }
+  return *this;
+}
+
+gx::matrix gx::multiply(matrix left,matrix::elem_t right) {
+  for(matrix::row_index_type i = 0; i < 4; i++) {
+    for(matrix::column_index_type j = 0; j < 4; j++) {
+      left[i][j] = left[i][j] * right;
+    }
+  }
+  return left;
+}
+
 gx::matrix gx::multiply(const matrix& left,const matrix& right) {
-  matrix result = matrix(); //0 init
+  matrix result; // 0 init
   for(matrix::row_index_type i = 0; i < 4; i++) {
     for(matrix::column_index_type j = 0; j < 4; j++) {
       for(size_t k = 0; k < 4; k++) {
@@ -155,6 +173,10 @@ gx::vector3f gx::multiply(const matrix& left,const vector3f& right) {
 
 gx::matrix gx::operator*(const matrix& left,const matrix& right) {
   return multiply(left,right);
+}
+
+gx::matrix gx::operator*(matrix left,matrix::elem_t right) {
+  return multiply(std::move(left),right);
 }
 
 gx::vector4f gx::operator*(const matrix& left,const vector4f& right) {

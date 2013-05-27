@@ -2,6 +2,9 @@
 #include <cmath>
 
 template<typename T>
+constexpr unsigned int gx::vector3<T>::numComponents;
+
+template<typename T>
 gx::vector3<T>::vector3()
   : x(elems[0]), y(elems[1]), z(elems[2]) {
   elems[0] = 0; elems[1] = 0; elems[2] = 0;
@@ -114,6 +117,14 @@ std::array<typename gx::vector3<T>::elem_t,3> gx::vector3<T>::oglVec3() const {
   return elems;
 }
 template<typename T>
+typename std::array<T,3>::iterator gx::vector3<T>::begin() {
+  return this->elems.begin();
+}
+template<typename T>
+typename std::array<T,3>::iterator gx::vector3<T>::end() {
+  return this->elems.end();
+}  
+template<typename T>
 typename gx::vector3<T>::elem_t& gx::vector3<T>::get(index_type i) {
   return elems[i];
 }
@@ -225,3 +236,9 @@ gx::operator<<<GLfloat> (std::ostream&, const vector3<GLfloat>&);
 //gx::operator*<double>(vector3<double>::elem_t, const vector3<double>&);
 //template std::ostream&
 //gx::operator<<<double> (std::ostream& out, const vector3<double>& v);
+
+template class gx::vector3<GLint>;
+template gx::vector3<GLint>
+gx::operator*<GLint>(vector3<GLint>::elem_t, const vector3<GLint>&);
+template std::ostream&
+gx::operator<<<GLint> (std::ostream&, const vector3<GLint>&);

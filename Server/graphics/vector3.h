@@ -14,6 +14,7 @@ template<typename T>
 class vector3 {
     std::array<T,3> elems;
   public:
+    static constexpr unsigned int numComponents = 3;
     typedef typename std::array<T,3>::size_type index_type;
     typedef T elem_t;
     elem_t& x;
@@ -40,6 +41,9 @@ class vector3 {
     elem_t magnitude() const;
     void normalize();
     std::array<elem_t,3> oglVec3() const;
+
+    typename std::array<T,3>::iterator begin();
+    typename std::array<T,3>::iterator end();
     elem_t& get(index_type);
     const elem_t& get(index_type) const;
     elem_t& operator[](index_type);

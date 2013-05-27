@@ -14,19 +14,17 @@ gx::matrix gx::toMat(aiMatrix3x3 m) {
                        0,    0,    0, 1);
 }
 
-gx::bone::bone(int idnum,matrix off, matrix trans, bool r, std::vector<std::vector<key>> anims, 
-     std::vector<bone> enfants)
-  : id(idnum), offset(std::move(off)), transform(std::move(trans)), real(std::move(r)),
+gx::bone::bone(int idnum, matrix trans, bool r,
+               std::vector<std::vector<key>> anims, std::vector<bone> enfants)
+  : id(idnum), transform(std::move(trans)), real(std::move(r)),
     animations(std::move(anims)), children(std::move(enfants)) {}
 
 gx::bone::bone(bone&& other) noexcept
-  : id(other.id), offset(std::move(other.offset)),
-  transform(std::move(other.transform)), real(std::move(other.real)), 
+  : id(other.id), transform(std::move(other.transform)), real(other.real), 
   animations(std::move(other.animations)), children(std::move(other.children)){}
 
 gx::bone& gx::bone::operator=(bone&& other) {
   this->id         = std::move(other.id);
-  this->offset     = std::move(other.offset);
   this->transform  = std::move(other.transform);
   this->real       = std::move(other.real); 
   this->animations = std::move(other.animations);
@@ -53,7 +51,7 @@ unsigned int gx::bone::numBones() const {
 }
 
 void gx::bone::walkBones(std::vector<GLfloat>& result,const matrix& parent,
-                         unsigned int anim, unsigned int time) const {
+                                  unsigned int anim  , unsigned int time) const {
   matrix fullTransformation;
   if(this->animated(anim)) {
     //no interpolation for now
@@ -69,8 +67,8 @@ void gx::bone::walkBones(std::vector<GLfloat>& result,const matrix& parent,
     fullTransformation = parent * this->transform;
   }
   if(this->real) {
-    const auto& data = (fullTransformation * this->offset).oglmatrix();
-    //std::cout << this->id << " at " << result.size() << std::endl;
+    //const auto& data = identity.oglmatrix();
+    const auto& data = fullTransformation.oglmatrix();
     result.insert(result.end(),data.begin(),data.end());
   } 
   for(auto boneItr = this->children.begin(); boneItr != this->children.end(); boneItr++) {

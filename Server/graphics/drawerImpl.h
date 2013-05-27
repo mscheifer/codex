@@ -2,23 +2,26 @@
 #define DRAWSET_H
 #include <GL/glew.h>
 #include <vector>
-#include "vao.h"
+#include "bone.h"
 #include "matrix.h"
 #include "uniformLocation.h"
-#include "graphicsEntity.h"
+#include "vao.h"
 
 namespace gx {
+struct graphicsEntity;
+
 class staticDrawerImpl {
     uniform::mat4floc modelToWorldLoc;
   public:
-    typedef staticEntity entity_t;
+    static const std::string shaderID;
+    typedef graphicsEntity entity_t;
     static const std::string vertShader;
     static const std::string fragShader;
     struct entityClass {
       typedef matrix        instance;
       std::vector<instance> instances;
       vao                   vertData;
-      matrix                centerAndResize;
+      matrix                centerAndResize; //TODO: to be removed
       entityClass(entity_t,varSigs_t);
       entityClass(const entityClass&);// = delete;
       entityClass& operator=(const entityClass&);// = delete;
@@ -34,6 +37,7 @@ class staticDrawerImpl {
       vector3f dirY;
       unsigned int type;
     };
+    static matrix makePositionMatrix(instanceData d);
     void addInstance(instanceData,std::vector<entityClass>&);
 };
 
@@ -42,7 +46,8 @@ class dynamicDrawerImpl {
     staticDrawerImpl staticBase;
     uniform::mat4floc boneTransforms;
   public:
-    typedef dynamicEntity entity_t;
+    static const std::string shaderID;
+    typedef graphicsEntity entity_t;
     static const std::string vertShader;
     static const std::string fragShader;
     struct entityClass {

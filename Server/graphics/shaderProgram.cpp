@@ -12,7 +12,7 @@ void printShaderInfoLog(GLuint obj,const std::string name) {
 
   if (infoLogLength > 1) {
     std::vector<GLchar> infoLog;
-    infoLog.resize(infoLogLength);
+    infoLog.resize(static_cast<size_t>(infoLogLength));
     glGetShaderInfoLog(obj, infoLogLength, &charsWritten, infoLog.data());
     std::cout << name << ": compile output " << infoLogLength << std::endl;
     std::cout << std::string(infoLog.begin(),infoLog.end()) << std::endl;
@@ -27,7 +27,7 @@ void printProgramInfoLog(GLuint obj) {
 
   if (infoLogLength > 1) {
     std::vector<GLchar> infoLog;
-    infoLog.resize(infoLogLength);
+    infoLog.resize(static_cast<size_t>(infoLogLength));
     glGetProgramInfoLog(obj, infoLogLength, &charsWritten, infoLog.data());
     std::cout << "Program: errors" << std::endl;
     std::cout << std::string(infoLog.begin(),infoLog.end()) << std::endl;
@@ -112,23 +112,28 @@ gx::shaderProgram::shaderProgram(   const std::string vsSource,
   debugout << "maxAttribNameLength = " << maxAttribNameLength << endl;
 
   std::vector<GLchar> attribName;
-  attribName.resize(maxAttribNameLength);
+  attribName.resize(static_cast<size_t>(maxAttribNameLength));
 
   for(GLuint i = 0; i < GLuint(numAttribs); ++i) {
     GLsizei writtenChars;
     GLint attribSize;
     GLenum attribType;
-    glGetActiveAttrib(this->prog, i, maxAttribNameLength, &writtenChars, &attribSize,
-                      &attribType, attribName.data());
+    glGetActiveAttrib(this->prog, i, maxAttribNameLength, &writtenChars,
+                      &attribSize, &attribType, attribName.data());
     debugout << "glGetActiveAttrib(" << this->prog << ", " << i << ", ";
     debugout << maxAttribNameLength << ", nullptr, &attribSize@" << &attribSize;
     debugout << ", &attribType@" << &attribType << ", ";
-    debugout << std::string(attribName.begin(), attribName.begin() + writtenChars) << ");" << endl;
+    debugout << std::string(attribName.begin(),attribName.begin()+writtenChars);
+    debugout << ");" << endl;
     GLint attribLoc = glGetAttribLocation(this->prog, attribName.data());
     debugout << attribLoc << " = glGetAttribLocation(" << this->prog << ", ";
-    debugout << std::string(attribName.begin(), attribName.begin() + writtenChars) << ");" << endl;
-    vertexAttribSignature sig(attribType,attribLoc);
-    this->attribSigs.insert(std::make_pair(std::string(attribName.begin(),attribName.begin() + writtenChars),sig));
+    debugout << std::string(attribName.begin(),attribName.begin()+writtenChars);
+    debugout << ");" << endl;
+    //safe to cast here becuase we know its a real location as it was returned
+    //from glgetattriblocation
+    vertexAttribSignature sig(attribType,static_cast<GLuint>(attribLoc));
+    this->attribSigs.insert(std::make_pair(
+      std::string(attribName.begin(),attribName.begin() + writtenChars),sig));
   }
 
   for(auto uniformp = uniforms.begin(); uniformp != uniforms.end(); ++uniformp){

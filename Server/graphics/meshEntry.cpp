@@ -9,42 +9,30 @@ gx::vector3f toVec3(const aiVector3D& aiVec) {
   return gx::vector3f(aiVec.x,aiVec.y,aiVec.z);
 }
 
-gx::Mesh::attribsList_t initAttribs(const gx::Mesh::idMap_t& idMap,
-    const aiMesh* paiMesh) {
-  const aiVector3D Zero3D(0.0f, 0.0f, 0.0f);
-
-  std::vector<GLfloat> positions;
-  std::vector<GLfloat> colors;
-  std::vector<GLfloat> normals;
+std::vector<gx::vector4f> initPositions(const aiMesh* paiMesh) {
+  std::vector<gx::vector4f> ret;
   for (unsigned int i = 0 ; i < paiMesh->mNumVertices ; i++) {
-    const aiVector3D* pPos = &(paiMesh->mVertices[i]);
-    const aiVector3D* pNormal   = &(paiMesh->mNormals[i]);
-    const aiVector3D* pTexCoord =
-      paiMesh->HasTextureCoords(0) ? &(paiMesh->mTextureCoords[0][i]) : &Zero3D;
-    gx::vector4f posVec = /*resize **/ toVec4(*pPos);
-    positions.push_back(posVec.x);
-    positions.push_back(posVec.y);
-    positions.push_back(posVec.z);
-    positions.push_back(posVec.w);
-      // temporary color filler. 
-      // colors are stored in materials
-    colors.push_back(1.0f);
-    colors.push_back(0.2f);
-    colors.push_back(0.0f);
-    colors.push_back(1.0f);
-    //resize works for normals too because we're doing uniform scaling
-    gx::vector3f normVec = /*resize **/ toVec3(*pNormal);
-    normals.push_back(normVec.x);
-    normals.push_back(normVec.y);
-    normals.push_back(normVec.z);
-    //TODO: use texture coordinates
+    const aiVector3D& pPos = paiMesh->mVertices[i];
+    ret.push_back(toVec4(pPos));
   }
-  const std::array<std::pair<GLfloat,GLint>,gx::Mesh::maxBonesPerVertex>
-                             defaultBones = {{std::make_pair(1.0f,-1),
-                                              std::make_pair(0.0f,-1),
-                                              std::make_pair(0.0f,-1),
-                                              std::make_pair(0.0f,-1)}};
-  std::vector<std::array<std::pair<GLfloat,GLint>,gx::Mesh::maxBonesPerVertex>>
+  return ret;
+}
+
+std::vector<gx::vector3f> initNormals(const aiMesh* paiMesh) {
+  std::vector<gx::vector3f> ret;
+  for (unsigned int i = 0 ; i < paiMesh->mNumVertices ; i++) {
+    const aiVector3D& pNormal = paiMesh->mNormals[i];
+    ret.push_back(toVec3(pNormal));
+  }
+  return ret;
+}
+
+std::pair<std::vector<gx::vector4i>,std::vector<gx::vector4f>>
+initBoneWeights(const gx::Mesh::idMap_t& idMap, const aiMesh* paiMesh) {
+  const std::pair<gx::vector4i,gx::vector4f> defaultBones =
+    std::make_pair(gx::vector4i(-1,-1,-1,-1),gx::vector4f(1.0f,0.0f,0.0f,0.0f));
+  std::pair<std::vector<gx::vector4i>,std::vector<gx::vector4f>> ret;
+  std::vector<std::pair<gx::vector4i,gx::vector4f>>
     boneGroups(paiMesh->mNumVertices,defaultBones);
   for(unsigned int i = 0; i < paiMesh->mNumBones; i++) {
     const auto& paiBone = paiMesh->mBones[i];
@@ -52,12 +40,13 @@ gx::Mesh::attribsList_t initAttribs(const gx::Mesh::idMap_t& idMap,
       const auto& paiWeight = paiBone->mWeights[j];
       auto& bg = boneGroups[paiWeight.mVertexId];
       bool good = false;
-      for(auto bgitr = bg.begin(); bgitr != bg.end(); bgitr++) {
-        auto& b = *bgitr;
-        if(b.second == -1) {
-          b.first = paiWeight.mWeight;
-          b.second =
-             static_cast<GLint>(idMap.find(paiBone->mName.C_Str())->second);
+      auto wItr = bg.second.begin();
+      for(auto idItr = bg.first.begin();
+          idItr != bg.first.end() && wItr != bg.second.end(); idItr++, wItr++) {
+        auto& id = *idItr;
+        if(id == -1) {
+          id    = static_cast<GLint>(idMap.find(paiBone->mName.C_Str())->second);
+          *wItr = paiWeight.mWeight;
           good = true;
           break;
         }
@@ -65,40 +54,36 @@ gx::Mesh::attribsList_t initAttribs(const gx::Mesh::idMap_t& idMap,
       if(!good) std::cout << "Error too many bones for one vertex" << std::endl;
     }
   }
-  std::vector<GLfloat> boneWeights;
-  std::vector<GLint>   boneIds;
   for(auto bgitr = boneGroups.begin(); bgitr != boneGroups.end(); bgitr++) {
     const auto& b = *bgitr;
     float totalWeight = 0;
-    for(auto bitr = b.begin(); bitr != b.end(); bitr++) {
+    for(auto bitr = b.second.begin(); bitr != b.second.end(); bitr++) {
       const auto& a = *bitr;
-      boneWeights.push_back(a.first);
-      totalWeight += a.first;
-      boneIds.push_back(a.second);
+      totalWeight += a;
     }
     if(totalWeight - 1.0 >= 0.01 || totalWeight - 1.0 <= -0.01) {
       std::cout << "error, total weight: " << totalWeight << std::endl;
     }
+    ret.first.push_back(b.first);
+    ret.second.push_back(b.second);
   }
-  auto positionsAttrib = std::make_shared<gx::vertexAttrib>(
-    gx::vertexAttrib("position"   ,4,0,positions));
-  auto colorsAttrib = std::make_shared<gx::vertexAttrib>(
-    gx::vertexAttrib("color"      ,4,0,colors));
-  auto normalsAttrib = std::make_shared<gx::vertexAttrib>(
-    gx::vertexAttrib("normal"     ,3,0,normals));
-  auto boneWeightAttrib = std::make_shared<gx::vertexAttrib>(
-    gx::vertexAttrib("boneWeights",4,0,boneWeights));
-  auto boneIdAttrib = std::make_shared<gx::vertexAttrib>(
-    gx::vertexAttrib("boneIDs"    ,4,0,boneIds));
+  return ret;
+}
 
-  gx::Mesh::attribsList_t attribs;
-  attribs.push_back(positionsAttrib);
-  attribs.push_back(colorsAttrib);
-  attribs.push_back(normalsAttrib);
-  attribs.push_back(boneWeightAttrib);
-  attribs.push_back(boneIdAttrib);
+std::vector<gx::vector4f> initColors(const aiMesh* paiMesh) {
+  const aiVector3D Zero3D(0.0f, 0.0f, 0.0f);
 
-  return attribs;
+  std::vector<gx::vector4f> ret;
+  for (unsigned int i = 0 ; i < paiMesh->mNumVertices ; i++) {
+    const aiVector3D* pTexCoord =
+      paiMesh->HasTextureCoords(0) ? &(paiMesh->mTextureCoords[0][i]) : &Zero3D;
+      // temporary color filler. 
+      // colors are stored in materials
+    ret.push_back(gx::vector4f(1.0f,0.2f,0.0f));
+    //TODO: use texture coordinates
+  }
+
+  return ret;
 }
 
 std::vector<GLuint> initIndices(const aiMesh* paiMesh) {
@@ -112,22 +97,39 @@ std::vector<GLuint> initIndices(const aiMesh* paiMesh) {
   }
   return Indices;
 }
+
+std::map<int,gx::matrix> initOffsets(const gx::Mesh::idMap_t& ids, const aiMesh* paiMesh) {
+  std::map<int,gx::matrix> offsets;
+  for(unsigned int i = 0; i < paiMesh->mNumBones; i++) {
+    const auto& meshBone = paiMesh->mBones[i];
+    if(ids.find(meshBone->mName.C_Str()) == ids.end()) {
+      std::cout << "error, no id for " << meshBone->mName.C_Str() << std::endl;
+    }
+    offsets.insert(std::make_pair(
+      ids.find(meshBone->mName.C_Str())->second,gx::toMat(meshBone->mOffsetMatrix)));
+  }
+  return offsets;
+}
 } //end unnamed namespace
 
-gx::Mesh::MeshEntry::MeshEntry(idMap_t& ids, const aiMesh* paiMesh)
-  : attribs(initAttribs(ids,paiMesh)), indices(initIndices(paiMesh)),
-    MaterialIndex(paiMesh->mMaterialIndex)                                 {
+gx::Mesh::MeshEntry::MeshEntry(const idMap_t& ids, const aiMesh* paiMesh)
+  : positions(initPositions(paiMesh)), colors(initColors(paiMesh)),
+    normals(initNormals(paiMesh)), boneWeights(initBoneWeights(ids,paiMesh)),
+    indices(initIndices(paiMesh)), offsets(initOffsets(ids,paiMesh)),
+    MaterialIndex(paiMesh->mMaterialIndex) {
   debugout << "mesh num bones: " << paiMesh->mNumBones << endl;
   for(unsigned int i = 0; i < paiMesh->mNumBones; i++) {
     debugout << "  bone: " << paiMesh->mBones[i]->mName.C_Str();
     debugout << " name_length: " << paiMesh->mBones[i]->mName.length;
     debugout << " numVerts: " << paiMesh->mBones[i]->mNumWeights << endl;
-    debugout << "  offset: " << toMat(paiMesh->mBones[i]->mOffsetMatrix)<< endl;
+    //debugout<< "  offset: "<< toMat(paiMesh->mBones[i]->mOffsetMatrix)<< endl;
   }
 };
 
 gx::Mesh::MeshEntry::MeshEntry(MeshEntry&& other) noexcept
-  : attribs(std::move(other.attribs)), indices(std::move(other.indices)),
+  : positions(std::move(other.positions)), colors(std::move(other.colors)),
+    normals(std::move(other.normals)),boneWeights(std::move(other.boneWeights)),
+    indices(std::move(other.indices)),    offsets(std::move(other.offsets)),
     MaterialIndex(std::move(other.MaterialIndex)) {}
 
 gx::Mesh::MeshEntry& gx::Mesh::MeshEntry::operator=(MeshEntry&&) {

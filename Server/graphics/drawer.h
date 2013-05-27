@@ -2,8 +2,7 @@
 #define DRAWER_H
 #include <vector>
 #include "shaderProgram.h"
-#include "graphicsEntity.h"
-#include "drawSet.h"
+#include "drawerImpl.h"
 
 namespace gx {
 

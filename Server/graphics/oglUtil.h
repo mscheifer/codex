@@ -27,30 +27,29 @@ const std::string shaderExtensions =
 const std::string shaderHeader = 
   "#version 130\n" + shaderExtensions + "\n";
 
-struct debugStream {
-  std::string logString;
-  template<typename T>
-  debugStream& operator<<(const T& a) {
-    bool userDebugOn = StringToBool(ConfigManager::configMap["graphicsDebug"]);
-    if(debugOn && userDebugOn) {
-      std::cout << a;
-      std::stringstream ss;
-      ss << a;
-      logString += ss.str();
-      if(logString.back() == '\n') {
-        logString = "";
-        GLenum err;
-        while((err = glGetError())) {
-          std::cout << "OpenGL error: " << err << std::endl;
-          std::stringstream sserror;
-          sserror << err;
-          ConfigManager::log(std::string("OpenGL error: ") +
-                             ss.str() + std::string("\n"));
+class debugStream {
+    std::stringstream logString;
+  public:
+    template<typename T>
+    debugStream& operator<<(const T& a) {
+      bool userDebugOn = StringToBool(ConfigManager::configMap["graphicsDebug"]);
+      if(debugOn && userDebugOn) {
+        logString << a;
+        if(logString.str().back() == '\n') {
+          std::string toPrint;
+          getline(logString, toPrint);
+          std::cout << toPrint << std::endl;
+          GLenum err;
+          while((err = glGetError())) {
+            std::stringstream sserror;
+            sserror << "OpenGL error: " << err << std::endl;
+            std::cout << sserror.str();
+            ConfigManager::log(sserror.str());
+          }
         }
-      }
-    } 
-    return *this;
-  }
+      } 
+      return *this;
+    }
 };
 
 extern debugStream debugout;

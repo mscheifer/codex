@@ -2,6 +2,9 @@
 #include "vector3.h"
 
 template<typename T>
+constexpr unsigned int gx::vector4<T>::numComponents;
+
+template<typename T>
 gx::vector4<T>::vector4(): x(elems[0]), y(elems[1]), z(elems[2]), w(elems[3]) {
   this->elems[0] = 0; this->elems[1] = 0; this->elems[2] = 0; this->elems[3]= 1;
 }
@@ -29,6 +32,11 @@ template<typename T>
 gx::vector4<T>::vector4(elem_t x0, elem_t y0, elem_t z0)
   : x(elems[0]), y(elems[1]), z(elems[2]), w(elems[3]) {
   this->elems[0]= x0; this->elems[1]= y0; this->elems[2]= z0; this->elems[3]= 1;
+}
+template<typename T>
+gx::vector4<T>::vector4(elem_t x0, elem_t y0, elem_t z0, elem_t w0)
+  : x(elems[0]), y(elems[1]), z(elems[2]), w(elems[3]) {
+  this->elems[0]= x0; this->elems[1]= y0; this->elems[2]= z0; this->elems[3]=w0;
 }
 template<typename T>
 gx::vector4<T>::vector4(const std::initializer_list<elem_t> l)
@@ -79,9 +87,25 @@ void gx::vector4<T>::dehomogenize() {
   this->w = 1;
 }
 template<typename T>
+typename std::array<T,4>::iterator gx::vector4<T>::begin() {
+  return this->elems.begin();
+}
+template<typename T>
+typename std::array<T,4>::const_iterator gx::vector4<T>::begin() const {
+  return this->elems.begin();
+}
+template<typename T>
+typename std::array<T,4>::iterator gx::vector4<T>::end() {
+  return this->elems.end();
+}
+template<typename T>
+typename std::array<T,4>::const_iterator gx::vector4<T>::end() const {
+  return this->elems.end();
+}  
+template<typename T>
 typename gx::vector4<T>::elem_t& gx::vector4<T>::get(index_type i) {
   return this->elems[i];
-}  
+}
 template<typename T>
 const typename gx::vector4<T>::elem_t& gx::vector4<T>::get(index_type i) const {
   return this->elems[i];
@@ -147,3 +171,7 @@ template class gx::vector4<GLfloat>;
 template gx::vector4<GLfloat> gx::dehomogenize<GLfloat>(vector4<GLfloat>);
 template std::ostream&
 gx::operator<<<GLfloat> (std::ostream&, const vector4<GLfloat>&);
+template class gx::vector4<GLint>;
+template gx::vector4<GLint> gx::dehomogenize<GLint>(vector4<GLint>);
+template std::ostream&
+gx::operator<<<GLint> (std::ostream&, const vector4<GLint>&);
