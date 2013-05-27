@@ -171,13 +171,10 @@ std::pair<bool,BoundingObj::vec3_t> boxBox(const BoundingBox* a,const  BoundingB
     if( !ret.first )
       return std::pair<bool,BoundingObj::vec3_t>(false,BoundingObj::vec3_t());
     else{
-      //std::cout << "axis " << axes[i] << std::endl;
-      //std::cout << "fixit " << ret.second << "mag " << ret.second.magnitude() << std::endl << std::endl;
       if(ret.second.magnitudesq() < min.second.magnitudesq())
         min.second = ret.second;
     }
   }
-  //std::cout << "min " << min.second << std::endl;
   return min;
 }
 
@@ -389,6 +386,8 @@ void boxTest(){
       5,1,2);
     */
 
+  /*
+    //floor
     BoundingBox b2(BoundingObj::vec4_t(0,0,-5), 
       BoundingObj::vec3_t(0,-1,0), BoundingObj::vec3_t(1,0,0), BoundingObj::vec3_t(0,0 ,1),
       500,500,5);
@@ -401,6 +400,8 @@ void boxTest(){
     std::cout << "1==" << collide(&player,&b2).first << " vecfix " << collide(&player,&b2).second << std::endl;
     player.setCenter( player.getCenter() + collide(&player,&b2).second );
         std::cout << "1==" << collide(&player,&b2).first << " vecfix " << collide(&player,&b2).second << std::endl;
+
+        */
     /*
     RayCollision f = rayCollide(&r1, &b1);
     std::cout << f.collided << std::endl

@@ -9,40 +9,78 @@ struct ProjectileData{
   float strength;
   float mpCost;
   int chargeTime; //charge time in milliseconds
-  BUFF debuff;
+  std::vector<BUFF> debuff;
 
   ProjectileData( MAGIC_POWER magicType1, 
     length_t range1,
     length_t speed1,
     float strength1,
     float mpCost1,
-    BUFF debuff1,
+    std::vector<BUFF> debuff1,
     int chargeTime1
     )
     : magicType(magicType), range(range1), speed(speed1), 
     strength(strength1), mpCost(mpCost1), chargeTime(chargeTime1), debuff(debuff1){}
 };
 
+const BUFF FIR1arr[] = {FIR1DEBUFF};
+const BUFF FIR2arr[] = {FIR2DEBUFF};
+const BUFF FIR3arr[] = {FIR3DEBUFF};
+const BUFF ICE1arr[] = {ICE1DEBUFF};
+const BUFF ICE2arr[] = {ICE2DEBUFF};
+const BUFF ICE3arr[] = {ICE3DEBUFF};
+const BUFF THU1arr[] = {THU1DEBUFF};
+const BUFF THU2arr[] = {THU2DEBUFF};
+const BUFF THU3arr[] = {THU3DEBUFF};
+const BUFF G1Marr[] = {G1MDEBUFF};
+const BUFF G2arr[] = {G2DEBUFF};
+const BUFF G2Marr[] = {G2MDEBUFF};
+const BUFF G3arr[] = {G3DEBUFF1, G3DEBUFF2};
+
+const BUFF NONEarr[] = {NONE};
+
+//the size is harded coded right now lol 
+const std::vector<BUFF> FIR1V(FIR1arr,FIR1arr+1);
+const std::vector<BUFF> FIR2V(FIR2arr,FIR2arr+1);
+const std::vector<BUFF> FIR3V(FIR3arr,FIR3arr+1);
+const std::vector<BUFF> ICE1V(ICE1arr,ICE1arr+1);
+const std::vector<BUFF> ICE2V(ICE2arr,ICE2arr+1);
+const std::vector<BUFF> ICE3V(ICE3arr,ICE3arr+1);
+const std::vector<BUFF> THU1V(THU1arr,THU1arr+1);
+const std::vector<BUFF> THU2V(THU2arr,THU2arr+1);
+const std::vector<BUFF> THU3V(THU3arr,THU3arr+1);
+const std::vector<BUFF> G1MV(G1Marr,G1Marr+1);
+const std::vector<BUFF> G2V(G2arr,G2arr+1);
+const std::vector<BUFF> G2MV(G2Marr,G2Marr+1);
+const std::vector<BUFF> G3V(G3arr,G3arr+2);
+
+const std::vector<BUFF> NONEV(NONEarr,NONEarr+1);
+
 const ProjectileData ProjInfo[] = { //TODO fix all these numbers
   //             type,  rng, spd str mp buff chrgTime
-  ProjectileData(FIR1,  300, 30, 10, 2, FIR1DEBUFF, 1500),
-  ProjectileData(FIR2,  300, 30, 12, 0, NONE, 5000),
-  ProjectileData(FIR3,  300, 30, 20, 0, NONE, -1),
-  ProjectileData(ICE1,  300, 30, 10, 0, NONE, 1500),
-  ProjectileData(ICE2,  300, 30, 12, 0, NONE, 5000),
-  ProjectileData(ICE3,  300, 30, 20, 0, NONE, -1),
-  ProjectileData(THU1,  300, 30, 10, 0, NONE, 1500),
-  ProjectileData(THU2,  300, 30, 12, 0, NONE, 5000),
-  ProjectileData(THU3,  300, 30, 20, 0, NONE, -1),
-  ProjectileData(G_IT,  300, 30, 12, 0, NONE, -1),
-  ProjectileData(G_FT,  300, 30, 12, 0, NONE, -1),
-  ProjectileData(G_FI,  300, 30, 12, 0, NONE, -1),
-  ProjectileData(G2,    300, 30, 25, 0, NONE, -1),
-  ProjectileData(G_IT2, 300, 30, 20, 0, NONE, -1),
-  ProjectileData(G_FT2, 300, 30, 20, 0, NONE, -1),
-  ProjectileData(G_FI2, 300, 30, 20, 0, NONE, -1),
-  ProjectileData(G3,    300, 30, 50, 0, NONE, -1),
-  ProjectileData(B1,    50,  30, 5, 0, NONE, -1)
+  ProjectileData(FIR1,  300, 30, 10, 2, FIR1V, 1500),
+  ProjectileData(FIR2,  300, 30, 12, 0, FIR2V, 5000),
+  ProjectileData(FIR3,  300, 30, 20, 0, FIR3V, -1),
+  ProjectileData(ICE1,  300, 30, 10, 0, ICE1V, 1500),
+  ProjectileData(ICE2,  300, 30, 12, 0, ICE2V, 5000),
+  ProjectileData(ICE3,  300, 30, 20, 0, ICE3V, -1),
+  ProjectileData(THU1,  300, 30, 10, 0, THU1V, 1500),
+  ProjectileData(THU2,  300, 30, 12, 0, THU2V, 5000),
+  ProjectileData(THU3,  300, 30, 20, 0, THU3V, -1),
+
+  ProjectileData(G_IT,  300, 30, 12, 0, G1MV, -1),
+  ProjectileData(G_FT,  300, 30, 12, 0, G1MV, -1),
+  ProjectileData(G_FI,  300, 30, 12, 0, G1MV, -1),
+
+  ProjectileData(G2,    300, 30, 25, 0, G2V, -1),
+
+  ProjectileData(G_IT2, 300, 30, 20, 0, G2MV, -1),
+  ProjectileData(G_FT2, 300, 30, 20, 0, G2MV, -1),
+  ProjectileData(G_FI2, 300, 30, 20, 0, G2MV, -1),
+
+  ProjectileData(G3,    300, 30, 50, 0, G3V, -1),
+
+  ProjectileData(B1,    50,  30, 5, 0, NONEV, -1)
 };
 
 class Projectile :

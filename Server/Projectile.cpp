@@ -54,7 +54,6 @@ void Projectile::update(void) {
   }
   
 	updateBounds();
-	// some collision detection
 }
 
 void Projectile::setOwner(Player * player){
@@ -76,6 +75,8 @@ void Projectile::setRange(length_t r) {
 
 void Projectile::updateBounds(){
   //update the bounding objects
+  boundingObjs[0]->setCenter(BoundingObj::vec4_t(position.x, position.y, position.z));
+  boundingObjs[0]->rotate(direction,BoundingObj::vec3_t(0,0,1));
   boundingObjs[0]->setCenterOnTree(BoundingObj::vec4_t(position.x, position.y, position.z));
 }
 
