@@ -64,6 +64,7 @@ void Player::init(v3_t pos, int assigned_id, Map * m)
 	castDownCounter = sf::Clock();
   speedUpCounter = sf::Clock();
   speedUp = false;
+  charging = false;
 	map = m;
 	weapon[0] = new WeaponFist(position, this->map); //has no bounds so it doesnt drop
 	weapon[1] = new WeaponFire(position, this->map, FIR1); //TODO add this to entities, or it won't be able render
@@ -307,6 +308,7 @@ void Player::handleSelfAction(ClientGameTimeAction a) {
 
     chargedProjectile->fire(v,strMult);
     chargedProjectile = nullptr;
+    charging = false;
   }
 
   if(a.switchWeapon) {
@@ -339,6 +341,7 @@ void Player::attack( ClientGameTimeAction a) {
 	  }
 	  mana -= currentWeapon->getMpCost();
 	  chargedProjectile = currentWeapon->attackRange(direction, getProjectilePosition(), this);
+    charging = true;
 	}
 	else if(a.attackMelee){
 		if( !currentWeapon->canUseWeapon(false, this)){
@@ -528,6 +531,7 @@ void Player::serialize(sf::Packet& packet) const {
     // change the array to vector ?
     packet << static_cast<sf::Uint32>(pickupWeaponType);
     packet << current_weapon_selection; 
+    packet << charging;
   }
 
   void Player::deserialize(sf::Packet& packet) {
@@ -556,4 +560,5 @@ void Player::serialize(sf::Packet& packet) const {
     packet >> pickupWeaponTypeUint32;
     pickupWeaponType = static_cast<WeaponType>(pickupWeaponTypeUint32);
     packet >> current_weapon_selection; 
+    packet >> charging;
   }

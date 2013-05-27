@@ -29,7 +29,9 @@ void NetworkClient::receiveMessages() {
           if(playerP->player_id != this->id) {
             //make sure the SGTR stays in scope
             entities.push_back(&(*playerP));
+           
           }
+          AudioManager::processPlayerSound(*playerP);
           
           if(cycle  == 100 ) {
              cycle = 0;
@@ -42,7 +44,7 @@ void NetworkClient::receiveMessages() {
         }
         for(auto entP = s.projectiles.begin(); entP != s.projectiles.end(); entP++) {
           entities.push_back(*entP);
-            AudioManager::processProjectileSound(**entP);
+           AudioManager::processProjectileSound(**entP);
         }
         for(auto entP = s.powerups.begin(); entP != s.powerups.end(); entP++) {
           entities.push_back(*entP);

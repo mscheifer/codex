@@ -6,7 +6,7 @@ std::array<sf::Music,2> AudioManager::music;
 std::array<int,2> AudioManager::musicProx;
 std::map<std::string, sf::SoundBuffer*> AudioManager::soundBuffers;
 std::map<std::string, std::string> AudioManager::musics;
-std::map<int, sf::Sound> AudioManager::sounds;
+std::map<std::string, sf::Sound> AudioManager::sounds;
 bool AudioManager::useSound;
 int AudioManager::trackNo;
 int AudioManager::currentlyPlayingMusic;
@@ -32,6 +32,9 @@ void AudioManager::loadSounds(){
     musicProx[i] = -1;
   }
 
+  
+  loadSound("c1", "sounds/charge1.wav");
+
   loadSound("s1", "sounds/sound_1.wav");
   loadSound("s2", "sounds/sound_2.wav");
   loadSound("s3", "sounds/sound_3.wav");
@@ -54,7 +57,7 @@ void AudioManager::loadSounds(){
   musics["m2_4"] = "sounds/m2_4.aif";
 }
 
-void AudioManager::playSound(std::string key, int id, v3_t pos){
+void AudioManager::playSound(std::string key, std::string id, v3_t pos){
   if(!useSound) 
     return;
 
@@ -65,12 +68,20 @@ void AudioManager::playSound(std::string key, int id, v3_t pos){
 
 
     if( sounds.find(id) ==  sounds.end()) {
-      sounds.insert(std::pair<int,sf::Sound>(id,sf::Sound()));
+      sounds.insert(std::pair<std::string,sf::Sound>(id,sf::Sound()));
     }
 
     playSoundHelper( &sounds.find(id)->second ,pos, it->second);
   
   }
+}
+
+
+void AudioManager::stopSound(std::string id) {
+   if( sounds.find(id) !=  sounds.end()) {
+     sounds.find(id)->second.stop();
+     sounds.erase(id);
+   }
 }
 
 void AudioManager::playSoundHelper( sf::Sound* s, v3_t pos, sf::SoundBuffer* sbuff){
@@ -167,13 +178,15 @@ void AudioManager::playMusic(std::string musicN, int index){
 }
 
 void AudioManager::processPlayerSound(Player& o){
-
+  if(o.charging) {
+    playSound("c1", "player:"+ o.player_id, o.getPosition());
+  }
 
 }
 
 void AudioManager::processProjectileSound(Projectile& o){
   if(o.getFired()){
-    playSound( "f1", o.id, o.getPosition());
+    playSound( "f1", "fire:"+o.id, o.getPosition());
   }
 }
 

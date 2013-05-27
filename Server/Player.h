@@ -65,7 +65,7 @@ public:
   
   void serialize(sf::Packet& packet) const;
   void deserialize(sf::Packet& packet);
-
+   bool charging;
 private:
   Weapon* pickup;
   WeaponType pickupWeaponType;
