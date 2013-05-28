@@ -39,7 +39,7 @@ public:
   void handleCollisions();  
   void updateBounds();  
   void updateBoundsSoft();
-  //void clearEvents();
+  void clearEvents();
   bool collidePlayer(const std::pair<Entity*,BoundingObj::vec3_t>& p);
   
   bool moveTowardDirection(move_t degree, bool jump); //handle movement input WADS jump
@@ -69,7 +69,8 @@ public:
   
   void serialize(sf::Packet& packet) const;
   void deserialize(sf::Packet& packet);
-   bool charging;
+  bool charging;
+  bool walking;
 private:
   Weapon* pickup;
   WeaponType pickupWeaponType;

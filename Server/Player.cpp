@@ -65,6 +65,7 @@ void Player::init(v3_t pos, int assigned_id, Map * m)
   speedUpCounter = sf::Clock();
   speedUp = false;
   charging = false;
+  walking = false;
 	map = m;
 	weapon[0] = new WeaponFist(position, this->map); //has no bounds so it doesnt drop
 	weapon[1] = new WeaponFire(position, this->map, FIR1); //TODO add this to entities, or it won't be able render
@@ -199,6 +200,13 @@ bool Player::moveTowardDirection(move_t inputDir, bool jump)
   }
 
   movementDirection = correctMovement(movementDirection, true);
+  
+  if(movementDirection.magnitude() > 1.0E-8 ){
+    walking = true;
+  } else {
+    walking = false;
+  }
+
   position += movementDirection;
   updateBounds();
 	return true;
@@ -207,6 +215,10 @@ bool Player::moveTowardDirection(move_t inputDir, bool jump)
 bool Player::correctMovementHit( Entity* e ){
   Entity_Type etype = e->getType();
   return etype == PLAYER || etype == WALL;
+}
+
+void Player::clearEvents(){
+  walking = false;
 }
 
 void Player::die()
@@ -546,6 +558,7 @@ void Player::serialize(sf::Packet& packet) const {
     packet << static_cast<sf::Uint32>(pickupWeaponType);
     packet << current_weapon_selection; 
     packet << charging;
+    packet << walking;
     packet << kills;
     packet << wins;
   }
@@ -577,6 +590,7 @@ void Player::serialize(sf::Packet& packet) const {
     pickupWeaponType = static_cast<WeaponType>(pickupWeaponTypeUint32);
     packet >> current_weapon_selection; 
     packet >> charging;
+    packet >> walking;
     packet >> kills;
     packet >> wins;
   }
