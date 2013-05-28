@@ -24,11 +24,12 @@ void NetworkClient::receiveMessages() {
         this->s.deserialize(packet);
         if (s.state != Game_State::PLAYING && ConfigManager::gameRestart()) 
           gameRestart = true;
-        std::cout<<s.state<<std::endl;
+      //  std::cout<<s.state<<std::endl;
         std::vector<int> kills;
         std::vector<int> wins;
         for(auto playerP = s.players.begin(); playerP != s.players.end(); playerP++) {
-          if(playerP->player_id != this->id) {
+          if(playerP->player_id !=
+            this->id) {
             //make sure the SGTR stays in scope
             entities.push_back(&(*playerP));
            
