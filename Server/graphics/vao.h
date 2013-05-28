@@ -16,7 +16,7 @@ class vao {
         GLuint ibo;
     attribsList_t attribs;
   public:
-    vao(const std::vector<GLuint>,attribsList_t,std::map<std::string,vertexAttribSignature>);
+    vao(const std::vector<GLuint>,attribsList_t,varSigs_t);
     vao(const vao&);// = delete; //don't copy
     vao& operator=(const vao&);// = delete; //don't assign
     vao(vao&&);

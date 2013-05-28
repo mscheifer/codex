@@ -1,4 +1,5 @@
 #include "drawer.h"
+#include "graphicsEntity.h"
 #include "uniformBlock.h"
 
 namespace {

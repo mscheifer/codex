@@ -9,7 +9,7 @@ std::map<std::string, std::string> AudioManager::musics;
 std::map<std::string, sf::Sound> AudioManager::sounds;
 bool AudioManager::useSound;
 int AudioManager::trackNo;
-int AudioManager::currentlyPlayingMusic;
+unsigned int AudioManager::currentlyPlayingMusic;
 
 void AudioManager::loadSound(std::string key, std::string sound){
   if(!useSound) 
@@ -85,11 +85,12 @@ void AudioManager::stopSound(std::string id) {
 }
 
 void AudioManager::playSoundHelper( sf::Sound* s, v3_t pos, sf::SoundBuffer* sbuff){
+  s->setPosition(pos.x,pos.y,pos.z);
   if(s->getStatus() != sf::Sound::Playing)  {
     s->setBuffer(*sbuff);
-    s->setPosition(pos.x,pos.y,pos.z);
     s->play();
   }
+
 }
 
 void AudioManager::updateMusic( int numPlayers ){
@@ -180,8 +181,9 @@ void AudioManager::playMusic(std::string musicN, int index){
 void AudioManager::processPlayerSound(Player& o){
   if(o.charging) {
     playSound("c1", "player:"+ o.player_id, o.getPosition());
+  } else {
+    stopSound( "player:"+ o.player_id);
   }
-
 }
 
 void AudioManager::processProjectileSound(Projectile& o){
