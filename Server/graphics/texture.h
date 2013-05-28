@@ -12,7 +12,7 @@ struct Texture {
 
     bool Load();
 
-    void bind(GLenum TextureUnit);
+    void bind(GLenum TextureUnit) const;
 
 private:
     GLenum m_textureTarget;

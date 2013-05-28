@@ -43,7 +43,7 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <AdditionalIncludeDirectories>$(ProjectDir);$(SolutionDir)SFML-2.0\include;$(SolutionDir)assimp\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>_MBCS;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_MBCS;_CRT_SECURE_NO_WARNINGS;GRAPHICSDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -93,6 +93,7 @@
     <ClCompile Include="graphics\graphicsEntity.cpp" />
     <ClCompile Include="graphics\light.cpp" />
     <ClCompile Include="graphics\loadCustom.cpp" />
+    <ClCompile Include="graphics\material.cpp" />
     <ClCompile Include="graphics\matrix.cpp" />
     <ClCompile Include="graphics\mesh.cpp" />
     <ClCompile Include="graphics\meshEntry.cpp" />
@@ -155,6 +156,7 @@
     <ClInclude Include="graphics\graphicsEntity.h" />
     <ClInclude Include="graphics\light.h" />
     <ClInclude Include="graphics\loadCustom.h" />
+    <ClInclude Include="graphics\material.h" />
     <ClInclude Include="graphics\matrix.h" />
     <ClInclude Include="graphics\mesh.h" />
     <ClInclude Include="graphics\oglUtil.h" />
@@ -174,7 +176,6 @@
     <ClInclude Include="HUD.h" />
     <ClInclude Include="lobby.h" />
     <ClInclude Include="Map.h" />
-    <ClInclude Include="material.h" />
     <ClInclude Include="NetworkServices.h" />
     <ClInclude Include="Physics.h" />
     <ClInclude Include="Player.h" />

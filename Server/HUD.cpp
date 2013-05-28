@@ -5,19 +5,19 @@
 HUD::HUD(void):health(100), maxHealth(100), HLossPercentage(0), 
   mana(100), maxMana(100), MLossPercentage(0) {
   /* test sprite */
-  hTexture.loadFromFile("graphics/Images/heart_color.png");
+  //hTexture.loadFromFile("graphics/Images/heart_color.png");
   hSprite.setTexture(hTexture);
   hSprite.setPosition(10,550-7.5);
   hSprite.setScale(0.15,0.15);
-  hBarTexture.loadFromFile("graphics/Images/bar.png");
+  //hBarTexture.loadFromFile("graphics/Images/bar.png");
   hBarSprite.setTexture(hBarTexture);
   hBarSprite.setPosition(50,550-7.5);
   hBarSprite.setScale(0.1,0.15);
-  mTexture.loadFromFile("graphics/Images/magic_color.png");
+  //mTexture.loadFromFile("graphics/Images/magic_color.png");
   mSprite.setTexture(mTexture);
   mSprite.setPosition(750,550-7.5);
   mSprite.setScale(0.15,0.15);
-  mBarTexture.loadFromFile("graphics/Images/bar.png");
+  //mBarTexture.loadFromFile("graphics/Images/bar.png");
   mBarSprite.setTexture(mBarTexture);
   mBarSprite.setPosition(537,550-7.5);
   mBarSprite.setScale(0.1,0.15);

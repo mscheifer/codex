@@ -1,4 +1,5 @@
 in vec4  interpColor;
+in vec2	 interpDiffuseCoord;
 in float interpNormDiff;
 in vec3  interpNormal;
 in vec4  interpPosition; //position of frag in eye space
@@ -6,6 +7,8 @@ in vec4  interpPosition; //position of frag in eye space
 in vec3  light1Dir; //direction of light in world space
 
 out vec4 outputF;
+
+uniform sampler2D diffuseTex;
 
 const float outlineThickness = 0.2f;
  

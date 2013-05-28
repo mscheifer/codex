@@ -6,7 +6,7 @@ lobby::lobby(void):start(false)  {
   welcome.setFont(font);
   welcome.setColor(sf::Color::Red);
   welcome.setCharacterSize(36);
-  welcome.setString("Please click join to start.");
+  //welcome.setString("Please click join to start.");
   welcome.setPosition(200,200);
   buttonRect.setSize(sf::Vector2f(250,45));
   buttonRect.setOutlineColor(sf::Color::Red);
@@ -15,7 +15,7 @@ lobby::lobby(void):start(false)  {
   button.setFont(font);
   button.setColor(sf::Color(150,50,50));
   button.setCharacterSize(36);
-  button.setString("join the game");
+  //button.setString("join the game");
   buttonBounds = buttonRect.getGlobalBounds();
   sf::FloatRect textBounds = button.getGlobalBounds();
   button.setPosition(280+(buttonBounds.width-textBounds.width)/2,300);
