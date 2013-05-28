@@ -9,7 +9,8 @@ gx::vertexAttrib::vertexAttrib(vertexAttrib&& other) noexcept
 
 gx::vertexAttrib::~vertexAttrib() noexcept {
   glDeleteBuffers(1, &(this->buffer));
-  debugout << "glDeleteBuffers(1, &(this->buffer): " << this->buffer << ");" << endl;
+  debugout << "glDeleteBuffers(1, &(this->buffer): " << this->buffer << ");";
+  debugout << endl;
 }
 
 void gx::vertexAttrib::bindBuffer() const {

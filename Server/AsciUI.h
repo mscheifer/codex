@@ -8,9 +8,9 @@ class Entity;
 class AsciUI
 {
 public:
-	AsciUI(void);
-	~AsciUI(void);
-	int update(Map*);
-	int render(Player*, std::vector<Entity *>);
+  AsciUI(void);
+  ~AsciUI(void);
+  int update(Map*);
+  int render(Player*, std::vector<Entity *>);
 };
 

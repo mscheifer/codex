@@ -29,7 +29,7 @@ void ClientGameTimeAction::clear() {
     packet << player_id;
     packet << static_cast<sf::Int32>(movement);
     packet << attackMelee;
-	  packet << attackRange;
+    packet << attackRange;
     packet << weapon1;
     packet << weapon2;
     packet << jump;
@@ -44,7 +44,7 @@ void ClientGameTimeAction::clear() {
     packet >> movementInt;
     movement = static_cast<move_t>(movementInt);
     packet >> attackMelee;
-	  packet >> attackRange;
+    packet >> attackRange;
     packet >> weapon1;
     packet >> weapon2;
     packet >> jump;

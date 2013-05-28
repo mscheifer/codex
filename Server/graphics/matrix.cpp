@@ -3,15 +3,15 @@
 #include "matrix.h"
 
 gx::matrix::matrix(): elems() {
-	/*elems({{ {{ 1, 0, 0, 0 }},
+  /*elems({{ {{ 1, 0, 0, 0 }},
                {{ 0, 1, 0, 0 }},
                {{ 0, 0, 1, 0 }},
                {{ 0, 0, 0, 1 }} }})*/
-	for(size_t i = 0; i < elems.size(); i++) {
-		for(size_t j = 0; j < elems[i].size(); j++) {
-			elems[i][j] = 0;
-		}
-	}
+  for(size_t i = 0; i < elems.size(); i++) {
+    for(size_t j = 0; j < elems[i].size(); j++) {
+      elems[i][j] = 0;
+    }
+  }
 }
 
 gx::matrix::matrix(std::array<std::array<elem_t,4>,4> a): elems(std::move(a)) {}
@@ -46,7 +46,7 @@ void gx::matrix::print(std::ostream& o) const {
   //cant use range based for here because of visual c++
   for(auto rowp = elems.begin(); rowp != elems.end(); ++rowp) {
     const auto& row = *rowp;
-	//cant use range based for here because of visual c++
+  //cant use range based for here because of visual c++
     for(auto ep = row.begin(); ep != row.end(); ++ep) {
       const auto& e = *ep;
       o << e << " ";
@@ -59,11 +59,11 @@ void gx::matrix::print() const {
   this->print(std::cout);
 }
 
-std::array<gx::matrix::elem_t,4>& gx::matrix::operator[](int i) {
+std::array<gx::matrix::elem_t,4>& gx::matrix::operator[](row_index_type i) {
   return elems[i];
 }
 
-const std::array<gx::matrix::elem_t,4>& gx::matrix::operator[](int i) const {
+const std::array<gx::matrix::elem_t,4>& gx::matrix::operator[](row_index_type i) const {
   return elems[i];
 }
 
@@ -73,28 +73,28 @@ void gx::matrix::identify() {
                {{ 0, 0, 1, 0 }},
                {{ 0, 0, 0, 1 }} }};*/
   //have to use this crap becuase of visual c++
-	for(size_t i = 0; i < elems.size(); i++) {
-		for(size_t j = 0; j < elems[i].size(); j++) {
-			elems[i][j] = 0;
-		}
-	}
-	for(size_t i = 0; i < elems.size(); i++) {
-		elems[i][i] = 1;
-	}
+  for(size_t i = 0; i < elems.size(); i++) {
+    for(size_t j = 0; j < elems[i].size(); j++) {
+      elems[i][j] = 0;
+    }
+  }
+  for(size_t i = 0; i < elems.size(); i++) {
+    elems[i][i] = 1;
+  }
 }
 
 void gx::matrix::oglmatrix(elem_t a[16]) const {
   //array is passed by reference by default
-  for(int i = 0; i < 4 ; i++) {
-    for(int j = 0; j < 4 ; j++) {
+  for(row_index_type i = 0; i < 4 ; i++) {
+    for(column_index_type j = 0; j < 4 ; j++) {
       a[i+4*j] = elems[i][j];
     }
   }
 }
 
 void gx::matrix::oglmatrix(elem_t a[4][4]) const {
-  for(int i = 0; i < 4 ; i++) {
-    for(int j = 0; j < 4 ; j++) {
+  for(row_index_type i = 0; i < 4 ; i++) {
+    for(column_index_type j = 0; j < 4 ; j++) {
       a[j][i] = elems[i][j];
     }
   }
@@ -102,8 +102,8 @@ void gx::matrix::oglmatrix(elem_t a[4][4]) const {
 
 std::array<gx::matrix::elem_t,16> gx::matrix::oglmatrix() const {
   std::array<elem_t,16> ret;
-  for(int i = 0; i < 4 ; i++) {
-    for(int j = 0; j < 4 ; j++) {
+  for(row_index_type i = 0; i < 4 ; i++) {
+    for(column_index_type j = 0; j < 4 ; j++) {
       ret[j*4+i] = elems[i][j];
     }
   }
@@ -111,8 +111,8 @@ std::array<gx::matrix::elem_t,16> gx::matrix::oglmatrix() const {
 }
 
 bool gx::matrix::operator==(const matrix& right) const {
-  for(int i = 0; i < 4; i++) {
-    for(int j = 0; j < 4; j++) {
+  for(row_index_type i = 0; i < 4; i++) {
+    for(column_index_type j = 0; j < 4; j++) {
       if((*this)[i][j] != right[i][j]) return false;
     }
   }
@@ -123,11 +123,29 @@ bool gx::matrix::operator!=(const matrix& right) const {
   return !((*this) == right);
 }
 
+gx::matrix& gx::matrix::operator+=(const matrix& right) {
+  for(row_index_type i = 0; i < 4; i++) {
+    for(column_index_type j = 0; j < 4; j++) {
+      (*this)[i][j] += right[i][j];
+    }
+  }
+  return *this;
+}
+
+gx::matrix gx::multiply(matrix left,matrix::elem_t right) {
+  for(matrix::row_index_type i = 0; i < 4; i++) {
+    for(matrix::column_index_type j = 0; j < 4; j++) {
+      left[i][j] = left[i][j] * right;
+    }
+  }
+  return left;
+}
+
 gx::matrix gx::multiply(const matrix& left,const matrix& right) {
-  matrix result = matrix(); //0 init
-  for(int i = 0; i < 4; i++) {
-    for(int j = 0; j < 4; j++) {
-      for(int k = 0; k < 4; k++) {
+  matrix result; // 0 init
+  for(matrix::row_index_type i = 0; i < 4; i++) {
+    for(matrix::column_index_type j = 0; j < 4; j++) {
+      for(size_t k = 0; k < 4; k++) {
         result[i][j] += left[i][k] * right[k][j];
       }
     }
@@ -138,8 +156,8 @@ gx::matrix gx::multiply(const matrix& left,const matrix& right) {
 gx::vector4f gx::multiply(const matrix& left,const vector4f& right) {
   vector4f result = vector4f(); //0 init
   result.w = 0;
-  for(int i = 0; i < 4; i++) {
-    for(int j = 0; j < 4; j++) {
+  for(vector4f::index_type i = 0; i < 4; i++) {
+    for(matrix::column_index_type j = 0; j < 4; j++) {
       result[i] += left[i][j] * right[j];
     }
   }
@@ -155,6 +173,10 @@ gx::vector3f gx::multiply(const matrix& left,const vector3f& right) {
 
 gx::matrix gx::operator*(const matrix& left,const matrix& right) {
   return multiply(left,right);
+}
+
+gx::matrix gx::operator*(matrix left,matrix::elem_t right) {
+  return multiply(std::move(left),right);
 }
 
 gx::vector4f gx::operator*(const matrix& left,const vector4f& right) {
@@ -242,7 +264,8 @@ gx::matrix gx::toBasis(const vector3f& x,const vector3f& y,const vector3f& z) {
                 0,   0,   0,   1);
 }
 
-gx::matrix gx::toRightHandBasisFromYandUp(const vector3f& dirY, const vector3f& up) {
+gx::matrix gx::toRightHandBasisFromYandUp(const vector3f& dirY,
+                                          const vector3f& up) {
   vector3f dirX = dirY * up;
   if(dirX.magnitude() > 0) {
     dirX.scale(dirY.magnitude() / dirX.magnitude());
@@ -255,7 +278,6 @@ gx::matrix gx::toRightHandBasisFromYandUp(const vector3f& dirY, const vector3f& 
   } else {
     dirZ = vector3f(0,0,1) * dirY.magnitude();
   }
-  //std::cout << "dirX: " << dirX << " dirY: " << dirY << " dirZ: " << dirZ << std::endl; 
   return toBasis(dirX,dirY,dirZ);
 }
 

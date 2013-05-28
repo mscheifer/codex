@@ -4,17 +4,20 @@
 #include "shaderProgram.h"
 
 template<GLenum Type>
-gx::uniform::_locations<Type>::_locations(std::string name): varName(std::move(name)) {}
+gx::uniform::_locations<Type>::_locations(std::string name)
+  : varName(std::move(name)) {}
 
 template<GLenum Type>
-void gx::uniform::_locations<Type>::updateLoc(GLuint shader, const GLfloat* data) const {
+void gx::uniform::_locations<Type>::updateLoc(GLuint shader,
+                                      const GLfloat* data) const {
   this->locations.at(shader).write(data);
 }
 
 
 template<GLenum Type>
 void gx::uniform::_locations<Type>::addShader(const shaderProgram& shader) {
-  this->locations.insert(std::make_pair(shader.progNum(),loc<Type>(shader,this->varName,1)));
+  this->locations.insert(
+    std::make_pair(shader.progNum(),loc<Type>(shader,this->varName,1)));
 }
 
 gx::uniform::mat4f::mat4f(std::string name)
@@ -78,7 +81,8 @@ std::string gx::uniform::vec1f::declaration() const {
   return "float " + this->varName + ";";
 }
 
-std::unique_ptr<gx::uniform::basic> gx::uniform::make_uniform(std::string name, GLenum type) {
+std::unique_ptr<gx::uniform::basic>
+gx::uniform::make_uniform(std::string name, GLenum type) {
   switch(type) {
     case GL_FLOAT_MAT4:
       return std::unique_ptr<basic>(new mat4f(std::move(name)));

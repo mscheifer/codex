@@ -6,24 +6,24 @@
 struct ClientGameTimeAction
 {
   static const int packetType = CGTA;  //might be a BUG
-	int player_id;
-	move_t movement;
-	bool attackMelee; // Can use ranged weapons to melee attack
+  int player_id;
+  move_t movement;
+  bool attackMelee; // Can use ranged weapons to melee attack
   bool attackRange;
   bool weapon1; // Used for switching weapon
   bool weapon2; // Used for switching weapon
-	bool jump;
+  bool jump;
   bool updated;
   bool pickup;
   bool switchWeapon;
-	v3_t facingDirection;
+  v3_t facingDirection;
   
   bool operator==(const ClientGameTimeAction & other) const;
   bool operator!=(const ClientGameTimeAction & other) const;
 
   void clear();
 
-	ClientGameTimeAction() : 
+  ClientGameTimeAction() : 
     player_id(-1), movement(NULL_DIR),
     attackMelee(false),attackRange(false),
     weapon1(false), weapon2(false),
