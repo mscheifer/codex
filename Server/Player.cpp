@@ -315,7 +315,12 @@ v3_t Player::getProjectilePosition() {
   v3_t temp = position;
   v3_t d = direction;
   d.normalize();
-  d.scale(1.5); //TODO how far away from the player @mc
+  float size;
+  if(chargedProjectile)
+    size = ProjInfo[chargedProjectile->getMagicType()].size;
+  else
+    size = ProjInfo[B1].size;
+  d.scale(size + 0.5f); //TODO how far away from the player @mc
   temp += d;
   return temp;
 }

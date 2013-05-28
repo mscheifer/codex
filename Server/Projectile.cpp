@@ -173,7 +173,6 @@ void Projectile::setMagicType( MAGIC_POWER m, bool melee ) {
   magicType = m;
   charge_counter.restart();
   float size = ProjInfo[magicType].size;
-  
   if(melee){ //set size for melee
     ((BoundingBox*) boundingObjs[0])->setHw( meleeWidth );
     ((BoundingBox*) boundingObjs[0])->setHh( meleeHeight );

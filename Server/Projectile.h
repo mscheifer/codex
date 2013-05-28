@@ -62,7 +62,7 @@ const ProjectileData ProjInfo[] = { //TODO fix all these numbers
   //             type,  rng, spd size str mp buff chrgTime
   ProjectileData(FIR1,  300, 30, 1,   10, 2, FIR1V, 1500),
   ProjectileData(FIR2,  300, 30, 2,   12, 0, FIR2V, 5000),
-  ProjectileData(FIR3,  300, 30, 2,   20, 0, FIR3V, -1),
+  ProjectileData(FIR3,  300, 30, 3,   20, 0, FIR3V, -1),
   ProjectileData(ICE1,  300, 30, 1,   10, 0, ICE1V, 1500),
   ProjectileData(ICE2,  300, 30, 2,   12, 0, ICE2V, 5000),
   ProjectileData(ICE3,  300, 30, 3,   20, 0, ICE3V, -1),
