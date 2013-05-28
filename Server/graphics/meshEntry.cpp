@@ -1,19 +1,13 @@
 #include "mesh.h"
 #include <assert.h>
+#include "assimpUtil.h"
 
 namespace {
-gx::vector4f toVec4(const aiVector3D& aiVec) {
-  return gx::vector4f(aiVec.x,aiVec.y,aiVec.z);
-}
-gx::vector3f toVec3(const aiVector3D& aiVec) {
-  return gx::vector3f(aiVec.x,aiVec.y,aiVec.z);
-}
-
 std::vector<gx::vector4f> initPositions(const aiMesh* paiMesh) {
   std::vector<gx::vector4f> ret;
   for (unsigned int i = 0 ; i < paiMesh->mNumVertices ; i++) {
     const aiVector3D& pPos = paiMesh->mVertices[i];
-    ret.push_back(toVec4(pPos));
+    ret.push_back(gx::toVec4(pPos));
   }
   return ret;
 }
@@ -22,7 +16,7 @@ std::vector<gx::vector3f> initNormals(const aiMesh* paiMesh) {
   std::vector<gx::vector3f> ret;
   for (unsigned int i = 0 ; i < paiMesh->mNumVertices ; i++) {
     const aiVector3D& pNormal = paiMesh->mNormals[i];
-    ret.push_back(toVec3(pNormal));
+    ret.push_back(gx::toVec3(pNormal));
   }
   return ret;
 }
@@ -67,6 +61,20 @@ initBoneWeights(const gx::Mesh::idMap_t& idMap, const aiMesh* paiMesh) {
     ret.first.push_back(b.first);
     ret.second.push_back(b.second);
   }
+  return ret;
+}
+
+std::vector<gx::vector2f> initTexCoords(const aiMesh* paiMesh) {
+  const aiVector3D Zero3D(0.0f, 0.0f, 0.0f);
+
+  std::vector<gx::vector2f> ret;
+  for (unsigned int i = 0 ; i < paiMesh->mNumVertices ; i++) {
+    //TODO: fix for more materials
+    const aiVector3D* pTexCoord =
+      paiMesh->HasTextureCoords(0) ? &(paiMesh->mTextureCoords[0][i]) : &Zero3D;
+    ret.push_back(gx::vector2f(pTexCoord->x,pTexCoord->y));
+  }
+
   return ret;
 }
 

@@ -4,9 +4,10 @@
 #include <vector>
 #include <set>
 #include <assimp/Importer.hpp>    // C++ importer interface
+#include "graphicsEntity.h"
+#include "material.h"
 #include "matrix.h"
 #include "texture.h"
-#include "graphicsEntity.h"
 
 struct aiMesh;
 
@@ -65,7 +66,7 @@ class Mesh {
   private:
     static const aiScene*        LoadFile(Assimp::Importer&,const std::string&);
     static std::vector<MeshEntry> InitFromScene(idMap_t&, const aiScene*);
-    static std::vector<Texture>   InitMaterials(const aiScene*,
+    static std::vector<material>  InitMaterials(const aiScene*,
                                                 const std::string& Filename);
     // fill in our m_boundary object with the boundary info
     static BoundParam CalcBoundBox(const aiScene* scene,length_t);

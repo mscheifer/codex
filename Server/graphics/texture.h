@@ -19,6 +19,7 @@ private:
     GLenum m_textureTarget;
     GLuint m_textureObj;
     sf::Image m_image;
+    GLuint m_textureID;
 };
 
 } //end namespace gx

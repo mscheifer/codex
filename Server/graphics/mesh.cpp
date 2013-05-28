@@ -4,6 +4,7 @@
 #include <string>
 #include <algorithm>
 #include <limits>
+#include "assimpUtil.h"
 #include "matrix.h"
 #include "vertexAttrib.h"
 
@@ -174,8 +175,8 @@ std::vector<gx::Mesh::MeshEntry> gx::Mesh::InitFromScene(idMap_t& idMap,
   return Ret;
 }
 
-std::vector<gx::Texture> gx::Mesh::InitMaterials(const aiScene* pScene,const std::string& Filename){
-  if(pScene == nullptr) return std::vector<Texture>();
+std::vector<gx::material> gx::Mesh::InitMaterials(const aiScene* pScene,const std::string& Filename){
+  if(pScene == nullptr) return std::vector<material>();
   // Extract the directory part from the file name
   std::string::size_type SlashIndex = Filename.find_last_of("/");
   std::string Dir;
@@ -188,32 +189,31 @@ std::vector<gx::Texture> gx::Mesh::InitMaterials(const aiScene* pScene,const std
     Dir = Filename.substr(0, SlashIndex);
   }
 
-  std::vector<Texture> Ret;
+  std::vector<material> ret;
 
   // Initialize the materials
   for (unsigned int i = 0 ; i < pScene->mNumMaterials ; i++) {
     const aiMaterial* pMaterial = pScene->mMaterials[i];
-
+    vector4f diffuseColor;
+    aiColor3D	ColorDiffuse;
+    if (AI_SUCCESS == pMaterial->Get(AI_MATKEY_COLOR_DIFFUSE, ColorDiffuse)) {
+      diffuseColor = toVec4(ColorDiffuse);
+    } else {
+      diffuseColor = vector4f(1.0,1.0,1.0);
+    }
+    std::string FullPath;
     if (pMaterial->GetTextureCount(aiTextureType_DIFFUSE) > 0) {
       aiString Path;
-
-      if(pMaterial->GetTexture(aiTextureType_DIFFUSE, 0, &Path) == AI_SUCCESS) {
-        std::string FullPath = Dir + "/" + Path.data;
-        Ret.push_back(Texture(GL_TEXTURE_2D, FullPath.c_str()));
-
-        if (!Ret.back().Load()) {
-          std::cout<<"Error loading texture '" << FullPath.c_str() << std::endl;
-          Ret.pop_back();
-          // Load a white texture in case the model does not include its own texture
-          Ret.push_back(Texture(GL_TEXTURE_2D, "./white.png"));
-          Ret.back().Load();
-        } else {
-          std::cout << "Loaded texture '" << FullPath.c_str() << std::endl; 
-        }
+      if(AI_SUCCESS == pMaterial->GetTexture(aiTextureType_DIFFUSE, 0, &Path)) {
+        FullPath = Dir + "/" + Path.data;
+      } else {
+        FullPath = "white.png";
       }
-    } 
+    }
+    Texture diffuseTex(GL_TEXTURE_2D, FullPath);
+    ret.push_back(material(std::move(diffuseTex),diffuseColor));
   }
-  return Ret;
+  return ret;
 }
 
 gx::Mesh::BoundParam gx::Mesh::CalcBoundBox(const aiScene* scene,

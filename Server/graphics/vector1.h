@@ -12,7 +12,7 @@ class vector1 {
     static constexpr unsigned int numComponents = 1;
     typedef T elem_t;
     vector1();
-    vector1(T);
+    vector1(elem_t);
     typename std::array<T,1>::iterator begin();
     typename std::array<T,1>::iterator end();
 };

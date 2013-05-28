@@ -105,6 +105,7 @@
     <ClCompile Include="graphics\uniformLocation.cpp" />
     <ClCompile Include="graphics\vao.cpp" />
     <ClCompile Include="graphics\vector1.cpp" />
+    <ClCompile Include="graphics\vector2.cpp" />
     <ClCompile Include="graphics\vector3.cpp" />
     <ClCompile Include="graphics\vector4.cpp" />
     <ClCompile Include="graphics\vertexAttrib.cpp" />
@@ -132,6 +133,7 @@
     <ClCompile Include="WeaponFist.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="assimpUtil.h" />
     <ClInclude Include="boundingBox.h" />
     <ClInclude Include="boundingManager.h" />
     <ClInclude Include="boundingObj.h" />
@@ -163,6 +165,7 @@
     <ClInclude Include="graphics\uniformLocation.h" />
     <ClInclude Include="graphics\vao.h" />
     <ClInclude Include="graphics\vector1.h" />
+    <ClInclude Include="graphics\vector2.h" />
     <ClInclude Include="graphics\vector3.h" />
     <ClInclude Include="graphics\vector4.h" />
     <ClInclude Include="graphics\vertexAttrib.h" />
@@ -171,6 +174,7 @@
     <ClInclude Include="HUD.h" />
     <ClInclude Include="lobby.h" />
     <ClInclude Include="Map.h" />
+    <ClInclude Include="material.h" />
     <ClInclude Include="NetworkServices.h" />
     <ClInclude Include="Physics.h" />
     <ClInclude Include="Player.h" />
