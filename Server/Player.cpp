@@ -27,7 +27,7 @@ int Player::MAXJUMP() {
 
 Player::Player(){}// this->init(0,0,0,0,NULL);}
 Player::~Player(void){}
-Player::Player(v3_t pos, int assigned_id, Map * m)
+Player::Player(v3_t pos, int assigned_id, Map * m): kills(0), wins(0)
 {
  generateBounds(position);
  this->init(pos, assigned_id, m); 
@@ -64,6 +64,7 @@ void Player::init(v3_t pos, int assigned_id, Map * m)
 	castDownCounter = sf::Clock();
   speedUpCounter = sf::Clock();
   speedUp = false;
+  charging = false;
 	map = m;
 	weapon[0] = new WeaponFist(position, this->map); //has no bounds so it doesnt drop
 	weapon[1] = new WeaponFire(position, this->map, FIR1); //TODO add this to entities, or it won't be able render
@@ -122,13 +123,27 @@ bool Player::attackBy(DeadlyEntity *other)
 
 bool Player::damageBy(DeadlyEntity *deadly)
 {
-	float damage = deadly->getStrength() - defense;
+	if (health==0) return true;
+  float damage = deadly->getStrength() - defense;
 	damage = ( damage > 0? damage: 0);
 	float newHealth = (health - damage);
 	health = (newHealth > 0 ? newHealth : 0);
   dead = health==0;
-  if(dead)
+
+  if(charging == true) {
+    map->destroyProjectile(chargedProjectile);
+    chargedProjectile = nullptr;
+    charging = false;
+  }
+
+  std::cout<<" i am attacked by"<< ((Projectile *) deadly)->getOwner()->player_id<<std::endl;
+  if(dead) {
     die();
+    //This is a hack
+    map->kills[((Projectile *) deadly)->getOwner()->player_id]++;
+    std::cout<<"updating kills"<<std::endl;
+    std::cout<<map->kills[((Projectile *) deadly)->getOwner()->player_id]<<std::endl;
+  }
 	return true;
 }
 
@@ -283,7 +298,7 @@ void Player::handleSelfAction(ClientGameTimeAction a) {
 
   //try pick up
   if(a.pickup && pickup ){
-    weapon[current_weapon_selection]->dropDown(position);
+    weapon[current_weapon_selection]->tossAway(position, direction);
     weapon[current_weapon_selection] = pickup;
     pickup->pickUp();
   }
@@ -298,6 +313,7 @@ void Player::handleSelfAction(ClientGameTimeAction a) {
 
     chargedProjectile->fire(v,getStrengthMultiplier());
     chargedProjectile = nullptr;
+    charging = false;
   }
 
   if(a.switchWeapon) {
@@ -328,13 +344,14 @@ v3_t Player::getProjectilePosition() {
 // this do substraction of stemina, respond to the user to render the attak animation  
 void Player::attack( ClientGameTimeAction a) {
 	Weapon* currentWeapon = weapon[current_weapon_selection];
-
+  std::cout << "attack " << std::endl;
 	if(a.attackRange){
     if( !currentWeapon->canUseWeapon(true, this) || currentWeapon->getMpCost() > mana){
 		  return;
 	  }
 	  mana -= currentWeapon->getMpCost();
 	  chargedProjectile = currentWeapon->attackRange(direction, getProjectilePosition(), this);
+    charging = true;
 	}
 	else if(a.attackMelee){
 		if( !currentWeapon->canUseWeapon(false, this)){
@@ -536,6 +553,9 @@ void Player::serialize(sf::Packet& packet) const {
     // change the array to vector ?
     packet << static_cast<sf::Uint32>(pickupWeaponType);
     packet << current_weapon_selection; 
+    packet << charging;
+    packet << kills;
+    packet << wins;
   }
 
   void Player::deserialize(sf::Packet& packet) {
@@ -564,4 +584,7 @@ void Player::serialize(sf::Packet& packet) const {
     packet >> pickupWeaponTypeUint32;
     pickupWeaponType = static_cast<WeaponType>(pickupWeaponTypeUint32);
     packet >> current_weapon_selection; 
+    packet >> charging;
+    packet >> kills;
+    packet >> wins;
   }

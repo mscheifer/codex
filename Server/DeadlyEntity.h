@@ -8,7 +8,7 @@ public:
   virtual ~DeadlyEntity(void);
   float getStrength(void){ return strength; }
 protected:
-	float range;
-	float strength;
+  float range;
+  float strength;
 };
 

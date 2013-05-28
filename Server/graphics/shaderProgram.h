@@ -15,7 +15,7 @@ class block;
 
 class shaderProgram {
     GLuint prog;
-    std::map<std::string,vertexAttribSignature> attribSigs;
+    varSigs_t attribSigs;
   public:
     shaderProgram(const std::string,const std::string,
                   const std::vector<uniform::block*>);
@@ -25,7 +25,7 @@ class shaderProgram {
     shaderProgram& operator=(shaderProgram&&);
     ~shaderProgram(); //not virtual because there's no inheiritance
     void use() const;
-    std::map<std::string,vertexAttribSignature> vars() const;
+    varSigs_t vars() const;
     GLint uniformLoc(const std::string) const;
     GLuint progNum() const;
 };

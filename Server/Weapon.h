@@ -23,11 +23,16 @@ public:
 	bool canUseWeapon(bool range_attack, Player* owner);
 	bool canPickUp() { return pickedUp; }
 	virtual Projectile* attackMelee(v3_t dir, v3_t pos, Player* owner); 
-  virtual Projectile* attackRange(v3_t dir, v3_t pos, Player* owner){return nullptr;}
+  virtual Projectile* attackRange(v3_t, v3_t, Player*){return nullptr;}
   //pick up weapon, remove bounding box from map
   virtual bool pickUp();
   //add the bounding box again
   virtual bool dropDown(v3_t dropPosition);
+  virtual bool tossAway(v3_t dropPosition, v3_t dir);
+  virtual void update(void);
+  virtual void handleCollisions();
+  virtual void updateBounds();
+  virtual bool collideWall(const std::pair<Entity*,BoundingObj::vec3_t>& p);
   
   MAGIC_POWER getBasicAttack() const{ return basicAttack; }
   int getRange(void);

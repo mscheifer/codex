@@ -10,8 +10,8 @@
 template<typename T>
 class objPool {
     //don't modify main vector for duration of serialization
-	           std::vector<T>                  objs;
-	           std::vector<std::unique_ptr<T>> newObjs;
+             std::vector<T>                  objs;
+             std::vector<std::unique_ptr<T>> newObjs;
     typename std::vector<T>::iterator        objsIndex;
   public:
     void reset() {
@@ -33,7 +33,7 @@ class objPool {
 };
 
 class EntityPool {
-	  objPool<Wall>                 walls;
+    objPool<Wall>                 walls;
     objPool<Projectile>           projectiles;
     objPool<Weapon>               weapons;
     objPool<PowerUp>              powerUps;

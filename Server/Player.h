@@ -27,6 +27,8 @@ public:
   int player_id;
   std::string name;
   Projectile* chargedProjectile;
+  int kills; //TODO private?
+  int wins;
   Player();
   void reset(v3_t pos);
   Player(v3_t pos, int assigned_id, Map *);
@@ -63,17 +65,19 @@ public:
   float getAttackCD() const;
   float getChargeCD() const;
   float getStrengthMultiplier() const;
+  int getKills() const { return kills; }
+  int getWins() const { return wins; }
   
   void serialize(sf::Packet& packet) const;
   void deserialize(sf::Packet& packet);
-
+   bool charging;
 private:
   Weapon* pickup;
   WeaponType pickupWeaponType;
   std::list<std::pair<BUFF,int>> buffs;
 
   v3_t oldJumpVelocity; //the x,y velocity that should be applied
-  bool minotaur; //might be private
+  bool minotaur; 
   float health;
   float healthRegen;
   float maxHealth;

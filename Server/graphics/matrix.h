@@ -13,6 +13,8 @@ private:
   //this is row major
   std::array<std::array<elem_t,4>,4> elems;
 public:
+  typedef std::array<std::array<elem_t,4>,4>::size_type row_index_type;
+  typedef               std::array<elem_t,4>::size_type column_index_type;
   matrix();
   matrix(std::array<std::array<elem_t,4>,4> a);
   matrix(elem_t a, elem_t b, elem_t c, elem_t d, elem_t e, elem_t f, elem_t g,
@@ -20,21 +22,24 @@ public:
     elem_t o, elem_t p);
   void print(std::ostream& o) const;
   void print() const;
-  std::array<elem_t,4>& operator[](int i);
-  const std::array<elem_t,4>& operator[](int i) const;
+  std::array<elem_t,4>& operator[](row_index_type i);
+  const std::array<elem_t,4>& operator[](row_index_type i) const;
   void identify();
   void oglmatrix(elem_t a[16]) const;
   void oglmatrix(elem_t a[4][4]) const;
   std::array<elem_t,16> oglmatrix() const;
   bool operator==(const matrix& right) const;
   bool operator!=(const matrix& right) const;
+  matrix& operator+=(const matrix& right);
 };
 
 //note mathematical ordering
 matrix multiply(const matrix& left,const matrix& right);
+matrix multiply(matrix left,matrix::elem_t right);
 vector4f multiply(const matrix& left,const vector4f& right);
 vector3f multiply(const matrix& left,const vector3f& right);
 matrix operator*(const matrix& left,const matrix& right);
+matrix operator*(matrix left,matrix::elem_t right);
 vector4f operator*(const matrix& left,const vector4f& right);
 vector3f operator*(const matrix& left,const vector3f& right);
 

@@ -32,6 +32,7 @@ class input {
     bool         fire2();
     bool        pickUp();
     bool       switchW();
+    bool         drawS();
     move_t  movePlayer();
     vector3f turnPlayer();
 

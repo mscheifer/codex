@@ -1,5 +1,5 @@
 #include "Projectile.h"
-
+int Projectile::ID_Counter = 0;
 const float Projectile::meleeWidth = 1.0f;
 const float Projectile::meleeHeight = 1.0f;
 const float Projectile::meleeDepth = 3.0f;
@@ -11,6 +11,8 @@ Projectile::Projectile(Map* m):fired(false)
   BoundingBox* b = new BoundingBox(BoundingObj::vec4_t(0,0,0),BoundingObj::vec3_t(1,0,0),BoundingObj::vec3_t(0,1,0),BoundingObj::vec3_t(0,0,1),
   1,1,1);
   b->setEntity(this);
+  id = ID_Counter;
+  ID_Counter++;
   boundingObjs.push_back(b);
   reset();
 }
@@ -187,12 +189,14 @@ void Projectile::setMagicType( MAGIC_POWER m, bool melee ) {
 void Projectile::serialize(sf::Packet & packet) const {
   Entity::serialize(packet);
   packet << fired;
+  packet << id;
   //(*owner).serialize(packet);
 }
 
 void Projectile::deserialize( sf::Packet & packet ) {
   Entity::deserialize(packet);
   packet >> fired;
+  packet >> id;
   //delete owner; this segfaults
   //Player* owner = new Player();
   //(*owner).deserialize(packet);

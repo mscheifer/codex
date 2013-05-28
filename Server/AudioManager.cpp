@@ -6,10 +6,10 @@ std::array<sf::Music,2> AudioManager::music;
 std::array<int,2> AudioManager::musicProx;
 std::map<std::string, sf::SoundBuffer*> AudioManager::soundBuffers;
 std::map<std::string, std::string> AudioManager::musics;
-std::list<sf::Sound> AudioManager::sounds;
+std::map<std::string, sf::Sound> AudioManager::sounds;
 bool AudioManager::useSound;
 int AudioManager::trackNo;
-int AudioManager::currentlyPlayingMusic;
+unsigned int AudioManager::currentlyPlayingMusic;
 
 void AudioManager::loadSound(std::string key, std::string sound){
   if(!useSound) 
@@ -32,11 +32,14 @@ void AudioManager::loadSounds(){
     musicProx[i] = -1;
   }
 
+  
+  loadSound("c1", "sounds/charge1.wav");
+
   loadSound("s1", "sounds/sound_1.wav");
   loadSound("s2", "sounds/sound_2.wav");
   loadSound("s3", "sounds/sound_3.wav");
   loadSound("m1", "sounds/music_mono.wav");
-  loadSound("f1", "sounds/105016__julien-matthey__jm-fx-fireball-01.wav");
+  loadSound("f1", "sounds/m2_2.wav");
   //loadSound("s5", "sound_5.wav");
 
   musics["m1"] = "sounds/music.wav";
@@ -54,7 +57,7 @@ void AudioManager::loadSounds(){
   musics["m2_4"] = "sounds/m2_4.aif";
 }
 
-void AudioManager::playSound(std::string key, v3_t pos){
+void AudioManager::playSound(std::string key, std::string id, v3_t pos){
   if(!useSound) 
     return;
 
@@ -62,28 +65,36 @@ void AudioManager::playSound(std::string key, v3_t pos){
   it = soundBuffers.find(key);
 
   if(it != soundBuffers.end()){ //element exists
-    auto sound = sounds.begin();
-    for(sound = sounds.begin(); sound != sounds.end(); sound++){
-      if(sound->getStatus() != sf::Sound::Playing){
-        playSoundHelper(sound,pos,it->second);
-        break;
-      }
+
+
+    if( sounds.find(id) ==  sounds.end()) {
+      sounds.insert(std::pair<std::string,sf::Sound>(id,sf::Sound()));
     }
 
-    if(sound == sounds.end()){
-      sounds.push_front(sf::Sound());
-      playSoundHelper(sounds.begin(),pos,it->second);
-    }
+    playSoundHelper( &sounds.find(id)->second ,pos, it->second);
+  
   }
 }
 
-void AudioManager::playSoundHelper(std::list<sf::Sound>::iterator index, v3_t pos, sf::SoundBuffer* sbuff){
-  index->setBuffer(*sbuff);
-  index->setPosition(pos.x,pos.y,pos.z);
-  index->play();
+
+void AudioManager::stopSound(std::string id) {
+   if( sounds.find(id) !=  sounds.end()) {
+     sounds.find(id)->second.stop();
+     sounds.erase(id);
+   }
+}
+
+void AudioManager::playSoundHelper( sf::Sound* s, v3_t pos, sf::SoundBuffer* sbuff){
+  s->setPosition(pos.x,pos.y,pos.z);
+  if(s->getStatus() != sf::Sound::Playing)  {
+    s->setBuffer(*sbuff);
+    s->play();
+  }
+
 }
 
 void AudioManager::updateMusic( int numPlayers ){
+  return;
   if(!useSound)
     return;
 
@@ -168,13 +179,16 @@ void AudioManager::playMusic(std::string musicN, int index){
 }
 
 void AudioManager::processPlayerSound(Player& o){
-
-
+  if(o.charging) {
+    playSound("c1", "player:"+ o.player_id, o.getPosition());
+  } else {
+    stopSound( "player:"+ o.player_id);
+  }
 }
 
 void AudioManager::processProjectileSound(Projectile& o){
   if(o.getFired()){
-    playSound("f1", o.getPosition());
+    playSound( "f1", "fire:"+o.id, o.getPosition());
   }
 }
 

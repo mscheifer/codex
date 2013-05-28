@@ -41,6 +41,15 @@ bool gx::input::switchW() {
   return this->switchWeapon;
 }
 
+bool gx::input::drawS() {
+  bool drawFlag = false;
+  if (sf::Keyboard::isKeyPressed(sf::Keyboard::Tab)) {
+     drawFlag = true;
+  } 
+  return drawFlag;
+}
+
+
 move_t gx::input::movePlayer() {
   move_t movement = NULL_DIR;
   if (sf::Keyboard::isKeyPressed(sf::Keyboard::W)) {
@@ -141,16 +150,16 @@ void gx::input::handleEvent(const sf::Event& event) {
     }
   } else if(event.type == sf::Event::MouseButtonPressed) {
     this->updated = true;
-	  if(event.mouseButton.button == sf::Mouse::Left) {
+    if(event.mouseButton.button == sf::Mouse::Left) {
       this->fired1 = true;
-	  } else if(event.mouseButton.button == sf::Mouse::Right) {
+    } else if(event.mouseButton.button == sf::Mouse::Right) {
       this->fired2 = true;
     }
   } else if(event.type == sf::Event::MouseButtonReleased) {
     this->updated = true;
-	  if(event.mouseButton.button == sf::Mouse::Left) {
+    if(event.mouseButton.button == sf::Mouse::Left) {
       this->fired1 = false;
-	  } else if(event.mouseButton.button == sf::Mouse::Right) {
+    } else if(event.mouseButton.button == sf::Mouse::Right) {
       this->fired2 = false;
     }
   }

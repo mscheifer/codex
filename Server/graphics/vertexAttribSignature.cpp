@@ -26,6 +26,8 @@ bool gx::vertexAttribSignature::checkAndBind(const vertexAttrib& attr) {
     }
     return true;
   } else {
+    std::cout << this->components << " != " << attr.vecSize() << " || ";
+    std::cout << this->glType     << " != " << attr.type()    << std::endl;
     return false;
   }
 }

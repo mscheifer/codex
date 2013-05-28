@@ -1,11 +1,14 @@
 #include "uniformLocation.h"
 #include "shaderProgram.h"
 
-gx::uniform::loc<GL_FLOAT_MAT4>::loc(const shaderProgram& shader,std::string name,GLsizei num)
+gx::uniform::loc<GL_FLOAT_MAT4>::loc(const shaderProgram& shader,
+                                              std::string name,GLsizei num)
   : location(glGetUniformLocation(shader.progNum(), name.c_str())), size(num) {
   debugout << this->location << " = glGetUniformLocation(" << shader.progNum();
   debugout  << ", \"" << name << "\");" << endl;
-  if(location == -1) std::cout << "Error: no variable in shader named " << name << std::endl;
+  if(location == -1) {
+    std::cout << "Error: no variable in shader named " << name << std::endl;
+  }
 }
 
 void gx::uniform::loc<GL_FLOAT_MAT4>::write(const GLfloat* data) const {

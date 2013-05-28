@@ -21,7 +21,7 @@ struct ProjectileData{
     std::vector<BUFF> debuff1,
     int chargeTime1
     )
-    : magicType(magicType), range(range1), speed(speed1), size(size1),
+    : magicType(magicType1), range(range1), speed(speed1), size(size1),
     strength(strength1), mpCost(mpCost1), chargeTime(chargeTime1), debuff(debuff1){}
 };
 
@@ -93,6 +93,7 @@ public:
   static MAGIC_POWER upgrade( const MAGIC_POWER m );
   static MAGIC_POWER combine( MAGIC_POWER m1, MAGIC_POWER m2 );
   static const MAGIC_POWER combinations[18][18];
+  static int ID_Counter;
   static const float meleeWidth;
   static const float meleeHeight;
   static const float meleeDepth;
@@ -122,6 +123,7 @@ private:
   int Charge_Time; 
 
 public:
+  int id;
   bool getFired() const { return fired; }
   void setFired(bool f) { fired = f; }
   float getStrength();

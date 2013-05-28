@@ -10,7 +10,7 @@
 namespace gx {
 
 class displaySet {
-  	matrix         view;
+    matrix         view;
     matrix         projection;
     vector4f       cameraPos;
     uniform::block unif;

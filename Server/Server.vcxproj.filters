@@ -28,6 +28,9 @@
     <Filter Include="Header Files\collisions">
       <UniqueIdentifier>{0f73f378-2807-435c-9b26-22768a910b46}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\graphics\Images">
+      <UniqueIdentifier>{3372b95b-78d0-4d1a-b5a5-93ec1e308774}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -76,9 +79,6 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="graphics\displaySet.cpp">
-      <Filter>Source Files\graphics</Filter>
-    </ClCompile>
-    <ClCompile Include="graphics\drawSet.cpp">
       <Filter>Source Files\graphics</Filter>
     </ClCompile>
     <ClCompile Include="graphics\light.cpp">
@@ -189,6 +189,24 @@
     <ClCompile Include="util.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="graphics\dynamicDrawerImpl.cpp">
+      <Filter>Source Files\graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="graphics\loadCustom.cpp">
+      <Filter>Source Files\graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="graphics\staticDrawerImpl.cpp">
+      <Filter>Source Files\graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="graphics\vector1.cpp">
+      <Filter>Source Files\graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="graphics\meshEntry.cpp">
+      <Filter>Source Files\graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="scoreBoard.cpp">
+      <Filter>Source Files\graphics</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">
@@ -246,9 +264,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="graphics\displaySet.h">
-      <Filter>Header Files\graphics</Filter>
-    </ClInclude>
-    <ClInclude Include="graphics\drawSet.h">
       <Filter>Header Files\graphics</Filter>
     </ClInclude>
     <ClInclude Include="graphics\light.h">
@@ -326,7 +341,7 @@
     <ClInclude Include="Wall.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="graphics\loadCube.h">
+    <ClInclude Include="graphics\loadCustom.h">
       <Filter>Header Files\graphics</Filter>
     </ClInclude>
     <ClInclude Include="util.h">
@@ -362,6 +377,15 @@
     <ClInclude Include="graphics\drawer.h">
       <Filter>Header Files\graphics</Filter>
     </ClInclude>
+    <ClInclude Include="graphics\drawerImpl.h">
+      <Filter>Header Files\graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="graphics\vector1.h">
+      <Filter>Header Files\graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="scoreBoard.h">
+      <Filter>Header Files\graphics</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\Makefile">
@@ -381,6 +405,15 @@
     </None>
     <None Include="shaders\animated.vert">
       <Filter>Resource Files\graphics</Filter>
+    </None>
+    <None Include="graphics\Images\bar.png">
+      <Filter>Header Files\graphics\Images</Filter>
+    </None>
+    <None Include="graphics\Images\heart_color.png">
+      <Filter>Header Files\graphics\Images</Filter>
+    </None>
+    <None Include="graphics\Images\magic_color.png">
+      <Filter>Header Files\graphics\Images</Filter>
     </None>
   </ItemGroup>
 </Project>

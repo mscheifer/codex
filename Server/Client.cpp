@@ -24,11 +24,17 @@ void NetworkClient::receiveMessages() {
         this->s.deserialize(packet);
         if (s.state != Game_State::PLAYING && ConfigManager::gameRestart()) 
           gameRestart = true;
+      //  std::cout<<s.state<<std::endl;
+        std::vector<int> kills;
+        std::vector<int> wins;
         for(auto playerP = s.players.begin(); playerP != s.players.end(); playerP++) {
           if(playerP->player_id != this->id) {
             //make sure the SGTR stays in scope
             entities.push_back(&(*playerP));
           }
+          kills.push_back((*playerP).kills);
+          wins.push_back((*playerP).wins);
+          AudioManager::processPlayerSound(*playerP);
           
           if(cycle  == 100 ) {
              cycle = 0;
@@ -41,7 +47,7 @@ void NetworkClient::receiveMessages() {
         }
         for(auto entP = s.projectiles.begin(); entP != s.projectiles.end(); entP++) {
           entities.push_back(*entP);
-            AudioManager::processProjectileSound(**entP);
+           AudioManager::processProjectileSound(**entP);
         }
         for(auto entP = s.powerups.begin(); entP != s.powerups.end(); entP++) {
           entities.push_back(*entP);
@@ -54,6 +60,7 @@ void NetworkClient::receiveMessages() {
         entities.push_back(&(this->skybox)); //add skybox
         gxClient.updateEntities(entities);
         gxClient.updateHUD(s.players[id]);
+        gxClient.updateScores(wins,kills);
         //std::cout << "num entities received: " << entities.size() << std::endl;
         if (s.players[id].dead) { /*render death everytime ? */}
         //render WIN OR LOSE based on s.state
@@ -158,7 +165,7 @@ void NetworkClient::doClient() {
       }
       initPacket.clear();
       if (netRecv.receiveMessage(initPacket)) {
-        std::cout << "received message" << std::endl;
+        //std::cout << "received message" << std::endl;
         sf::Uint32 packetType;
         initPacket >> packetType;
         if (packetType == JOINID) {

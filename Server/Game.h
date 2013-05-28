@@ -73,6 +73,7 @@ public:
   InitPacket getInitPacket(int playerId);
   void clearEvents();
   void restartGame();
+  void initScores();
 private:
 	Map world;
 };
