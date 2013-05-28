@@ -8,7 +8,6 @@ public:
   static const bool hasRangedAttack = false;
   static const bool hasMeleeAttack = true;
 
-
   WeaponFist(v3_t, Map*);
   ~WeaponFist(void);
   //bool pickUp();

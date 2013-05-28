@@ -69,6 +69,7 @@ void Game::updateAndResolveCollision() {
 
 ServerGameTimeRespond Game::prepResponse() {
 	ServerGameTimeRespond s;
+  s.state = Game_State::PLAYING;
 	s.weapons.clear();
 	s.projectiles.clear();
 	s.walls.clear();
@@ -77,6 +78,29 @@ ServerGameTimeRespond Game::prepResponse() {
 	std::vector<Player*>  currentPlayers =  world.getPlayers();
 	std::vector<Entity*> currentEntities = world.getEntity();
   std::vector<Projectile*> currentProjectiles = world.getLiveProjectTile();
+	
+  unsigned int deadPlayers = 0;
+  bool minotaurLose  = false;
+  //determine who wins
+  for (unsigned int i = 0; i< currentPlayers.size(); i++ ) {
+     currentPlayers[i]->kills = world.kills[i];
+     currentPlayers[i]->wins = world.wins[i];
+     if (!currentPlayers[i]->isMinotaur()) {
+        if (currentPlayers[i]->dead) {
+          deadPlayers++;
+        }
+     } else if (currentPlayers[i]->dead) {
+        minotaurLose = true;
+     }
+  }
+
+	if (minotaurLose) {
+	  s.state = CIVILIAN_WIN; 
+	}
+	if (deadPlayers == currentPlayers.size()-1 ) {
+		s.state = MANOTAUR_WIN;
+	}
+
 	for( unsigned int i = 0; i < currentPlayers.size(); i++ ) {
      /*for testing
      if (currentPlayers[i]->getHealth() > 0) {
@@ -113,26 +137,6 @@ ServerGameTimeRespond Game::prepResponse() {
     }
   }
 	  
-	unsigned int deadPlayers = 0;
-  bool minotaurLose  = false;
-  //determine who wins
-  for (unsigned int i = 0; i< currentPlayers.size(); i++ ) {
-     if (!currentPlayers[i]->isMinotaur()) {
-        if (currentPlayers[i]->dead) {
-          deadPlayers++;
-        }
-     } else if (currentPlayers[i]->dead) {
-        minotaurLose = true;
-     }
-  }
-
-	if (minotaurLose) {
-	  s.state = CIVILIAN_WIN; 
-	}
-	if (deadPlayers == currentPlayers.size()-1 ) {
-		s.state = MANOTAUR_WIN;
-	}
-
   return s;
 }
 
@@ -158,4 +162,13 @@ void Game::clearEvents(){
 	for( unsigned int i = 0; i < currentEntities.size(); i++ ) {
 		currentEntities[i]->clearEvents();
 	}
+}
+
+void Game::restartGame()
+{
+  world.mapReset();
+}
+
+void Game::initScores() {
+  world.initScores();
 }

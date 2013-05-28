@@ -12,6 +12,7 @@ public:
   lobby(void);
   ~lobby(void);
   bool getStart() const { return start; }
+  void endGame() { start = false; }
   void handleInput(sf::RenderWindow & window);
   void drawLobby(sf::RenderWindow & window);
 };

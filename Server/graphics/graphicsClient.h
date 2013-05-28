@@ -10,6 +10,7 @@
 #include "ClientGameTimeAction.h" 
 #include <SFML/Graphics.hpp>
 #include "Player.h"
+#include "scoreBoard.h"
 
 class Entity;
 
@@ -40,6 +41,7 @@ class graphicsClient {
     int fpsFrames;
     HUD Hud;
     lobby Lobby;
+    scoreBoard Score;
     void setCamera();
     void reshape(unsigned int, unsigned int);
     std::vector<gx::uniform::block*> uniforms();
@@ -56,7 +58,10 @@ class graphicsClient {
     void updateHUD(Player & player);
     void drawLobby();
     void disableCursor();
+    void enableCursor();
     bool gameStart() const;
+    void gameEnd();
+    void updateScores(std::vector<int> & pwins, std::vector<int> & pkills);
 
     //input functions
     bool closed()        { return this->userInput.getStop(); }

@@ -23,6 +23,19 @@ public:
   }
 };
 
+struct StartGamePacket
+{
+  public:
+  static const int packetType = STARTGAME;
+  StartGamePacket() {}
+
+  void serialize(sf::Packet& packet) const{
+  }
+
+  void deserialize(sf::Packet& packet){
+  }
+};
+
 struct InitPacket{
 public:
   static const int packetType = INIT;
@@ -59,6 +72,8 @@ public:
   void chooseMinotaur();
   InitPacket getInitPacket(int playerId);
   void clearEvents();
+  void restartGame();
+  void initScores();
 private:
 	Map world;
 };

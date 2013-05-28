@@ -22,6 +22,14 @@ private :
   sf::RectangleShape manaLoss; 
   sf::FloatRect healthRect;
   sf::FloatRect manaRect;
+  sf::Texture hTexture;
+  sf::Sprite hSprite;
+  sf::Texture mTexture;
+  sf::Sprite mSprite;
+  sf::Texture hBarTexture;
+  sf::Sprite hBarSprite;
+  sf::Texture mBarTexture;
+  sf::Sprite mBarSprite;
 public:
   HUD(void);
   ~HUD(void);

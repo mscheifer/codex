@@ -17,6 +17,7 @@ class NetworkClient {
   int id;
   bool sendPacket;
   bool running;
+  bool gameRestart;
   EntityPool objPool;
   Entity skybox; //this is kind of stupid but we'll do it for now
 

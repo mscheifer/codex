@@ -123,26 +123,15 @@ bool Player::attackBy(DeadlyEntity *other)
 
 bool Player::damageBy(DeadlyEntity *deadly)
 {
-	if (health==0) return true;
-  float damage = deadly->getStrength() - defense;
+	float damage = deadly->getStrength() - defense;
 	damage = ( damage > 0? damage: 0);
 	float newHealth = (health - damage);
 	health = (newHealth > 0 ? newHealth : 0);
   dead = health==0;
-
-  if(charging == true) {
-    map->destroyProjectile(chargedProjectile);
-    chargedProjectile = nullptr;
-    charging = false;
-  }
-
-  std::cout<<" i am attacked by"<< ((Projectile *) deadly)->getOwner()->player_id<<std::endl;
   if(dead) {
     die();
     //This is a hack
     map->kills[((Projectile *) deadly)->getOwner()->player_id]++;
-    std::cout<<"updating kills"<<std::endl;
-    std::cout<<map->kills[((Projectile *) deadly)->getOwner()->player_id]<<std::endl;
   }
 	return true;
 }
@@ -348,7 +337,7 @@ v3_t Player::getProjectilePosition() {
 // this do substraction of stemina, respond to the user to render the attak animation  
 void Player::attack( ClientGameTimeAction a) {
 	Weapon* currentWeapon = weapon[current_weapon_selection];
-  std::cout << "attack " << std::endl;
+
 	if(a.attackRange){
     if( !currentWeapon->canUseWeapon(true, this) || currentWeapon->getMpCost() > mana){
 		  return;
@@ -545,9 +534,12 @@ void Player::serialize(sf::Packet& packet) const {
     // change the array to vector ?
     packet << static_cast<sf::Uint32>(pickupWeaponType);
     packet << current_weapon_selection; 
+<<<<<<< HEAD
     packet << charging;
+=======
     packet << kills;
     packet << wins;
+>>>>>>> 03bea1dd4ce16a142e8f29813932f33179c9fbad
   }
 
   void Player::deserialize(sf::Packet& packet) {
@@ -576,7 +568,10 @@ void Player::serialize(sf::Packet& packet) const {
     packet >> pickupWeaponTypeUint32;
     pickupWeaponType = static_cast<WeaponType>(pickupWeaponTypeUint32);
     packet >> current_weapon_selection; 
+<<<<<<< HEAD
     packet >> charging;
+=======
     packet >> kills;
     packet >> wins;
+>>>>>>> 03bea1dd4ce16a142e8f29813932f33179c9fbad
   }

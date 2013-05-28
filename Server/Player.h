@@ -26,8 +26,11 @@ public:
   bool dead; //might be private. should be determined in handleAction
   int player_id;
   std::string name;
-
+  Projectile* chargedProjectile;
+  int kills; //TODO private?
+  int wins;
   Player();
+  void reset(v3_t pos);
   Player(v3_t pos, int assigned_id, Map *);
   ~Player(void);
   std::string getString();
@@ -59,24 +62,27 @@ public:
   void setAsMinotaur(bool b);
   bool isMinotaur();
   Entity_Type getType() const { return type; }
+  float getAttackCD() const;
+  float getChargeCD() const;
+  int getKills() const { return kills; }
+  int getWins() const { return wins; }
   
   void serialize(sf::Packet& packet) const;
   void deserialize(sf::Packet& packet);
-
+   bool charging;
 private:
   Weapon* pickup;
   WeaponType pickupWeaponType;
   std::list<std::pair<BUFF,int>> buffs;
 
   v3_t oldJumpVelocity; //the x,y velocity that should be applied
-  bool minotaur; //might be private
+  bool minotaur; 
   float health;
   float healthRegen;
   float maxHealth;
   float mana;
   float manaRegen;
   float maxMana;
-  Projectile* chargedProjectile;
   float defense;
   float speed;
   int speedUpTime;
@@ -102,6 +108,7 @@ private:
   v3_t getProjectilePosition(void);
   void die();
   void respawn(v3_t pos);
+  void applyBuff( BUFF b);
 
     //helper functions for collisions
   bool collideWall(const std::pair<Entity*,BoundingObj::vec3_t>& p);

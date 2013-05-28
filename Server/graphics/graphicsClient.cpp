@@ -95,7 +95,7 @@ gx::graphicsClient::graphicsClient():
     playerStartDirection(0.0, 1.0,0.0),//change to result of init packet
     playerStartRight(playerStartDirection.y,playerStartDirection.x,playerStartDirection.z),
     playerPosition(0.0, 0.0, 0.0),//change to the result of init packet
-     fpsClock(), fpsFrames(0) , Hud()                {
+     fpsClock(), fpsFrames(0) , Hud(), Lobby() , Score(3) {
   this->window.setVerticalSyncEnabled(false);
   this->window.setMouseCursorVisible(true);
   if(!this->window.setActive()) {
@@ -158,10 +158,12 @@ void gx::graphicsClient::draw() {
   window.pushGLStates();
   //glUseProgram(0);
   glBindBuffer(GL_ARRAY_BUFFER, 0);
-  /* -----------------------move to a method ----------------------*/
+  //SFML graphics
   Hud.draw(window); 
-  /* ------------------------------*/
-  window.popGLStates(); 
+  if (this->userInput.drawS())
+    Score.draw(window);
+  //end of SFML graphics
+  window.popGLStates();
   //glDisableClientState(GL_VERTEX_ARRAY);
   //glDisableClientState(GL_COLOR_ARRAY);
   //glDisableClientState(GL_TEXTURE_COORD_ARRAY);
@@ -224,6 +226,19 @@ void gx::graphicsClient::disableCursor() {
   this->window.setMouseCursorVisible(false);
 }
 
+void gx::graphicsClient::enableCursor() {
+  this->window.setMouseCursorVisible(true);
+}
+
 bool gx::graphicsClient::gameStart() const {
   return (this->Lobby).getStart();
+}
+
+void gx::graphicsClient::gameEnd()
+{
+  Lobby.endGame();
+}
+
+void gx::graphicsClient::updateScores(std::vector<int> & pwins, std::vector<int> & pkills) {
+  Score.updateScores(pwins,pkills);
 }
