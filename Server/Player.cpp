@@ -319,7 +319,7 @@ v3_t Player::getProjectilePosition() {
   if(chargedProjectile)
     size = ProjInfo[chargedProjectile->getMagicType()].size;
   else
-    size = ProjInfo[B1].size;
+    size = ProjInfo[weapon[current_weapon_selection]->getBasicAttack()].size;
   d.scale(size + 0.5f); //TODO how far away from the player @mc
   temp += d;
   return temp;

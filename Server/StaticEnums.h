@@ -58,9 +58,11 @@ enum MAGIC_POWER {
   B1
 }; 
 
-enum BUFF{ NONE=0, MOVEBOOST, MANABOOST, HEALTHBOOST, STRBOOST, ATTACKCD, CHARGECD,
+enum BUFF{ 
+  NONE=0, MOVEBOOST, MANABOOST, HEALTHBOOST, STRBOOST, ATTACKCD, CHARGECD,
   FIR1DEBUFF, FIR2DEBUFF, FIR3DEBUFF,
   ICE1DEBUFF, ICE2DEBUFF, ICE3DEBUFF,
+  THUSTUN, THUSTUN2,
   THU1DEBUFF, THU2DEBUFF, THU3DEBUFF,
   G1MDEBUFF,
   G2DEBUFF,
@@ -133,6 +135,8 @@ const BuffData BuffInfo[] = {
   BuffData(ICE2DEBUFF, 100, true, 0.75f, false, 0, false, 0, false, 0, false, 0, false, 0),
   BuffData(ICE3DEBUFF, 100, true, 0.65f, false, 0, false, 0, false, 0, false, 0, false, 0),
 
+  BuffData(THUSTUN, 50, true, 0, false, 0, false, 0, false, 0, false, 0, false, 0),
+  BuffData(THUSTUN2, 100, true, 0, false, 0, false, 0, false, 0, false, 0, false, 0),
   BuffData(THU1DEBUFF, 100, false, 0, true, -1.5, false, 0, false, 0, false, 0, false, 0), //TODO teleport to random location?
   BuffData(THU2DEBUFF, 100, false, 0, true, -2, false, 0, false, 0, false, 0, false, 0),
   BuffData(THU3DEBUFF, 100, false, 0, true, -4, false, 0, false, 0, false, 0, false, 0),
@@ -141,6 +145,6 @@ const BuffData BuffInfo[] = {
   BuffData(G1MDEBUFF,  100,  false, 0,    false, 0,     false, 0, true, .95f, false, 0, false, 0),
   BuffData(G2DEBUFF,   100,  true, 0.85f, true, -2,     true, -1, true, .90f, false, 0, false, 0),
   BuffData(G2MDEBUFF,  100,  true, 0.95f, true, -1.25f, false, 0, false, 0,   false, 0, false, 0),
-  BuffData(G3DEBUFF1,   100, true, 0,     false, 0,     false, 0, false, 0,   false, 0, false, 0),
-  BuffData(G3DEBUFF2,   500, true, 0.75f, true, -5,     true, -2, true, .85f,  false, 0, false, 0)
+  BuffData(G3DEBUFF1,   500, true, 0,     false, 0,     false, 0, false, 0,   false, 0, false, 0),
+  BuffData(G3DEBUFF2,  1000, true, 0.75f, true, -5,     true, -2, true, .85f,  false, 0, false, 0)
 };
