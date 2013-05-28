@@ -111,7 +111,7 @@ void Player::generateBounds(v3_t pos){
   boundingObjs.push_back(b);
 }
 
-bool Player::attackBy(DeadlyEntity *other)
+bool Player::attackBy(Projectile *other)
 {
 	if(other)
 	{
@@ -121,7 +121,7 @@ bool Player::attackBy(DeadlyEntity *other)
 		return false;
 }
 
-bool Player::damageBy(DeadlyEntity *deadly)
+bool Player::damageBy(Projectile *deadly)
 {
 	if (health==0) return true;
   float damage = deadly->getStrength() - defense;
@@ -136,7 +136,7 @@ bool Player::damageBy(DeadlyEntity *deadly)
     charging = false;
   }
 
-  std::cout<<" i am attacked by"<< ((Projectile *) deadly)->getOwner()->player_id<<std::endl;
+  std::cout<<" i am attacked by"<< deadly->getOwner()->player_id<<std::endl;
   if(dead) {
     die();
     //This is a hack

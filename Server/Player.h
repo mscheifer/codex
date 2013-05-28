@@ -34,7 +34,7 @@ public:
   Player(v3_t pos, int assigned_id, Map *);
   ~Player(void);
   std::string getString();
-  virtual bool attackBy(DeadlyEntity*);
+  virtual bool attackBy(Projectile*);
   void update();
   void handleCollisions();  
   void updateBounds();  
@@ -98,7 +98,7 @@ private:
   Weapon* weapon[MAXWEAPONS]; //0 bare hand, 1 fireball
   int current_weapon_selection; //0 bare hand, 1 fireball
 
-  bool damageBy(DeadlyEntity *);
+  bool damageBy(Projectile *);
   void handleSelfAction(ClientGameTimeAction a);
   void handleOtherAction(ClientGameTimeAction a);
   void attack(ClientGameTimeAction a);
