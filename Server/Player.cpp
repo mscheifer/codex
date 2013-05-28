@@ -129,6 +129,13 @@ bool Player::damageBy(DeadlyEntity *deadly)
 	float newHealth = (health - damage);
 	health = (newHealth > 0 ? newHealth : 0);
   dead = health==0;
+
+  if(charging == true) {
+    map->destroyProjectile(chargedProjectile);
+    chargedProjectile = nullptr;
+    charging = false;
+  }
+
   std::cout<<" i am attacked by"<< ((Projectile *) deadly)->getOwner()->player_id<<std::endl;
   if(dead) {
     die();
