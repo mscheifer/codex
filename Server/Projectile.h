@@ -6,6 +6,7 @@ struct ProjectileData{
   MAGIC_POWER magicType;
   length_t range;
   length_t speed;
+  length_t size;
   float strength;
   float mpCost;
   int chargeTime; //charge time in milliseconds
@@ -14,12 +15,13 @@ struct ProjectileData{
   ProjectileData( MAGIC_POWER magicType1, 
     length_t range1,
     length_t speed1,
+    length_t size1,
     float strength1,
     float mpCost1,
     std::vector<BUFF> debuff1,
     int chargeTime1
     )
-    : magicType(magicType), range(range1), speed(speed1), 
+    : magicType(magicType), range(range1), speed(speed1), size(size1),
     strength(strength1), mpCost(mpCost1), chargeTime(chargeTime1), debuff(debuff1){}
 };
 
@@ -57,30 +59,30 @@ const std::vector<BUFF> G3V(G3arr,G3arr+2);
 const std::vector<BUFF> NONEV(NONEarr,NONEarr+1);
 
 const ProjectileData ProjInfo[] = { //TODO fix all these numbers
-  //             type,  rng, spd str mp buff chrgTime
-  ProjectileData(FIR1,  300, 30, 10, 2, FIR1V, 1500),
-  ProjectileData(FIR2,  300, 30, 12, 0, FIR2V, 5000),
-  ProjectileData(FIR3,  300, 30, 20, 0, FIR3V, -1),
-  ProjectileData(ICE1,  300, 30, 10, 0, ICE1V, 1500),
-  ProjectileData(ICE2,  300, 30, 12, 0, ICE2V, 5000),
-  ProjectileData(ICE3,  300, 30, 20, 0, ICE3V, -1),
-  ProjectileData(THU1,  300, 30, 10, 0, THU1V, 1500),
-  ProjectileData(THU2,  300, 30, 12, 0, THU2V, 5000),
-  ProjectileData(THU3,  300, 30, 20, 0, THU3V, -1),
+  //             type,  rng, spd size str mp buff chrgTime
+  ProjectileData(FIR1,  300, 30, 1,   10, 2, FIR1V, 1500),
+  ProjectileData(FIR2,  300, 30, 2,   12, 0, FIR2V, 5000),
+  ProjectileData(FIR3,  300, 30, 2,   20, 0, FIR3V, -1),
+  ProjectileData(ICE1,  300, 30, 1,   10, 0, ICE1V, 1500),
+  ProjectileData(ICE2,  300, 30, 2,   12, 0, ICE2V, 5000),
+  ProjectileData(ICE3,  300, 30, 3,   20, 0, ICE3V, -1),
+  ProjectileData(THU1,  300, 30, 1,   10, 0, THU1V, 1500),
+  ProjectileData(THU2,  300, 30, 2,   12, 0, THU2V, 5000),
+  ProjectileData(THU3,  300, 30, 3,   20, 0, THU3V, -1),
 
-  ProjectileData(G_IT,  300, 30, 12, 0, G1MV, -1),
-  ProjectileData(G_FT,  300, 30, 12, 0, G1MV, -1),
-  ProjectileData(G_FI,  300, 30, 12, 0, G1MV, -1),
+  ProjectileData(G_IT,  300, 30, 1,   12, 0, G1MV, -1),
+  ProjectileData(G_FT,  300, 30, 1,   12, 0, G1MV, -1),
+  ProjectileData(G_FI,  300, 30, 1,   12, 0, G1MV, -1),
 
-  ProjectileData(G2,    300, 30, 25, 0, G2V, -1),
+  ProjectileData(G2,    300, 30, 2,   25, 0, G2V, -1),
 
-  ProjectileData(G_IT2, 300, 30, 20, 0, G2MV, -1),
-  ProjectileData(G_FT2, 300, 30, 20, 0, G2MV, -1),
-  ProjectileData(G_FI2, 300, 30, 20, 0, G2MV, -1),
+  ProjectileData(G_IT2, 300, 30, 2,   20, 0, G2MV, -1),
+  ProjectileData(G_FT2, 300, 30, 2,   20, 0, G2MV, -1),
+  ProjectileData(G_FI2, 300, 30, 2,   20, 0, G2MV, -1),
 
-  ProjectileData(G3,    300, 30, 50, 0, G3V, -1),
+  ProjectileData(G3,    300, 30, 3,   50, 0, G3V, -1),
 
-  ProjectileData(B1,    50,  30, 5, 0, NONEV, -1)
+  ProjectileData(B1,    50,  30, 1,   5, 0, NONEV, -1)
 };
 
 class Projectile :
@@ -91,6 +93,9 @@ public:
   static MAGIC_POWER upgrade( const MAGIC_POWER m );
   static MAGIC_POWER combine( MAGIC_POWER m1, MAGIC_POWER m2 );
   static const MAGIC_POWER combinations[18][18];
+  static const float meleeWidth;
+  static const float meleeHeight;
+  static const float meleeDepth;
 
   length_t range;
   length_t distanceLeftToTravel;
@@ -123,8 +128,9 @@ public:
   void setStrength(float a);
   void setRange(length_t r);
   void setOwner(Player *);
+  void setCharing( bool c ){ charging = c; }
   MAGIC_POWER getMagicType(){ return magicType; }
-  void setMagicType( MAGIC_POWER m ) { magicType = m; charge_counter.restart(); }
+  void setMagicType( MAGIC_POWER m, bool melee = false); //TODO this is not the best way
   Player* getOwner(){return owner;}
   void setChargeTime(int t) { Charge_Time = t ;};
   Entity_Type getType() const { return type; }

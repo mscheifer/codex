@@ -295,14 +295,8 @@ void Player::handleSelfAction(ClientGameTimeAction a) {
 	} else if ( chargedProjectile && !a.attackRange ) { //@Fire the projectile!
     v3_t v = direction;
     v.normalize();
-    float strMult = 1;
-    for(auto buff = buffs.begin(); buff != buffs.end(); buff++){
-      if( BuffInfo[buff->first].affectStrength ){
-        strMult *= (BuffInfo[buff->first].strengthMultiplier);
-      }
-    }
 
-    chargedProjectile->fire(v,strMult);
+    chargedProjectile->fire(v,getStrengthMultiplier());
     chargedProjectile = nullptr;
   }
 
@@ -501,6 +495,16 @@ float Player::getChargeCD() const{
     }
   }
   return cdMult;
+}
+
+float Player::getStrengthMultiplier() const{
+  float strMult = 1;
+  for(auto buff = buffs.begin(); buff != buffs.end(); buff++){
+    if( BuffInfo[buff->first].affectStrength ){
+      strMult *= (BuffInfo[buff->first].strengthMultiplier);
+    }
+  }
+  return strMult;
 }
 
 void Player::serialize(sf::Packet& packet) const {

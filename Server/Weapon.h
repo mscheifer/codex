@@ -12,6 +12,9 @@ public:
   static const WeaponType wtype = UNK; //this is to get the weapon name
   static const bool hasRangedAttack = false;
   static const bool hasMeleeAttack = false;
+  static const float meleeAttackMult; //TODO balance this
+  MAGIC_POWER basicAttack;
+
   Weapon() {/*TODO initialzie*/}
 	Weapon(Map*);
 	~Weapon(void);
@@ -26,6 +29,7 @@ public:
   //add the bounding box again
   virtual bool dropDown(v3_t dropPosition);
   
+  MAGIC_POWER getBasicAttack() const{ return basicAttack; }
   int getRange(void);
 	int getDamage(void);
   virtual float getMpCost(){return 0;}

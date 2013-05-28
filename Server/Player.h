@@ -62,6 +62,7 @@ public:
   Entity_Type getType() const { return type; }
   float getAttackCD() const;
   float getChargeCD() const;
+  float getStrengthMultiplier() const;
   
   void serialize(sf::Packet& packet) const;
   void deserialize(sf::Packet& packet);
