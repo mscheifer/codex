@@ -37,14 +37,16 @@ std::shared_ptr<rawAttrib<T>> makeRawAttribPtr(std::string name, std::vector<T> 
 
 struct graphicsEntity {
     template<typename T>
-    using rawAttribPtr_t = std::shared_ptr<rawAttrib<T>>;
+    struct rawAttribPtr_t {
+      typedef std::shared_ptr<rawAttrib<T>> t;
+    };
     //-- this block
-    rawAttribPtr_t<vector4f> positions;
-    rawAttribPtr_t<vector3f> normals;
-    //rawAttribPtr_t<vector2f> texcoords;
-    rawAttribPtr_t<vector4f> colors;
-    rawAttribPtr_t<vector4i> boneIDs;
-    rawAttribPtr_t<vector4f> boneWeights;
+    rawAttribPtr_t<vector4f>::t positions;
+    rawAttribPtr_t<vector3f>::t normals;
+    //rawAttribPtr_t<vector2f>::type texcoords;
+    rawAttribPtr_t<vector4f>::t colors;
+    rawAttribPtr_t<vector4i>::t boneIDs;
+    rawAttribPtr_t<vector4f>::t boneWeights;
     std::vector<GLuint>  indices;
     std::map<int,matrix> offsets; //for the bones, applied before everything
                                   //else, in addition to interpolated
@@ -60,10 +62,15 @@ struct graphicsEntity {
                    std::vector<vector4f> bWeights,std::vector<GLuint>   indices,
                    std::map<int,matrix>, bone, matrix);
 
-    graphicsEntity(rawAttribPtr_t<vector4f> pos, rawAttribPtr_t<vector3f> norms,
-                   rawAttribPtr_t<vector4f> cols,rawAttribPtr_t<vector4i> bIDs,
-                   rawAttribPtr_t<vector4f> bWts,std::vector<GLuint> indices,
+    graphicsEntity(rawAttribPtr_t<vector4f>::t pos, rawAttribPtr_t<vector3f>::t norms,
+                   rawAttribPtr_t<vector4f>::t cols,rawAttribPtr_t<vector4i>::t bIDs,
+                   rawAttribPtr_t<vector4f>::t bWts,std::vector<GLuint> indices,
                    std::map<int,matrix>, bone, matrix);
+
+    graphicsEntity(graphicsEntity const&);// = delete; //don't copy
+    graphicsEntity& operator=(graphicsEntity const&);// = delete; //don't copy
+    graphicsEntity(graphicsEntity&&);// = delete; //don't copy
+    graphicsEntity& operator=(graphicsEntity&&);// = delete; //don't copy
 
     typedef vertexAttrib::attribsList_t attribsList_t;
     attribsList_t getAttribList(std::string const&) const;

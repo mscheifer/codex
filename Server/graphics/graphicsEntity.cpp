@@ -54,14 +54,34 @@ gx::graphicsEntity::graphicsEntity(std::vector<vector4f> pos,
     indices(std::move(inds)), offsets(std::move(offs)), rootBone(std::move(bn)),
     centerAndResize(std::move(fixMat)) {}
 
-gx::graphicsEntity::graphicsEntity(rawAttribPtr_t<vector4f> pos,
-    rawAttribPtr_t<vector3f> norms, rawAttribPtr_t<vector4f> cols,
-    rawAttribPtr_t<vector4i> bIDs, rawAttribPtr_t<vector4f> bWts,
+gx::graphicsEntity::graphicsEntity(rawAttribPtr_t<vector4f>::t pos,
+    rawAttribPtr_t<vector3f>::t norms, rawAttribPtr_t<vector4f>::t cols,
+    rawAttribPtr_t<vector4i>::t bIDs,  rawAttribPtr_t<vector4f>::t bWts,
     std::vector<GLuint> inds, std::map<int,matrix> offs, bone bn, matrix car)
   : positions(std::move(pos)), normals(std::move(norms)), colors(std::move(cols)),
     boneIDs(std::move(bIDs)), boneWeights(std::move(bWts)),
     indices(std::move(inds)), offsets(std::move(offs)), rootBone(std::move(bn)),
     centerAndResize(std::move(car)) {}
+
+gx::graphicsEntity::graphicsEntity(graphicsEntity&& other)
+  : positions(std::move(other.positions)), normals(std::move(other.normals)),
+    colors(std::move(other.colors)), boneIDs(std::move(other.boneIDs)),
+    boneWeights(std::move(other.boneWeights)), indices(std::move(other.indices)),
+    offsets(std::move(other.offsets)), rootBone(std::move(other.rootBone)),
+    centerAndResize(std::move(other.centerAndResize)) {}
+
+gx::graphicsEntity& gx::graphicsEntity::operator=(graphicsEntity&& other) {
+  this->positions       = std::move(other.positions);
+  this->normals         = std::move(other.normals);
+  this->colors          = std::move(other.colors);
+  this->boneIDs         = std::move(other.boneIDs);
+  this->boneWeights     = std::move(other.boneWeights);
+  this->indices         = std::move(other.indices);
+  this->offsets         = std::move(other.offsets);
+  this->rootBone        = std::move(other.rootBone);
+  this->centerAndResize = std::move(other.centerAndResize);
+  return *this;
+}
 
 gx::graphicsEntity::attribsList_t gx::graphicsEntity::getAttribList(const std::string& shID) const {
   attribsList_t ret;

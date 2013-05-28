@@ -10,7 +10,8 @@ gx::graphicsEntity::attribsList_t processAttribs(const gx::graphicsEntity& genti
     auto boneWeights = gentity.boneWeights->getRawData();
     for(unsigned int i = 0; i < rawData.size(); i++) {
       gx::matrix offset; //0 init
-      for(unsigned int j = 0; j < decltype(boneIDs)::value_type::numComponents; j++) {
+      typedef decltype(boneIDs) boneType;
+      for(unsigned int j = 0; j < boneType::value_type::numComponents; j++) {
         if(gentity.offsets.find(boneIDs[i][j]) != gentity.offsets.end()) {
           //std::cout << "offset id " << boneIDs[i][j] << std::endl;
           offset += gentity.offsets.find(boneIDs[i][j])->second * boneWeights[i][j];
@@ -26,7 +27,8 @@ gx::graphicsEntity::attribsList_t processAttribs(const gx::graphicsEntity& genti
     auto boneWeights = gentity.boneWeights->getRawData();
     for(unsigned int i = 0; i < rawData.size(); i++) {
       gx::matrix offset; //0 init
-      for(unsigned int j = 0; j < decltype(boneIDs)::value_type::numComponents; j++) {
+      typedef decltype(boneIDs) boneType;
+      for(unsigned int j = 0; j < boneType::value_type::numComponents; j++) {
         if(gentity.offsets.find(boneIDs[i][j]) != gentity.offsets.end()) {
           offset += gentity.offsets.find(boneIDs[i][j])->second * boneWeights[i][j];
         }

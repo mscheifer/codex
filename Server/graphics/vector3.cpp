@@ -102,9 +102,19 @@ template<typename T>
 typename gx::vector3<T>::elem_t gx::vector3<T>::magnitudesq() const {
   return x*x + y*y + z*z;
 }
+namespace {
+  template<typename T>
+  struct magnitudeType {
+    typedef T floatType;
+  };
+  template<>
+  struct magnitudeType<GLint> {
+    typedef double floatType;
+  };
+} //end unnamed namespace
 template<typename T>
 typename gx::vector3<T>::elem_t gx::vector3<T>::magnitude() const {
-  return static_cast<elem_t>(sqrt(this->magnitudesq()));
+  return static_cast<elem_t>(sqrt(static_cast<magnitudeType<T>::floatType>(this->magnitudesq())));
 }
 template<typename T>
 void gx::vector3<T>::normalize() {

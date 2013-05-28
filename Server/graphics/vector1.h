@@ -2,6 +2,7 @@
 #define VECTOR1_H
 #include <GL/glew.h>
 #include <array>
+#include "windowsHacks.h"
 
 namespace gx {
 template<typename T>

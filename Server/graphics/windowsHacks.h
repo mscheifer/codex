@@ -1,3 +1,5 @@
+#ifndef WINDOWSHACKS_H
+#define WINDOWSHACKS_H
 #ifdef _WIN32
 #define constexpr const
 #define noexcept
@@ -15,3 +17,4 @@ namespace std { //initializer_list hack
   };
 } //end std hack
 #endif
+#endif //WINDOWSHACKS_H

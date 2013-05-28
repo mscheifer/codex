@@ -2,38 +2,38 @@
 #include "vector1.h"
 
 std::vector<gx::graphicsEntity> gx::loadCube() {
-  std::array<vector4f,8> posArray    = {{ { 0.0f, 0.0f, 0.0f, 1.0f},
-                                          { 1.0f, 0.0f, 0.0f, 1.0f},
-                                          { 0.0f, 1.0f, 0.0f, 1.0f},
-                                          { 1.0f, 1.0f, 0.0f, 1.0f},
-                                          { 0.0f, 0.0f,-1.0f, 1.0f},
-                                          { 1.0f, 0.0f,-1.0f, 1.0f},
-                                          { 0.0f, 1.0f,-1.0f, 1.0f},
-                                          { 1.0f, 1.0f,-1.0f, 1.0f} }};
-  std::array<vector4f,8> blueArray   = {{ { 0.0f, 0.0f, 1.0f, 1.0f},
-                                          { 0.0f, 0.0f, 1.0f, 1.0f},
-                                          { 0.0f, 0.0f, 1.0f, 1.0f},
-                                          { 0.0f, 0.0f, 1.0f, 1.0f},
-                                          { 0.0f, 0.0f, 1.0f, 1.0f},
-                                          { 0.0f, 0.0f, 1.0f, 1.0f},
-                                          { 0.0f, 0.0f, 1.0f, 1.0f},
-                                          { 0.0f, 0.0f, 1.0f, 1.0f} }};
-  std::array<vector4f,8> redArray    = {{ { 1.0f, 0.0f, 0.0f, 1.0f},
-                                          { 1.0f, 0.0f, 0.0f, 1.0f},
-                                          { 1.0f, 0.0f, 0.0f, 1.0f},
-                                          { 1.0f, 0.0f, 0.0f, 1.0f},
-                                          { 1.0f, 0.0f, 0.0f, 1.0f},
-                                          { 1.0f, 0.0f, 0.0f, 1.0f},
-                                          { 1.0f, 0.0f, 0.0f, 1.0f},
-                                          { 1.0f, 0.0f, 0.0f, 1.0f} }};
-  std::array<vector3f,8> normalArray = {{ {-1.0f,-1.0f, 1.0f},
-                                          { 1.0f,-1.0f, 1.0f}, 
-                                          {-1.0f, 1.0f, 1.0f}, 
-                                          { 1.0f, 1.0f, 1.0f}, 
-                                          {-1.0f,-1.0f,-1.0f}, 
-                                          { 1.0f,-1.0f,-1.0f}, 
-                                          {-1.0f, 1.0f,-1.0f}, 
-                                          { 1.0f, 1.0f,-1.0f} }};
+  std::array<vector4f,8> posArray    = {{ vector4f( 0.0f, 0.0f, 0.0f, 1.0f),
+                                          vector4f( 1.0f, 0.0f, 0.0f, 1.0f),
+                                          vector4f( 0.0f, 1.0f, 0.0f, 1.0f),
+                                          vector4f( 1.0f, 1.0f, 0.0f, 1.0f),
+                                          vector4f( 0.0f, 0.0f,-1.0f, 1.0f),
+                                          vector4f( 1.0f, 0.0f,-1.0f, 1.0f),
+                                          vector4f( 0.0f, 1.0f,-1.0f, 1.0f),
+                                          vector4f( 1.0f, 1.0f,-1.0f, 1.0f) }};
+  std::array<vector4f,8> blueArray   = {{ vector4f( 0.0f, 0.0f, 1.0f, 1.0f),
+                                          vector4f( 0.0f, 0.0f, 1.0f, 1.0f),
+                                          vector4f( 0.0f, 0.0f, 1.0f, 1.0f),
+                                          vector4f( 0.0f, 0.0f, 1.0f, 1.0f),
+                                          vector4f( 0.0f, 0.0f, 1.0f, 1.0f),
+                                          vector4f( 0.0f, 0.0f, 1.0f, 1.0f),
+                                          vector4f( 0.0f, 0.0f, 1.0f, 1.0f),
+                                          vector4f( 0.0f, 0.0f, 1.0f, 1.0f) }};
+  std::array<vector4f,8> redArray    = {{ vector4f( 1.0f, 0.0f, 0.0f, 1.0f),
+                                          vector4f( 1.0f, 0.0f, 0.0f, 1.0f),
+                                          vector4f( 1.0f, 0.0f, 0.0f, 1.0f),
+                                          vector4f( 1.0f, 0.0f, 0.0f, 1.0f),
+                                          vector4f( 1.0f, 0.0f, 0.0f, 1.0f),
+                                          vector4f( 1.0f, 0.0f, 0.0f, 1.0f),
+                                          vector4f( 1.0f, 0.0f, 0.0f, 1.0f),
+                                          vector4f( 1.0f, 0.0f, 0.0f, 1.0f) }};
+  std::array<vector3f,8> normalArray = {{ vector3f(-1.0f,-1.0f, 1.0f),
+                                          vector3f( 1.0f,-1.0f, 1.0f), 
+                                          vector3f(-1.0f, 1.0f, 1.0f), 
+                                          vector3f( 1.0f, 1.0f, 1.0f), 
+                                          vector3f(-1.0f,-1.0f,-1.0f), 
+                                          vector3f( 1.0f,-1.0f,-1.0f), 
+                                          vector3f(-1.0f, 1.0f,-1.0f), 
+                                          vector3f( 1.0f, 1.0f,-1.0f) }};
   std::vector<vector1f> normDiffs(8);
   for(auto itr = normalArray.begin(); itr != normalArray.end(); itr++) {
     auto& norm = *itr;
@@ -87,30 +87,30 @@ std::vector<gx::graphicsEntity> gx::loadCube() {
 
 gx::graphicsEntity gx::loadSkybox() {
   //sky box
-  std::array<vector4f,8> skyboxVtArr = {{ { 1000.0f, 1000.0f, 500.0f, 1.0f},
-                                          {-1000.0f, 1000.0f, 500.0f, 1.0f},
-                                          {-1000.0f,-1000.0f, 500.0f, 1.0f},
-                                          { 1000.0f,-1000.0f, 500.0f, 1.0f},
-                                          { 1000.0f, 1000.0f,   0.0f, 1.0f},
-                                          {-1000.0f, 1000.0f,   0.0f, 1.0f},
-                                          {-1000.0f,-1000.0f,   0.0f, 1.0f},
-                                          { 1000.0f,-1000.0f,   0.0f, 1.0f} }};
-  std::array<vector3f,8> skyboxNormA = {{ {-1.0f,-1.0f,-1.0f},
-                                          { 1.0f,-1.0f,-1.0f}, 
-                                          { 1.0f, 1.0f,-1.0f}, 
-                                          {-1.0f, 1.0f,-1.0f}, 
-                                          {-1.0f,-1.0f, 0.0f}, 
-                                          { 1.0f,-1.0f, 0.0f}, 
-                                          { 1.0f, 1.0f, 0.0f}, 
-                                          {-1.0f, 1.0f, 0.0f} }};
-  std::array<vector4f,8> lightblueArray = {{ { 0.4f, 0.4f, 1.0f, 1.0f},
-                                             { 0.4f, 0.4f, 1.0f, 1.0f},
-                                             { 0.4f, 0.4f, 1.0f, 1.0f},
-                                             { 0.4f, 0.4f, 1.0f, 1.0f},
-                                             { 0.4f, 0.4f, 1.0f, 1.0f},
-                                             { 0.4f, 0.4f, 1.0f, 1.0f},
-                                             { 0.4f, 0.4f, 1.0f, 1.0f},
-                                             { 0.4f, 0.4f, 1.0f, 1.0f} }};
+  std::array<vector4f,8> skyboxVtArr = {{ vector4f( 1000.0f, 1000.0f, 500.0f, 1.0f),
+                                          vector4f(-1000.0f, 1000.0f, 500.0f, 1.0f),
+                                          vector4f(-1000.0f,-1000.0f, 500.0f, 1.0f),
+                                          vector4f( 1000.0f,-1000.0f, 500.0f, 1.0f),
+                                          vector4f( 1000.0f, 1000.0f,   0.0f, 1.0f),
+                                          vector4f(-1000.0f, 1000.0f,   0.0f, 1.0f),
+                                          vector4f(-1000.0f,-1000.0f,   0.0f, 1.0f),
+                                          vector4f( 1000.0f,-1000.0f,   0.0f, 1.0f) }};
+  std::array<vector3f,8> skyboxNormA = {{ vector3f(-1.0f,-1.0f,-1.0f),
+                                          vector3f( 1.0f,-1.0f,-1.0f), 
+                                          vector3f( 1.0f, 1.0f,-1.0f), 
+                                          vector3f(-1.0f, 1.0f,-1.0f), 
+                                          vector3f(-1.0f,-1.0f, 0.0f), 
+                                          vector3f( 1.0f,-1.0f, 0.0f), 
+                                          vector3f( 1.0f, 1.0f, 0.0f), 
+                                          vector3f(-1.0f, 1.0f, 0.0f) }};
+  std::array<vector4f,8> lightblueArray = {{ vector4f( 0.4f, 0.4f, 1.0f, 1.0f),
+                                             vector4f( 0.4f, 0.4f, 1.0f, 1.0f),
+                                             vector4f( 0.4f, 0.4f, 1.0f, 1.0f),
+                                             vector4f( 0.4f, 0.4f, 1.0f, 1.0f),
+                                             vector4f( 0.4f, 0.4f, 1.0f, 1.0f),
+                                             vector4f( 0.4f, 0.4f, 1.0f, 1.0f),
+                                             vector4f( 0.4f, 0.4f, 1.0f, 1.0f),
+                                             vector4f( 0.4f, 0.4f, 1.0f, 1.0f) }};
   for(auto itr = skyboxNormA.begin(); itr != skyboxNormA.end(); itr++) {
     auto& norm = *itr;
     norm.normalize();
