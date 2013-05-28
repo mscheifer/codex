@@ -123,15 +123,19 @@ bool Player::attackBy(DeadlyEntity *other)
 
 bool Player::damageBy(DeadlyEntity *deadly)
 {
-	float damage = deadly->getStrength() - defense;
+	if (health==0) return true;
+  float damage = deadly->getStrength() - defense;
 	damage = ( damage > 0? damage: 0);
 	float newHealth = (health - damage);
 	health = (newHealth > 0 ? newHealth : 0);
   dead = health==0;
+  std::cout<<" i am attacked by"<< ((Projectile *) deadly)->getOwner()->player_id<<std::endl;
   if(dead) {
     die();
     //This is a hack
     map->kills[((Projectile *) deadly)->getOwner()->player_id]++;
+    std::cout<<"updating kills"<<std::endl;
+    std::cout<<map->kills[((Projectile *) deadly)->getOwner()->player_id]<<std::endl;
   }
 	return true;
 }
