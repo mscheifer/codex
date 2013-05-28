@@ -1,5 +1,5 @@
-#ifndef DRAWSET_H
-#define DRAWSET_H
+#ifndef DRAWERIMPL_H
+#define DRAWERIMPL_H
 #include <GL/glew.h>
 #include <vector>
 #include "bone.h"
@@ -79,4 +79,4 @@ class dynamicDrawerImpl {
 };
 
 } //end namespace gx
-#endif // DRAWSET_H
+#endif // DRAWERIMPL_H
