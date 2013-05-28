@@ -19,7 +19,7 @@ struct ProjectileData{
     BUFF debuff1,
     int chargeTime1
     )
-    : magicType(magicType), range(range1), speed(speed1), 
+    : magicType(magicType1), range(range1), speed(speed1), 
     strength(strength1), mpCost(mpCost1), chargeTime(chargeTime1), debuff(debuff1){}
 };
 

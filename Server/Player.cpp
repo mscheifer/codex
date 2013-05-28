@@ -129,6 +129,13 @@ bool Player::damageBy(DeadlyEntity *deadly)
 	float newHealth = (health - damage);
 	health = (newHealth > 0 ? newHealth : 0);
   dead = health==0;
+
+  if(charging == true) {
+    map->destroyProjectile(chargedProjectile);
+    chargedProjectile = nullptr;
+    charging = false;
+  }
+
   std::cout<<" i am attacked by"<< ((Projectile *) deadly)->getOwner()->player_id<<std::endl;
   if(dead) {
     die();
@@ -294,7 +301,7 @@ void Player::handleSelfAction(ClientGameTimeAction a) {
 
   //try pick up
   if(a.pickup && pickup ){
-    weapon[current_weapon_selection]->dropDown(position);
+    weapon[current_weapon_selection]->tossAway(position, direction);
     weapon[current_weapon_selection] = pickup;
     pickup->pickUp();
   }

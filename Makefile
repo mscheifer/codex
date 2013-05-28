@@ -1,7 +1,7 @@
 NAME	    = Server/drchao
 DEBUGNAME = Server/drchao-debug
 ECHO	    = @echo
-CC        = @g++
+CC        = @clang++
 BINFLAGS  = -O3 -flto -DNDEBUG
 #possible optimizations to consider: fmodulo-sched fmodulo-sched-allow-regmoves
 #  fgcse-sm fgcse-las fgcse-after-reload 
@@ -12,7 +12,7 @@ BINFLAGS  = -O3 -flto -DNDEBUG
 #diagnostic flags: -fmudflap
 #there's also profling optimization options
 DEBUGFLAGS= -g -DGRAPHICSDEBUG
-WARNINGS  = -Wall -Wextra -Wstrict-overflow=5 -Wshadow #-Wconversion
+WARNINGS  = -Wall -Wextra -Wstrict-overflow=5 -Wshadow -Wconversion
 INCLUDE   = -IServer/
 CCFLAGS   = $(WARNINGS) $(INCLUDE) -std=c++11
 LDSFML = -lsfml-window -lsfml-system -lsfml-audio -lsfml-network -lsfml-graphics

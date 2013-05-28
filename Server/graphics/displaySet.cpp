@@ -2,14 +2,16 @@
 
 namespace { //don't export
  const std::string uniformName = "display";
- const std::array<std::pair<std::string,GLenum>,2> uniformVars = {{ 
+ const std::array<std::pair<std::string,GLenum>,2> uniformVarsArray = {{ 
    std::make_pair("viewMatrix",GL_FLOAT_MAT4), 
    std::make_pair("projMatrix",GL_FLOAT_MAT4)
  }};
+ const std::map<std::string,GLenum> uniformVars(uniformVarsArray.begin(),
+                                                uniformVarsArray.end());
 } //end unnamed namespace
 
 gx::displaySet::displaySet(): view(), projection(), cameraPos(),
-    unif(uniformName,std::map<std::string,GLenum>(uniformVars.begin(),uniformVars.end())) {}
+    unif(uniformName,uniformVars) {}
 
 void gx::displaySet::setProjection(elem_t fov, elem_t ratio, elem_t nearP,
                                elem_t farP) {

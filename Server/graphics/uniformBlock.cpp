@@ -14,12 +14,14 @@ GLuint gx::uniform::block::freshBindPoint() {
   return nextUniformBindPoint++;
 }
 
-gx::uniform::block::block(std::string n, std::map<std::string,GLenum> varNameType)
-  : blockName(n), bindingIndex(freshBindPoint()), bufferName(-5), offsets(), basicStorage(), storageNums() {
+gx::uniform::block::block(std::string n,
+                          std::map<std::string,GLenum> varNameType)
+  : blockName(n), bindingIndex(freshBindPoint()), bufferName(), offsets(),
+    basicStorage(), storageNums() {
   if(gx::sharedUniformsOn) {
     GLsizeiptr buffSize = -3;//todo fix this
 
-	//setup this->offsets
+    //setup this->offsets
 
     glGenBuffers(1, &(this->bufferName));
     debugout << "glGenBuffers(1, &(this->bufferName));" << endl;
@@ -49,13 +51,13 @@ gx::uniform::block::~block() {
 }
 
 void gx::uniform::block::writeBuffer(GLintptr offset, GLsizeiptr size,
-                        const GLvoid* data) const {
+                                     const GLvoid* data) const {
+  glBindBuffer(GL_UNIFORM_BUFFER, this->bufferName);
   debugout << "glBindBuffer(GL_UNIFORM_BUFFER, " << this->bufferName << ");";
   debugout << endl;
-  glBindBuffer(GL_UNIFORM_BUFFER, this->bufferName);
+  glBufferSubData(GL_UNIFORM_BUFFER, offset, size, data);
   debugout << "glBufferSubData(GL_UNIFORM_BUFFER, " << offset << ", ";
   debugout << size << ", data@" << data << ");" << endl;
-  glBufferSubData(GL_UNIFORM_BUFFER, offset, size, data);
 }
 
 void gx::uniform::block::addShaderBindings(shaderProgram* p) {
@@ -77,7 +79,8 @@ void gx::uniform::block::addShaderBindings(shaderProgram* p) {
                               GL_UNIFORM_BLOCK_DATA_SIZE, &sz);
     debugout << "uniform size: " << sz << endl;
   } else {
-    for(auto varp = this->basicStorage.begin(); varp != this->basicStorage.end(); varp++) {
+    auto& storage = this->basicStorage;
+    for(auto varp = storage.begin(); varp != storage.end(); varp++) {
       (*varp)->addShader(*p);
     }
   }
@@ -85,7 +88,8 @@ void gx::uniform::block::addShaderBindings(shaderProgram* p) {
 
 void gx::uniform::block::frameUpdate(const shaderProgram* p) const {
   if(!gx::sharedUniformsOn) {
-    for(auto varp = this->basicStorage.begin(); varp != this->basicStorage.end(); varp++) {
+    auto& storage = this->basicStorage;
+    for(auto varp = storage.begin(); varp != storage.end(); varp++) {
       (*varp)->update(p->progNum());
     }
   }
@@ -95,12 +99,14 @@ std::string gx::uniform::block::declaration() const {
   std::string ret;
   if(gx::sharedUniformsOn) {
     ret  = "layout(std140) uniform display {";
-    for(auto basicP = basicStorage.begin(); basicP != basicStorage.end(); basicP++) {
+    auto& storage = this->basicStorage;
+    for(auto basicP = storage.begin(); basicP != storage.end(); basicP++) {
       ret += "  " + (*basicP)->declaration();
     }
     ret += "};\n";
   } else {
-    for(auto basicP = basicStorage.begin(); basicP != basicStorage.end(); basicP++) {
+    auto& storage = this->basicStorage;
+    for(auto basicP = storage.begin(); basicP != storage.end(); basicP++) {
       ret += "uniform " + (*basicP)->declaration();
     }
   }

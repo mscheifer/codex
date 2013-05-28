@@ -20,7 +20,7 @@ class block {
     GLuint      bufferName;
 
     std::map<std::string,GLintptr>      offsets;
-	  std::vector<std::unique_ptr<basic>> basicStorage;
+    std::vector<std::unique_ptr<basic>> basicStorage;
     std::map<std::string,unsigned int>  storageNums;
     void writeBuffer(GLintptr,GLsizeiptr,const GLvoid*) const;
   public:
@@ -30,12 +30,13 @@ class block {
     block(block&&);// = delete;
     block& operator=(block&&);// = delete;
     ~block();
-    void addShaderBindings(shaderProgram*);//TODO: change to take shader reference
+    void addShaderBindings(shaderProgram*);//TODO: change to take shader ref
     template<typename T>
     void writeBufferStruct(GLintptr offset,const T& data) const {
       if(gx::sharedUniformsOn) {
-        this->write(offset, sizeof(data), &data);
+        this->writeBuffer(offset, sizeof(data), &data);
       }
+      //TODO: add for not shared too
     }
     template<typename T,size_t N>
     void writeBuffer(GLintptr offset,const std::array<T,N>& data) const {
@@ -44,7 +45,7 @@ class block {
       }
     }
     template<typename T>
-    void writeBuffer(GLintptr offset,const T data) const {
+    void writeBuffer(GLintptr offset, const T& data) const {
       if(gx::sharedUniformsOn) {
         this->writeBuffer(offset, sizeof(data), &data);
       }
@@ -56,7 +57,7 @@ class block {
       }
     }
     template<typename T>
-    void writeNum(unsigned int num, const T data) {
+    void writeNum(unsigned int num,const T& data) {
       if(!gx::sharedUniformsOn) {
         this->basicStorage[num]->write(data);
       }
@@ -64,13 +65,13 @@ class block {
     template<typename T,size_t N>
     void write(const std::string varName, const std::array<T,N>& data) {
       if(gx::sharedUniformsOn) {
-        this->writeBuffer(this->offsets[varName],std::forward<const std::array<T,N>>(data));
+        this->writeBuffer(this->offsets[varName],data);
       } else {
-        this->writeNum(this->storageNums[varName],std::forward<const std::array<T,N>>(data));
+        this->writeNum(this->storageNums[varName],data);
       }
     }
     template<typename T>
-    void write(const std::string varName, const T data) {
+    void write(const std::string varName, const T& data) {
       if(gx::sharedUniformsOn) {
         this->writeBuffer(this->offsets[varName],data);
       } else {

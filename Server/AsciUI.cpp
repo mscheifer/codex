@@ -17,135 +17,135 @@ AsciUI::~AsciUI(void)
 
 int AsciUI::render(Player* players, std::vector<Entity *> entities)
 {
-	
-	system("cls");
-	int layout[15][15];
-	for(unsigned int i = 0 ; i < entities.size() ;i++) {
-		layout[(int)(entities[i]->getPosition()).y][(int)(entities[i]->getPosition()).x] = 5;
-		
-	}
+  
+  system("cls");
+  int layout[15][15];
+  for(unsigned int i = 0 ; i < entities.size() ;i++) {
+    layout[(int)(entities[i]->getPosition()).y][(int)(entities[i]->getPosition()).x] = 5;
+    
+  }
 
-	for(int i = 0 ; i < 4 ;i++) {
-		layout[(int)(players[i].getPosition()).y][(int)(players[i].getPosition()).x] = i;
-		
-	}
+  for(int i = 0 ; i < 4 ;i++) {
+    layout[(int)(players[i].getPosition()).y][(int)(players[i].getPosition()).x] = i;
+    
+  }
 
-	
+  
 
-	string out_map = "+";
-	for(int j = 0; j < 15; j++) {
-			out_map.append("---+");
-	}
-	out_map.append("\n");
-	for(int i = 0; i < 15; i++) {
-		out_map.append("|");
-		for(int j = 0; j < 15; j++) {
-			if(layout[i][j] == 0) {
-				out_map.append(" 11 ");
-			} else if(layout[i][j] == 1){
-				out_map.append(" 22 ");
-			} else if(layout[i][j] == 2){
-				out_map.append(" 33 ");
-			}else if(layout[i][j] == 3){
-				out_map.append(" 44 ");
-			} else {
-				out_map.append("    ");
-			}
-
-
-		}
-		out_map.append("|");
-		out_map.append("\n+");
-		if(i == 14) {
-			for(int j = 0; j < 15; j++) {
-				out_map.append("---+");
-			}
-		}else {
-			for(int j = 0; j < 15; j++) {
-				out_map.append("   +");
-			}
-		}
-		
-		out_map.append("\n");
-	
+  string out_map = "+";
+  for(int j = 0; j < 15; j++) {
+      out_map.append("---+");
+  }
+  out_map.append("\n");
+  for(int i = 0; i < 15; i++) {
+    out_map.append("|");
+    for(int j = 0; j < 15; j++) {
+      if(layout[i][j] == 0) {
+        out_map.append(" 11 ");
+      } else if(layout[i][j] == 1){
+        out_map.append(" 22 ");
+      } else if(layout[i][j] == 2){
+        out_map.append(" 33 ");
+      }else if(layout[i][j] == 3){
+        out_map.append(" 44 ");
+      } else {
+        out_map.append("    ");
+      }
 
 
-	}
+    }
+    out_map.append("|");
+    out_map.append("\n+");
+    if(i == 14) {
+      for(int j = 0; j < 15; j++) {
+        out_map.append("---+");
+      }
+    }else {
+      for(int j = 0; j < 15; j++) {
+        out_map.append("   +");
+      }
+    }
+    
+    out_map.append("\n");
+  
 
-	/*
-		+---+   +   +   +   +
-		| @  XXX   
-		+   +   +   +   +   +
-		|XXX XXX
-		+   +   +   +   +   +
 
-	*/
-		out_map.append("Player1 health: " + std::to_string( static_cast<long long>(players[0].getHealth() ) ) + "\n") ;
-		out_map.append("Player2 health: " + std::to_string( static_cast<long long>(players[1].getHealth() ) ) + "\n" );
-		out_map.append("Player3 health: " + std::to_string( static_cast<long long>(players[2].getHealth() ) ) + "\n");
-		out_map.append("Player4 health: " + std::to_string( static_cast<long long>(players[3].getHealth() ) ) + "\n");
+  }
+
+  /*
+    +---+   +   +   +   +
+    | @  XXX   
+    +   +   +   +   +   +
+    |XXX XXX
+    +   +   +   +   +   +
+
+  */
+    out_map.append("Player1 health: " + std::to_string( static_cast<long long>(players[0].getHealth() ) ) + "\n") ;
+    out_map.append("Player2 health: " + std::to_string( static_cast<long long>(players[1].getHealth() ) ) + "\n" );
+    out_map.append("Player3 health: " + std::to_string( static_cast<long long>(players[2].getHealth() ) ) + "\n");
+    out_map.append("Player4 health: " + std::to_string( static_cast<long long>(players[3].getHealth() ) ) + "\n");
     out_map.append(players[0].getString()+"\n");
     out_map.append(players[1].getString()+"\n");
 
-	cout << out_map << endl;
+  cout << out_map << endl;
 
-		
-	return 0;
+    
+  return 0;
 
 }
 
 int AsciUI::update(Map*)
 {
-	system("cls");
-//	int layout[15][15];
-//	Entity* entities = map->getEntities();
-//	Player* players = (Player*)entities;
-	for(int i = 0 ; i < 10 ;i++) {
-	/*
-		if(players[i]){
-			layout[(players[i]->getPosition())->x][(players[i]->getPosition())->y] = 1;
-		}
-		*/
-		
-	}
+  system("cls");
+//  int layout[15][15];
+//  Entity* entities = map->getEntities();
+//  Player* players = (Player*)entities;
+  for(int i = 0 ; i < 10 ;i++) {
+  /*
+    if(players[i]){
+      layout[(players[i]->getPosition())->x][(players[i]->getPosition())->y] = 1;
+    }
+    */
+    
+  }
 
-	string out_map = "+";
-	for(int j = 0; j < 15; j++) {
-			out_map.append("---+");
-	}
-	out_map.append("\n");
-	for(int i = 0; i < 15; i++) {
-		out_map.append("|");
-		for(int j = 0; j < 15; j++) {
-			out_map.append("    ");
-		}
-		out_map.append("|");
-		out_map.append("\n+");
-		if(i == 14) {
-			for(int j = 0; j < 15; j++) {
-				out_map.append("---+");
-			}
-		}else {
-			for(int j = 0; j < 15; j++) {
-				out_map.append("   +");
-			}
-		}
-		out_map.append("\n");
+  string out_map = "+";
+  for(int j = 0; j < 15; j++) {
+      out_map.append("---+");
+  }
+  out_map.append("\n");
+  for(int i = 0; i < 15; i++) {
+    out_map.append("|");
+    for(int j = 0; j < 15; j++) {
+      out_map.append("    ");
+    }
+    out_map.append("|");
+    out_map.append("\n+");
+    if(i == 14) {
+      for(int j = 0; j < 15; j++) {
+        out_map.append("---+");
+      }
+    }else {
+      for(int j = 0; j < 15; j++) {
+        out_map.append("   +");
+      }
+    }
+    out_map.append("\n");
 
-	}
+  }
 
-	/*
-		+---+   +   +   +   +
-		| @  XXX   
-		+   +   +   +   +   +
-		|XXX XXX
-		+   +   +   +   +   +
+  /*
+    +---+   +   +   +   +
+    | @  XXX   
+    +   +   +   +   +   +
+    |XXX XXX
+    +   +   +   +   +   +
 
-	*/
+  */
 
-	cout << out_map << endl;
+  cout << out_map << endl;
 
-		
-	return 0;
+    
+  return 0;
 }
 

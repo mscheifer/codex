@@ -1,7 +1,7 @@
 #ifndef BONE_H
 #define BONE_H
 #include <memory>
-#include <assimp/scene.h>			    // Output data structure
+#include <assimp/scene.h>          // Output data structure
 #include "matrix.h"
 
 namespace gx {
@@ -12,10 +12,6 @@ gx::matrix toMat(aiMatrix3x3);
 
 struct bone {
   int id;
-  matrix offset; //applied before everything else, in addition to interpolated
-                 //transformations
-                 //assume it's the same for each mesh for now, if we do more
-                 //than 1 mesh
   matrix transform; //applied if there is no animation active/present
   struct key {
     //assimp stuff
@@ -28,7 +24,7 @@ struct bone {
   std::vector<std::vector<key>> animations;
   std::vector<bone>             children;
 
-  bone(int,matrix,matrix,bool,std::vector<std::vector<key>>,std::vector<bone>);
+  bone(int,matrix,bool,std::vector<std::vector<key>>,std::vector<bone>);
   bone(const bone&);// = delete;
   bone& operator=(const bone&);// = delete;
   bone(bone&&) noexcept;
@@ -44,7 +40,8 @@ struct bone {
   //getBonesData().size() / 16
           unsigned int numBones() const;
   private:
-    void walkBones(std::vector<GLfloat>&,const matrix&,unsigned int,unsigned int) const;
+    void walkBones(std::vector<GLfloat>&,const matrix&,unsigned int,
+                                                       unsigned int) const;
 };
 
 } //end namespace gx

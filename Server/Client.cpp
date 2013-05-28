@@ -165,7 +165,7 @@ void NetworkClient::doClient() {
       }
       initPacket.clear();
       if (netRecv.receiveMessage(initPacket)) {
-        std::cout << "received message" << std::endl;
+        //std::cout << "received message" << std::endl;
         sf::Uint32 packetType;
         initPacket >> packetType;
         if (packetType == JOINID) {
