@@ -60,15 +60,12 @@ void scoreBoard::draw(sf::RenderWindow & window) {
   window.draw(boardText);
   window.draw(killText);
   window.draw(winText);
-  int i=0;
-  for (auto scores = playerScores.begin(), kills = playerKills.begin(), wins = playerWins.begin();
-    scores != playerScores.end(); scores++, kills++, wins++) {
-    (*kills).setString(std::to_string((long long)pkills[i]));
-    (*wins).setString(std::to_string((long long) pwins[i]));
-    window.draw(*scores);
-    window.draw(*kills);
-    window.draw(*wins);
-    i++;
+  for (int i=0; i<playerWins.size(); i++ ) {
+    playerKills[i].setString(std::to_string((long long)pkills[i]));
+    playerWins[i].setString(std::to_string((long long) pwins[i]));
+    window.draw(playerScores[i]);
+    window.draw(playerKills[i]);
+    window.draw(playerWins[i]);
   }
 }
 
