@@ -3,11 +3,12 @@
 #include <string>
 #include <vector>
 #include <map>
-#include "vertexAttrib.h"
+#include "bone.h"
+#include "material.h"
 #include "vector4.h"
 #include "vector3.h"
 #include "vector2.h"
-#include "bone.h"
+#include "vertexAttrib.h"
 
 namespace gx {
 
@@ -53,7 +54,10 @@ struct graphicsEntity {
                                   //else, in addition to interpolated
                                   //transformations assume it's the same for
                                   //each mesh for now, if we do more than 1 mesh
+    //unsigned int materialIndex;
     //-- would be part of seperate meshes
+    material mat; //would be a vector if we had more than one mesh    
+
     bone rootBone;
 
     matrix centerAndResize;
@@ -61,16 +65,16 @@ struct graphicsEntity {
     graphicsEntity(std::vector<vector4f> position,std::vector<vector3f> normals,
                    std::vector<vector4f> colors  ,std::vector<vector4i> boneIDs,
                    std::vector<vector4f> bWeights,std::vector<GLuint>   indices,
-                   std::map<int,matrix>, bone, matrix);
+                   std::map<int,matrix>, material, bone, matrix);
 
     graphicsEntity(rawAttribPtr_t<vector4f>::t pos, rawAttribPtr_t<vector3f>::t norms,
                    rawAttribPtr_t<vector4f>::t cols,rawAttribPtr_t<vector4i>::t bIDs,
                    rawAttribPtr_t<vector4f>::t bWts,std::vector<GLuint> indices,
-                   std::map<int,matrix>, bone, matrix);
+                   std::map<int,matrix>, material, bone, matrix);
 
     graphicsEntity(graphicsEntity const&);// = delete; //don't copy
     graphicsEntity& operator=(graphicsEntity const&);// = delete; //don't copy
-    graphicsEntity(graphicsEntity&&);// = delete; //don't copy
+    graphicsEntity(graphicsEntity&&) noexcept;// = delete; //don't copy
     graphicsEntity& operator=(graphicsEntity&&);// = delete; //don't copy
 
     typedef vertexAttrib::attribsList_t attribsList_t;

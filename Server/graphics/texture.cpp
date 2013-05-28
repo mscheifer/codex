@@ -5,6 +5,12 @@
 gx::Texture::Texture(GLenum TextureTarget, const std::string& FileName)
   : m_textureTarget(TextureTarget), m_fileName(FileName), m_image() {}
 
+gx::Texture::~Texture() {
+  glDeleteTextures(1, &(this->m_textureID));
+  debugout << "glDeleteTextures(1, &(this->m_textureID): " << this->m_textureID;
+  debugout << ");" << endl;
+}
+
 bool gx::Texture::Load() {
   bool success = this->m_image.loadFromFile(this->m_fileName);
 
@@ -28,7 +34,7 @@ bool gx::Texture::Load() {
   return success;
 }
 
-void gx::Texture::Bind(GLenum TextureUnit) {
+void gx::Texture::bind(GLenum TextureUnit) {
   glActiveTexture(TextureUnit);
   glBindTexture(m_textureTarget, m_textureID);
 }

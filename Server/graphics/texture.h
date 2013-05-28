@@ -6,19 +6,19 @@
 
 namespace gx {
 
-class Texture {
-public:
+struct Texture {
     Texture(GLenum TextureTarget, const std::string& FileName);
+    ~Texture();
 
     bool Load();
 
-    void Bind(GLenum TextureUnit);
+    void bind(GLenum TextureUnit);
 
 private:
-    std::string m_fileName;
     GLenum m_textureTarget;
-    GLuint m_textureObj;
+    std::string m_fileName;
     sf::Image m_image;
+    GLuint m_textureObj;
     GLuint m_textureID;
 };
 

@@ -44,30 +44,32 @@ void gx::rawAttrib<T>::putDefaultData(std::string shID) {
 gx::graphicsEntity::graphicsEntity(std::vector<vector4f> pos,
        std::vector<vector3f> norm, std::vector<vector4f> cols,
        std::vector<vector4i> bIDs, std::vector<vector4f> bWeights,
-       std::vector<GLuint>   inds, std::map<int,matrix>  offs, bone bn,
-       matrix fixMat)
+       std::vector<GLuint>   inds, std::map<int,matrix>  offs, material m,
+       bone bn, matrix fixMat)
   :   positions(makeRawAttribPtr("position"   ,pos)),
         normals(makeRawAttribPtr("normal"     ,norm)),
          colors(makeRawAttribPtr("color"      ,cols)),
         boneIDs(makeRawAttribPtr("boneIDs"    ,bIDs)),
     boneWeights(makeRawAttribPtr("boneWeights",bWeights)),
-    indices(std::move(inds)), offsets(std::move(offs)), rootBone(std::move(bn)),
-    centerAndResize(std::move(fixMat)) {}
+    indices(std::move(inds)), offsets(std::move(offs)), mat(std::move(m)),
+    rootBone(std::move(bn)), centerAndResize(std::move(fixMat)) {}
 
 gx::graphicsEntity::graphicsEntity(rawAttribPtr_t<vector4f>::t pos,
     rawAttribPtr_t<vector3f>::t norms, rawAttribPtr_t<vector4f>::t cols,
     rawAttribPtr_t<vector4i>::t bIDs,  rawAttribPtr_t<vector4f>::t bWts,
-    std::vector<GLuint> inds, std::map<int,matrix> offs, bone bn, matrix car)
+    std::vector<GLuint> inds, std::map<int,matrix> offs, material m, bone bn,
+    matrix car)
   : positions(std::move(pos)), normals(std::move(norms)), colors(std::move(cols)),
     boneIDs(std::move(bIDs)), boneWeights(std::move(bWts)),
-    indices(std::move(inds)), offsets(std::move(offs)), rootBone(std::move(bn)),
-    centerAndResize(std::move(car)) {}
+    indices(std::move(inds)), offsets(std::move(offs)), mat(std::move(m)),
+    rootBone(std::move(bn)), centerAndResize(std::move(car)) {}
 
-gx::graphicsEntity::graphicsEntity(graphicsEntity&& other)
+gx::graphicsEntity::graphicsEntity(graphicsEntity&& other) noexcept
   : positions(std::move(other.positions)), normals(std::move(other.normals)),
     colors(std::move(other.colors)), boneIDs(std::move(other.boneIDs)),
-    boneWeights(std::move(other.boneWeights)), indices(std::move(other.indices)),
-    offsets(std::move(other.offsets)), rootBone(std::move(other.rootBone)),
+    boneWeights(std::move(other.boneWeights)),indices(std::move(other.indices)),
+    offsets(std::move(other.offsets)), mat(std::move(other.mat)),
+    rootBone(std::move(other.rootBone)),
     centerAndResize(std::move(other.centerAndResize)) {}
 
 gx::graphicsEntity& gx::graphicsEntity::operator=(graphicsEntity&& other) {
@@ -78,6 +80,7 @@ gx::graphicsEntity& gx::graphicsEntity::operator=(graphicsEntity&& other) {
   this->boneWeights     = std::move(other.boneWeights);
   this->indices         = std::move(other.indices);
   this->offsets         = std::move(other.offsets);
+  this->mat             = std::move(other.mat);
   this->rootBone        = std::move(other.rootBone);
   this->centerAndResize = std::move(other.centerAndResize);
   return *this;

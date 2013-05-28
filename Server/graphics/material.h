@@ -9,6 +9,7 @@ class material {
     vector4f diffuseColor;
   public:
     material(Texture,vector4f);
+    void bind();
 };
 } //end namespace gx
 #endif //MATERIAL_H

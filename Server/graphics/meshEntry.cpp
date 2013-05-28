@@ -125,6 +125,7 @@ gx::Mesh::MeshEntry::MeshEntry(const idMap_t& ids, const aiMesh* paiMesh)
     normals(initNormals(paiMesh)), boneWeights(initBoneWeights(ids,paiMesh)),
     indices(initIndices(paiMesh)), offsets(initOffsets(ids,paiMesh)),
     MaterialIndex(paiMesh->mMaterialIndex) {
+  debugout << "mesh num colors: " << paiMesh->GetNumColorChannels() << endl;
   debugout << "mesh num bones: " << paiMesh->mNumBones << endl;
   for(unsigned int i = 0; i < paiMesh->mNumBones; i++) {
     debugout << "  bone: " << paiMesh->mBones[i]->mName.C_Str();

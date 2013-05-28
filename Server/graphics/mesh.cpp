@@ -115,13 +115,14 @@ gx::Mesh::Mesh(const std::string& Filename, length_t height)
     m_boundary(CalcBoundBox(mScene, height)), idMap(),
     bones(initBones(idMap,mScene)),
     m_Entries(InitFromScene(idMap,mScene)),
-    m_Textures(InitMaterials(mScene, Filename)),
+    m_Materials(InitMaterials(mScene, Filename)),
   //just do the first one unless kangh has a model with more
     entityData(std::move(m_Entries[0].positions),std::move(m_Entries[0].normals),
       std::move(m_Entries[0].colors), std::move(m_Entries[0].boneWeights.first),
       std::move(m_Entries[0].boneWeights.second),
       std::move(m_Entries[0].indices), std::move(m_Entries[0].offsets),
-      std::move(bones), std::move(m_boundary.centerAndResize)) {}
+      std::move(m_Materials[0]), std::move(bones),
+      std::move(m_boundary.centerAndResize)) {}
 
 const aiScene* gx::Mesh::LoadFile(Assimp::Importer& Importer,
                                  const std::string& Filename) {
@@ -211,6 +212,7 @@ std::vector<gx::material> gx::Mesh::InitMaterials(const aiScene* pScene,const st
       }
     }
     Texture diffuseTex(GL_TEXTURE_2D, FullPath);
+    //material index will correspond to the Mesh's material index
     ret.push_back(material(std::move(diffuseTex),diffuseColor));
   }
   return ret;

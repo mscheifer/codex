@@ -73,10 +73,15 @@ std::vector<gx::graphicsEntity> gx::loadCube() {
   bone root2(1,identity,true,std::vector<std::vector<bone::key>>(),
                             std::vector<bone>());
 
+  material blueMat(Texture(GL_TEXTURE_2D, "white.png"),vector4f(0,0,1,1));
+  material  redMat(Texture(GL_TEXTURE_2D, "white.png"),vector4f(1,0,0,1));
+
   graphicsEntity blueCube(positionsAttrib,normalsAttrib,blueAttrib,boneIdAttrib,
-     boneWeightAttrib,indices,std::map<int,matrix>(),std::move(root1),identity);
+     boneWeightAttrib,indices,std::map<int,matrix>(),std::move(blueMat),
+     std::move(root1),identity);
   graphicsEntity  redCube(positionsAttrib,normalsAttrib, redAttrib,boneIdAttrib,
-     boneWeightAttrib,indices,std::map<int,matrix>(),std::move(root2),identity);
+     boneWeightAttrib,indices,std::map<int,matrix>(),std::move(redMat),
+     std::move(root2),identity);
 
   std::vector<graphicsEntity> ret;
   ret.push_back(std::move(blueCube));
@@ -134,7 +139,10 @@ gx::graphicsEntity gx::loadSkybox() {
   bone root(1,identity,true,std::vector<std::vector<bone::key>>(),
                             std::vector<bone>());
 
+  material mat(Texture(GL_TEXTURE_2D, "white.png"),vector4f(0,0,1,1));
+
   return graphicsEntity(std::move(skyboxVerts), std::move(skyboxnormals),
     std::move(lightblue), std::move(skyboxBoneIDs), std::move(skyboxBWeight), 
-    std::move(skyboxindices), skyboxOffsets, std::move(root), identity);
+    std::move(skyboxindices), skyboxOffsets, std::move(mat), std::move(root),
+    identity);
 }

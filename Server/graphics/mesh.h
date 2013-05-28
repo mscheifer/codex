@@ -59,7 +59,7 @@ class Mesh {
        bone bones;
 
     std::vector<MeshEntry> m_Entries;
-    std::vector<Texture>   m_Textures;
+    std::vector<material>  m_Materials;
             graphicsEntity entityData;
 
     bool                   m_Good();

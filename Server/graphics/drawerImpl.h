@@ -3,6 +3,7 @@
 #include <GL/glew.h>
 #include <vector>
 #include "bone.h"
+#include "material.h"
 #include "matrix.h"
 #include "uniformLocation.h"
 #include "vao.h"
@@ -21,6 +22,7 @@ class staticDrawerImpl {
       typedef matrix        instance;
       std::vector<instance> instances;
       vao                   vertData;
+      material              mat;
       matrix                centerAndResize; //TODO: to be removed
       entityClass(entity_t,varSigs_t);
       entityClass(const entityClass&);// = delete;
@@ -58,6 +60,7 @@ class dynamicDrawerImpl {
       };
       std::vector<instance> instances;
       vao                   vertData;
+      material              mat;
       bone                  rootBone;
       entityClass(entity_t,varSigs_t);
       entityClass(const entityClass&);// = delete;
