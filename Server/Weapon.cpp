@@ -1,6 +1,8 @@
 #include "Weapon.h"
 #include "Projectile.h"
 
+const float Weapon::meleeAttackMult = 1.25f;
+
 Weapon::Weapon(Map* m)
 {
   Range_Cool_Down_Time = 0;
@@ -9,6 +11,7 @@ Weapon::Weapon(Map* m)
   Range_Cool_Down_Counter = sf::Clock();
   Melee_Cool_Down_Counter = sf::Clock();
   this->map = m;
+  basicAttack = B1;
 }
 
 Weapon::~Weapon()
@@ -53,8 +56,12 @@ Projectile* Weapon::attackMelee(v3_t dir , v3_t pos, Player* owner)
   pj->setVelocity(dir);
   pj->setPosition(pos);
   pj->setOwner(owner);
-  pj->setStrength(projectileStrength);
+	pj->setStrength(projectileStrength*owner->getStrengthMultiplier()*meleeAttackMult);
   pj->setRange(1);
+
+  pj->setCharing(false); 
+  pj->setMagicType(basicAttack, true); //TODO this is not a good way to do it
+
   //pj->setFired(true); //TODO add a sound event for melee
   Melee_Cool_Down_Counter.restart();
   return pj;

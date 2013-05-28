@@ -64,6 +64,7 @@ public:
   Entity_Type getType() const { return type; }
   float getAttackCD() const;
   float getChargeCD() const;
+  float getStrengthMultiplier() const;
   int getKills() const { return kills; }
   int getWins() const { return wins; }
   

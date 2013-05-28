@@ -228,20 +228,14 @@ void Player::update(){
     return;
   //powerup shit
   for(auto buff = buffs.begin(); buff != buffs.end();){
-    buff->second--;
+    buff->second -= (int)ConfigManager::serverTickLengthMilli();
     if( buff->second <= 0 ){
       buff = buffs.erase(buff);
     } else {
       buff++;
     }
   }
-
-  if(speedUp && speedUpCounter.getElapsedTime().asMilliseconds() > speedUpTime) {
-     speedUp = false;
-     attackSpeed = 1.0;
-  }
-
-  //
+  
   if( chargedProjectile ) {
     chargedProjectile->setDirection(direction);
     chargedProjectile->setPosition(getProjectilePosition());
@@ -261,17 +255,20 @@ void Player::update(){
   //calculate regen multipliers
   float manaMultiplier = 1;
   float healthMultiplier = 1;
+
   for(auto buff = buffs.begin(); buff != buffs.end(); buff++){
     if( BuffInfo[buff->first].affectManaRegen ){
-      manaMultiplier *= (BuffInfo[buff->first].manaMultiplier);
+        manaMultiplier += BuffInfo[buff->first].manaBonus;
     } else if ( BuffInfo[buff->first].affectHealthRegen ){
-      healthMultiplier *= (BuffInfo[buff->first].healthMultiplier);
+        healthMultiplier += BuffInfo[buff->first].healthBonus;
     }
   }
-  health+=healthRegen*healthMultiplier;
-  health = (health > maxHealth? maxHealth : health);
+
+  health+= healthRegen*healthMultiplier;
+  health = (health > maxHealth ? maxHealth : health);
   mana+=manaRegen*manaMultiplier;
-  mana = (mana > maxMana? maxMana : mana);
+  mana = (mana > maxMana ? maxMana : mana);
+  mana = (mana < 0 ? 0 : mana);
   if(health <= 0)
     die();
   updateBounds();
@@ -310,17 +307,11 @@ void Player::handleSelfAction(ClientGameTimeAction a) {
   //std::cout << " attackRng " << a.attackRange << " chrg " << (chargedProjectile == nullptr) << std::endl;
 	if( (a.attackRange && chargedProjectile == nullptr) || a.attackMelee) {
 		attack(a);
-	} else if ( chargedProjectile && !a.attackRange ) { //Fire the projectile!
+	} else if ( chargedProjectile && !a.attackRange ) { //@Fire the projectile!
     v3_t v = direction;
     v.normalize();
-    float strMult = 1;
-    for(auto buff = buffs.begin(); buff != buffs.end(); buff++){
-      if( BuffInfo[buff->first].affectStrength ){
-        strMult *= (BuffInfo[buff->first].strengthMultiplier);
-      }
-    }
 
-    chargedProjectile->fire(v,strMult);
+    chargedProjectile->fire(v,getStrengthMultiplier());
     chargedProjectile = nullptr;
     charging = false;
   }
@@ -340,7 +331,12 @@ v3_t Player::getProjectilePosition() {
   v3_t temp = position;
   v3_t d = direction;
   d.normalize();
-  d.scale(1.5); //how far away from the player
+  float size;
+  if(chargedProjectile)
+    size = ProjInfo[chargedProjectile->getMagicType()].size;
+  else
+    size = ProjInfo[weapon[current_weapon_selection]->getBasicAttack()].size;
+  d.scale(size + 0.5f); //TODO how far away from the player @mc
   temp += d;
   return temp;
 }
@@ -398,7 +394,6 @@ void Player::handleCollisions(){
   for( auto it = entities.begin(); it != entities.end(); ){
     Entity * e = it->first;
 
-    //has already been processed //TODO @mc collision look at fix it vector, should never reprocess
     switch( e->getType() ) {
       case WALL:
        // std::cout << "wall" << << std::endl;
@@ -460,7 +455,10 @@ bool Player::collideProjectile(const std::pair<Entity*,BoundingObj::vec3_t>& p){
   if(proj->getOwner() != this) {
     std::cout << "OW hit "<< player_id << std::endl;
     attackBy(proj);
-    applyBuff(ProjInfo[proj->getMagicType()].debuff);
+    //apply debuffs
+    std::vector<BUFF> debuffs = ProjInfo[proj->getMagicType()].debuff;
+    for( auto d = debuffs.begin(); d != debuffs.end(); d++)
+      applyBuff(*d);
     std::cout << health  << " HP left" << " for " << player_id << std::endl;
   }
   return false;
@@ -478,13 +476,13 @@ void Player::applyBuff( BUFF b){
   auto buff = buffs.begin();
   for(; buff != buffs.end(); buff++){
     if( buff->first == b){ //found one that is the same, reset timer
-      buff->second = BuffInfo[b].ticksEffect;
+      buff->second = BuffInfo[b].milliEffect;
       break;
     }
   }
 
   if(buff == buffs.end()){//didn't find same type
-    buffs.push_front(std::pair<BUFF,int>(b,BuffInfo[b].ticksEffect));
+    buffs.push_front(std::pair<BUFF,int>(b,BuffInfo[b].milliEffect));
   }
 }
 
@@ -519,6 +517,16 @@ float Player::getChargeCD() const{
     }
   }
   return cdMult;
+}
+
+float Player::getStrengthMultiplier() const{
+  float strMult = 1;
+  for(auto buff = buffs.begin(); buff != buffs.end(); buff++){
+    if( BuffInfo[buff->first].affectStrength ){
+      strMult *= (BuffInfo[buff->first].strengthMultiplier);
+    }
+  }
+  return strMult;
 }
 
 void Player::serialize(sf::Packet& packet) const {
