@@ -415,5 +415,8 @@
     <None Include="graphics\Images\magic_color.png">
       <Filter>Header Files\graphics\Images</Filter>
     </None>
+    <None Include="graphics\Images\badguy.png">
+      <Filter>Header Files\graphics\Images</Filter>
+    </None>
   </ItemGroup>
 </Project>

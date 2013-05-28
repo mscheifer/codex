@@ -60,7 +60,7 @@ public:
   void restartSpeedUpCounter(void) { speedUpCounter.restart();};
   WeaponType getPickupWeaponType() const{ return pickupWeaponType; }
   void setAsMinotaur(bool b);
-  bool isMinotaur();
+  bool isMinotaur() const;
   Entity_Type getType() const { return type; }
   float getAttackCD() const;
   float getChargeCD() const;
