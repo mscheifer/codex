@@ -53,6 +53,7 @@ public:
   static MAGIC_POWER upgrade( const MAGIC_POWER m );
   static MAGIC_POWER combine( MAGIC_POWER m1, MAGIC_POWER m2 );
   static const MAGIC_POWER combinations[18][18];
+  static int ID_Counter;
 
   length_t range;
   length_t distanceLeftToTravel;
@@ -79,6 +80,7 @@ private:
   int Charge_Time; 
 
 public:
+  int id;
   bool getFired() const { return fired; }
   void setFired(bool f) { fired = f; }
   float getStrength();

@@ -1,5 +1,5 @@
 #include "Projectile.h"
-
+int Projectile::ID_Counter = 0;
 Projectile::Projectile(Map* m):fired(false)
 {
 	this->map = m;
@@ -7,6 +7,8 @@ Projectile::Projectile(Map* m):fired(false)
   BoundingBox* b = new BoundingBox(BoundingObj::vec4_t(0,0,0),BoundingObj::vec3_t(1,0,0),BoundingObj::vec3_t(0,1,0),BoundingObj::vec3_t(0,0,1),
   1,1,1);
   b->setEntity(this);
+  id = ID_Counter;
+  ID_Counter++;
   boundingObjs.push_back(b);
   reset();
 }
@@ -160,12 +162,14 @@ MAGIC_POWER Projectile::combine( MAGIC_POWER m1, MAGIC_POWER m2 ){
 void Projectile::serialize(sf::Packet & packet) const {
   Entity::serialize(packet);
   packet << fired;
+  packet << id;
   //(*owner).serialize(packet);
 }
 
 void Projectile::deserialize( sf::Packet & packet ) {
   Entity::deserialize(packet);
   packet >> fired;
+  packet >> id;
   //delete owner; this segfaults
   //Player* owner = new Player();
   //(*owner).deserialize(packet);

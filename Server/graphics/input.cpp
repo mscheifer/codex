@@ -41,6 +41,15 @@ bool gx::input::switchW() {
   return this->switchWeapon;
 }
 
+bool gx::input::drawS() {
+  bool drawFlag = false;
+  if (sf::Keyboard::isKeyPressed(sf::Keyboard::Tab)) {
+     drawFlag = true;
+  } 
+  return drawFlag;
+}
+
+
 move_t gx::input::movePlayer() {
   move_t movement = NULL_DIR;
   if (sf::Keyboard::isKeyPressed(sf::Keyboard::W)) {
