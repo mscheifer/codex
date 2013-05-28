@@ -85,7 +85,7 @@ bool Weapon::tossAway(v3_t dropPosition, v3_t dir){
   //  return false;
 
   render = true;
-  dropPosition.z += 1;
+  dropPosition.z += 0;
   position = dropPosition;
   direction = dir;
   velocity = dir;
