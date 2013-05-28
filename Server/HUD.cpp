@@ -21,6 +21,10 @@ HUD::HUD(void):health(100), maxHealth(100), HLossPercentage(0),
   mBarSprite.setTexture(mBarTexture);
   mBarSprite.setPosition(537,550-7.5);
   mBarSprite.setScale(0.1,0.15);
+  badGuyTexture.loadFromFile("graphics/Images/badguy.png");
+  badGuySprite.setTexture(badGuyTexture);
+  badGuySprite.setPosition(740,10);
+  badGuySprite.setScale(0.1,0.1);
   /* end */
   font.loadFromFile("arial.ttf");
   healthBar.setSize(sf::Vector2f(200,25));
@@ -80,6 +84,8 @@ void HUD::draw(sf::RenderWindow & window) {
   window.draw(mSprite);
   window.draw(hBarSprite);
   window.draw(mBarSprite);
+  if (minotaur) 
+    window.draw(badGuySprite);
 }
 
 void HUD::updateHUD(const Player& player) {
@@ -87,4 +93,5 @@ void HUD::updateHUD(const Player& player) {
   MLossPercentage = (maxMana-player.getMana()) / maxMana;
   health = player.getHealth();
   mana = player.getMana();
+  minotaur = player.isMinotaur();
 }

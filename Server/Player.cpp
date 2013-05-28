@@ -96,7 +96,7 @@ void Player::setAsMinotaur(bool b)
   }
 }
 
-bool Player::isMinotaur()
+bool Player::isMinotaur() const
 {
   return minotaur;
 }

@@ -194,6 +194,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="..\Makefile" />
+    <None Include="graphics\Images\badguy.png" />
     <None Include="graphics\Images\bar.png" />
     <None Include="graphics\Images\heart_color.png" />
     <None Include="graphics\Images\magic_color.png" />
