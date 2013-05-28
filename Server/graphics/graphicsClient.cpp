@@ -95,7 +95,7 @@ gx::graphicsClient::graphicsClient():
     playerStartDirection(0.0, 1.0,0.0),//change to result of init packet
     playerStartRight(playerStartDirection.y,playerStartDirection.x,playerStartDirection.z),
     playerPosition(0.0, 0.0, 0.0),//change to the result of init packet
-     fpsClock(), fpsFrames(0) , Hud(), Lobby() , Score(3) {
+     fpsClock(), fpsFrames(0) , Hud(), Lobby() , Score(ConfigManager::numPlayers()) {
   this->window.setVerticalSyncEnabled(false);
   this->window.setMouseCursorVisible(true);
   if(!this->window.setActive()) {
