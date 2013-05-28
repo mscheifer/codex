@@ -25,6 +25,11 @@ public:
   virtual bool pickUp();
   //add the bounding box again
   virtual bool dropDown(v3_t dropPosition);
+  virtual bool tossAway(v3_t dropPosition, v3_t dir);
+  virtual void update(void);
+  virtual void handleCollisions();
+  virtual void updateBounds();
+  virtual bool collideWall(const std::pair<Entity*,BoundingObj::vec3_t>& p);
   
   int getRange(void);
 	int getDamage(void);

@@ -294,7 +294,7 @@ void Player::handleSelfAction(ClientGameTimeAction a) {
 
   //try pick up
   if(a.pickup && pickup ){
-    weapon[current_weapon_selection]->dropDown(position);
+    weapon[current_weapon_selection]->tossAway(position, direction);
     weapon[current_weapon_selection] = pickup;
     pickup->pickUp();
   }

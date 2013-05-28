@@ -79,6 +79,81 @@ bool Weapon::dropDown(v3_t dropPosition){
   map->addToQtree(this);
   return true;
 } 
+
+bool Weapon::tossAway(v3_t dropPosition, v3_t dir){
+  //if(!pickedUp)
+  //  return false;
+
+  render = true;
+  dropPosition.z += 1;
+  position = dropPosition;
+  direction = dir;
+  velocity = dir;
+  direction.normalize();
+  velocity.z = 0;
+  velocity.normalize();
+  velocity.scale(25);
+
+  pickedUp = false;
+  map->addToQtree(this);
+  return true;
+} 
+
+void Weapon::update()
+{
+  acceleration = getGravity();
+  velocity += acceleration * ConfigManager::serverTickLengthSec();
+  v3_t attemptMove = velocity * ConfigManager::serverTickLengthSec();
+  position += correctMovement( attemptMove, false );
+  updateBounds();
+}
+
+void Weapon::updateBounds(){
+  //update the bounding objects
+  boundingObjs[0]->setCenterOnTree(BoundingObj::vec4_t(position.x, position.y, position.z));
+}
+
+bool Weapon::collideWall(const std::pair<Entity*,BoundingObj::vec3_t>& p){
+  BoundingObj::vec3_t fixShit = p.second;
+  position += p.second;
+  updateBounds();
+  velocity = v3_t(0,0,0);
+  return true;
+}
+
+void Weapon::handleCollisions(){
+  std::vector<std::pair<Entity*,BoundingObj::vec3_t>> entities =  detectCollision();
+  bool restart = false;
+  int restarts = 0;
+
+  for( auto it = entities.begin(); it != entities.end(); ){
+    Entity * e = it->first;
+
+    //has already been processed //TODO @mc collision look at fix it vector, should never reprocess
+    switch( e->getType() ) {
+      case WALL:
+       // std::cout << "wall" << << std::endl;
+        restart = collideWall(*it);
+        break;
+      default:
+        break;
+    }
+
+    //different position now, needs to see what it hit
+    //TODO this could cause an infinite loop
+    if(restart){
+      restarts++;
+      restart = false;
+      entities = detectCollision();
+      it = entities.begin();
+    } else {
+      it++;
+    }
+
+    if( restarts > 3 ) break;
+  }
+}
+
 void Weapon::serialize(sf::Packet & packet) const {
     Entity::serialize(packet);
     //Range_Cool_Down_Time; 
