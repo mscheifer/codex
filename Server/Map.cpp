@@ -276,24 +276,32 @@ void Map::separatePlayers(Player* player){
   std::vector<BoundingObj*> myObjs = player->getBoundingObjs();
   int restart = false;
   int restarts = 0;
-
+  std::pair<bool,BoundingObj::vec3_t> res(false, BoundingObj::vec3_t(0,0,0));
+  Entity * e = nullptr;
+  
   for( unsigned int i=0; i < players.size(); i++ ){
     
-    if(players[i] != player){
+    if(players[i] != player){ //if not the player try collide
       std::vector<BoundingObj*> objs = players[i]->getBoundingObjs();  
       for( auto boxes = objs.begin(); boxes != objs.end(); boxes++){
+
         for( auto myBoxes = myObjs.begin(); myBoxes != myObjs.end(); myBoxes++){
-          std::pair<bool,BoundingObj::vec3_t> res = collide(*myBoxes,*boxes);
-          if(res.first){
-            player->collidePlayer(
-              std::pair<Entity*, BoundingObj::vec3_t>((*boxes)->getEntity(),
-              res.second));
-            restart = true;
-            break;
+          std::pair<bool,BoundingObj::vec3_t> res2 = collide(*myBoxes,*boxes);
+          if(res2.first){
+            if(res2.second.magnitudesq() > res.second.magnitudesq()){
+              e = (*boxes)->getEntity();
+              res = res;
+            }
           }
         }
         if(restart)
           break;
+
+      }
+      
+      if(res.first){
+        player->collidePlayer(std::pair<Entity*, BoundingObj::vec3_t>(e, res.second));
+        restart = true;
       }
     }
 

@@ -21,28 +21,30 @@ std::vector<std::pair<Entity*,BoundingObj::vec3_t>> Entity::detectCollision(){
       if((*it2)->getEntity() == this)
         continue;
 
-      Entity_Type f = (*it2)->getEntity()->getType();
+      std::pair<bool,BoundingObj::vec3_t> collRes = collide(*myObjsIt,*it2);
+      //try collide
+      if(collRes.first){
+        auto result = res.begin();
 
       //check if I have already collided with this entity //TODO maybe no entity check 
       //[for 2 objs collide with 1 of my bboxes] shortest dist changes
-      auto finder = res.begin();
-      bool flag = false;
-      for( ; finder != res.end(); finder++){
-        if( finder->first == (*it2)->getEntity() ){
-          flag = true;
-          break;
+        for( ; result != res.end(); result++){
+          if( result->first == (*it2)->getEntity() ){
+            //pick max if same entity has collided
+            if(result->second.magnitudesq() < collRes.second.magnitudesq()){
+              res.erase(result);
+              res.push_back(std::pair<Entity*,BoundingObj::vec3_t>((*it2)->getEntity(),collRes.second));
+            }
+            break;
+          }
         }
-      }
-      if(flag)
-        continue;
 
-      if( finder == res.end() ){
-        std::pair<bool,BoundingObj::vec3_t> collRes = collide(*myObjsIt,*it2);
-        //try collide
-        if(collRes.first){
+        if(result == res.end()){
           res.push_back(std::pair<Entity*,BoundingObj::vec3_t>((*it2)->getEntity(),collRes.second));
         }
+
       }
+
     }
   }
 
