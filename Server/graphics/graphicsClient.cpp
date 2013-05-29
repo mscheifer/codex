@@ -91,6 +91,7 @@ gx::graphicsClient::graphicsClient():
     display(),
     entities(staticModels(),uniforms()),
     animatedDrawer(dynamicModels(),uniforms()),
+	skyboxDrawer(this->display.storage()),
     playerDirection(0.0, 1.0,0.0),//change to result of init packet
     playerStartDirection(0.0, 1.0,0.0),//change to result of init packet
     playerStartRight(playerStartDirection.y,playerStartDirection.x,playerStartDirection.z),
@@ -151,6 +152,7 @@ void gx::graphicsClient::draw() {
   // draw...
   entities.draw();
   animatedDrawer.draw();
+  skyboxDrawer.draw();
   
   //render sfml please don't comment or uncomment anything from the following block
   glBindVertexArray(0);

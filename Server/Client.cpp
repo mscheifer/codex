@@ -57,7 +57,7 @@ void NetworkClient::receiveMessages() {
         }
         auto pos = s.players[this->id].getPosition();
         gxClient.updatePosition(gx::vector4f(pos.x,pos.y,pos.z));
-        entities.push_back(&(this->skybox)); //add skybox
+        //entities.push_back(&(this->skybox)); //add skybox
         gxClient.updateEntities(entities);
         gxClient.updateHUD(s.players[id]);
         gxClient.updateScores(wins,kills);
