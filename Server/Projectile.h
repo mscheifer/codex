@@ -97,7 +97,8 @@ public:
   static const float meleeWidth;
   static const float meleeHeight;
   static const float meleeDepth;
-
+  
+  bool combined;
   length_t range;
   length_t distanceLeftToTravel;
 

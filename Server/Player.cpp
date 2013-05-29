@@ -48,6 +48,7 @@ void Player::init(v3_t pos, int assigned_id, Map * m)
   minotaur = false;
 	dead = false;
   canJump = true;
+  meleeAttack = false;
   jumpCount = 0;
 	player_id = assigned_id;
 	position = pos;
@@ -301,6 +302,8 @@ void Player::handleSelfAction(ClientGameTimeAction a) {
     weapon[current_weapon_selection]->tossAway(position, direction);
     weapon[current_weapon_selection] = pickup;
     pickup->pickUp();
+    weaponCall = true;
+    weaponCallType = weapon[current_weapon_selection]->getWeaponType();
   }
 
 	//start of attacking logic
@@ -320,6 +323,8 @@ void Player::handleSelfAction(ClientGameTimeAction a) {
     ++current_weapon_selection;
     current_weapon_selection = current_weapon_selection % MAXWEAPONS;
     std::cout << "switch to " << WeaponNames[weapon[current_weapon_selection]->getWeaponType()] << std::endl;
+    weaponCall = true;
+    weaponCallType = weapon[current_weapon_selection]->getWeaponType();
   }
 }
 
@@ -336,7 +341,7 @@ v3_t Player::getProjectilePosition() {
     size = ProjInfo[chargedProjectile->getMagicType()].size;
   else
     size = ProjInfo[weapon[current_weapon_selection]->getBasicAttack()].size;
-  d.scale(size + 0.5f); //TODO how far away from the player @mc
+  d.scale(size + 0.5f);
   temp += d;
   return temp;
 }
@@ -357,11 +362,22 @@ void Player::attack( ClientGameTimeAction a) {
 		if( !currentWeapon->canUseWeapon(false, this)){
 		  return;
 		}
-	  currentWeapon->attackMelee(direction, position, this);
+
+    meleeAttack = true;
+    v3_t dir = direction;
+    dir.normalize();
+    dir.scale(Projectile::meleeWidth);
+	  currentWeapon->attackMelee(direction, position+dir, this);
+    
 	}
 
-	attacking = true;
+	attacking = true; //todo wtf is this
 	return;
+}
+
+void Player::clearEvents(){
+  meleeAttack = false;
+  weaponCall = false;
 }
 
 std::string Player::getString()
@@ -556,6 +572,10 @@ void Player::serialize(sf::Packet& packet) const {
     packet << charging;
     packet << kills;
     packet << wins;
+
+    packet << meleeAttack;
+    packet << weaponCall;
+    packet << static_cast<sf::Uint32>(weaponCallType);
   }
 
   void Player::deserialize(sf::Packet& packet) {
@@ -587,4 +607,10 @@ void Player::serialize(sf::Packet& packet) const {
     packet >> charging;
     packet >> kills;
     packet >> wins;
+    
+    packet >> meleeAttack;
+    packet >> weaponCall;
+    sf::Uint32 weaponCallType32;
+    packet >> weaponCallType32;
+    weaponCallType = static_cast<WeaponType>(weaponCallType32);
   }

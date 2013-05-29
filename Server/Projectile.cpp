@@ -28,7 +28,7 @@ void Projectile::reset(){
 
 bool Projectile::correctMovementHit( Entity* e ){
   Entity_Type etype = e->getType();
-  if( etype == WALL || etype == PROJECTILE ){
+  if( etype == WALL || (etype == PROJECTILE && ((Projectile*) e)->charging) ){
     return true;
   } else if ( etype == PLAYER ){
     return e != owner;
@@ -115,19 +115,24 @@ void Projectile::handleCollisions() {
       if(charging){      //TODO add combine sound
         setMagicType(combine(proj->getMagicType(), magicType));
         map->destroyProjectile(proj);
+        combined = true;
       } else if ( proj->charging ){
         proj->setMagicType(combine(proj->getMagicType(), magicType));
-        map->destroyProjectile(this);
-      } else {
-        map->destroyProjectile(proj);
+        proj->combined = true;
         map->destroyProjectile(this);
       }
+      
+      //else {
+      //  map->destroyProjectile(proj);
+      //  map->destroyProjectile(this);
+      //}
       break;
     }
   }
 }
 
 void Projectile::clearEvents(){
+  combined = false;
   fired = false;
 }
 
@@ -190,6 +195,7 @@ void Projectile::serialize(sf::Packet & packet) const {
   Entity::serialize(packet);
   packet << fired;
   packet << id;
+  packet << combined;
   //(*owner).serialize(packet);
 }
 
@@ -197,6 +203,7 @@ void Projectile::deserialize( sf::Packet & packet ) {
   Entity::deserialize(packet);
   packet >> fired;
   packet >> id;
+  packet >> combined;
   //delete owner; this segfaults
   //Player* owner = new Player();
   //(*owner).deserialize(packet);

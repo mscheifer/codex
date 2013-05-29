@@ -61,6 +61,7 @@ Projectile* Weapon::attackMelee(v3_t dir , v3_t pos, Player* owner)
 
   pj->setCharing(false); 
   pj->setMagicType(basicAttack, true); //TODO this is not a good way to do it
+  pj->setRender(false);
 
   //pj->setFired(true); //TODO add a sound event for melee
   Melee_Cool_Down_Counter.restart();

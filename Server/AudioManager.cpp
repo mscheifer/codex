@@ -40,6 +40,12 @@ void AudioManager::loadSounds(){
   loadSound("s3", "sounds/sound_3.wav");
   loadSound("m1", "sounds/music_mono.wav");
   loadSound("f1", "sounds/m2_2.wav");
+  loadSound("melee", "sounds/52458__audione__sword-01_.wav");
+  loadSound("combine", "sounds/SE1_BMP_MAGIC_REBLOW1_2.wav");
+  loadSound("weapI", "sounds/weaponIce.wav");
+  loadSound("weapB", "sounds/weaponBas.wav");
+  loadSound("weapF", "sounds/weaponFir.wav");
+  loadSound("weapT", "sounds/weaponThu.wav");
   //loadSound("s5", "sound_5.wav");
 
   musics["m1"] = "sounds/music.wav";
@@ -179,6 +185,13 @@ void AudioManager::playMusic(std::string musicN, int index){
 }
 
 void AudioManager::processPlayerSound(Player& o){
+  if(o.meleeAttack)
+    playSound("melee", "playerM:"+ o.player_id, o.getPosition());
+
+  if(o.weaponCall){
+    playSound(getWeaponCall(o.weaponCallType), "playerCall: " + o.player_id, o.getPosition());
+  }
+
   if(o.charging) {
     playSound("c1", "player:"+ o.player_id, o.getPosition());
   } else {
@@ -189,6 +202,8 @@ void AudioManager::processPlayerSound(Player& o){
 void AudioManager::processProjectileSound(Projectile& o){
   if(o.getFired()){
     playSound( "f1", "fire:"+o.id, o.getPosition());
+  } else if (o.combined){
+    playSound( "combine", "combine:"+o.id, o.getPosition());
   }
 }
 
@@ -196,6 +211,19 @@ int AudioManager::notCurrentlyPlaying(){
   if(currentlyPlayingMusic == 0)
     return 1;
   return 0;
+}
+
+std::string AudioManager::getWeaponCall(WeaponType w){
+  switch(w){
+  case FIRE:
+    return "weapF";
+  case ICE:
+    return "weapI";
+  case THUNDER:
+    return "weapT";
+  default:
+    return "weapB";
+  }
 }
 
 std::string AudioManager::getTrack( int track, int prox ){

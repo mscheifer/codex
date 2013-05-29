@@ -24,6 +24,10 @@ public:
   static const float playerDepth;
   static const Entity_Type type = PLAYER;
   bool dead; //might be private. should be determined in handleAction
+  bool meleeAttack;
+  bool weaponCall;
+  WeaponType weaponCallType;
+  
   int player_id;
   std::string name;
   Projectile* chargedProjectile;
@@ -39,7 +43,7 @@ public:
   void handleCollisions();  
   void updateBounds();  
   void updateBoundsSoft();
-  //void clearEvents();
+  void clearEvents();
   bool collidePlayer(const std::pair<Entity*,BoundingObj::vec3_t>& p);
   
   bool moveTowardDirection(move_t degree, bool jump); //handle movement input WADS jump
