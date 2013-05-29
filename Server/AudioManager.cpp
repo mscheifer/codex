@@ -32,14 +32,25 @@ void AudioManager::loadSounds(){
     musicProx[i] = -1;
   }
 
+  loadSound("sc1", "sounds/scream_1.wav");
   
   loadSound("c1", "sounds/charge1.wav");
+  
+
+  loadSound("w1", "sounds/foot_step_1.wav");
+  loadSound("w2", "sounds/foot_step_2.wav");
 
   loadSound("s1", "sounds/sound_1.wav");
   loadSound("s2", "sounds/sound_2.wav");
   loadSound("s3", "sounds/sound_3.wav");
   loadSound("m1", "sounds/music_mono.wav");
-  loadSound("f1", "sounds/m2_2.wav");
+  loadSound("f1", "sounds/fire_1.wav");
+  loadSound("melee", "sounds/52458__audione__sword-01_.wav");
+  loadSound("combine", "sounds/SE1_BMP_MAGIC_REBLOW1_2.wav");
+  loadSound("weapI", "sounds/weaponIce.wav");
+  loadSound("weapB", "sounds/weaponBas.wav");
+  loadSound("weapF", "sounds/weaponFir.wav");
+  loadSound("weapT", "sounds/weaponThu.wav");
   //loadSound("s5", "sound_5.wav");
 
   musics["m1"] = "sounds/music.wav";
@@ -179,16 +190,57 @@ void AudioManager::playMusic(std::string musicN, int index){
 }
 
 void AudioManager::processPlayerSound(Player& o){
+  static bool walk_toggle[4] = { false, false, false, false};
+
+  if(o.meleeAttack)
+    playSound("melee", "playerM:"+ o.player_id, o.getPosition());
+
+  if(o.weaponCall){
+    stopSound( "playerCall: " + o.player_id );
+    playSound(getWeaponCall(o.weaponCallType), "playerCall: " + o.player_id, o.getPosition());
+  }
+
   if(o.charging) {
-    playSound("c1", "player:"+ o.player_id, o.getPosition());
+    playSound("c1", "cplayer:"+ o.player_id, o.getPosition());
   } else {
-    stopSound( "player:"+ o.player_id);
+    stopSound( "cplayer:"+ o.player_id);
+  }
+
+  if(o.shotProjectile) {  
+    static int id = 0;
+    playSound("f1", id+"fplayer:"+ o.player_id, o.getPosition());
+    id++;
+  }
+
+  if(o.attacked) {  
+    static int id = 0;
+    playSound("sc1", id+"scplayer:"+ o.player_id, o.getPosition());
+    id++;
+  }
+
+  if(o.walking) {
+
+    if(walk_toggle[o.player_id]) {
+     
+      walk_toggle[o.player_id] = false;
+      playSound("w1", "w1player:"+o.player_id, o.getPosition());
+
+    } else {     
+      walk_toggle[o.player_id] = true;
+      playSound("w2", "w2player:"+o.player_id, o.getPosition());
+    }
+   
+  } else {
+    stopSound("w1player:"+o.player_id);   
+    stopSound("w2player:"+o.player_id);
   }
 }
 
 void AudioManager::processProjectileSound(Projectile& o){
   if(o.getFired()){
     playSound( "f1", "fire:"+o.id, o.getPosition());
+  } else if (o.combined){
+    playSound( "combine", "combine:"+o.id, o.getPosition());
   }
 }
 
@@ -196,6 +248,19 @@ int AudioManager::notCurrentlyPlaying(){
   if(currentlyPlayingMusic == 0)
     return 1;
   return 0;
+}
+
+std::string AudioManager::getWeaponCall(WeaponType w){
+  switch(w){
+  case FIRE:
+    return "weapF";
+  case ICE:
+    return "weapI";
+  case THUNDER:
+    return "weapT";
+  default:
+    return "weapB";
+  }
 }
 
 std::string AudioManager::getTrack( int track, int prox ){

@@ -48,6 +48,9 @@ void Player::init(v3_t pos, int assigned_id, Map * m)
   minotaur = false;
 	dead = false;
   canJump = true;
+  shotProjectile = false;
+  meleeAttack = false;
+  attacked = false;
   jumpCount = 0;
 	player_id = assigned_id;
 	position = pos;
@@ -65,10 +68,15 @@ void Player::init(v3_t pos, int assigned_id, Map * m)
   speedUpCounter = sf::Clock();
   speedUp = false;
   charging = false;
+  walking = false;
 	map = m;
 	weapon[0] = new WeaponFist(position, this->map); //has no bounds so it doesnt drop
-	weapon[1] = new WeaponFire(position, this->map, FIR1); //TODO add this to entities, or it won't be able render
-	current_weapon_selection = 1;
+	weapon[1] = new WeaponFire(position, this->map, B1); //TODO add this to entities, or it won't be able render
+	m->addEntity(weapon[1]);
+  buffs.clear();
+  inactiveBuffs.clear();
+
+  current_weapon_selection = 1;
   chargedProjectile = nullptr;
   m->addToQtree(this);
 }
@@ -96,7 +104,7 @@ void Player::setAsMinotaur(bool b)
   }
 }
 
-bool Player::isMinotaur()
+bool Player::isMinotaur() const
 {
   return minotaur;
 }
@@ -111,7 +119,7 @@ void Player::generateBounds(v3_t pos){
   boundingObjs.push_back(b);
 }
 
-bool Player::attackBy(DeadlyEntity *other)
+bool Player::attackBy(Projectile *other)
 {
 	if(other)
 	{
@@ -121,9 +129,12 @@ bool Player::attackBy(DeadlyEntity *other)
 		return false;
 }
 
-bool Player::damageBy(DeadlyEntity *deadly)
+bool Player::damageBy(Projectile *deadly)
 {
+  
 	if (health==0) return true;
+
+  attacked = true;
   float damage = deadly->getStrength() - defense;
 	damage = ( damage > 0? damage: 0);
 	float newHealth = (health - damage);
@@ -136,7 +147,7 @@ bool Player::damageBy(DeadlyEntity *deadly)
     charging = false;
   }
 
-  std::cout<<" i am attacked by"<< ((Projectile *) deadly)->getOwner()->player_id<<std::endl;
+  std::cout<<" i am attacked by"<< deadly->getOwner()->player_id<<std::endl;
   if(dead) {
     die();
     //This is a hack
@@ -192,13 +203,16 @@ bool Player::moveTowardDirection(move_t inputDir, bool jump)
   else
     movementDirection.scale(speed * MOVESCALE());
 
-  for(auto buff = buffs.begin(); buff != buffs.end(); buff++){
-    if( BuffInfo[buff->first].affectMovement ){
-      movementDirection.scale(BuffInfo[buff->first].movementMultiplier);
-    }
-  }
+  movementDirection.scale(getMovementMultiplier());
 
   movementDirection = correctMovement(movementDirection, true);
+  
+  if(movementDirection.magnitude() > 1.0E-8 ){
+    walking = true;
+  } else {
+    walking = false;
+  }
+
   position += movementDirection;
   updateBounds();
 	return true;
@@ -207,6 +221,14 @@ bool Player::moveTowardDirection(move_t inputDir, bool jump)
 bool Player::correctMovementHit( Entity* e ){
   Entity_Type etype = e->getType();
   return etype == PLAYER || etype == WALL;
+}
+
+void Player::clearEvents(){
+  walking = false;
+  shotProjectile = false;
+  attacked = false;
+  meleeAttack = false;
+  weaponCall = false;
 }
 
 void Player::die()
@@ -226,22 +248,9 @@ void Player::update(){
   // No need to update when user is dead
   if(dead)
     return;
-  //powerup shit
-  for(auto buff = buffs.begin(); buff != buffs.end();){
-    buff->second--;
-    if( buff->second <= 0 ){
-      buff = buffs.erase(buff);
-    } else {
-      buff++;
-    }
-  }
 
-  if(speedUp && speedUpCounter.getElapsedTime().asMilliseconds() > speedUpTime) {
-     speedUp = false;
-     attackSpeed = 1.0;
-  }
-
-  //
+  updateBuffs();
+  
   if( chargedProjectile ) {
     chargedProjectile->setDirection(direction);
     chargedProjectile->setPosition(getProjectilePosition());
@@ -257,21 +266,12 @@ void Player::update(){
   v3_t attemptMove = velocity * ConfigManager::serverTickLengthSec();
   position += correctMovement( attemptMove, false );
   //position += velocity * ConfigManager::serverTickLengthSec();
-  
-  //calculate regen multipliers
-  float manaMultiplier = 1;
-  float healthMultiplier = 1;
-  for(auto buff = buffs.begin(); buff != buffs.end(); buff++){
-    if( BuffInfo[buff->first].affectManaRegen ){
-      manaMultiplier *= (BuffInfo[buff->first].manaMultiplier);
-    } else if ( BuffInfo[buff->first].affectHealthRegen ){
-      healthMultiplier *= (BuffInfo[buff->first].healthMultiplier);
-    }
-  }
-  health+=healthRegen*healthMultiplier;
-  health = (health > maxHealth? maxHealth : health);
-  mana+=manaRegen*manaMultiplier;
-  mana = (mana > maxMana? maxMana : mana);
+
+  health+= healthRegen*getHealthRegenMultiplier();
+  health = (health > maxHealth ? maxHealth : health);
+  mana+=manaRegen*getManaRegenMultiplier();
+  mana = (mana > maxMana ? maxMana : mana);
+  mana = (mana < 0 ? 0 : mana);
   if(health <= 0)
     die();
   updateBounds();
@@ -301,34 +301,33 @@ void Player::handleSelfAction(ClientGameTimeAction a) {
 
   //try pick up
   if(a.pickup && pickup ){
-    weapon[current_weapon_selection]->dropDown(position);
+    weapon[current_weapon_selection]->tossAway(position, direction);
     weapon[current_weapon_selection] = pickup;
     pickup->pickUp();
+    weaponCall = true;
+    weaponCallType = weapon[current_weapon_selection]->getWeaponType();
   }
 
 	//start of attacking logic
   //std::cout << " attackRng " << a.attackRange << " chrg " << (chargedProjectile == nullptr) << std::endl;
 	if( (a.attackRange && chargedProjectile == nullptr) || a.attackMelee) {
 		attack(a);
-	} else if ( chargedProjectile && !a.attackRange ) { //Fire the projectile!
+	} else if ( chargedProjectile && !a.attackRange ) { //@Fire the projectile!
     v3_t v = direction;
     v.normalize();
-    float strMult = 1;
-    for(auto buff = buffs.begin(); buff != buffs.end(); buff++){
-      if( BuffInfo[buff->first].affectStrength ){
-        strMult *= (BuffInfo[buff->first].strengthMultiplier);
-      }
-    }
 
-    chargedProjectile->fire(v,strMult);
+    chargedProjectile->fire(v,getStrengthMultiplier());
     chargedProjectile = nullptr;
     charging = false;
+    shotProjectile = true;
   }
 
   if(a.switchWeapon) {
     ++current_weapon_selection;
     current_weapon_selection = current_weapon_selection % MAXWEAPONS;
     std::cout << "switch to " << WeaponNames[weapon[current_weapon_selection]->getWeaponType()] << std::endl;
+    weaponCall = true;
+    weaponCallType = weapon[current_weapon_selection]->getWeaponType();
   }
 }
 
@@ -340,7 +339,12 @@ v3_t Player::getProjectilePosition() {
   v3_t temp = position;
   v3_t d = direction;
   d.normalize();
-  d.scale(1.5); //how far away from the player
+  float size;
+  if(chargedProjectile)
+    size = ProjInfo[chargedProjectile->getMagicType()].size;
+  else
+    size = ProjInfo[weapon[current_weapon_selection]->getBasicAttack()].size;
+  d.scale(size + 0.5f);
   temp += d;
   return temp;
 }
@@ -361,10 +365,16 @@ void Player::attack( ClientGameTimeAction a) {
 		if( !currentWeapon->canUseWeapon(false, this)){
 		  return;
 		}
-	  currentWeapon->attackMelee(direction, position, this);
+
+    meleeAttack = true;
+    v3_t dir = direction;
+    dir.normalize();
+    dir.scale(Projectile::meleeWidth);
+	  currentWeapon->attackMelee(direction, position+dir, this);
+    
 	}
 
-	attacking = true;
+	attacking = true; //todo wtf is this
 	return;
 }
 
@@ -398,7 +408,6 @@ void Player::handleCollisions(){
   for( auto it = entities.begin(); it != entities.end(); ){
     Entity * e = it->first;
 
-    //has already been processed //TODO @mc collision look at fix it vector, should never reprocess
     switch( e->getType() ) {
       case WALL:
        // std::cout << "wall" << << std::endl;
@@ -460,7 +469,10 @@ bool Player::collideProjectile(const std::pair<Entity*,BoundingObj::vec3_t>& p){
   if(proj->getOwner() != this) {
     std::cout << "OW hit "<< player_id << std::endl;
     attackBy(proj);
-    applyBuff(ProjInfo[proj->getMagicType()].debuff);
+    //apply debuffs
+    std::vector<BUFF> debuffs = ProjInfo[proj->getMagicType()].debuff;
+    for( auto d = debuffs.begin(); d != debuffs.end(); d++)
+      applyBuff(*d);
     std::cout << health  << " HP left" << " for " << player_id << std::endl;
   }
   return false;
@@ -473,19 +485,96 @@ bool Player::collidePowerUp(const std::pair<Entity*,BoundingObj::vec3_t>& p){
   return false;
 }
 
+void Player::updateBuffs(){
+  for(auto buff = inactiveBuffs.begin(); buff != inactiveBuffs.end();){
+    buff->second -= (int)ConfigManager::serverTickLengthMilli();
+    if( buff->second <= 0 ){
+      buff = inactiveBuffs.erase(buff);
+    } else {
+      buff++;
+    }
+  }
+
+  std::list<std::pair<BUFF, int>> toAdd;
+  for(auto buff = buffs.begin(); buff != buffs.end();){
+    buff->second -= (int)ConfigManager::serverTickLengthMilli();
+    if( buff->second <= 0 ){      
+      toAdd.push_back(getBuffReplacement(buff->first));
+      buff = buffs.erase(buff);
+    } else {
+      buff++;
+    }
+  }
+
+  for(auto buff = toAdd.begin(); buff != toAdd.end(); buff++){
+    if(buff->first != NONE)
+      buffs.push_back(*buff);
+  }
+
+  //std::cout << "BUFFS" << std::endl;
+  //for(auto buff = buffs.begin(); buff != buffs.end(); buff++){
+  //  std::cout << " buff " << buff->first << " ";
+  //}
+  //std::cout << std::endl << std::endl;
+
+}
+
 void Player::applyBuff( BUFF b){
-  //TODO FIR1 and FIR2 debuff? applied at same time
   auto buff = buffs.begin();
   for(; buff != buffs.end(); buff++){
-    if( buff->first == b){ //found one that is the same, reset timer
-      buff->second = BuffInfo[b].ticksEffect;
+    if( BuffInfo[buff->first].code == BuffInfo[b].code ){ //found one that is the same, reset timer
+      //buff level > b level - add b to inactive
+      if( BuffInfo[buff->first].level > BuffInfo[b].level ){  
+        addInactiveBuff( b, BuffInfo[b].milliEffect );
+        //buff level < b level - move buff to inactive
+      } else if ( BuffInfo[buff->first].level < BuffInfo[b].level ){  
+        addInactiveBuff( buff->first, buff->second );
+        buffs.erase(buff);
+        buffs.push_front(std::pair<BUFF,int>(b,BuffInfo[b].milliEffect));
+      } else {  //code and level is same reset timer
+        buff->second = BuffInfo[b].milliEffect;
+      }
+      return;
+    }
+  }
+
+  if(buff == buffs.end()){//didn't find same code
+    buffs.push_front(std::pair<BUFF,int>(b,BuffInfo[b].milliEffect));
+  }
+}
+
+void Player::addInactiveBuff( BUFF b, int time ){
+  auto buff = inactiveBuffs.begin();
+  for(; buff != inactiveBuffs.end(); buff++){
+    if( buff->first == b ){ //found one that is the same, reset timer
+      buff->second = time > buff->second ? time : buff->second;
       break;
     }
   }
 
-  if(buff == buffs.end()){//didn't find same type
-    buffs.push_front(std::pair<BUFF,int>(b,BuffInfo[b].ticksEffect));
+  if(buff == inactiveBuffs.end()){//didn't find same code
+    inactiveBuffs.push_front(std::pair<BUFF,int>(b,time));
   }
+}
+
+std::pair<BUFF, int> Player::getBuffReplacement( BUFF b ){
+  std::pair<BUFF, int> candidate(NONE,0);
+
+  auto buff = inactiveBuffs.begin();
+  for(; buff != inactiveBuffs.end(); buff++){
+    if( BuffInfo[buff->first].code == BuffInfo[b].code ){ //found one that is the same, reset timer
+      if( BuffInfo[buff->first].level >= BuffInfo[candidate.first].level ){
+        candidate.first = buff->first;
+        candidate.second = buff->second;
+      }
+    }
+  }
+
+  if(candidate.first != NONE){
+    inactiveBuffs.remove(candidate);
+  }
+
+  return candidate;
 }
 
 void Player::setHealth(float h) {
@@ -521,6 +610,44 @@ float Player::getChargeCD() const{
   return cdMult;
 }
 
+float Player::getStrengthMultiplier() const{
+  float strMult = 1;
+  for(auto buff = buffs.begin(); buff != buffs.end(); buff++){
+    if( BuffInfo[buff->first].affectStrength ){
+      strMult *= (BuffInfo[buff->first].strengthMultiplier);
+    }
+  }
+  return strMult;
+}
+
+float Player::getMovementMultiplier() const{
+  float movementMult = 1;
+  for(auto buff = buffs.begin(); buff != buffs.end(); buff++){
+    if( BuffInfo[buff->first].affectMovement ){
+      movementMult *= BuffInfo[buff->first].movementMultiplier;
+    }
+  }
+  return movementMult;
+}
+
+float Player::getManaRegenMultiplier() const{
+  float manaMultiplier = 1;
+  for(auto buff = buffs.begin(); buff != buffs.end(); buff++){
+    if( BuffInfo[buff->first].affectManaRegen )
+        manaMultiplier += BuffInfo[buff->first].manaBonus;
+  }
+  return manaMultiplier;
+}
+
+float Player::getHealthRegenMultiplier() const{
+  float healthMultiplier = 1;
+  for(auto buff = buffs.begin(); buff != buffs.end(); buff++){
+    if( BuffInfo[buff->first].affectHealthRegen )
+        healthMultiplier += BuffInfo[buff->first].healthBonus;
+  }
+  return healthMultiplier;
+}
+
 void Player::serialize(sf::Packet& packet) const {
     Entity::serialize(packet);
     packet << this->player_id;
@@ -546,8 +673,19 @@ void Player::serialize(sf::Packet& packet) const {
     packet << static_cast<sf::Uint32>(pickupWeaponType);
     packet << current_weapon_selection; 
     packet << charging;
+    packet << walking;
+    packet << shotProjectile;
+    packet << attacked;
     packet << kills;
     packet << wins;
+    packet << buffs.size();
+    for (auto itr = buffs.begin(); itr!=buffs.end(); itr++) {
+      packet << static_cast<sf::Uint32>((*itr).first);
+      packet << (*itr).second;
+    }
+    packet << meleeAttack;
+    packet << weaponCall;
+    packet << static_cast<sf::Uint32>(weaponCallType);
   }
 
   void Player::deserialize(sf::Packet& packet) {
@@ -577,6 +715,26 @@ void Player::serialize(sf::Packet& packet) const {
     pickupWeaponType = static_cast<WeaponType>(pickupWeaponTypeUint32);
     packet >> current_weapon_selection; 
     packet >> charging;
+    packet >> walking;
+    packet >> shotProjectile;
+    packet >> attacked;
     packet >> kills;
     packet >> wins;
+    int size = 0; 
+    buffs.clear();
+    packet >> size;
+    for (; size>0; size--){
+      sf::Uint32 buff;
+      int time;
+      packet >> buff;
+      packet >> time;
+      buffs.push_back(std::pair<BUFF,int>(static_cast<BUFF>(buff),time));
+    }
+    
+    packet >> meleeAttack;
+    packet >> weaponCall;
+    sf::Uint32 weaponCallType32;
+    packet >> weaponCallType32;
+    weaponCallType = static_cast<WeaponType>(weaponCallType32);
+
   }

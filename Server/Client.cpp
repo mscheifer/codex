@@ -28,16 +28,14 @@ void NetworkClient::receiveMessages() {
         std::vector<int> kills;
         std::vector<int> wins;
         for(auto playerP = s.players.begin(); playerP != s.players.end(); playerP++) {
-          if(playerP->player_id !=
-            this->id) {
+          if(playerP->player_id != this->id) {
             //make sure the SGTR stays in scope
             entities.push_back(&(*playerP));
-           
-            kills.push_back((*playerP).kills);
-            wins.push_back((*playerP).wins);
           }
+          kills.push_back((*playerP).kills);
+          wins.push_back((*playerP).wins);
           AudioManager::processPlayerSound(*playerP);
-          
+        
           if(cycle  == 100 ) {
              cycle = 0;
              std::cout << "Current health is " << (*playerP).getHealth() << std::endl;

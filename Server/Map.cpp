@@ -34,17 +34,17 @@ void Map::mapReset()
 }
 
 void Map::initPowerUps() {
-  PowerUp* superPower = new PowerUp(v3_t(2,9,0), this, MOVEBOOST);
+  PowerUp* superPower = new PowerUp(v3_t(2,2,0), this, ICE3DEBUFF);
   superPower->setRespownTime(5000);
   this->entities.push_back(superPower);
 
-  //PowerUp* p2 = new PowerUp(v3_t(10,-9,0), this, STRBOOST);//TOOD set respawn timer
-  //p2->setRespownTime(5000);
-  //this->entities.push_back(p2);
+  PowerUp* p2 = new PowerUp(v3_t(2,5,0), this, ICE2DEBUFF);
+  p2->setRespownTime(5000);
+  this->entities.push_back(p2);
 
-  //PowerUp* p3 = new PowerUp(v3_t(-10,-9,0), this, ATTACKCD);
-  //p3->setRespownTime(5000);
-  //this->entities.push_back(p3);
+  PowerUp* p3 = new PowerUp(v3_t(2,9,0), this, ICE1DEBUFF);
+  p3->setRespownTime(5000);
+  this->entities.push_back(p3);
 }
 
 void Map::initWallsOne(void)
@@ -207,10 +207,10 @@ void Map::initWallsOne(void)
 void Map::initWalls(void)
 {
   //TODO move this
-  WeaponFire* w1 = new WeaponFire(v3_t(100,100,0), this, FIR1);
-  w1->dropDown(v3_t(10,10,0));
-  w1->setDirection(v3_t(0,1,0));
-  entities.push_back(w1);
+  //WeaponFire* w1 = new WeaponFire(v3_t(100,100,0), this, FIR1);
+  //w1->dropDown(v3_t(10,10,0));
+  //w1->setDirection(v3_t(0,1,0));
+  //entities.push_back(w1);
   WeaponFire* w2 = new WeaponFire(v3_t(120,120,0), this, THU1);
   w2->dropDown(v3_t(10,-10,0));
   w2->setDirection(v3_t(0,1,0));
@@ -429,28 +429,37 @@ std::vector<Entity *> Map::getEntity() {
    removeFromQtree(proj);
  }
 
+ //@mc 2box
 void Map::separatePlayers(Player* player){
   std::vector<BoundingObj*> myObjs = player->getBoundingObjs();
   int restart = false;
   int restarts = 0;
-
+  std::pair<bool,BoundingObj::vec3_t> res(false, BoundingObj::vec3_t(0,0,0));
+  Entity * e = nullptr;
+  
   for( unsigned int i=0; i < players.size(); i++ ){
     
-    if(players[i] != player){
+    if(players[i] != player){ //if not the player try collide
       std::vector<BoundingObj*> objs = players[i]->getBoundingObjs();  
       for( auto boxes = objs.begin(); boxes != objs.end(); boxes++){
+
         for( auto myBoxes = myObjs.begin(); myBoxes != myObjs.end(); myBoxes++){
-          std::pair<bool,BoundingObj::vec3_t> res = collide(*myBoxes,*boxes);
-          if(res.first){
-            player->collidePlayer(
-              std::pair<Entity*, BoundingObj::vec3_t>((*boxes)->getEntity(),
-              res.second));
-            restart = true;
-            break;
+          std::pair<bool,BoundingObj::vec3_t> res2 = collide(*myBoxes,*boxes);
+          if(res2.first){
+            if(res2.second.magnitudesq() > res.second.magnitudesq()){
+              e = (*boxes)->getEntity();
+              res = res;
+            }
           }
         }
         if(restart)
           break;
+
+      }
+      
+      if(res.first){
+        player->collidePlayer(std::pair<Entity*, BoundingObj::vec3_t>(e, res.second));
+        restart = true;
       }
     }
 
@@ -492,4 +501,9 @@ void Map::initScores() {
     kills.push_back(0);
     wins.push_back(0);
   }
+}
+
+void Map::addEntity(Entity* e){
+  entities.push_back(e);
+  addToQtree(e);
 }

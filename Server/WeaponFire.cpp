@@ -6,14 +6,15 @@ WeaponFire::~WeaponFire(void)
 }
 
 WeaponFire::WeaponFire(v3_t c, Map* m, MAGIC_POWER basicAttack1)
-  : Weapon(2.0, 300, c, m), basicAttack(basicAttack1) {
+  : Weapon(2.0, 300, c, m) {
 
-	Range_Cool_Down_Time = 500;
+	Range_Cool_Down_Time = 500; //TODO set these values to what we want them to be
 	Melee_Cool_Down_Time = 200;
+  basicAttack = basicAttack1;
 
   BoundingBox* b = new BoundingBox(BoundingObj::vec4_t(c.x,c.y,c.z),
   BoundingObj::vec3_t(1,0,0),BoundingObj::vec3_t(0,1,0),BoundingObj::vec3_t(0,0,1),
-  3,3,3);
+  1,1,1);
   b->setEntity(this);
   //BoundingSphere* b = new BoundingSphere(gx::vector4(x,y,z),sphereRadius);
   boundingObjs.push_back(b);
