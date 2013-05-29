@@ -92,8 +92,10 @@
     <ClCompile Include="graphics\dynamicDrawerImpl.cpp" />
     <ClCompile Include="graphics\graphicsClient.cpp" />
     <ClCompile Include="graphics\graphicsEntity.cpp" />
+    <ClCompile Include="graphics\HUD.cpp" />
     <ClCompile Include="graphics\light.cpp" />
     <ClCompile Include="graphics\loadCustom.cpp" />
+    <ClCompile Include="graphics\lobby.cpp" />
     <ClCompile Include="graphics\material.cpp" />
     <ClCompile Include="graphics\matrix.cpp" />
     <ClCompile Include="graphics\mesh.cpp" />
@@ -113,8 +115,6 @@
     <ClCompile Include="graphics\vector4.cpp" />
     <ClCompile Include="graphics\vertexAttrib.cpp" />
     <ClCompile Include="graphics\vertexAttribSignature.cpp" />
-    <ClCompile Include="HUD.cpp" />
-    <ClCompile Include="lobby.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Map.cpp" />
     <ClCompile Include="NetworkServices.cpp" />
@@ -157,8 +157,10 @@
     <ClInclude Include="graphics\drawerImpl.h" />
     <ClInclude Include="graphics\graphicsClient.h" />
     <ClInclude Include="graphics\graphicsEntity.h" />
+    <ClInclude Include="graphics\HUD.h" />
     <ClInclude Include="graphics\light.h" />
     <ClInclude Include="graphics\loadCustom.h" />
+    <ClInclude Include="graphics\lobby.h" />
     <ClInclude Include="graphics\material.h" />
     <ClInclude Include="graphics\matrix.h" />
     <ClInclude Include="graphics\mesh.h" />
@@ -177,8 +179,6 @@
     <ClInclude Include="graphics\vertexAttrib.h" />
     <ClInclude Include="graphics\vertexAttribSignature.h" />
     <ClInclude Include="graphics\windowsHacks.h" />
-    <ClInclude Include="HUD.h" />
-    <ClInclude Include="lobby.h" />
     <ClInclude Include="Map.h" />
     <ClInclude Include="NetworkServices.h" />
     <ClInclude Include="Physics.h" />

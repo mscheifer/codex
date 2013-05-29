@@ -71,6 +71,7 @@ void gx::HUD::draw(sf::RenderWindow & window) {
   healthRect = manaText.getGlobalBounds();
   healthText.setPosition( 55+ (200 -healthRect.width)/2 , 550);
   //mana display
+  //TODO: use stringstrem here
   std::string manaS(std::to_string(static_cast<long long>(mana)) + 
     std::string("/") +std::to_string(static_cast<long long>(maxMana)));
   manaText.setString(manaS);

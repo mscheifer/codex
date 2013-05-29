@@ -3,6 +3,7 @@
 #include <GL/glew.h>
 #include <string>
 #include <SFML/Graphics.hpp>
+#include "windowsHacks.h"
 
 namespace gx {
 

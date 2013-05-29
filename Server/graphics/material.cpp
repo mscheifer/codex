@@ -12,6 +12,11 @@ gx::material::material(material&& other) noexcept
   : diffuseTex(std::move(other.diffuseTex)),
     diffuseColor(std::move(other.diffuseColor)) {}
 
+gx::material& gx::material::operator=(material&&) {
+  assert(false);
+  return *this;
+}
+
 void gx::material::bind() const {
   //this is the correct way to do it. Take GL_TEXTURE0 and add the number
   //look it up

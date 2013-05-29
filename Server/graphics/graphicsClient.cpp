@@ -68,6 +68,10 @@ void gx::graphicsClient::reshape(unsigned int w, unsigned int h) {
   const elem_t nearPlane = 1.0f;
   const elem_t farPlane  = 3000.0f;
   // RenderWindow automatically sets the viewport on a resize
+  // in Linux but not in windows so we have to do it here
+  this->window.setView(sf::View(sf::FloatRect(0,0,w,h)));
+  std::cout << this->window.getView().getSize().x << " ";
+  std::cout << this->window.getView().getSize().y << std::endl;
   this->display.setProjection(fov,ratio,nearPlane,farPlane);
 }
 
@@ -90,7 +94,7 @@ gx::graphicsClient::graphicsClient():
     display(),
     entities(staticModels(),uniforms()),
     animatedDrawer(dynamicModels(),uniforms()),
-    skyboxDrawer(this->display.storage()),
+    skyboxDrawer(display.storage()),
     Hud(),Lobby(), Score(ConfigManager::numPlayers()),
     playerDirection(0.0, 1.0,0.0),//change to result of init packet
     playerStartDirection(0.0, 1.0,0.0),//change to result of init packet
@@ -118,6 +122,8 @@ gx::graphicsClient::graphicsClient():
 
   this->setCamera();
   this->userInput.setUpMouse();
+
+  this->reshape(defaultWindowWidth, defaultWindowHeight);
 }
 
 ClientGameTimeAction gx::graphicsClient::handleInput() {
