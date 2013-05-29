@@ -32,7 +32,7 @@ int sign( float number)
 std::pair<bool,BoundingObj::vec3_t> notSeparatedByAxis(const BoundingBox* a, const BoundingObj::vec3_t t,
   const BoundingObj::vec3_t axis, const BoundingBox* b){
 
-  float centerDist = abs(t.dot(axis)); //MATT C LOOK AT THIS, IT CONVERTS TO INT AND ROUNDS THE NUMBER
+  float centerDist = fabs(t.dot(axis)); //MATT C LOOK AT THIS, IT CONVERTS TO INT AND ROUNDS THE NUMBER
   float sumDist = 0;
 
   //Ax*Aw dot L
