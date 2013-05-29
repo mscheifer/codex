@@ -51,6 +51,10 @@ gx::HUD::HUD(void):health(100), maxHealth(100), HLossPercentage(0),
   positionText.setCharacterSize(24);
   positionText.setColor(sf::Color::Black);
   positionText.setPosition(10,10);
+  //aimer
+  aimerTexture.loadFromFile("graphics/Images/aimer.png");
+  aimer.setTexture(aimerTexture);
+  aimer.setPosition(300,200);
 }
 
 gx::HUD::~HUD(void) {
@@ -86,6 +90,9 @@ void gx::HUD::draw(sf::RenderWindow & window) {
     window.draw(badGuySprite);
   if (canPickUp)
     window.draw(pickUp);
+  if (sf::Mouse::isButtonPressed(sf::Mouse::Button::Right)) { //TODO this is bad
+    window.draw(aimer);
+  }
 }
 
 void gx::HUD::updateHUD(const Player& player) {

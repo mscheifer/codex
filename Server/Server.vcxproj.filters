@@ -448,5 +448,8 @@
     <None Include="graphics\Images\stn2.png">
       <Filter>Header Files\graphics\Images</Filter>
     </None>
+    <None Include="graphics\Images\aimer.png">
+      <Filter>Header Files\graphics\Images</Filter>
+    </None>
   </ItemGroup>
 </Project>
