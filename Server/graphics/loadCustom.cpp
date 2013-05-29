@@ -109,14 +109,6 @@ gx::graphicsEntity gx::loadSkybox() {
                                           vector3f( 1.0f,-1.0f, 0.0f), 
                                           vector3f( 1.0f, 1.0f, 0.0f), 
                                           vector3f(-1.0f, 1.0f, 0.0f) }};
-  std::array<vector4f,8> lightblueArray = {{ vector4f( 0.4f, 0.4f, 1.0f, 1.0f),
-                                             vector4f( 0.4f, 0.4f, 1.0f, 1.0f),
-                                             vector4f( 0.4f, 0.4f, 1.0f, 1.0f),
-                                             vector4f( 0.4f, 0.4f, 1.0f, 1.0f),
-                                             vector4f( 0.4f, 0.4f, 1.0f, 1.0f),
-                                             vector4f( 0.4f, 0.4f, 1.0f, 1.0f),
-                                             vector4f( 0.4f, 0.4f, 1.0f, 1.0f),
-                                             vector4f( 0.4f, 0.4f, 1.0f, 1.0f) }};
   for(auto itr = skyboxNormA.begin(); itr != skyboxNormA.end(); itr++) {
     auto& norm = *itr;
     norm.normalize();
@@ -141,7 +133,7 @@ gx::graphicsEntity gx::loadSkybox() {
   bone root(1,identity,true,std::vector<std::vector<bone::key>>(),
                             std::vector<bone>());
 
-  material mat(Texture(GL_TEXTURE_2D, "models/white.png"),vector4f(0.4,0.4,1));
+  material mat(Texture(GL_TEXTURE_2D, "models/white.png"),vector4f(0.4f,0.4f,1.0f));
 
   return graphicsEntity(std::move(skyboxVerts), std::move(skyboxnormals),
     std::move(texCoords), std::move(skyboxBoneIDs), std::move(skyboxBWeight), 

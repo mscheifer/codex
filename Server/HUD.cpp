@@ -45,7 +45,7 @@ gx::HUD::HUD(void):health(100), maxHealth(100), HLossPercentage(0),
   badGuyTexture.loadFromFile("graphics/Images/badguy.png");
   badGuySprite.setTexture(badGuyTexture);
   badGuySprite.setPosition(740,10);
-  badGuySprite.setScale(0.1,0.1);
+  badGuySprite.setScale(0.1f,0.1f);
   //positionText
   positionText.setFont(font);
   positionText.setCharacterSize(24);

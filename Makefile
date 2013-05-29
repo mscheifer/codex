@@ -1,8 +1,8 @@
 NAME	    = Server/drchao
 DEBUGNAME = Server/drchao-debug
 ECHO	    = @echo
-CC        = @clang++
-BINFLAGS  = -O3 -flto -DNDEBUG
+CC        = +@g++
+BINFLAGS  = -O3 -flto=jobserver -DNDEBUG
 #possible optimizations to consider: fmodulo-sched fmodulo-sched-allow-regmoves
 #  fgcse-sm fgcse-las fgcse-after-reload 
 #  (funsafe-loop-optimizations Wfunsafe-loop-optimizations) 

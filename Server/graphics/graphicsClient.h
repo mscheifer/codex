@@ -24,14 +24,13 @@ class graphicsClient {
     light light1;
     displaySet display;
 
-    HUD Hud;
-    lobby Lobby;
-    scoreBoard Score;
-
     staticDrawer entities;
     dynamicDrawer animatedDrawer;
 	SkyboxDraw skyboxDrawer;
 
+    HUD Hud;
+    lobby Lobby;
+    scoreBoard Score;
 
     //player info
     static const vector3f upDirection;

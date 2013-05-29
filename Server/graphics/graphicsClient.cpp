@@ -64,13 +64,13 @@ void gx::graphicsClient::setCamera() {
 void gx::graphicsClient::reshape(unsigned int w, unsigned int h) {
   typedef displaySet::elem_t elem_t;
   const elem_t fov       = 53.13f;
-  const elem_t ratio     = elem_t(w) / elem_t(h);
+  const elem_t ratio     = static_cast<elem_t>(w) / static_cast<elem_t>(h);
   const elem_t nearPlane = 1.0f;
   const elem_t farPlane  = 3000.0f;
   // adjust the viewport when the window is resized
-  //this->window.setView(w,h); //maybe better?
-  glViewport(0, 0, w, h);
-  gx::debugout << "glViewport(0, 0, " << w << ", " << h << ");" << gx::endl;
+  // should probablt be setView actually
+  this->window.setSize(sf::Vector2u(w,h)); //maybe better?
+  std::cout << "setSize " << w << " " << h << std::endl;
   this->display.setProjection(fov,ratio,nearPlane,farPlane);
 }
 
@@ -94,12 +94,13 @@ gx::graphicsClient::graphicsClient():
     entities(staticModels(),uniforms()),
     animatedDrawer(dynamicModels(),uniforms()),
 	skyboxDrawer(this->display.storage()),
+    Hud(),Lobby(), Score(ConfigManager::numPlayers()),
     playerDirection(0.0, 1.0,0.0),//change to result of init packet
     playerStartDirection(0.0, 1.0,0.0),//change to result of init packet
     playerStartRight(playerStartDirection.y,-playerStartDirection.x,
                      playerStartDirection.z),
     playerPosition(0.0, 0.0, 0.0),//change to the result of init packet
-    fpsClock(), fpsFrames(0),Hud(),Lobby(), Score(ConfigManager::numPlayers()) {
+    fpsClock(), fpsFrames(0) {
   this->window.setVerticalSyncEnabled(false);
   this->window.setMouseCursorVisible(true);
   if(!this->window.setActive()) {

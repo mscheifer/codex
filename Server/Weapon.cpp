@@ -125,7 +125,7 @@ void Weapon::updateBounds(){
 }
 
 bool Weapon::collideWall(const std::pair<Entity*,BoundingObj::vec3_t>& p){
-  BoundingObj::vec3_t fixShit = p.second;
+  BoundingObj::vec3_t fixShit = p.second; //why unused?
   position += p.second;
   updateBounds();
   velocity = v3_t(0,0,0);

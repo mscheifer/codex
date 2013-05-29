@@ -497,7 +497,7 @@ void Map::removeFromQtree(Entity* e){
 }
 
 void Map::initScores() {
-  for (int i=0;i<ConfigManager::numPlayers();i++) {
+  for (unsigned int i=0;i<ConfigManager::numPlayers();i++) {
     kills.push_back(0);
     wins.push_back(0);
   }
