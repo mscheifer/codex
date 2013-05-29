@@ -72,6 +72,8 @@ public:
   void deserialize(sf::Packet& packet);
   bool charging;
   bool walking;
+  bool shotProjectile;
+  bool attacked;
 private:
   Weapon* pickup;
   WeaponType pickupWeaponType;

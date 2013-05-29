@@ -32,6 +32,7 @@ void AudioManager::loadSounds(){
     musicProx[i] = -1;
   }
 
+  loadSound("sc1", "sounds/scream_1.wav");
   
   loadSound("c1", "sounds/charge1.wav");
   
@@ -43,7 +44,7 @@ void AudioManager::loadSounds(){
   loadSound("s2", "sounds/sound_2.wav");
   loadSound("s3", "sounds/sound_3.wav");
   loadSound("m1", "sounds/music_mono.wav");
-  loadSound("f1", "sounds/m2_2.wav");
+  loadSound("f1", "sounds/fire_1.wav");
   //loadSound("s5", "sound_5.wav");
 
   musics["m1"] = "sounds/music.wav";
@@ -191,6 +192,17 @@ void AudioManager::processPlayerSound(Player& o){
     stopSound( "cplayer:"+ o.player_id);
   }
 
+  if(o.shotProjectile) {  
+    static int id = 0;
+    playSound("f1", id+"fplayer:"+ o.player_id, o.getPosition());
+    id++;
+  }
+
+  if(o.attacked) {  
+    static int id = 0;
+    playSound("sc1", id+"scplayer:"+ o.player_id, o.getPosition());
+    id++;
+  }
 
   if(o.walking) {
 
