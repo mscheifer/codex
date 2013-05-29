@@ -29,10 +29,10 @@ bool gx::input::getJump() {
 bool gx::input::getStop() {
   return this->stopped;
 }
-bool gx::input::fire1() {
+bool gx::input::fire1() const {
   return this->fired1;
 }
-bool gx::input::fire2() {
+bool gx::input::fire2() const {
   return this->fired2;
 }
 bool gx::input::pickUp() {
@@ -109,6 +109,14 @@ unsigned int gx::input::windowHeight() {
   return this->height;
 }
 
+int gx::input::mouseXpos() const {
+  return this->mouseX;
+}
+
+int gx::input::mouseYpos() const {
+  return this->mouseY;
+}
+
 void gx::input::setUpMouse() {
   //somehow change this to set it to the center of the screen
   mouseBasePosition = sf::Vector2i(450,400);
@@ -135,7 +143,6 @@ void gx::input::handleEvent(const sf::Event& event) {
     this->resized = true;
     this->width  = event.size.width,
     this->height = event.size.height;
-    std::cout << "reshape w " << this->width << " h " << this->height << std::endl;
   } else if (event.type == sf::Event::KeyPressed) {
     if(event.key.code == sf::Keyboard::Escape) {
       this->stopped = true; // end the program
@@ -163,5 +170,8 @@ void gx::input::handleEvent(const sf::Event& event) {
     } else if(event.mouseButton.button == sf::Mouse::Right) {
       this->fired2 = false;
     }
+  } else if(event.type == event.MouseMoved) {
+    this->mouseX = event.mouseMove.x;
+    this->mouseY = event.mouseMove.y;
   }
 }

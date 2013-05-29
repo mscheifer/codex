@@ -161,7 +161,7 @@ void NetworkClient::doClient() {
       if (joined && this->gxClient.gameStart()) {
         initPacket << static_cast<sf::Uint32>(INIT); 
         netRecv.sendMessage(initPacket);
-        joined =false; //only send packet once
+        joined = false; //only send packet once
       }
       initPacket.clear();
       if (netRecv.receiveMessage(initPacket)) {

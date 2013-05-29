@@ -26,7 +26,7 @@ class graphicsClient {
 
     staticDrawer entities;
     dynamicDrawer animatedDrawer;
-	SkyboxDraw skyboxDrawer;
+    SkyboxDraw skyboxDrawer;
 
     HUD Hud;
     lobby Lobby;
@@ -67,12 +67,7 @@ class graphicsClient {
     void gameEnd();
     void updateScores(std::vector<int> & pwins, std::vector<int> & pkills);
 
-    //input functions
     bool closed()        { return this->userInput.getStop(); }
-    bool jumped()        { return this->userInput.getJump(); }
-    bool fire1 ()        { return this->userInput.fire1  (); }
-    bool fire2 ()        { return this->userInput.fire2  (); }
-    vector3f getDir()     { return this->playerDirection; }
 };
 
 } //end namespace gx

@@ -1,7 +1,8 @@
 #include "lobby.h"
 #include <iostream>
+#include "input.h"
 
-lobby::lobby(void):start(false)  {
+gx::lobby::lobby(void):start(false)  {
   font.loadFromFile("arial.ttf");
   welcome.setFont(font);
   welcome.setColor(sf::Color::Red);
@@ -21,33 +22,21 @@ lobby::lobby(void):start(false)  {
   button.setPosition(280+(buttonBounds.width-textBounds.width)/2,300);
 }
 
+gx::lobby::~lobby(void) {}
 
-lobby::~lobby(void) {
-}
-
-void lobby::handleInput(sf::RenderWindow & window) {
-  sf::Event event;
-  // TODO move this code to input? @MATT S
-  //window.setMouseCursorVisible(true);
-  while (window.pollEvent(event)) {
-    if(event.type == event.MouseButtonPressed && event.mouseButton.button == sf::Mouse::Left) {
-      if(buttonBounds.contains(event.mouseButton.x, event.mouseButton.y) == true) {
-        start = true;
-        std::cout<<"i clicked!"<<std::endl;           
-      }
-    } else if(event.type == event.MouseMoved) {
-      if(buttonBounds.contains(event.mouseMove.x, event.mouseMove.y) == true) {
-        button.setColor(sf::Color(250, 20, 20));
-      } else {
-        button.setColor(sf::Color(150, 50, 50));
-      }
+void gx::lobby::handleInput(input const& userInput) {
+  if(buttonBounds.contains(userInput.mouseXpos(), userInput.mouseYpos()) == true) {
+    button.setColor(sf::Color(250, 20, 20));
+    if(userInput.fire1()) {
+      start = true;
+      std::cout<<"i clicked!"<<std::endl;           
     }
+  } else {
+    button.setColor(sf::Color(150, 50, 50));
   }
-
 }
-void lobby::drawLobby(sf::RenderWindow & window) {
-  //TODO @Matt S do I want to draw it everytime?
-  handleInput(window);
+
+void gx::lobby::drawLobby(sf::RenderWindow & window) {
   if (start) welcome.setString("Waiting for other players to start");
   else welcome.setString("Please click join to start.");
   window.draw(welcome);

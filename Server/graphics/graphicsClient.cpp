@@ -67,10 +67,7 @@ void gx::graphicsClient::reshape(unsigned int w, unsigned int h) {
   const elem_t ratio     = static_cast<elem_t>(w) / static_cast<elem_t>(h);
   const elem_t nearPlane = 1.0f;
   const elem_t farPlane  = 3000.0f;
-  // adjust the viewport when the window is resized
-  // should probablt be setView actually
-  this->window.setSize(sf::Vector2u(w,h)); //maybe better?
-  std::cout << "setSize " << w << " " << h << std::endl;
+  // RenderWindow automatically sets the viewport on a resize
   this->display.setProjection(fov,ratio,nearPlane,farPlane);
 }
 
@@ -93,7 +90,7 @@ gx::graphicsClient::graphicsClient():
     display(),
     entities(staticModels(),uniforms()),
     animatedDrawer(dynamicModels(),uniforms()),
-	skyboxDrawer(this->display.storage()),
+    skyboxDrawer(this->display.storage()),
     Hud(),Lobby(), Score(ConfigManager::numPlayers()),
     playerDirection(0.0, 1.0,0.0),//change to result of init packet
     playerStartDirection(0.0, 1.0,0.0),//change to result of init packet
@@ -121,7 +118,6 @@ gx::graphicsClient::graphicsClient():
 
   this->setCamera();
   this->userInput.setUpMouse();
-  this->reshape(defaultWindowWidth, defaultWindowHeight);
 }
 
 ClientGameTimeAction gx::graphicsClient::handleInput() {
@@ -134,15 +130,15 @@ ClientGameTimeAction gx::graphicsClient::handleInput() {
   this->playerDirection =
     toBasis(playerStartRight,playerStartDirection,upDirection) * newdir;
   this->setCamera(); //after setting new player position and direction
-  if(jumped()) {
+  if(this->userInput.getJump()) {
     action.jump = true;
   }
   action.movement = this->userInput.movePlayer();
-  auto dir = getDir();
+  auto dir = this->playerDirection;
   action.updated = this->userInput.getUpdated();
   action.facingDirection = dir;
-  action.attackMelee = fire1();
-  action.attackRange = fire2();
+  action.attackMelee = this->userInput.fire1();
+  action.attackRange = this->userInput.fire2();
   action.pickup = this->userInput.pickUp();
   action.switchWeapon = this->userInput.switchW();
   return action;
@@ -228,7 +224,12 @@ void gx::graphicsClient::drawLobby() {
   glBindVertexArray(0);
   window.pushGLStates();
   glBindBuffer(GL_ARRAY_BUFFER, 0);
-  this->Lobby.drawLobby(window);
+  this->userInput.handle(this->window);
+  if(this->userInput.resizedWindow()) {
+    reshape(this->userInput.windowWidth(),this->userInput.windowHeight());
+  }
+  this->Lobby.handleInput(this->userInput);
+  this->Lobby.drawLobby(this->window);
   window.popGLStates(); 
   window.display();
 }
