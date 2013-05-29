@@ -406,9 +406,6 @@
     <None Include="shaders\animated.vert">
       <Filter>Resource Files\graphics</Filter>
     </None>
-    <None Include="graphics\Images\bar.png">
-      <Filter>Header Files\graphics\Images</Filter>
-    </None>
     <None Include="graphics\Images\heart_color.png">
       <Filter>Header Files\graphics\Images</Filter>
     </None>
@@ -416,6 +413,39 @@
       <Filter>Header Files\graphics\Images</Filter>
     </None>
     <None Include="graphics\Images\badguy.png">
+      <Filter>Header Files\graphics\Images</Filter>
+    </None>
+    <None Include="graphics\Images\burn.png">
+      <Filter>Header Files\graphics\Images</Filter>
+    </None>
+    <None Include="graphics\Images\burn2.png">
+      <Filter>Header Files\graphics\Images</Filter>
+    </None>
+    <None Include="graphics\Images\Empty_bar.png">
+      <Filter>Header Files\graphics\Images</Filter>
+    </None>
+    <None Include="graphics\Images\frz.png">
+      <Filter>Header Files\graphics\Images</Filter>
+    </None>
+    <None Include="graphics\Images\frz2.png">
+      <Filter>Header Files\graphics\Images</Filter>
+    </None>
+    <None Include="graphics\Images\Full_life_bar.png">
+      <Filter>Header Files\graphics\Images</Filter>
+    </None>
+    <None Include="graphics\Images\Full_mana_bar.png">
+      <Filter>Header Files\graphics\Images</Filter>
+    </None>
+    <None Include="graphics\Images\grv.png">
+      <Filter>Header Files\graphics\Images</Filter>
+    </None>
+    <None Include="graphics\Images\grv2.png">
+      <Filter>Header Files\graphics\Images</Filter>
+    </None>
+    <None Include="graphics\Images\stn.png">
+      <Filter>Header Files\graphics\Images</Filter>
+    </None>
+    <None Include="graphics\Images\stn2.png">
       <Filter>Header Files\graphics\Images</Filter>
     </None>
   </ItemGroup>

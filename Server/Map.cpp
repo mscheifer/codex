@@ -38,13 +38,13 @@ void Map::initPowerUps() {
   superPower->setRespownTime(5000);
   this->entities.push_back(superPower);
 
-  //PowerUp* p2 = new PowerUp(v3_t(10,-9,0), this, STRBOOST);//TOOD set respawn timer
-  //p2->setRespownTime(5000);
-  //this->entities.push_back(p2);
+  PowerUp* p2 = new PowerUp(v3_t(10,-9,0), this, STRBOOST);//TOOD set respawn timer
+  p2->setRespownTime(5000);
+  this->entities.push_back(p2);
 
-  //PowerUp* p3 = new PowerUp(v3_t(-10,-9,0), this, ATTACKCD);
-  //p3->setRespownTime(5000);
-  //this->entities.push_back(p3);
+  PowerUp* p3 = new PowerUp(v3_t(-10,-9,0), this, ATTACKCD);
+  p3->setRespownTime(5000);
+  this->entities.push_back(p3);
 }
 
 void Map::initWallsOne(void)
