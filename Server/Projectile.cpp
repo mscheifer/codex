@@ -28,7 +28,7 @@ void Projectile::reset(){
 
 bool Projectile::correctMovementHit( Entity* e ){
   Entity_Type etype = e->getType();
-  if( etype == WALL || (etype == PROJECTILE && ((Projectile*) e)->charging) ){
+  if( etype == WALL || (etype == PROJECTILE && ((Projectile*) e)->charging) ){//TODO check the team
     return true;
   } else if ( etype == PLAYER ){
     return e != owner;

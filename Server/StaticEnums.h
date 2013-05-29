@@ -141,7 +141,7 @@ const BuffData BuffInfo[] = {
   BuffData(THU2DEBUFF, 100, false, 0, true, -2, false, 0, false, 0, false, 0, false, 0),
   BuffData(THU3DEBUFF, 100, false, 0, true, -4, false, 0, false, 0, false, 0, false, 0),
 
-    //                 time|  move      |mpRegen       |hpRegen   |str       | atkCD   |chargeCD  
+  //                   time|  move      |mpRegen       |hpRegen   |str       | atkCD   |chargeCD  
   BuffData(G1MDEBUFF,  100,  false, 0,    false, 0,     false, 0, true, .95f, false, 0, false, 0),
   BuffData(G2DEBUFF,   100,  true, 0.85f, true, -2,     true, -1, true, .90f, false, 0, false, 0),
   BuffData(G2MDEBUFF,  100,  true, 0.95f, true, -1.25f, false, 0, false, 0,   false, 0, false, 0),

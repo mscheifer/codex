@@ -189,6 +189,7 @@ void AudioManager::processPlayerSound(Player& o){
     playSound("melee", "playerM:"+ o.player_id, o.getPosition());
 
   if(o.weaponCall){
+    stopSound( "playerCall: " + o.player_id );
     playSound(getWeaponCall(o.weaponCallType), "playerCall: " + o.player_id, o.getPosition());
   }
 

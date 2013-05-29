@@ -92,6 +92,9 @@ bool Weapon::tossAway(v3_t dropPosition, v3_t dir){
   //if(!pickedUp)
   //  return false;
 
+  if( getWeaponType() == FIST )
+    return true;
+
   render = true;
   dropPosition.z += 0;
   position = dropPosition;

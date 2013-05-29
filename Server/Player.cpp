@@ -68,8 +68,11 @@ void Player::init(v3_t pos, int assigned_id, Map * m)
   charging = false;
 	map = m;
 	weapon[0] = new WeaponFist(position, this->map); //has no bounds so it doesnt drop
-	weapon[1] = new WeaponFire(position, this->map, FIR1); //TODO add this to entities, or it won't be able render
-	current_weapon_selection = 1;
+	weapon[1] = new WeaponFire(position, this->map, B1); //TODO add this to entities, or it won't be able render
+	m->addEntity(weapon[1]);
+  buffs.clear();
+
+  current_weapon_selection = 1;
   chargedProjectile = nullptr;
   m->addToQtree(this);
 }
@@ -193,11 +196,7 @@ bool Player::moveTowardDirection(move_t inputDir, bool jump)
   else
     movementDirection.scale(speed * MOVESCALE());
 
-  for(auto buff = buffs.begin(); buff != buffs.end(); buff++){
-    if( BuffInfo[buff->first].affectMovement ){
-      movementDirection.scale(BuffInfo[buff->first].movementMultiplier);
-    }
-  }
+  movementDirection.scale(getMovementMultiplier());
 
   movementDirection = correctMovement(movementDirection, true);
   position += movementDirection;
@@ -252,22 +251,10 @@ void Player::update(){
   v3_t attemptMove = velocity * ConfigManager::serverTickLengthSec();
   position += correctMovement( attemptMove, false );
   //position += velocity * ConfigManager::serverTickLengthSec();
-  
-  //calculate regen multipliers
-  float manaMultiplier = 1;
-  float healthMultiplier = 1;
 
-  for(auto buff = buffs.begin(); buff != buffs.end(); buff++){
-    if( BuffInfo[buff->first].affectManaRegen ){
-        manaMultiplier += BuffInfo[buff->first].manaBonus;
-    } else if ( BuffInfo[buff->first].affectHealthRegen ){
-        healthMultiplier += BuffInfo[buff->first].healthBonus;
-    }
-  }
-
-  health+= healthRegen*healthMultiplier;
+  health+= healthRegen*getHealthRegenMultiplier();
   health = (health > maxHealth ? maxHealth : health);
-  mana+=manaRegen*manaMultiplier;
+  mana+=manaRegen*getManaRegenMultiplier();
   mana = (mana > maxMana ? maxMana : mana);
   mana = (mana < 0 ? 0 : mana);
   if(health <= 0)
@@ -543,6 +530,34 @@ float Player::getStrengthMultiplier() const{
     }
   }
   return strMult;
+}
+
+float Player::getMovementMultiplier() const{
+  float movementMult = 1;
+  for(auto buff = buffs.begin(); buff != buffs.end(); buff++){
+    if( BuffInfo[buff->first].affectMovement ){
+      movementMult *= BuffInfo[buff->first].movementMultiplier;
+    }
+  }
+  return movementMult;
+}
+
+float Player::getManaRegenMultiplier() const{
+  float manaMultiplier = 1;
+  for(auto buff = buffs.begin(); buff != buffs.end(); buff++){
+    if( BuffInfo[buff->first].affectManaRegen )
+        manaMultiplier += BuffInfo[buff->first].manaBonus;
+  }
+  return manaMultiplier;
+}
+
+float Player::getHealthRegenMultiplier() const{
+  float healthMultiplier = 1;
+  for(auto buff = buffs.begin(); buff != buffs.end(); buff++){
+    if( BuffInfo[buff->first].affectHealthRegen )
+        healthMultiplier += BuffInfo[buff->first].healthBonus;
+  }
+  return healthMultiplier;
 }
 
 void Player::serialize(sf::Packet& packet) const {

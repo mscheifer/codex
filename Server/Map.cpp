@@ -502,3 +502,8 @@ void Map::initScores() {
     wins.push_back(0);
   }
 }
+
+void Map::addEntity(Entity* e){
+  entities.push_back(e);
+  addToQtree(e);
+}

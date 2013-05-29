@@ -69,6 +69,9 @@ public:
   float getAttackCD() const;
   float getChargeCD() const;
   float getStrengthMultiplier() const;
+  float getMovementMultiplier() const;
+  float getManaRegenMultiplier() const;
+  float getHealthRegenMultiplier() const;
   int getKills() const { return kills; }
   int getWins() const { return wins; }
   
