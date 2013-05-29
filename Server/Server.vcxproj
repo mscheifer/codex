@@ -134,7 +134,6 @@
     <ClCompile Include="WeaponFist.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="assimpUtil.h" />
     <ClInclude Include="boundingBox.h" />
     <ClInclude Include="boundingManager.h" />
     <ClInclude Include="boundingObj.h" />
@@ -147,6 +146,7 @@
     <ClInclude Include="Entity.h" />
     <ClInclude Include="EntityPool.h" />
     <ClInclude Include="Game.h" />
+    <ClInclude Include="graphics\assimpUtil.h" />
     <ClInclude Include="graphics\basicUniform.h" />
     <ClInclude Include="graphics\bone.h" />
     <ClInclude Include="graphics\displaySet.h" />

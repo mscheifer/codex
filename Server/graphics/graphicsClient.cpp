@@ -13,7 +13,7 @@ gx::graphicsEntity loadModel(const std::string& ModelPath) {
 }
 
 std::vector<gx::graphicsEntity> staticModels() {
-  auto modelJack   = loadModel("models/weird_orange_thing.dae");
+  auto modelJack   = loadModel("models/Badguy_texture.dae");
   auto modelWall   = loadModel("models/wall.dae");
   auto modelPlayer = loadModel("models/Test_Run.dae");
   auto cubes = gx::loadCube();
@@ -191,7 +191,7 @@ void gx::graphicsClient::updateEntities(std::vector<Entity*> data) {
   for(auto entityP = data.begin(); entityP != data.end(); ++entityP) {
     const auto& entity = **entityP;
     const auto& type = entity.getType();
-    if(type == POWER_UP) { //TODO: change back to type == PLAYER
+    if(type == PLAYER) { //TODO: change back to type == PLAYER
       dynamicDrawer::instanceData inst;
       inst. pos = entity.getPosition();
       inst.dirY = entity.getDirection();

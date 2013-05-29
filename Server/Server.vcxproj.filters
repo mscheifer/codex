@@ -392,13 +392,13 @@
     <ClInclude Include="scoreBoard.h">
       <Filter>Header Files\graphics</Filter>
     </ClInclude>
-    <ClInclude Include="assimpUtil.h">
-      <Filter>Header Files\graphics</Filter>
-    </ClInclude>
     <ClInclude Include="graphics\vector2.h">
       <Filter>Header Files\graphics</Filter>
     </ClInclude>
     <ClInclude Include="graphics\material.h">
+      <Filter>Header Files\graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="graphics\assimpUtil.h">
       <Filter>Header Files\graphics</Filter>
     </ClInclude>
   </ItemGroup>
