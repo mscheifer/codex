@@ -1,6 +1,7 @@
 #ifndef OGLUTIL_H
 #define OGLUTIL_H
 #include <GL/glew.h>
+#include <assert.h>
 #include <iostream>
 #include <string>
 #include <sstream>
@@ -45,6 +46,7 @@ class debugStream {
             sserror << "OpenGL error: " << err << std::endl;
             std::cout << sserror.str();
             ConfigManager::log(sserror.str());
+            assert(false);
           }
         }
       } 

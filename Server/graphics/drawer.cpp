@@ -22,8 +22,10 @@ gx::drawer<T>::drawer(std::vector<typename T::entity_t> entDatas,
   : program(T::vertShader, T::fragShader, globalUnifs), impl(program), 
     entityClasses(setupEntities<T>(std::move(entDatas),program.vars())),
     globalUniforms(globalUnifs) {
-  GLint diffuseLoc = glGetUniformLocation(program.progNum(), "diffuseTex");
+  GLint diffuseLoc = program.uniformLoc("diffuseTex");
+  this->program.use();
   glUniform1i(diffuseLoc, 0); //TODO: change 0 to constant that corresponds with GL_TEXTURE0
+  debugout << "glUniform1i(" << diffuseLoc << ", 2);" << endl;
 }
 
 template<typename T>
@@ -36,7 +38,7 @@ void gx::drawer<T>::draw() {
   for(auto entityCp = entityClasses.begin(); entityCp != entityClasses.end();
                                                                  ++entityCp) {
     const auto& entityC = *entityCp;
-	entityC.mat.bind();
+    entityC.mat.bind();
     for(auto instp = entityC.instances.begin();instp != entityC.instances.end();
                                                                       ++instp) {
       const auto& inst = *instp;

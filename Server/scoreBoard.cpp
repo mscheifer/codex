@@ -49,6 +49,7 @@ scoreBoard::scoreBoard(int numPlayer) {
    pkills.push_back(0);
    pwins.push_back(0);
  }
+
 }
 
 

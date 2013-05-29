@@ -23,6 +23,10 @@ class graphicsClient {
     light light1;
     displaySet display;
 
+    HUD Hud;
+    lobby Lobby;
+    scoreBoard Score;
+
     staticDrawer entities;
     dynamicDrawer animatedDrawer;
 
@@ -39,9 +43,7 @@ class graphicsClient {
 
     sf::Clock fpsClock;
     int fpsFrames;
-    HUD Hud;
-    lobby Lobby;
-    scoreBoard Score;
+    
     void setCamera();
     void reshape(unsigned int, unsigned int);
     std::vector<gx::uniform::block*> uniforms();

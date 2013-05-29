@@ -14,11 +14,10 @@ gx::Texture::~Texture() {
 }
 
 bool gx::Texture::Load() { //TODO: just move this function to the constructor
-  std::cout << "loading tex" << std::endl;
   bool success = this->m_image.loadFromFile(this->m_fileName);
 
   if (!success) {
- 		std::cout << "Error loading texture '" << this->m_fileName << "'" << std::endl;
+ 		std::cout << "Error loading texture \"" << this->m_fileName << "\"" << std::endl;
     this->m_image.loadFromFile("white.png");
   } else {
     std::cout << "Loaded texture '" << this->m_fileName << "'" << std::endl; 

@@ -22,7 +22,7 @@ void main() {
   float att = 1.0 / (constantAttenuation + linearAttenuation * light1Dist +
                      quadraticAttenuation * light1Dist * light1Dist);
   
-  vec4 color = interpColor +
+  vec4 color = texture(diffuseTex, interpDiffuseCoord) +
                att * light1color * max(dot(normal,normalize(light1Dir)),0);
 
   if(dot(viewDirection, normal) < outlineThickness) {

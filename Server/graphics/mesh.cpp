@@ -202,16 +202,17 @@ std::vector<gx::material> gx::Mesh::InitMaterials(const aiScene* pScene,const st
     } else {
       diffuseColor = vector4f(1.0,1.0,1.0);
     }
-    std::string FullPath;
-    if (pMaterial->GetTextureCount(aiTextureType_DIFFUSE) > 0) {
-      aiString Path;
-      if(AI_SUCCESS == pMaterial->GetTexture(aiTextureType_DIFFUSE, 0, &Path)) {
-        FullPath = Dir + "/" + Path.data;
-      } else {
-        FullPath = "white.png";
-      }
+    std::string diffusePath;
+    aiString Path;
+    if (pMaterial->GetTextureCount(aiTextureType_DIFFUSE) > 0 &&
+        AI_SUCCESS == pMaterial->GetTexture(aiTextureType_DIFFUSE, 0, &Path)) {
+      diffusePath = Dir + "/" + Path.C_Str();
+      std::cout << "name length " << Path.length << " for " << Filename << std::endl;
+    } else {
+      diffusePath = "white.png";
     }
-    Texture diffuseTex(GL_TEXTURE_2D, FullPath);
+    Texture diffuseTex(GL_TEXTURE_2D, diffusePath);
+    diffuseTex.Load();
     //material index will correspond to the Mesh's material index
     ret.push_back(material(std::move(diffuseTex),diffuseColor));
   }
