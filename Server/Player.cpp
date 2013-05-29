@@ -74,6 +74,7 @@ void Player::init(v3_t pos, int assigned_id, Map * m)
 	weapon[1] = new WeaponFire(position, this->map, B1); //TODO add this to entities, or it won't be able render
 	m->addEntity(weapon[1]);
   buffs.clear();
+  inactiveBuffs.clear();
 
   current_weapon_selection = 1;
   chargedProjectile = nullptr;
@@ -247,15 +248,8 @@ void Player::update(){
   // No need to update when user is dead
   if(dead)
     return;
-  //powerup shit
-  for(auto buff = buffs.begin(); buff != buffs.end();){
-    buff->second -= (int)ConfigManager::serverTickLengthMilli();
-    if( buff->second <= 0 ){
-      buff = buffs.erase(buff);
-    } else {
-      buff++;
-    }
-  }
+
+  updateBuffs();
   
   if( chargedProjectile ) {
     chargedProjectile->setDirection(direction);
@@ -491,19 +485,96 @@ bool Player::collidePowerUp(const std::pair<Entity*,BoundingObj::vec3_t>& p){
   return false;
 }
 
+void Player::updateBuffs(){
+  for(auto buff = inactiveBuffs.begin(); buff != inactiveBuffs.end();){
+    buff->second -= (int)ConfigManager::serverTickLengthMilli();
+    if( buff->second <= 0 ){
+      buff = inactiveBuffs.erase(buff);
+    } else {
+      buff++;
+    }
+  }
+
+  std::list<std::pair<BUFF, int>> toAdd;
+  for(auto buff = buffs.begin(); buff != buffs.end();){
+    buff->second -= (int)ConfigManager::serverTickLengthMilli();
+    if( buff->second <= 0 ){      
+      toAdd.push_back(getBuffReplacement(buff->first));
+      buff = buffs.erase(buff);
+    } else {
+      buff++;
+    }
+  }
+
+  for(auto buff = toAdd.begin(); buff != toAdd.end(); buff++){
+    if(buff->first != NONE)
+      buffs.push_back(*buff);
+  }
+
+  //std::cout << "BUFFS" << std::endl;
+  //for(auto buff = buffs.begin(); buff != buffs.end(); buff++){
+  //  std::cout << " buff " << buff->first << " ";
+  //}
+  //std::cout << std::endl << std::endl;
+
+}
+
 void Player::applyBuff( BUFF b){
-  //TODO FIR1 and FIR2 debuff? applied at same time
   auto buff = buffs.begin();
   for(; buff != buffs.end(); buff++){
-    if( buff->first == b){ //found one that is the same, reset timer
-      buff->second = BuffInfo[b].milliEffect;
+    if( BuffInfo[buff->first].code == BuffInfo[b].code ){ //found one that is the same, reset timer
+      //buff level > b level - add b to inactive
+      if( BuffInfo[buff->first].level > BuffInfo[b].level ){  
+        addInactiveBuff( b, BuffInfo[b].milliEffect );
+        //buff level < b level - move buff to inactive
+      } else if ( BuffInfo[buff->first].level < BuffInfo[b].level ){  
+        addInactiveBuff( buff->first, buff->second );
+        buffs.erase(buff);
+        buffs.push_front(std::pair<BUFF,int>(b,BuffInfo[b].milliEffect));
+      } else {  //code and level is same reset timer
+        buff->second = BuffInfo[b].milliEffect;
+      }
+      return;
+    }
+  }
+
+  if(buff == buffs.end()){//didn't find same code
+    buffs.push_front(std::pair<BUFF,int>(b,BuffInfo[b].milliEffect));
+  }
+}
+
+void Player::addInactiveBuff( BUFF b, int time ){
+  auto buff = inactiveBuffs.begin();
+  for(; buff != inactiveBuffs.end(); buff++){
+    if( buff->first == b ){ //found one that is the same, reset timer
+      buff->second = time > buff->second ? time : buff->second;
       break;
     }
   }
 
-  if(buff == buffs.end()){//didn't find same type
-    buffs.push_front(std::pair<BUFF,int>(b,BuffInfo[b].milliEffect));
+  if(buff == inactiveBuffs.end()){//didn't find same code
+    inactiveBuffs.push_front(std::pair<BUFF,int>(b,time));
   }
+}
+
+std::pair<BUFF, int> Player::getBuffReplacement( BUFF b ){
+  std::pair<BUFF, int> candidate(NONE,0);
+
+  auto buff = inactiveBuffs.begin();
+  for(; buff != inactiveBuffs.end(); buff++){
+    if( BuffInfo[buff->first].code == BuffInfo[b].code ){ //found one that is the same, reset timer
+      if( BuffInfo[buff->first].level >= BuffInfo[candidate.first].level ){
+        candidate.first = buff->first;
+        candidate.second = buff->second;
+      }
+    }
+  }
+
+  if(candidate.first != NONE){
+    inactiveBuffs.remove(candidate);
+  }
+
+  return candidate;
 }
 
 void Player::setHealth(float h) {

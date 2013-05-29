@@ -85,6 +85,7 @@ private:
   Weapon* pickup;
   WeaponType pickupWeaponType;
   std::list<std::pair<BUFF,int>> buffs;
+  std::list<std::pair<BUFF,int>> inactiveBuffs;
 
   v3_t oldJumpVelocity; //the x,y velocity that should be applied
   bool minotaur; 
@@ -120,6 +121,9 @@ private:
   void die();
   void respawn(v3_t pos);
   void applyBuff( BUFF b);
+  void addInactiveBuff( BUFF b, int time );
+  std::pair<BUFF, int> getBuffReplacement( BUFF b );
+  void updateBuffs();
 
     //helper functions for collisions
   bool collideWall(const std::pair<Entity*,BoundingObj::vec3_t>& p);
