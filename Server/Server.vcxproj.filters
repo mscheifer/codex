@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <Filter Include="Source Files">
@@ -213,6 +213,12 @@
     <ClCompile Include="graphics\material.cpp">
       <Filter>Source Files\graphics</Filter>
     </ClCompile>
+    <ClCompile Include="graphics\CubemapTexture.cpp">
+      <Filter>Source Files\graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="graphics\SkyboxDraw.cpp">
+      <Filter>Source Files\graphics</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">
@@ -392,13 +398,19 @@
     <ClInclude Include="scoreBoard.h">
       <Filter>Header Files\graphics</Filter>
     </ClInclude>
-    <ClInclude Include="assimpUtil.h">
-      <Filter>Header Files\graphics</Filter>
-    </ClInclude>
     <ClInclude Include="graphics\vector2.h">
       <Filter>Header Files\graphics</Filter>
     </ClInclude>
     <ClInclude Include="graphics\material.h">
+      <Filter>Header Files\graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="graphics\assimpUtil.h">
+      <Filter>Header Files\graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="graphics\CubemapTexture.h">
+      <Filter>Header Files\graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="graphics\SkyboxDraw.h">
       <Filter>Header Files\graphics</Filter>
     </ClInclude>
   </ItemGroup>
@@ -429,6 +441,12 @@
     </None>
     <None Include="graphics\Images\magic_color.png">
       <Filter>Resource Files\graphics\Images</Filter>
+    </None>
+    <None Include="shaders\skybox.frag">
+      <Filter>Resource Files\graphics</Filter>
+    </None>
+    <None Include="shaders\skybox.vert">
+      <Filter>Resource Files\graphics</Filter>
     </None>
   </ItemGroup>
 </Project>

@@ -3,6 +3,7 @@
 #include <SFML/Window.hpp>
 #include "displaySet.h"
 #include "drawer.h"
+#include "SkyboxDraw.h"
 #include "light.h"
 #include "input.h"
 #include "HUD.h"
@@ -29,6 +30,8 @@ class graphicsClient {
 
     staticDrawer entities;
     dynamicDrawer animatedDrawer;
+	SkyboxDraw skyboxDrawer;
+
 
     //player info
     static const vector3f upDirection;

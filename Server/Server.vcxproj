@@ -86,6 +86,7 @@
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="graphics\basicUniform.cpp" />
     <ClCompile Include="graphics\bone.cpp" />
+    <ClCompile Include="graphics\CubemapTexture.cpp" />
     <ClCompile Include="graphics\displaySet.cpp" />
     <ClCompile Include="graphics\drawer.cpp" />
     <ClCompile Include="graphics\dynamicDrawerImpl.cpp" />
@@ -99,6 +100,7 @@
     <ClCompile Include="graphics\meshEntry.cpp" />
     <ClCompile Include="graphics\oglUtil.cpp" />
     <ClCompile Include="graphics\shaderProgram.cpp" />
+    <ClCompile Include="graphics\SkyboxDraw.cpp" />
     <ClCompile Include="graphics\staticDrawerImpl.cpp" />
     <ClCompile Include="graphics\texture.cpp" />
     <ClCompile Include="graphics\uniformBlock.cpp" />
@@ -134,7 +136,6 @@
     <ClCompile Include="WeaponFist.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="assimpUtil.h" />
     <ClInclude Include="boundingBox.h" />
     <ClInclude Include="boundingManager.h" />
     <ClInclude Include="boundingObj.h" />
@@ -147,8 +148,10 @@
     <ClInclude Include="Entity.h" />
     <ClInclude Include="EntityPool.h" />
     <ClInclude Include="Game.h" />
+    <ClInclude Include="graphics\assimpUtil.h" />
     <ClInclude Include="graphics\basicUniform.h" />
     <ClInclude Include="graphics\bone.h" />
+    <ClInclude Include="graphics\CubemapTexture.h" />
     <ClInclude Include="graphics\displaySet.h" />
     <ClInclude Include="graphics\drawer.h" />
     <ClInclude Include="graphics\drawerImpl.h" />
@@ -161,6 +164,7 @@
     <ClInclude Include="graphics\mesh.h" />
     <ClInclude Include="graphics\oglUtil.h" />
     <ClInclude Include="graphics\shaderProgram.h" />
+    <ClInclude Include="graphics\SkyboxDraw.h" />
     <ClInclude Include="graphics\texture.h" />
     <ClInclude Include="graphics\uniformBlock.h" />
     <ClInclude Include="graphics\input.h" />
@@ -207,6 +211,8 @@
     <None Include="shaders\animated.vert" />
     <None Include="shaders\default.frag" />
     <None Include="shaders\default.vert" />
+    <None Include="shaders\skybox.frag" />
+    <None Include="shaders\skybox.vert" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

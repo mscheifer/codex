@@ -13,7 +13,7 @@ gx::graphicsEntity loadModel(const std::string& ModelPath) {
 }
 
 std::vector<gx::graphicsEntity> staticModels() {
-  auto modelJack   = loadModel("models/weird_orange_thing.dae");
+  auto modelJack   = loadModel("models/Badguy_texture.dae");
   auto modelWall   = loadModel("models/wall.dae");
   auto modelPlayer = loadModel("models/Test_Run.dae");
   auto cubes = gx::loadCube();
@@ -93,6 +93,7 @@ gx::graphicsClient::graphicsClient():
     display(),
     entities(staticModels(),uniforms()),
     animatedDrawer(dynamicModels(),uniforms()),
+	skyboxDrawer(this->display.storage()),
     playerDirection(0.0, 1.0,0.0),//change to result of init packet
     playerStartDirection(0.0, 1.0,0.0),//change to result of init packet
     playerStartRight(playerStartDirection.y,-playerStartDirection.x,
@@ -155,6 +156,7 @@ void gx::graphicsClient::draw() {
   // draw...
   entities.draw();
   animatedDrawer.draw();
+  skyboxDrawer.draw();
   
   //render sfml please don't comment or uncomment anything from the following
   //block
@@ -196,7 +198,7 @@ void gx::graphicsClient::updateEntities(std::vector<Entity*> data) {
   for(auto entityP = data.begin(); entityP != data.end(); ++entityP) {
     const auto& entity = **entityP;
     const auto& type = entity.getType();
-    if(type == POWER_UP) { //TODO: change back to type == PLAYER
+    if(type == PLAYER) { //TODO: change back to type == PLAYER
       dynamicDrawer::instanceData inst;
       inst. pos = entity.getPosition();
       inst.dirY = entity.getDirection();
