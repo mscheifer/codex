@@ -3,10 +3,6 @@
 #include "matrix.h"
 
 gx::matrix::matrix(): elems() {
-  /*elems({{ {{ 1, 0, 0, 0 }},
-               {{ 0, 1, 0, 0 }},
-               {{ 0, 0, 1, 0 }},
-               {{ 0, 0, 0, 1 }} }})*/
   for(size_t i = 0; i < elems.size(); i++) {
     for(size_t j = 0; j < elems[i].size(); j++) {
       elems[i][j] = 0;

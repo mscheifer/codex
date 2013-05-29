@@ -109,7 +109,27 @@ gx::graphicsEntity::getAttribList(const std::string& shID) const {
 }
 
 template class gx::rawAttrib<gx::vector4f>;
+template gx::rawAttrib<gx::vector4f>
+gx::makeRawAttrib(std::string name, std::vector<gx::vector4f> data);
+template std::shared_ptr<gx::rawAttrib<gx::vector4f>>
+gx::makeRawAttribPtr(std::string, std::vector<gx::vector4f>);
 template class gx::rawAttrib<gx::vector3f>;
+template gx::rawAttrib<gx::vector3f>
+gx::makeRawAttrib(std::string name, std::vector<gx::vector3f> data);
+template std::shared_ptr<gx::rawAttrib<gx::vector3f>>
+gx::makeRawAttribPtr(std::string, std::vector<gx::vector3f>);
 template class gx::rawAttrib<gx::vector2f>;
-template class gx::rawAttrib<gx::vector4i>;
+template gx::rawAttrib<gx::vector2f>
+gx::makeRawAttrib(std::string name, std::vector<gx::vector2f> data);
+template std::shared_ptr<gx::rawAttrib<gx::vector2f>>
+gx::makeRawAttribPtr(std::string, std::vector<gx::vector2f>);
 template class gx::rawAttrib<gx::vector1f>;
+template gx::rawAttrib<gx::vector1f>
+ gx::makeRawAttrib(std::string name, std::vector<gx::vector1f> data);
+template std::shared_ptr<gx::rawAttrib<gx::vector1f>>
+gx::makeRawAttribPtr(std::string, std::vector<gx::vector1f>);
+template class gx::rawAttrib<gx::vector4i>;
+template gx::rawAttrib<gx::vector4i>
+gx::makeRawAttrib(std::string name, std::vector<gx::vector4i> data);
+template std::shared_ptr<gx::rawAttrib<gx::vector4i>>
+gx::makeRawAttribPtr(std::string, std::vector<gx::vector4i>);

@@ -2,7 +2,7 @@
 
 namespace { //to not export
  const std::string uniformName = "light1";
- const std::array<std::pair<std::string,GLenum>,5> uniformVarsArr = {{ 
+ const std::array<std::pair<std::string,GLenum>,5> uniformVars = {{ 
    std::make_pair("light1position",       GL_FLOAT_VEC4), 
    std::make_pair("light1color",          GL_FLOAT_VEC4),
    std::make_pair("constantAttenuation",  GL_FLOAT),
@@ -10,12 +10,12 @@ namespace { //to not export
    std::make_pair("quadraticAttenuation", GL_FLOAT)
  }};
 
- std::map<std::string,GLenum uniformVars(
-   uniformVarsArr.begin(), uniformVarsArr.end());
+ std::map<std::string,GLenum> uniformVarsMap(
+   uniformVars.begin(), uniformVars.end());
 } //end unnamed namespace
 
 gx::light::light(vector4f co, GLfloat ca, GLfloat la, GLfloat qa)
-  : data(), unif(uniformName,uniformVars) {
+  : data(), unif(uniformName,uniformVarsMap) {
     //have to initialize here instead of initialization list because of visual
     //studio
     this->data.constantAttenuation = ca;

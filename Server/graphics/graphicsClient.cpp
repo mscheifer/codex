@@ -9,7 +9,7 @@ const unsigned int defaultWindowWidth  = 800;
 const unsigned int defaultWindowHeight = 600;
 
 gx::graphicsEntity loadModel(const std::string& ModelPath) {
-  return gx::Mesh(ModelPath,5).entityData; //add std::move if this copies
+  return gx::Mesh(ModelPath,10).entityData; //add std::move if this copies
 }
 
 std::vector<gx::graphicsEntity> staticModels() {

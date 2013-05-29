@@ -4,6 +4,8 @@
 #include "vector4.h"
 
 namespace gx {
+class shaderProgram;
+
 class material {
     Texture  diffuseTex;
     vector4f diffuseColor;

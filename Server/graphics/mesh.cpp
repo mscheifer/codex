@@ -127,10 +127,9 @@ gx::Mesh::Mesh(const std::string& Filename, length_t height)
 
 const aiScene* gx::Mesh::LoadFile(Assimp::Importer& Importer,
                                  const std::string& Filename) {
-  const aiScene* pScene = Importer.ReadFile(Filename.c_str(), 
-           aiProcess_Triangulate 
-         | aiProcess_GenSmoothNormals
-       /*| aiProcess_FlipUVs*/);
+  const aiScene* pScene = Importer.ReadFile(Filename.c_str(), 0
+         | aiProcess_Triangulate
+         | aiProcess_GenSmoothNormals);
   if (!pScene) {
     std::cout << "Error parsing '" <<  Filename.c_str() << "': '";
     std::cout << Importer.GetErrorString() << std::endl;

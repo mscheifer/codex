@@ -1,4 +1,5 @@
 #include "material.h"
+#include "shaderProgram.h"
 
 namespace {
   constexpr GLenum diffuseBindPoint = 0;
@@ -15,7 +16,7 @@ void gx::material::bind() const {
 
 void gx::material::setupBindings(shaderProgram const& program) {
   GLint diffuseLoc = program.uniformLoc("diffuseTex");
-  this->program.use();
+  program.use();
   glUniform1i(diffuseLoc, diffuseBindPoint); 
   debugout << "glUniform1i(" << diffuseLoc << ", " << diffuseBindPoint << ");";
   debugout << endl;

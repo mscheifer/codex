@@ -26,8 +26,8 @@ bool gx::Texture::Load() { //TODO: just move this function to the constructor
   }
 
   sf::Vector2u dimension = this->m_image.getSize();
-  GLsizei width = dimension.x;
-  GLsizei height = dimension.y;
+  GLsizei width  = static_cast<GLsizei>(dimension.x);
+  GLsizei height = static_cast<GLsizei>(dimension.y);
 
   glGenTextures(1, &(this->m_textureID));
   glBindTexture(this->m_textureTarget, this->m_textureID);
