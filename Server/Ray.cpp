@@ -30,6 +30,7 @@ void Ray::updateRect(){
 
 std::string Ray::toString(){
   std::stringstream ss;
+  ss << "RAY" << std::endl;
   ss << BoundingObj::toString();
   ss << getDirection() << std::endl;
   return ss.str();

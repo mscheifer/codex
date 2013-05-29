@@ -18,7 +18,7 @@ private:
   static bool useSound;
   static int trackNo;
   static const int maxTracks = 2;
-  static int currentlyPlayingMusic;
+  static unsigned int currentlyPlayingMusic;
 
   //load a sound into the soundBuffers with reference name key
   //and filename sound

@@ -1,24 +1,24 @@
 #include "graphicsClient.h"
 #include "oglUtil.h"
 #include "mesh.h"
-#include "loadCube.h"
+#include "loadCustom.h"
 #include "Entity.h"
 
 namespace {
 const unsigned int defaultWindowWidth  = 800;
 const unsigned int defaultWindowHeight = 600;
 
-gx::dynamicEntity loadModel(const std::string& ModelPath) {
-	return std::move(gx::Mesh(ModelPath,5).entityData);
+gx::graphicsEntity loadModel(const std::string& ModelPath) {
+  return std::move(gx::Mesh(ModelPath,5).entityData); //is std::move necessary here?
 }
 
-std::vector<gx::staticEntity> staticModels() {
+std::vector<gx::graphicsEntity> staticModels() {
   auto modelJack   = loadModel("models/weird_orange_thing.dae");
   auto modelWall   = loadModel("models/wall.dae");
   auto modelPlayer = loadModel("models/Test_Run.dae");
   auto cubes = gx::loadCube();
   auto skybox = gx::loadSkybox();
-  std::vector<gx::staticEntity> entitiesData;
+  std::vector<gx::graphicsEntity> entitiesData;
   entitiesData.push_back(std::move(skybox));
   entitiesData.push_back(std::move(modelPlayer));
   entitiesData.push_back(std::move(modelWall));
@@ -28,13 +28,13 @@ std::vector<gx::staticEntity> staticModels() {
   return entitiesData;
 }
 
-std::vector<gx::dynamicEntity> dynamicModels() {
-	// MODEL LOADING
+std::vector<gx::graphicsEntity> dynamicModels() {
+  // MODEL LOADING
   //auto modelTest   = loadModel("models/boblampclean.md5anim");
   auto modelPlayer = loadModel("models/Test_Run.dae");
 
     //setup drawing data
-  std::vector<gx::dynamicEntity> entitiesData;
+  std::vector<gx::graphicsEntity> entitiesData;
   entitiesData.push_back(std::move(modelPlayer));
   return entitiesData;
 }
@@ -95,7 +95,7 @@ gx::graphicsClient::graphicsClient():
     playerStartDirection(0.0, 1.0,0.0),//change to result of init packet
     playerStartRight(playerStartDirection.y,playerStartDirection.x,playerStartDirection.z),
     playerPosition(0.0, 0.0, 0.0),//change to the result of init packet
-     fpsClock(), fpsFrames(0) , Hud(), Lobby() , Score(3) {
+     fpsClock(), fpsFrames(0) , Hud(), Lobby() , Score(ConfigManager::numPlayers()) {
   this->window.setVerticalSyncEnabled(false);
   this->window.setMouseCursorVisible(true);
   if(!this->window.setActive()) {
@@ -149,8 +149,8 @@ void gx::graphicsClient::draw() {
   gx::debugout << "| GL_STENCIL_BUFFER_BIT);" << gx::endl;
   
   // draw...
-	entities.draw();
-	animatedDrawer.draw();
+  entities.draw();
+  animatedDrawer.draw();
   
   //render sfml please don't comment or uncomment anything from the following block
   glBindVertexArray(0);
@@ -183,7 +183,7 @@ void gx::graphicsClient::updatePosition(vector4f pos) {
   this->playerPosition = pos;
   this->setCamera();
 }
-
+int aniFrame = 0;
 void gx::graphicsClient::updateEntities(std::vector<Entity*> data) {
   this->entities.reset();
   this->animatedDrawer.reset();
@@ -197,7 +197,9 @@ void gx::graphicsClient::updateEntities(std::vector<Entity*> data) {
       inst.dirY = entity.getDirection();
       inst.type = 0; //TODO: somehow set this based on type but it can't be absolute type?
       inst.animation    = 0;
-      inst.timePosition = 0;
+      ++aniFrame;
+      aniFrame %= 80;
+      inst.timePosition = aniFrame / 2;
       this->animatedDrawer.addInstance(inst);
     } else {
       staticDrawer::instanceData inst;

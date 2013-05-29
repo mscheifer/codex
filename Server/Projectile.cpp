@@ -1,5 +1,9 @@
 #include "Projectile.h"
 int Projectile::ID_Counter = 0;
+const float Projectile::meleeWidth = 1.0f;
+const float Projectile::meleeHeight = 1.0f;
+const float Projectile::meleeDepth = 3.0f;
+
 Projectile::Projectile(Map* m):fired(false)
 {
 	this->map = m;
@@ -45,6 +49,13 @@ void Projectile::update(void) {
   } else {
     v3_t distanceTravelled = velocity * ConfigManager::serverTickLengthSec();
     distanceTravelled = correctMovement(distanceTravelled, false);
+
+    float mag = distanceTravelled.magnitude();
+    if( mag > distanceLeftToTravel ){ //make sure you don't go past the range
+      distanceTravelled.normalize();
+      distanceTravelled.scale(distanceLeftToTravel);
+    }
+
 	  position += distanceTravelled;
   
     //see if travelled full range
@@ -56,7 +67,6 @@ void Projectile::update(void) {
   }
   
 	updateBounds();
-	// some collision detection
 }
 
 void Projectile::setOwner(Player * player){
@@ -78,6 +88,8 @@ void Projectile::setRange(length_t r) {
 
 void Projectile::updateBounds(){
   //update the bounding objects
+  boundingObjs[0]->setCenter(BoundingObj::vec4_t(position.x, position.y, position.z));
+  boundingObjs[0]->rotate(direction,BoundingObj::vec3_t(0,0,1));
   boundingObjs[0]->setCenterOnTree(BoundingObj::vec4_t(position.x, position.y, position.z));
 }
 
@@ -157,6 +169,21 @@ MAGIC_POWER Projectile::combine( MAGIC_POWER m1, MAGIC_POWER m2 ){
   }
   //switch so the row is m1
   return combinations[m1][m2];
+}
+
+void Projectile::setMagicType( MAGIC_POWER m, bool melee ) {
+  magicType = m;
+  charge_counter.restart();
+  float size = ProjInfo[magicType].size;
+  if(melee){ //set size for melee
+    ((BoundingBox*) boundingObjs[0])->setHw( meleeWidth );
+    ((BoundingBox*) boundingObjs[0])->setHh( meleeHeight );
+    ((BoundingBox*) boundingObjs[0])->setHd( meleeDepth );
+  } else {
+    ((BoundingBox*) boundingObjs[0])->setHw( size );
+    ((BoundingBox*) boundingObjs[0])->setHh( size );
+    ((BoundingBox*) boundingObjs[0])->setHd( size );
+  }
 }
 
 void Projectile::serialize(sf::Packet & packet) const {

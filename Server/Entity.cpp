@@ -2,6 +2,7 @@
 #include <algorithm>
 #include <iostream>
 
+//@mc 2box
 std::vector<std::pair<Entity*,BoundingObj::vec3_t>> Entity::detectCollision(){
   std::vector<std::pair<Entity*,BoundingObj::vec3_t>> res;
   std::vector<BoundingObj*> potentialCollisions;
@@ -20,28 +21,30 @@ std::vector<std::pair<Entity*,BoundingObj::vec3_t>> Entity::detectCollision(){
       if((*it2)->getEntity() == this)
         continue;
 
-      Entity_Type f = (*it2)->getEntity()->getType();
+      std::pair<bool,BoundingObj::vec3_t> collRes = collide(*myObjsIt,*it2);
+      //try collide
+      if(collRes.first){
+        auto result = res.begin();
 
       //check if I have already collided with this entity //TODO maybe no entity check 
       //[for 2 objs collide with 1 of my bboxes] shortest dist changes
-      auto finder = res.begin();
-      bool flag = false;
-      for( ; finder != res.end(); finder++){
-        if( finder->first == (*it2)->getEntity() ){
-          flag = true;
-          break;
+        for( ; result != res.end(); result++){
+          if( result->first == (*it2)->getEntity() ){
+            //pick max if same entity has collided
+            if(result->second.magnitudesq() < collRes.second.magnitudesq()){
+              res.erase(result);
+              res.push_back(std::pair<Entity*,BoundingObj::vec3_t>((*it2)->getEntity(),collRes.second));
+            }
+            break;
+          }
         }
-      }
-      if(flag)
-        continue;
 
-      if( finder == res.end() ){
-        std::pair<bool,BoundingObj::vec3_t> collRes = collide(*myObjsIt,*it2);
-        //try collide
-        if(collRes.first){
+        if(result == res.end()){
           res.push_back(std::pair<Entity*,BoundingObj::vec3_t>((*it2)->getEntity(),collRes.second));
         }
+
       }
+
     }
   }
 
@@ -112,7 +115,7 @@ v3_t Entity::correctMovement(v3_t movementDirection, bool slide){
   //add the radius to account for collision
   //v3_t radius = myBox->getMaxRadius( movementDirection );
   //movementDirection += radius;
-  Ray movementRay(v4_t(position.x,position.y,position.z), movementDirection);
+  Ray movementRay(v4_t(position.x,position.y,position.z), movementDirection);//TODO @mc ray movement adjust origin
   
   std::vector<RayCollision> colls = detectCollision(&movementRay);
   bool restart = false;
@@ -120,7 +123,6 @@ v3_t Entity::correctMovement(v3_t movementDirection, bool slide){
 
   //std::cout << movementRay.getDirection() << std::endl;
   for(auto coll = colls.begin(); coll != colls.end(); ){
-    Entity * e = coll->e;
 
     if(correctMovementHit(coll->e)){
       //scale by tfirst
@@ -144,9 +146,9 @@ v3_t Entity::correctMovement(v3_t movementDirection, bool slide){
         v3_t excess = movementRay.getDirection();
         excess.scale(1.0f - coll->tfirst);
         coll->parallelAxis.normalize();
-        length_t slide = excess.dot(coll->parallelAxis);
+        length_t slideLen = excess.dot(coll->parallelAxis);
         excess = coll->parallelAxis;
-        excess.scale(slide);
+        excess.scale(slideLen);
         newDir += excess;
       }
 

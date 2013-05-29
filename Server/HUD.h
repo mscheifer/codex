@@ -13,6 +13,7 @@ private :
   float mana;
   float maxMana;
   float MLossPercentage;
+  bool minotaur;
   sf::Text healthText;
   sf::Text manaText;
   sf::Font font;
@@ -30,6 +31,8 @@ private :
   sf::Sprite hBarSprite;
   sf::Texture mBarTexture;
   sf::Sprite mBarSprite;
+  sf::Texture badGuyTexture;
+  sf::Sprite badGuySprite;
 public:
   HUD(void);
   ~HUD(void);

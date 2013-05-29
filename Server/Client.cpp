@@ -28,14 +28,12 @@ void NetworkClient::receiveMessages() {
         std::vector<int> kills;
         std::vector<int> wins;
         for(auto playerP = s.players.begin(); playerP != s.players.end(); playerP++) {
-          if(playerP->player_id !=
-            this->id) {
+          if(playerP->player_id != this->id) {
             //make sure the SGTR stays in scope
             entities.push_back(&(*playerP));
-           
-            kills.push_back((*playerP).kills);
-            wins.push_back((*playerP).wins);
           }
+          kills.push_back((*playerP).kills);
+          wins.push_back((*playerP).wins);
           AudioManager::processPlayerSound(*playerP);
           std::cout << "the player is walking? " << (*playerP).walking << std::endl;
 
@@ -168,7 +166,7 @@ void NetworkClient::doClient() {
       }
       initPacket.clear();
       if (netRecv.receiveMessage(initPacket)) {
-        std::cout << "received message" << std::endl;
+        //std::cout << "received message" << std::endl;
         sf::Uint32 packetType;
         initPacket >> packetType;
         if (packetType == JOINID) {

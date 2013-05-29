@@ -81,9 +81,6 @@
     <ClCompile Include="graphics\displaySet.cpp">
       <Filter>Source Files\graphics</Filter>
     </ClCompile>
-    <ClCompile Include="graphics\drawSet.cpp">
-      <Filter>Source Files\graphics</Filter>
-    </ClCompile>
     <ClCompile Include="graphics\light.cpp">
       <Filter>Source Files\graphics</Filter>
     </ClCompile>
@@ -192,6 +189,21 @@
     <ClCompile Include="util.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="graphics\dynamicDrawerImpl.cpp">
+      <Filter>Source Files\graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="graphics\loadCustom.cpp">
+      <Filter>Source Files\graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="graphics\staticDrawerImpl.cpp">
+      <Filter>Source Files\graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="graphics\vector1.cpp">
+      <Filter>Source Files\graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="graphics\meshEntry.cpp">
+      <Filter>Source Files\graphics</Filter>
+    </ClCompile>
     <ClCompile Include="scoreBoard.cpp">
       <Filter>Source Files\graphics</Filter>
     </ClCompile>
@@ -252,9 +264,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="graphics\displaySet.h">
-      <Filter>Header Files\graphics</Filter>
-    </ClInclude>
-    <ClInclude Include="graphics\drawSet.h">
       <Filter>Header Files\graphics</Filter>
     </ClInclude>
     <ClInclude Include="graphics\light.h">
@@ -332,7 +341,7 @@
     <ClInclude Include="Wall.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="graphics\loadCube.h">
+    <ClInclude Include="graphics\loadCustom.h">
       <Filter>Header Files\graphics</Filter>
     </ClInclude>
     <ClInclude Include="util.h">
@@ -368,6 +377,12 @@
     <ClInclude Include="graphics\drawer.h">
       <Filter>Header Files\graphics</Filter>
     </ClInclude>
+    <ClInclude Include="graphics\drawerImpl.h">
+      <Filter>Header Files\graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="graphics\vector1.h">
+      <Filter>Header Files\graphics</Filter>
+    </ClInclude>
     <ClInclude Include="scoreBoard.h">
       <Filter>Header Files\graphics</Filter>
     </ClInclude>
@@ -398,6 +413,9 @@
       <Filter>Header Files\graphics\Images</Filter>
     </None>
     <None Include="graphics\Images\magic_color.png">
+      <Filter>Header Files\graphics\Images</Filter>
+    </None>
+    <None Include="graphics\Images\badguy.png">
       <Filter>Header Files\graphics\Images</Filter>
     </None>
   </ItemGroup>
