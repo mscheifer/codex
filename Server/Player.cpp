@@ -65,6 +65,7 @@ void Player::init(v3_t pos, int assigned_id, Map * m)
   speedUpCounter = sf::Clock();
   speedUp = false;
   charging = false;
+  walking = false;
 	map = m;
 	weapon[0] = new WeaponFist(position, this->map); //has no bounds so it doesnt drop
 	weapon[1] = new WeaponFire(position, this->map, FIR1); //TODO add this to entities, or it won't be able render
@@ -111,7 +112,7 @@ void Player::generateBounds(v3_t pos){
   boundingObjs.push_back(b);
 }
 
-bool Player::attackBy(DeadlyEntity *other)
+bool Player::attackBy(Projectile *other)
 {
 	if(other)
 	{
@@ -121,7 +122,7 @@ bool Player::attackBy(DeadlyEntity *other)
 		return false;
 }
 
-bool Player::damageBy(DeadlyEntity *deadly)
+bool Player::damageBy(Projectile *deadly)
 {
 	if (health==0) return true;
   float damage = deadly->getStrength() - defense;
@@ -136,7 +137,7 @@ bool Player::damageBy(DeadlyEntity *deadly)
     charging = false;
   }
 
-  std::cout<<" i am attacked by"<< ((Projectile *) deadly)->getOwner()->player_id<<std::endl;
+  std::cout<<" i am attacked by"<< deadly->getOwner()->player_id<<std::endl;
   if(dead) {
     die();
     //This is a hack
@@ -199,6 +200,13 @@ bool Player::moveTowardDirection(move_t inputDir, bool jump)
   }
 
   movementDirection = correctMovement(movementDirection, true);
+  
+  if(movementDirection.magnitude() > 1.0E-8 ){
+    walking = true;
+  } else {
+    walking = false;
+  }
+
   position += movementDirection;
   updateBounds();
 	return true;
@@ -207,6 +215,10 @@ bool Player::moveTowardDirection(move_t inputDir, bool jump)
 bool Player::correctMovementHit( Entity* e ){
   Entity_Type etype = e->getType();
   return etype == PLAYER || etype == WALL;
+}
+
+void Player::clearEvents(){
+  walking = false;
 }
 
 void Player::die()
@@ -554,6 +566,7 @@ void Player::serialize(sf::Packet& packet) const {
     packet << static_cast<sf::Uint32>(pickupWeaponType);
     packet << current_weapon_selection; 
     packet << charging;
+    packet << walking;
     packet << kills;
     packet << wins;
     packet << buffs.size();
@@ -590,6 +603,7 @@ void Player::serialize(sf::Packet& packet) const {
     pickupWeaponType = static_cast<WeaponType>(pickupWeaponTypeUint32);
     packet >> current_weapon_selection; 
     packet >> charging;
+    packet >> walking;
     packet >> kills;
     packet >> wins;
     int size = 0; 

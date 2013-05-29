@@ -34,6 +34,10 @@ void AudioManager::loadSounds(){
 
   
   loadSound("c1", "sounds/charge1.wav");
+  
+
+  loadSound("w1", "sounds/foot_step_1.wav");
+  loadSound("w2", "sounds/foot_step_2.wav");
 
   loadSound("s1", "sounds/sound_1.wav");
   loadSound("s2", "sounds/sound_2.wav");
@@ -179,10 +183,30 @@ void AudioManager::playMusic(std::string musicN, int index){
 }
 
 void AudioManager::processPlayerSound(Player& o){
+  static bool walk_toggle[4] = { false, false, false, false};
+
   if(o.charging) {
-    playSound("c1", "player:"+ o.player_id, o.getPosition());
+    playSound("c1", "cplayer:"+ o.player_id, o.getPosition());
   } else {
-    stopSound( "player:"+ o.player_id);
+    stopSound( "cplayer:"+ o.player_id);
+  }
+
+
+  if(o.walking) {
+
+    if(walk_toggle[o.player_id]) {
+     
+      walk_toggle[o.player_id] = false;
+      playSound("w1", "w1player:"+o.player_id, o.getPosition());
+
+    } else {     
+      walk_toggle[o.player_id] = true;
+      playSound("w2", "w2player:"+o.player_id, o.getPosition());
+    }
+   
+  } else {
+    stopSound("w1player:"+o.player_id);   
+    stopSound("w2player:"+o.player_id);
   }
 }
 
