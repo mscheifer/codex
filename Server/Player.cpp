@@ -71,8 +71,10 @@ void Player::init(v3_t pos, int assigned_id, Map * m)
   walking = false;
 	map = m;
 	weapon[0] = new WeaponFist(position, this->map); //has no bounds so it doesnt drop
-	weapon[1] = new WeaponFire(position, this->map, B1); //TODO add this to entities, or it won't be able render
+  //weapon[1] = new WeaponFist(position, this->map);
+	weapon[1] = new WeaponFire(position, this->map, B1); 
 	m->addEntity(weapon[1]);
+  weapon[1]->pickUp();
   buffs.clear();
   inactiveBuffs.clear();
 
@@ -114,7 +116,7 @@ void Player::generateBounds(v3_t pos){
   //BoundingSphere* b = new BoundingSphere(gx::vector4(x,y,z),sphereRadius);
   BoundingBox* b = new BoundingBox(BoundingObj::vec4_t(pos.x,pos.y,pos.z),
     BoundingObj::vec3_t(1,0,0),BoundingObj::vec3_t(0,1,0),BoundingObj::vec3_t(0,0,1),
-    playerWidth,playerHeight,playerDepth);
+    playerWidth/2.f,playerHeight/2.f,playerDepth/2.f);
   b->setEntity(this);
   boundingObjs.push_back(b);
 }
@@ -205,7 +207,7 @@ bool Player::moveTowardDirection(move_t inputDir, bool jump)
 
   movementDirection.scale(getMovementMultiplier());
 
-  movementDirection = correctMovement(movementDirection, true);
+  movementDirection = correctMovement(movementDirection, true, getFeetOrigin());
   
   if(movementDirection.magnitude() > 1.0E-8 ){
     walking = true;
@@ -264,7 +266,7 @@ void Player::update(){
   acceleration = getGravity();
   velocity += acceleration * ConfigManager::serverTickLengthSec();
   v3_t attemptMove = velocity * ConfigManager::serverTickLengthSec();
-  position += correctMovement( attemptMove, false );
+  position += correctMovement( attemptMove, false, getFeetOrigin() );
   //position += velocity * ConfigManager::serverTickLengthSec();
 
   health+= healthRegen*getHealthRegenMultiplier();
@@ -398,6 +400,11 @@ void Player::updateBounds(){
 void Player::updateBoundsSoft(){
   //update the bounding objects
   boundingObjs[0]->setCenter(BoundingObj::vec4_t(position.x, position.y, position.z));
+}
+
+v3_t Player::getFeetOrigin(){
+  v3_t origin(0,0,-1*(playerHeight/2.1f));
+  return origin + position;
 }
 
 void Player::handleCollisions(){

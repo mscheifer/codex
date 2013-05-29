@@ -124,6 +124,7 @@ private:
   void addInactiveBuff( BUFF b, int time );
   std::pair<BUFF, int> getBuffReplacement( BUFF b );
   void updateBuffs();
+  v3_t getFeetOrigin();
 
     //helper functions for collisions
   bool collideWall(const std::pair<Entity*,BoundingObj::vec3_t>& p);

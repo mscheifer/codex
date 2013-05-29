@@ -30,7 +30,7 @@ Projectile* WeaponFire::attackRange(v3_t dir , v3_t pos, Player* owner)
 	Projectile* pj = map->produceProjectile();
   //dir.normalize();
   //pj->setDirection(dir);
-  //dir.scale(projectileSpeed); //TODO @alvin I took these out becasuse 
+  //dir.scale(projectileSpeed);
   pj->setVelocity(ZEROVEC);
   //pj->setPosition(pos);
   pj->setOwner(owner);
@@ -38,7 +38,7 @@ Projectile* WeaponFire::attackRange(v3_t dir , v3_t pos, Player* owner)
 	//pj->setRange(100); //      based on the magic it is
   //pj->setFired(false); //defaults to false
   // pj->setChargeTime(1500);
-  std::cout << "set proj m type " << basicAttack << std::endl;
+  //std::cout << "set proj m type " << basicAttack << std::endl;
   pj->setMagicType(basicAttack);
 
   Range_Cool_Down_Counter.restart();

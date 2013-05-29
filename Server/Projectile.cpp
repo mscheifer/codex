@@ -28,7 +28,14 @@ void Projectile::reset(){
 
 bool Projectile::correctMovementHit( Entity* e ){
   Entity_Type etype = e->getType();
-  if( etype == WALL || (etype == PROJECTILE && ((Projectile*) e)->charging) ){//TODO check the team
+  if( etype == WALL )
+    return true;
+  else if (etype == PROJECTILE && ((Projectile*) e)->charging){// check same team
+    if( owner->isMinotaur() )
+      return false;
+    else if( ((Projectile*) e)->getOwner()->isMinotaur() )
+      return false;
+
     return true;
   } else if ( etype == PLAYER ){
     return e != owner;
@@ -48,7 +55,7 @@ void Projectile::update(void) {
     }
   } else {
     v3_t distanceTravelled = velocity * ConfigManager::serverTickLengthSec();
-    distanceTravelled = correctMovement(distanceTravelled, false);
+    distanceTravelled = correctMovement(distanceTravelled, false, position);
 
     float mag = distanceTravelled.magnitude();
     if( mag > distanceLeftToTravel ){ //make sure you don't go past the range
@@ -112,7 +119,7 @@ void Projectile::handleCollisions() {
       break;
     case PROJECTILE:
       Projectile * proj = (Projectile*) e;
-      if(charging){      //TODO add combine sound
+      if(charging){
         setMagicType(combine(proj->getMagicType(), magicType));
         map->destroyProjectile(proj);
         combined = true;

@@ -26,7 +26,7 @@ std::vector<std::pair<Entity*,BoundingObj::vec3_t>> Entity::detectCollision(){
       if(collRes.first){
         auto result = res.begin();
 
-      //check if I have already collided with this entity //TODO maybe no entity check 
+      //check if I have already collided with this entity
       //[for 2 objs collide with 1 of my bboxes] shortest dist changes
         for( ; result != res.end(); result++){
           if( result->first == (*it2)->getEntity() ){
@@ -110,7 +110,7 @@ std::vector<RayCollision> Entity::detectCollision(Ray* r){
   return res;
 }
 
-v3_t Entity::correctMovement(v3_t movementDirection, bool slide){
+v3_t Entity::correctMovement(v3_t movementDirection, bool slide, v3_t origin){
   BoundingBox * myBox = (BoundingBox*) boundingObjs[0]; //TODO just doing this for now
   //add the radius to account for collision
   //v3_t radius = myBox->getMaxRadius( movementDirection );

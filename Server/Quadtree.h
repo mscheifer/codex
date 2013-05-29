@@ -5,9 +5,9 @@
 #include <iostream>
 #include "boundingObj.h"
 
-#include "boundingSphere.h" //TODO remove for testing
-#include "boundingBox.h"
-#include "Ray.h"
+//#include "boundingSphere.h" //TODO remove for testing
+//#include "boundingBox.h"
+//#include "Ray.h"
 
 class Quadtree{
 private:

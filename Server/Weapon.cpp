@@ -17,7 +17,7 @@ Weapon::~Weapon()
 {
 }
 
-Weapon::Weapon(float damage, float ran, v3_t pos, Map* m)
+Weapon::Weapon(float damage, float ran, v3_t pos, Map* m) : pickedUp(false)
 {
   Range_Cool_Down_Time = 0;
   Melee_Cool_Down_Time = 0;
@@ -63,7 +63,6 @@ Projectile* Weapon::attackMelee(v3_t dir , v3_t pos, Player* owner)
   pj->setMagicType(basicAttack, true); //TODO this is not a good way to do it
   pj->setRender(false);
 
-  //pj->setFired(true); //TODO add a sound event for melee
   Melee_Cool_Down_Counter.restart();
   return pj;
 }
@@ -72,6 +71,7 @@ bool Weapon::pickUp(){
   if(pickedUp)
     return false;
   
+  pickedUp = true;
   render = false;
   map->removeFromQtree(this);
   return true;
@@ -112,10 +112,13 @@ bool Weapon::tossAway(v3_t dropPosition, v3_t dir){
 
 void Weapon::update()
 {
+  if(pickedUp)
+    return;
+
   acceleration = getGravity();
   velocity += acceleration * ConfigManager::serverTickLengthSec();
   v3_t attemptMove = velocity * ConfigManager::serverTickLengthSec();
-  position += correctMovement( attemptMove, false );
+  position += correctMovement( attemptMove, false, position );
   updateBounds();
 }
 
@@ -140,7 +143,6 @@ void Weapon::handleCollisions(){
   for( auto it = entities.begin(); it != entities.end(); ){
     Entity * e = it->first;
 
-    //has already been processed //TODO @mc collision look at fix it vector, should never reprocess
     switch( e->getType() ) {
       case WALL:
        // std::cout << "wall" << << std::endl;

@@ -19,7 +19,7 @@ protected:
   std::vector<BoundingObj*> boundingObjs;
   // Some kind of state {paralyzed, frozen, blah blah}
   // Power ups {contains MULTIPLERS for health, defense/ elemental weapons}
-  v3_t correctMovement( v3_t movementDirection, bool slide );
+  v3_t correctMovement( v3_t movementDirection, bool slide, v3_t origin );
   //return true on which types to "collide with" when moving
   virtual bool correctMovementHit( Entity* ){return false;}
 
