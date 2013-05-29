@@ -8,17 +8,19 @@ namespace gx {
 
 struct Texture {
     Texture(GLenum TextureTarget, const std::string& FileName);
+    Texture(Texture const&);
+    Texture& operator=(Texture const&);
+    Texture(Texture&&) noexcept;
+    Texture& operator=(Texture&&);
     ~Texture();
-
-    bool Load();
 
     void bind(GLenum TextureUnit) const;
 
 private:
+    bool Load();
     GLenum m_textureTarget;
     std::string m_fileName;
     sf::Image m_image;
-    GLuint m_textureObj;
     GLuint m_textureID;
 };
 

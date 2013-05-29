@@ -4,14 +4,21 @@
 
 gx::Texture::Texture(GLenum TextureTarget, const std::string& FileName)
   : m_textureTarget(TextureTarget), m_fileName(FileName), m_image(),
-    m_textureID(0) {}
+    m_textureID(0) {
+  this->Load();
+}
+
+gx::Texture::Texture(Texture&& other) noexcept
+  : m_textureTarget(std::move(other.m_textureTarget)),
+    m_fileName(std::move(other.m_fileName)), m_image(std::move(other.m_image)),
+    m_textureID(std::move(other.m_textureID)) {
+  other.m_textureID = 0; //delete textures won't complain
+}
 
 gx::Texture::~Texture() {
-  /*
   glDeleteTextures(1, &(this->m_textureID));
   debugout << "glDeleteTextures(1, &(this->m_textureID): " << this->m_textureID;
   debugout << ");" << endl;
-  */
 }
 
 bool gx::Texture::Load() { //TODO: just move this function to the constructor

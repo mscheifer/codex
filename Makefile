@@ -1,8 +1,10 @@
 NAME	    = Server/drchao
 DEBUGNAME = Server/drchao-debug
 ECHO	    = @echo
-CC        = +@g++
-BINFLAGS  = -O3 -flto=jobserver -DNDEBUG
+CC        = clang++
+BINBASE   = -O3 -DNDEBUG
+BINFLAGS  = -flto $(BINBASE)
+LDBINFLAGS= -flto $(BINBASE)
 #possible optimizations to consider: fmodulo-sched fmodulo-sched-allow-regmoves
 #  fgcse-sm fgcse-las fgcse-after-reload 
 #  (funsafe-loop-optimizations Wfunsafe-loop-optimizations) 
@@ -33,25 +35,24 @@ debug: $(DEBUGNAME)
 
 $(DEBUGOBJS): $(DEBUGDIR)%.o: %.cpp
 	$(ECHO) "Compiling $< debug"
-	$(CC) -MMD -MP $(DEBUGFLAGS) $(CCFLAGS) -c -o $@ $<
+	@$(CC) -MMD -MP $(DEBUGFLAGS) $(CCFLAGS) -c -o $@ $<
 
 $(DEBUGNAME): $(DEBUGOBJS)
 	$(ECHO) "Linking $@..."
-	$(ECHO) $(CC) -o $@ $(DEBUGOBJS) -g $(LDFLAGS)
+#	$(ECHO) $(CC) -o $@ $(DEBUGOBJS) -g $(LDFLAGS)
 	$(CC) -o $@ $(DEBUGOBJS) $(DEBUGFLAGS) $(LDFLAGS)
 	$(ECHO) "Built $@!"
 
 $(OBJS): $(OBJDIR)%.o: %.cpp
 	$(ECHO) "Compiling $<"
-#	$(ECHO) $(CC) $(CPPFLAGS) -c -o $@ $<
-	$(CC) -MMD -MP $(BINFLAGS) $(CCFLAGS) -c -o $@ $<
+	@$(CC) -MMD -MP $(BINFLAGS) $(CCFLAGS) -c -o $@ $<
 
 -include $(DEPENDENCIES)
 
 $(NAME): $(OBJS)
 	$(ECHO) "Linking $@..."
-	$(ECHO) $(CC) -o $@ $(OBJS) $(BINFLAGS) $(LDFLAGS)
-	$(CC) -o $@ $(OBJS) $(BINFLAGS) $(LDFLAGS)
+#	$(ECHO) $(CC) -o $@ $(OBJS) $(LDBINFLAGS) $(LDFLAGS)
+	$(CC) -o $@ $(OBJS) $(LDBINFLAGS) $(LDFLAGS)
 	$(ECHO) "Built $@!"
 
 clean:
