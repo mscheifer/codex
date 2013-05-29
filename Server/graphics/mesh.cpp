@@ -209,7 +209,7 @@ std::vector<gx::material> gx::Mesh::InitMaterials(const aiScene* pScene,const st
       diffusePath = Dir + "/" + Path.C_Str();
       std::cout << "name length " << Path.length << " for " << Filename << std::endl;
     } else {
-      diffusePath = "white.png";
+      diffusePath = "models/white.png";
     }
     Texture diffuseTex(GL_TEXTURE_2D, diffusePath);
     diffuseTex.Load();

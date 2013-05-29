@@ -18,7 +18,7 @@ bool gx::Texture::Load() { //TODO: just move this function to the constructor
 
   if (!success) {
  		std::cout << "Error loading texture \"" << this->m_fileName << "\"" << std::endl;
-    this->m_image.loadFromFile("white.png");
+    this->m_image.loadFromFile("models/white.png");
   } else {
     std::cout << "Loaded texture '" << this->m_fileName << "'" << std::endl; 
   }
@@ -37,7 +37,6 @@ bool gx::Texture::Load() { //TODO: just move this function to the constructor
 }
 
 void gx::Texture::bind(GLenum TextureUnit) const {
-  std::cout << "binding" << std::endl;
   glActiveTexture(TextureUnit);
   glBindTexture(this->m_textureTarget, this->m_textureID);
 }
