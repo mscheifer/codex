@@ -35,7 +35,7 @@ void NetworkClient::receiveMessages() {
           kills.push_back((*playerP).kills);
           wins.push_back((*playerP).wins);
           AudioManager::processPlayerSound(*playerP);
-          
+        
           if(cycle  == 100 ) {
              cycle = 0;
              std::cout << "Current health is " << (*playerP).getHealth() << std::endl;

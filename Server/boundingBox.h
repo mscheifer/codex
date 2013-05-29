@@ -39,6 +39,9 @@ public:
   unit_t getHw() const{ return hw; }
   unit_t getHh() const{ return hh; }
   unit_t getHd() const{ return hd; }
+  void setHw(unit_t h) {hw = h;}
+  void setHh(unit_t h) {hh = h;}
+  void setHd(unit_t h) {hd = h;}
 
   /*
   static void test(){

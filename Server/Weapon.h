@@ -12,6 +12,9 @@ public:
   static const WeaponType wtype = UNK; //this is to get the weapon name
   static const bool hasRangedAttack = false;
   static const bool hasMeleeAttack = false;
+  static const float meleeAttackMult; //TODO balance this
+  MAGIC_POWER basicAttack;
+
   Weapon() {/*TODO initialzie*/}
 	Weapon(Map*);
 	~Weapon(void);
@@ -31,6 +34,7 @@ public:
   virtual void updateBounds();
   virtual bool collideWall(const std::pair<Entity*,BoundingObj::vec3_t>& p);
   
+  MAGIC_POWER getBasicAttack() const{ return basicAttack; }
   int getRange(void);
 	int getDamage(void);
   virtual float getMpCost(){return 0;}

@@ -71,6 +71,7 @@ void BoundingBox::rotate(vec3_t dir, vec3_t up){
 
 std::string BoundingBox::toString(){
   std::stringstream ss;
+  ss << "BOX" << std::endl;
   ss << BoundingObj::toString();
   ss << "axis x " << ax << " axis y " << ay << " axis z " << az << std::endl;
   ss << "hw " << hw << " hh " << hh << " hd " << hd << std::endl;

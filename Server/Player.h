@@ -24,6 +24,10 @@ public:
   static const float playerDepth;
   static const Entity_Type type = PLAYER;
   bool dead; //might be private. should be determined in handleAction
+  bool meleeAttack;
+  bool weaponCall;
+  WeaponType weaponCallType;
+  
   int player_id;
   std::string name;
   Projectile* chargedProjectile;
@@ -34,12 +38,12 @@ public:
   Player(v3_t pos, int assigned_id, Map *);
   ~Player(void);
   std::string getString();
-  virtual bool attackBy(DeadlyEntity*);
+  virtual bool attackBy(Projectile*);
   void update();
   void handleCollisions();  
   void updateBounds();  
   void updateBoundsSoft();
-  //void clearEvents();
+  void clearEvents();
   bool collidePlayer(const std::pair<Entity*,BoundingObj::vec3_t>& p);
   
   bool moveTowardDirection(move_t degree, bool jump); //handle movement input WADS jump
@@ -60,16 +64,23 @@ public:
   void restartSpeedUpCounter(void) { speedUpCounter.restart();};
   WeaponType getPickupWeaponType() const{ return pickupWeaponType; }
   void setAsMinotaur(bool b);
-  bool isMinotaur();
+  bool isMinotaur() const;
   Entity_Type getType() const { return type; }
   float getAttackCD() const;
   float getChargeCD() const;
+  float getStrengthMultiplier() const;
+  float getMovementMultiplier() const;
+  float getManaRegenMultiplier() const;
+  float getHealthRegenMultiplier() const;
   int getKills() const { return kills; }
   int getWins() const { return wins; }
   
   void serialize(sf::Packet& packet) const;
   void deserialize(sf::Packet& packet);
-   bool charging;
+  bool charging;
+  bool walking;
+  bool shotProjectile;
+  bool attacked;
 private:
   Weapon* pickup;
   WeaponType pickupWeaponType;
@@ -97,7 +108,7 @@ private:
   Weapon* weapon[MAXWEAPONS]; //0 bare hand, 1 fireball
   int current_weapon_selection; //0 bare hand, 1 fireball
 
-  bool damageBy(DeadlyEntity *);
+  bool damageBy(Projectile *);
   void handleSelfAction(ClientGameTimeAction a);
   void handleOtherAction(ClientGameTimeAction a);
   void attack(ClientGameTimeAction a);

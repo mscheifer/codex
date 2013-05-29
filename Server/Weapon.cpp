@@ -1,6 +1,8 @@
 #include "Weapon.h"
 #include "Projectile.h"
 
+const float Weapon::meleeAttackMult = 1.25f;
+
 Weapon::Weapon(Map* m)
 {
   Range_Cool_Down_Time = 0;
@@ -29,6 +31,7 @@ Weapon::Weapon(float damage, float ran, v3_t pos, Map* m)
   projectileRange = 300; //pending removal
   projectileStrength = 26; //pending removal
   this->map = m;
+  basicAttack = B1;
 }
 
 bool Weapon::canUseWeapon(bool range_attack, Player* Owner) {
@@ -53,8 +56,13 @@ Projectile* Weapon::attackMelee(v3_t dir , v3_t pos, Player* owner)
   pj->setVelocity(dir);
   pj->setPosition(pos);
   pj->setOwner(owner);
-  pj->setStrength(projectileStrength);
+	pj->setStrength(projectileStrength*owner->getStrengthMultiplier()*meleeAttackMult);
   pj->setRange(1);
+
+  pj->setCharing(false); 
+  pj->setMagicType(basicAttack, true); //TODO this is not a good way to do it
+  pj->setRender(false);
+
   //pj->setFired(true); //TODO add a sound event for melee
   Melee_Cool_Down_Counter.restart();
   return pj;
@@ -83,6 +91,9 @@ bool Weapon::dropDown(v3_t dropPosition){
 bool Weapon::tossAway(v3_t dropPosition, v3_t dir){
   //if(!pickedUp)
   //  return false;
+
+  if( getWeaponType() == FIST )
+    return true;
 
   render = true;
   dropPosition.z += 0;

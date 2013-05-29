@@ -151,6 +151,7 @@ std::pair<bool,BoundingObj::vec3_t> boxBox(const BoundingBox* a,const  BoundingB
   bool firstTime = true;
 
   for( int i = 0; i < 15; i++){
+    axes[i].normalize();
     //dont try for axis 0,0,0
     if( axes[i].x == 0 && axes[i].y == 0 && axes[i].z == 0)
       continue;
@@ -385,15 +386,22 @@ void boxTest(){
       5,1,2);
     */
 
-    BoundingBox b2(BoundingObj::vec4_t(10,10,0), 
-      BoundingObj::vec3_t(1,0,0), BoundingObj::vec3_t(0,1,0), BoundingObj::vec3_t(0,0 ,1),
-      3,3,3);
+  /*
+    //floor
+    BoundingBox b2(BoundingObj::vec4_t(0,0,-5), 
+      BoundingObj::vec3_t(0,-1,0), BoundingObj::vec3_t(1,0,0), BoundingObj::vec3_t(0,0 ,1),
+      500,500,5);
     
-    BoundingBox player(BoundingObj::vec4_t(10.0349, 9.64931, 2.99833), 
-      BoundingObj::vec3_t(0.616899, -0.787042,0), BoundingObj::vec3_t(0.787042, 0.616899,0), BoundingObj::vec3_t(0,0 ,1),
+    BoundingBox player(BoundingObj::vec4_t(12.9452, -9.96372, 2.98109), 
+      //BoundingObj::vec3_t(1, 0, 0), BoundingObj::vec3_t(0, 1,0), BoundingObj::vec3_t(0,0 ,1),
+      BoundingObj::vec3_t(0.980067, -0.198669, 0), BoundingObj::vec3_t(0.198669, 0.980067,0), BoundingObj::vec3_t(0,0 ,1),
       1,1,3);
 
     std::cout << "1==" << collide(&player,&b2).first << " vecfix " << collide(&player,&b2).second << std::endl;
+    player.setCenter( player.getCenter() + collide(&player,&b2).second );
+        std::cout << "1==" << collide(&player,&b2).first << " vecfix " << collide(&player,&b2).second << std::endl;
+
+        */
     /*
     RayCollision f = rayCollide(&r1, &b1);
     std::cout << f.collided << std::endl

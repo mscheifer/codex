@@ -9,7 +9,6 @@
 #include "Quadtree.h"
 #include "Physics.h" //typedef
 
-
 class Entity;
 class Player;
 class Projectile;
@@ -36,6 +35,7 @@ public:
   bool addPlayer(Player *);
   Quadtree* getQuadtreePtr(){ return &q; }
   void separatePlayers(Player* player);
+  void addEntity(Entity* e);
   
   //add this entity to the quadtree, should only be called in a constructor
   //of an entity

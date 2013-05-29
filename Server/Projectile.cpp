@@ -1,5 +1,9 @@
 #include "Projectile.h"
 int Projectile::ID_Counter = 0;
+const float Projectile::meleeWidth = 1.0f;
+const float Projectile::meleeHeight = 1.0f;
+const float Projectile::meleeDepth = 3.0f;
+
 Projectile::Projectile(Map* m):fired(false)
 {
 	this->map = m;
@@ -24,7 +28,7 @@ void Projectile::reset(){
 
 bool Projectile::correctMovementHit( Entity* e ){
   Entity_Type etype = e->getType();
-  if( etype == WALL || etype == PROJECTILE ){
+  if( etype == WALL || (etype == PROJECTILE && ((Projectile*) e)->charging) ){//TODO check the team
     return true;
   } else if ( etype == PLAYER ){
     return e != owner;
@@ -45,6 +49,13 @@ void Projectile::update(void) {
   } else {
     v3_t distanceTravelled = velocity * ConfigManager::serverTickLengthSec();
     distanceTravelled = correctMovement(distanceTravelled, false);
+
+    float mag = distanceTravelled.magnitude();
+    if( mag > distanceLeftToTravel ){ //make sure you don't go past the range
+      distanceTravelled.normalize();
+      distanceTravelled.scale(distanceLeftToTravel);
+    }
+
 	  position += distanceTravelled;
   
     //see if travelled full range
@@ -56,7 +67,6 @@ void Projectile::update(void) {
   }
   
 	updateBounds();
-	// some collision detection
 }
 
 void Projectile::setOwner(Player * player){
@@ -78,6 +88,8 @@ void Projectile::setRange(length_t r) {
 
 void Projectile::updateBounds(){
   //update the bounding objects
+  boundingObjs[0]->setCenter(BoundingObj::vec4_t(position.x, position.y, position.z));
+  boundingObjs[0]->rotate(direction,BoundingObj::vec3_t(0,0,1));
   boundingObjs[0]->setCenterOnTree(BoundingObj::vec4_t(position.x, position.y, position.z));
 }
 
@@ -103,19 +115,24 @@ void Projectile::handleCollisions() {
       if(charging){      //TODO add combine sound
         setMagicType(combine(proj->getMagicType(), magicType));
         map->destroyProjectile(proj);
+        combined = true;
       } else if ( proj->charging ){
         proj->setMagicType(combine(proj->getMagicType(), magicType));
-        map->destroyProjectile(this);
-      } else {
-        map->destroyProjectile(proj);
+        proj->combined = true;
         map->destroyProjectile(this);
       }
+      
+      //else {
+      //  map->destroyProjectile(proj);
+      //  map->destroyProjectile(this);
+      //}
       break;
     }
   }
 }
 
 void Projectile::clearEvents(){
+  combined = false;
   fired = false;
 }
 
@@ -159,10 +176,26 @@ MAGIC_POWER Projectile::combine( MAGIC_POWER m1, MAGIC_POWER m2 ){
   return combinations[m1][m2];
 }
 
+void Projectile::setMagicType( MAGIC_POWER m, bool melee ) {
+  magicType = m;
+  charge_counter.restart();
+  float size = ProjInfo[magicType].size;
+  if(melee){ //set size for melee
+    ((BoundingBox*) boundingObjs[0])->setHw( meleeWidth );
+    ((BoundingBox*) boundingObjs[0])->setHh( meleeHeight );
+    ((BoundingBox*) boundingObjs[0])->setHd( meleeDepth );
+  } else {
+    ((BoundingBox*) boundingObjs[0])->setHw( size );
+    ((BoundingBox*) boundingObjs[0])->setHh( size );
+    ((BoundingBox*) boundingObjs[0])->setHd( size );
+  }
+}
+
 void Projectile::serialize(sf::Packet & packet) const {
   Entity::serialize(packet);
   packet << fired;
   packet << id;
+  packet << combined;
   //(*owner).serialize(packet);
 }
 
@@ -170,6 +203,7 @@ void Projectile::deserialize( sf::Packet & packet ) {
   Entity::deserialize(packet);
   packet >> fired;
   packet >> id;
+  packet >> combined;
   //delete owner; this segfaults
   //Player* owner = new Player();
   //(*owner).deserialize(packet);
