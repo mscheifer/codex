@@ -11,7 +11,6 @@ Weapon::Weapon(Map* m)
   Range_Cool_Down_Counter = sf::Clock();
   Melee_Cool_Down_Counter = sf::Clock();
   this->map = m;
-  basicAttack = B1;
 }
 
 Weapon::~Weapon()
@@ -32,6 +31,7 @@ Weapon::Weapon(float damage, float ran, v3_t pos, Map* m)
   projectileRange = 300; //pending removal
   projectileStrength = 26; //pending removal
   this->map = m;
+  basicAttack = B1;
 }
 
 bool Weapon::canUseWeapon(bool range_attack, Player* Owner) {

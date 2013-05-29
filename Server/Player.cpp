@@ -226,6 +226,8 @@ void Player::clearEvents(){
   walking = false;
   shotProjectile = false;
   attacked = false;
+  meleeAttack = false;
+  weaponCall = false;
 }
 
 void Player::die()
@@ -380,11 +382,6 @@ void Player::attack( ClientGameTimeAction a) {
 
 	attacking = true; //todo wtf is this
 	return;
-}
-
-void Player::clearEvents(){
-  meleeAttack = false;
-  weaponCall = false;
 }
 
 std::string Player::getString()
