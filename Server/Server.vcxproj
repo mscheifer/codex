@@ -43,7 +43,7 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <AdditionalIncludeDirectories>$(ProjectDir);$(SolutionDir)SFML-2.0\include;$(SolutionDir)assimp\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>_MBCS;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_MBCS;_CRT_SECURE_NO_WARNINGS;GRAPHICSDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -86,18 +86,23 @@
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="graphics\basicUniform.cpp" />
     <ClCompile Include="graphics\bone.cpp" />
+    <ClCompile Include="graphics\CubemapTexture.cpp" />
     <ClCompile Include="graphics\displaySet.cpp" />
     <ClCompile Include="graphics\drawer.cpp" />
     <ClCompile Include="graphics\dynamicDrawerImpl.cpp" />
     <ClCompile Include="graphics\graphicsClient.cpp" />
     <ClCompile Include="graphics\graphicsEntity.cpp" />
+    <ClCompile Include="graphics\HUD.cpp" />
     <ClCompile Include="graphics\light.cpp" />
     <ClCompile Include="graphics\loadCustom.cpp" />
+    <ClCompile Include="graphics\lobby.cpp" />
+    <ClCompile Include="graphics\material.cpp" />
     <ClCompile Include="graphics\matrix.cpp" />
     <ClCompile Include="graphics\mesh.cpp" />
     <ClCompile Include="graphics\meshEntry.cpp" />
     <ClCompile Include="graphics\oglUtil.cpp" />
     <ClCompile Include="graphics\shaderProgram.cpp" />
+    <ClCompile Include="graphics\SkyboxDraw.cpp" />
     <ClCompile Include="graphics\staticDrawerImpl.cpp" />
     <ClCompile Include="graphics\texture.cpp" />
     <ClCompile Include="graphics\uniformBlock.cpp" />
@@ -105,12 +110,11 @@
     <ClCompile Include="graphics\uniformLocation.cpp" />
     <ClCompile Include="graphics\vao.cpp" />
     <ClCompile Include="graphics\vector1.cpp" />
+    <ClCompile Include="graphics\vector2.cpp" />
     <ClCompile Include="graphics\vector3.cpp" />
     <ClCompile Include="graphics\vector4.cpp" />
     <ClCompile Include="graphics\vertexAttrib.cpp" />
     <ClCompile Include="graphics\vertexAttribSignature.cpp" />
-    <ClCompile Include="HUD.cpp" />
-    <ClCompile Include="lobby.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Map.cpp" />
     <ClCompile Include="NetworkServices.cpp" />
@@ -144,32 +148,37 @@
     <ClInclude Include="Entity.h" />
     <ClInclude Include="EntityPool.h" />
     <ClInclude Include="Game.h" />
+    <ClInclude Include="graphics\assimpUtil.h" />
     <ClInclude Include="graphics\basicUniform.h" />
     <ClInclude Include="graphics\bone.h" />
+    <ClInclude Include="graphics\CubemapTexture.h" />
     <ClInclude Include="graphics\displaySet.h" />
     <ClInclude Include="graphics\drawer.h" />
     <ClInclude Include="graphics\drawerImpl.h" />
     <ClInclude Include="graphics\graphicsClient.h" />
     <ClInclude Include="graphics\graphicsEntity.h" />
+    <ClInclude Include="graphics\HUD.h" />
     <ClInclude Include="graphics\light.h" />
     <ClInclude Include="graphics\loadCustom.h" />
+    <ClInclude Include="graphics\lobby.h" />
+    <ClInclude Include="graphics\material.h" />
     <ClInclude Include="graphics\matrix.h" />
     <ClInclude Include="graphics\mesh.h" />
     <ClInclude Include="graphics\oglUtil.h" />
     <ClInclude Include="graphics\shaderProgram.h" />
+    <ClInclude Include="graphics\SkyboxDraw.h" />
     <ClInclude Include="graphics\texture.h" />
     <ClInclude Include="graphics\uniformBlock.h" />
     <ClInclude Include="graphics\input.h" />
     <ClInclude Include="graphics\uniformLocation.h" />
     <ClInclude Include="graphics\vao.h" />
     <ClInclude Include="graphics\vector1.h" />
+    <ClInclude Include="graphics\vector2.h" />
     <ClInclude Include="graphics\vector3.h" />
     <ClInclude Include="graphics\vector4.h" />
     <ClInclude Include="graphics\vertexAttrib.h" />
     <ClInclude Include="graphics\vertexAttribSignature.h" />
     <ClInclude Include="graphics\windowsHacks.h" />
-    <ClInclude Include="HUD.h" />
-    <ClInclude Include="lobby.h" />
     <ClInclude Include="Map.h" />
     <ClInclude Include="NetworkServices.h" />
     <ClInclude Include="Physics.h" />
@@ -214,6 +223,8 @@
     <None Include="shaders\animated.vert" />
     <None Include="shaders\default.frag" />
     <None Include="shaders\default.vert" />
+    <None Include="shaders\skybox.frag" />
+    <None Include="shaders\skybox.vert" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

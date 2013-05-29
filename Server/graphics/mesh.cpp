@@ -4,6 +4,7 @@
 #include <string>
 #include <algorithm>
 #include <limits>
+#include "assimpUtil.h"
 #include "matrix.h"
 #include "vertexAttrib.h"
 
@@ -114,20 +115,21 @@ gx::Mesh::Mesh(const std::string& Filename, length_t height)
     m_boundary(CalcBoundBox(mScene, height)), idMap(),
     bones(initBones(idMap,mScene)),
     m_Entries(InitFromScene(idMap,mScene)),
-    m_Textures(InitMaterials(mScene, Filename)),
+    m_Materials(InitMaterials(mScene, Filename)),
   //just do the first one unless kangh has a model with more
-    entityData(std::move(m_Entries[0].positions),std::move(m_Entries[0].normals),
-      std::move(m_Entries[0].colors), std::move(m_Entries[0].boneWeights.first),
+    entityData(std::move(m_Entries[0].positions),
+      std::move(m_Entries[0].normals), std::move(m_Entries[0].diffuseCoords),
+      std::move(m_Entries[0].boneWeights.first),
       std::move(m_Entries[0].boneWeights.second),
       std::move(m_Entries[0].indices), std::move(m_Entries[0].offsets),
-      std::move(bones), std::move(m_boundary.centerAndResize)) {}
+      std::move(m_Materials[0]), std::move(bones),
+      std::move(m_boundary.centerAndResize)) {}
 
 const aiScene* gx::Mesh::LoadFile(Assimp::Importer& Importer,
                                  const std::string& Filename) {
-  const aiScene* pScene = Importer.ReadFile(Filename.c_str(), 
-        aiProcess_Triangulate       |
-        aiProcess_GenSmoothNormals |
-        aiProcess_FlipUVs);
+  const aiScene* pScene = Importer.ReadFile(Filename.c_str(), 0
+         | aiProcess_Triangulate
+         | aiProcess_GenSmoothNormals);
   if (!pScene) {
     std::cout << "Error parsing '" <<  Filename.c_str() << "': '";
     std::cout << Importer.GetErrorString() << std::endl;
@@ -141,14 +143,16 @@ const aiScene* gx::Mesh::LoadFile(Assimp::Importer& Importer,
   for(unsigned int i = 0; i < pScene->mNumAnimations; i++) {
     debugout << "animation: " << pScene->mAnimations[i]->mName.C_Str() << endl;
     debugout << "duration: " << pScene->mAnimations[i]->mDuration << endl;
-    debugout << "tics per second: " << pScene->mAnimations[i]->mTicksPerSecond << endl;
+    debugout << "tics per second: " << pScene->mAnimations[i]->mTicksPerSecond;
+    debugout << endl;
     debugout << "meshes: " << pScene->mAnimations[i]->mNumMeshChannels << endl;
     debugout << "bones: " << pScene->mAnimations[i]->mNumChannels << endl;
     for(unsigned int j = 0; j < pScene->mAnimations[i]->mNumChannels; j++) {
-      debugout << "  bonesName: " << pScene->mAnimations[i]->mChannels[j]->mNodeName.C_Str() << endl;
-      debugout << "    position keys " << pScene->mAnimations[i]->mChannels[j]->mNumPositionKeys << endl;
-      debugout << "    rotation keys " << pScene->mAnimations[i]->mChannels[j]->mNumRotationKeys << endl;
-      debugout << "    scaling keys " << pScene->mAnimations[i]->mChannels[j]->mNumScalingKeys << endl;
+      const auto& channel = pScene->mAnimations[i]->mChannels[j];
+      debugout << "  bonesName: " << channel->mNodeName.C_Str() << endl;
+      debugout << "    position keys " << channel->mNumPositionKeys << endl;
+      debugout << "    rotation keys " << channel->mNumRotationKeys << endl;
+      debugout << "    scaling keys " << channel->mNumScalingKeys << endl;
     }
   }
   //end print
@@ -174,8 +178,9 @@ std::vector<gx::Mesh::MeshEntry> gx::Mesh::InitFromScene(idMap_t& idMap,
   return Ret;
 }
 
-std::vector<gx::Texture> gx::Mesh::InitMaterials(const aiScene* pScene,const std::string& Filename){
-  if(pScene == nullptr) return std::vector<Texture>();
+std::vector<gx::material>
+gx::Mesh::InitMaterials(const aiScene* pScene,const std::string& Filename) {
+  if(pScene == nullptr) return std::vector<material>();
   // Extract the directory part from the file name
   std::string::size_type SlashIndex = Filename.find_last_of("/");
   std::string Dir;
@@ -188,32 +193,31 @@ std::vector<gx::Texture> gx::Mesh::InitMaterials(const aiScene* pScene,const std
     Dir = Filename.substr(0, SlashIndex);
   }
 
-  std::vector<Texture> Ret;
+  std::vector<material> ret;
 
   // Initialize the materials
   for (unsigned int i = 0 ; i < pScene->mNumMaterials ; i++) {
     const aiMaterial* pMaterial = pScene->mMaterials[i];
-
-    if (pMaterial->GetTextureCount(aiTextureType_DIFFUSE) > 0) {
-      aiString Path;
-
-      if(pMaterial->GetTexture(aiTextureType_DIFFUSE, 0, &Path) == AI_SUCCESS) {
-        std::string FullPath = Dir + "/" + Path.data;
-        Ret.push_back(Texture(GL_TEXTURE_2D, FullPath.c_str()));
-
-        if (!Ret.back().Load()) {
-          std::cout<<"Error loading texture '" << FullPath.c_str() << std::endl;
-          Ret.pop_back();
-          // Load a white texture in case the model does not include its own texture
-          Ret.push_back(Texture(GL_TEXTURE_2D, "./white.png"));
-          Ret.back().Load();
-        } else {
-          std::cout << "Loaded texture '" << FullPath.c_str() << std::endl; 
-        }
-      }
-    } 
+    vector4f diffuseColor;
+    aiColor3D	ColorDiffuse;
+    if (AI_SUCCESS == pMaterial->Get(AI_MATKEY_COLOR_DIFFUSE, ColorDiffuse)) {
+      diffuseColor = toVec4(ColorDiffuse);
+    } else {
+      diffuseColor = vector4f(1.0,1.0,1.0);
+    }
+    std::string diffusePath;
+    aiString Path;
+    if (pMaterial->GetTextureCount(aiTextureType_DIFFUSE) > 0 &&
+        AI_SUCCESS == pMaterial->GetTexture(aiTextureType_DIFFUSE, 0, &Path)) {
+      diffusePath = Dir + "/" + Path.C_Str();
+    } else {
+      diffusePath = "models/white.png";
+    }
+    Texture diffuseTex(GL_TEXTURE_2D, diffusePath);
+    //material index will correspond to the Mesh's material index
+    ret.push_back(material(std::move(diffuseTex),diffuseColor));
   }
-  return Ret;
+  return ret;
 }
 
 gx::Mesh::BoundParam gx::Mesh::CalcBoundBox(const aiScene* scene,

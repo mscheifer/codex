@@ -45,7 +45,7 @@ gx::HUD::HUD(void):health(100), maxHealth(100), HLossPercentage(0),
   badGuyTexture.loadFromFile("graphics/Images/badguy.png");
   badGuySprite.setTexture(badGuyTexture);
   badGuySprite.setPosition(740,10);
-  badGuySprite.setScale(0.1,0.1);
+  badGuySprite.setScale(0.1f,0.1f);
   //positionText
   positionText.setFont(font);
   positionText.setCharacterSize(24);
@@ -71,6 +71,7 @@ void gx::HUD::draw(sf::RenderWindow & window) {
   healthRect = manaText.getGlobalBounds();
   healthText.setPosition( 55+ (200 -healthRect.width)/2 , 550);
   //mana display
+  //TODO: use stringstrem here
   std::string manaS(std::to_string(static_cast<long long>(mana)) + 
     std::string("/") +std::to_string(static_cast<long long>(maxMana)));
   manaText.setString(manaS);

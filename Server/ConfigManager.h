@@ -26,12 +26,12 @@ public:
   }
 
   static float serverTickLengthMilli() {
-    static float ret = 1000.f / serverTicksPerSec();
+    static float ret = 1000.f / static_cast<float>(serverTicksPerSec());
     return ret;
   }
   
   static float serverTickLengthSec() {
-    static float ret = 1.f / serverTicksPerSec();
+    static float ret = 1.f / static_cast<float>(serverTicksPerSec());
     return ret;
   }
 

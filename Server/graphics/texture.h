@@ -3,22 +3,26 @@
 #include <GL/glew.h>
 #include <string>
 #include <SFML/Graphics.hpp>
+#include "windowsHacks.h"
 
 namespace gx {
 
-class Texture {
-public:
+struct Texture {
     Texture(GLenum TextureTarget, const std::string& FileName);
+    Texture(Texture const&);
+    Texture& operator=(Texture const&);
+    Texture(Texture&&) noexcept;
+    Texture& operator=(Texture&&);
+    ~Texture();
 
-    bool Load();
-
-    void Bind(GLenum TextureUnit);
+    void bind(GLenum TextureUnit) const;
 
 private:
-    std::string m_fileName;
+    bool Load();
     GLenum m_textureTarget;
-    GLuint m_textureObj;
+    std::string m_fileName;
     sf::Image m_image;
+    GLuint m_textureID;
 };
 
 } //end namespace gx

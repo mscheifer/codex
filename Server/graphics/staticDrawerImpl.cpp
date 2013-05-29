@@ -38,8 +38,8 @@ gx::graphicsEntity::attribsList_t processAttribs(const gx::graphicsEntity& genti
     }
     gentity.normals->putProcessedData(shaderID,rawData);
   }
-  if(!gentity.colors->hasProcessedData(shaderID)) {
-    gentity.colors->putDefaultData(shaderID);
+  if(!gentity.diffuseCoords->hasProcessedData(shaderID)) {
+    gentity.diffuseCoords->putDefaultData(shaderID);
   }
   if(!gentity.boneIDs->hasProcessedData(shaderID)) {
     gentity.boneIDs->putDefaultData(shaderID);
@@ -54,10 +54,11 @@ gx::graphicsEntity::attribsList_t processAttribs(const gx::graphicsEntity& genti
 gx::staticDrawerImpl::entityClass::entityClass(graphicsEntity drawData,
                                                varSigs_t vars)
   : vertData(std::move(drawData.indices), processAttribs(drawData),
-    std::move(vars)), centerAndResize(identity) {}
+    std::move(vars)), mat(std::move(drawData.mat)), centerAndResize(identity) {}
 
 gx::staticDrawerImpl::entityClass::entityClass(entityClass&& other) noexcept
   : instances(std::move(other.instances)), vertData(std::move(other.vertData)),
+    mat(std::move(other.mat)),
     centerAndResize(std::move(other.centerAndResize)) {}
 
 gx::staticDrawerImpl::entityClass&

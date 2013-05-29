@@ -21,7 +21,9 @@ gx::drawer<T>::drawer(std::vector<typename T::entity_t> entDatas,
                       std::vector<uniform::block*> globalUnifs)
   : program(T::vertShader, T::fragShader, globalUnifs), impl(program), 
     entityClasses(setupEntities<T>(std::move(entDatas),program.vars())),
-    globalUniforms(globalUnifs) {}
+    globalUniforms(globalUnifs) {
+  material::setupBindings(this->program);
+}
 
 template<typename T>
 void gx::drawer<T>::draw() {
@@ -33,6 +35,7 @@ void gx::drawer<T>::draw() {
   for(auto entityCp = entityClasses.begin(); entityCp != entityClasses.end();
                                                                  ++entityCp) {
     const auto& entityC = *entityCp;
+    entityC.mat.bind();
     for(auto instp = entityC.instances.begin();instp != entityC.instances.end();
                                                                       ++instp) {
       const auto& inst = *instp;

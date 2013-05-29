@@ -9,11 +9,15 @@ namespace { //to not export
    std::make_pair("linearAttenuation",    GL_FLOAT),
    std::make_pair("quadraticAttenuation", GL_FLOAT)
  }};
+
+ std::map<std::string,GLenum> uniformVarsMap(
+   uniformVars.begin(), uniformVars.end());
 } //end unnamed namespace
 
 gx::light::light(vector4f co, GLfloat ca, GLfloat la, GLfloat qa)
-         : data(), unif(uniformName,std::map<std::string,GLenum>(uniformVars.begin(),uniformVars.end())) {
-    //have to initialize here instead of initialization list because of visual studio
+  : data(), unif(uniformName,uniformVarsMap) {
+    //have to initialize here instead of initialization list because of visual
+    //studio
     this->data.constantAttenuation = ca;
     this->data.linearAttenuation = la;
     this->data.quadraticAttenuation = qa;

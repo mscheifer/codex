@@ -685,7 +685,7 @@ void Player::serialize(sf::Packet& packet) const {
     packet << attacked;
     packet << kills;
     packet << wins;
-    packet << buffs.size();
+    packet << static_cast<sf::Uint32>(buffs.size());
     for (auto itr = buffs.begin(); itr!=buffs.end(); itr++) {
       packet << static_cast<sf::Uint32>((*itr).first);
       packet << (*itr).second;
@@ -727,10 +727,10 @@ void Player::serialize(sf::Packet& packet) const {
     packet >> attacked;
     packet >> kills;
     packet >> wins;
-    int size = 0; 
+    sf::Uint32 size = 0; 
     buffs.clear();
     packet >> size;
-    for (; size>0; size--){
+    for (; size > 0; size--){
       sf::Uint32 buff;
       int time;
       packet >> buff;

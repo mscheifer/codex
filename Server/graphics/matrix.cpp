@@ -3,10 +3,6 @@
 #include "matrix.h"
 
 gx::matrix::matrix(): elems() {
-  /*elems({{ {{ 1, 0, 0, 0 }},
-               {{ 0, 1, 0, 0 }},
-               {{ 0, 0, 1, 0 }},
-               {{ 0, 0, 0, 1 }} }})*/
   for(size_t i = 0; i < elems.size(); i++) {
     for(size_t j = 0; j < elems[i].size(); j++) {
       elems[i][j] = 0;
@@ -63,7 +59,8 @@ std::array<gx::matrix::elem_t,4>& gx::matrix::operator[](row_index_type i) {
   return elems[i];
 }
 
-const std::array<gx::matrix::elem_t,4>& gx::matrix::operator[](row_index_type i) const {
+const std::array<gx::matrix::elem_t,4>&
+gx::matrix::operator[](row_index_type i) const {
   return elems[i];
 }
 

@@ -167,7 +167,13 @@ std::map<std::string,gx::vertexAttribSignature> gx::shaderProgram::vars() const{
 }
 
 GLint gx::shaderProgram::uniformLoc(const std::string name) const {
-  return glGetUniformLocation(this->prog, name.c_str());
+  auto ret = glGetUniformLocation(this->prog, name.c_str());
+  debugout << ret << " = glGetUniformLocation(" << this->prog << ", \"";
+  debugout << name.c_str() << "\");" << endl;
+  if(ret == -1) {
+    std::cout << "Error, no uniform in shader named " << name << std::endl;
+  }
+  return std::move(ret);
 }
 
 GLuint gx::shaderProgram::progNum() const {

@@ -1,6 +1,9 @@
 #pragma once
 #include <SFML/Graphics.hpp>
 
+namespace gx {
+class input;
+
 class lobby {
   sf::Text  welcome;
   sf::Font  font;
@@ -13,7 +16,8 @@ public:
   ~lobby(void);
   bool getStart() const { return start; }
   void endGame() { start = false; }
-  void handleInput(sf::RenderWindow & window);
+  void handleInput(input const& userInput);
   void drawLobby(sf::RenderWindow & window);
 };
 
+} //end namespace gx
