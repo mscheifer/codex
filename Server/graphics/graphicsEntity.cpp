@@ -22,8 +22,8 @@ gx::rawAttrib<T>::getProcessedData(const std::string& shID) const {
   return this->processedAttribs.find(shID)->second;
 }
 
-template<typename T>
-void gx::rawAttrib<T>::putProcessedData(std::string shID, std::vector<T> newData) {
+template<typename T> void
+gx::rawAttrib<T>::putProcessedData(std::string shID, std::vector<T> newData) {
   std::vector<typename T::elem_t> flatData;
   for(auto itr = newData.begin(); itr != newData.end(); itr++) {
     for(auto vitr = itr->begin(); vitr != itr->end(); vitr++) {
@@ -39,6 +39,16 @@ void gx::rawAttrib<T>::putProcessedData(std::string shID, std::vector<T> newData
 template<typename T>
 void gx::rawAttrib<T>::putDefaultData(std::string shID) {
   this->putProcessedData(std::move(shID),this->data);
+}
+
+template<typename T>
+gx::rawAttrib<T> gx::makeRawAttrib(std::string name, std::vector<T> data) {
+  return rawAttrib<T>(std::move(name),std::move(data));
+}
+
+template<typename T> std::shared_ptr<gx::rawAttrib<T>>
+gx::makeRawAttribPtr(std::string name, std::vector<T> data) {
+  return std::make_shared<rawAttrib<T>>(std::move(name),std::move(data));
 }
 
 gx::graphicsEntity::graphicsEntity(std::vector<vector4f> pos,
@@ -59,17 +69,18 @@ gx::graphicsEntity::graphicsEntity(rawAttribPtr_t<vector4f>::t pos,
     rawAttribPtr_t<vector4i>::t bIDs,  rawAttribPtr_t<vector4f>::t bWts,
     std::vector<GLuint> inds, std::map<int,matrix> offs, material m, bone bn,
     matrix car)
-  : positions(std::move(pos)), normals(std::move(norms)), diffuseCoords(std::move(coords)),
-    boneIDs(std::move(bIDs)), boneWeights(std::move(bWts)),
-    indices(std::move(inds)), offsets(std::move(offs)), mat(std::move(m)),
-    rootBone(std::move(bn)), centerAndResize(std::move(car)) {}
+  : positions(std::move(pos)), normals(std::move(norms)),
+    diffuseCoords(std::move(coords)), boneIDs(std::move(bIDs)),
+    boneWeights(std::move(bWts)), indices(std::move(inds)),
+    offsets(std::move(offs)), mat(std::move(m)), rootBone(std::move(bn)),
+    centerAndResize(std::move(car)) {}
 
 gx::graphicsEntity::graphicsEntity(graphicsEntity&& other) noexcept
   : positions(std::move(other.positions)), normals(std::move(other.normals)),
-    diffuseCoords(std::move(other.diffuseCoords)), boneIDs(std::move(other.boneIDs)),
-    boneWeights(std::move(other.boneWeights)),indices(std::move(other.indices)),
-    offsets(std::move(other.offsets)), mat(std::move(other.mat)),
-    rootBone(std::move(other.rootBone)),
+    diffuseCoords(std::move(other.diffuseCoords)),
+    boneIDs(std::move(other.boneIDs)),boneWeights(std::move(other.boneWeights)),
+    indices(std::move(other.indices)), offsets(std::move(other.offsets)),
+    mat(std::move(other.mat)), rootBone(std::move(other.rootBone)),
     centerAndResize(std::move(other.centerAndResize)) {}
 
 gx::graphicsEntity& gx::graphicsEntity::operator=(graphicsEntity&& other) {
@@ -86,7 +97,8 @@ gx::graphicsEntity& gx::graphicsEntity::operator=(graphicsEntity&& other) {
   return *this;
 }
 
-gx::graphicsEntity::attribsList_t gx::graphicsEntity::getAttribList(const std::string& shID) const {
+gx::graphicsEntity::attribsList_t
+gx::graphicsEntity::getAttribList(const std::string& shID) const {
   attribsList_t ret;
   ret.push_back(this->positions    ->getProcessedData(shID));
   ret.push_back(this->normals      ->getProcessedData(shID));

@@ -3,7 +3,8 @@
 #include "oglUtil.h"
 
 gx::Texture::Texture(GLenum TextureTarget, const std::string& FileName)
-  : m_textureTarget(TextureTarget), m_fileName(FileName), m_image(), m_textureID(0) {}
+  : m_textureTarget(TextureTarget), m_fileName(FileName), m_image(),
+    m_textureID(0) {}
 
 gx::Texture::~Texture() {
   /*
@@ -17,7 +18,8 @@ bool gx::Texture::Load() { //TODO: just move this function to the constructor
   bool success = this->m_image.loadFromFile(this->m_fileName);
 
   if (!success) {
- 		std::cout << "Error loading texture \"" << this->m_fileName << "\"" << std::endl;
+ 		std::cout << "Error loading texture \"" << this->m_fileName << "\"";
+    std::cout << std::endl;
     this->m_image.loadFromFile("models/white.png");
   } else {
     std::cout << "Loaded texture '" << this->m_fileName << "'" << std::endl; 
@@ -31,7 +33,8 @@ bool gx::Texture::Load() { //TODO: just move this function to the constructor
   glBindTexture(this->m_textureTarget, this->m_textureID);
   glTexImage2D(this->m_textureTarget, 0, GL_RGBA, width, height, 0, 
     GL_RGBA, GL_UNSIGNED_BYTE, this->m_image.getPixelsPtr());
-  glTexParameterf(this->m_textureTarget, GL_TEXTURE_MIN_FILTER, GL_LINEAR); //TODO: change to use mipmaps
+  //TODO: change to use mipmaps
+  glTexParameterf(this->m_textureTarget, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
   glTexParameterf(this->m_textureTarget, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
   return success;
 }

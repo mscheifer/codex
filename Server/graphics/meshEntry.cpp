@@ -103,15 +103,16 @@ std::vector<GLuint> initIndices(const aiMesh* paiMesh) {
   return Indices;
 }
 
-std::map<int,gx::matrix> initOffsets(const gx::Mesh::idMap_t& ids, const aiMesh* paiMesh) {
+std::map<int,gx::matrix>
+initOffsets(const gx::Mesh::idMap_t& ids, const aiMesh* paiMesh) {
   std::map<int,gx::matrix> offsets;
   for(unsigned int i = 0; i < paiMesh->mNumBones; i++) {
     const auto& meshBone = paiMesh->mBones[i];
     if(ids.find(meshBone->mName.C_Str()) == ids.end()) {
       std::cout << "error, no id for " << meshBone->mName.C_Str() << std::endl;
     }
-    offsets.insert(std::make_pair(
-      ids.find(meshBone->mName.C_Str())->second,gx::toMat(meshBone->mOffsetMatrix)));
+    offsets.insert(std::make_pair(ids.find(meshBone->mName.C_Str())->second,
+                                  gx::toMat(meshBone->mOffsetMatrix)));
   }
   return offsets;
 }
@@ -133,12 +134,13 @@ gx::Mesh::MeshEntry::MeshEntry(const idMap_t& ids, const aiMesh* paiMesh)
 };
 
 gx::Mesh::MeshEntry::MeshEntry(MeshEntry&& other) noexcept
-  : positions(std::move(other.positions)), diffuseCoords(std::move(other.diffuseCoords)),
+  : positions(std::move(other.positions)),
+    diffuseCoords(std::move(other.diffuseCoords)),
     normals(std::move(other.normals)),boneWeights(std::move(other.boneWeights)),
     indices(std::move(other.indices)),    offsets(std::move(other.offsets)),
     MaterialIndex(std::move(other.MaterialIndex)) {}
 
 gx::Mesh::MeshEntry& gx::Mesh::MeshEntry::operator=(MeshEntry&&) {
-  exit(-1); //fail hard
+  assert(false);
   return *this;
 }

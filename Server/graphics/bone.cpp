@@ -36,7 +36,8 @@ bool gx::bone::animated(unsigned int index) const {
   return !this->animations[index].empty();
 }
 
-std::vector<GLfloat> gx::bone::getBonesData(unsigned int anim, unsigned int time) const {
+std::vector<GLfloat>
+gx::bone::getBonesData(unsigned int anim, unsigned int time) const {
   std::vector<GLfloat> ret;
   this->walkBones(ret,identity,anim,time);
   return ret;
@@ -44,14 +45,15 @@ std::vector<GLfloat> gx::bone::getBonesData(unsigned int anim, unsigned int time
 
 unsigned int gx::bone::numBones() const {
   unsigned int ret = this->real ? 1 : 0;
-  for(auto boneItr = this->children.begin(); boneItr != this->children.end(); boneItr++) {
+  for(auto boneItr = this->children.begin(); boneItr != this->children.end();
+                                                                  boneItr++) {
     ret += boneItr->numBones();
   }
   return ret;
 }
 
 void gx::bone::walkBones(std::vector<GLfloat>& result,const matrix& parent,
-                                  unsigned int anim  , unsigned int time) const {
+                         unsigned int anim, unsigned int time) const {
   matrix fullTransformation;
   if(this->animated(anim)) {
     //no interpolation for now
@@ -71,7 +73,8 @@ void gx::bone::walkBones(std::vector<GLfloat>& result,const matrix& parent,
     const auto& data = fullTransformation.oglmatrix();
     result.insert(result.end(),data.begin(),data.end());
   } 
-  for(auto boneItr = this->children.begin(); boneItr != this->children.end(); boneItr++) {
+  for(auto boneItr = this->children.begin(); boneItr != this->children.end();
+                                                                  boneItr++) {
     boneItr->walkBones(result,fullTransformation,anim,time);
   }
 }

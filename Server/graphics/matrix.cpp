@@ -63,7 +63,8 @@ std::array<gx::matrix::elem_t,4>& gx::matrix::operator[](row_index_type i) {
   return elems[i];
 }
 
-const std::array<gx::matrix::elem_t,4>& gx::matrix::operator[](row_index_type i) const {
+const std::array<gx::matrix::elem_t,4>&
+gx::matrix::operator[](row_index_type i) const {
   return elems[i];
 }
 

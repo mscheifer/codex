@@ -17,7 +17,8 @@ sf::Vector2i mouseDiff = sf::Vector2i(0,0);
 } //end unnamed namespace
 
 gx::input::input()
-  : updated(false), jumped(false), stopped(false), fired1(false), fired2(false), pickup(false),switchWeapon(false) {}
+  : updated(false), jumped(false), stopped(false), fired1(false), fired2(false),
+    pickup(false),switchWeapon(false) {}
 
 bool gx::input::getUpdated() {
   return this->updated;

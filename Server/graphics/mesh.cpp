@@ -117,8 +117,9 @@ gx::Mesh::Mesh(const std::string& Filename, length_t height)
     m_Entries(InitFromScene(idMap,mScene)),
     m_Materials(InitMaterials(mScene, Filename)),
   //just do the first one unless kangh has a model with more
-    entityData(std::move(m_Entries[0].positions),std::move(m_Entries[0].normals),
-      std::move(m_Entries[0].diffuseCoords), std::move(m_Entries[0].boneWeights.first),
+    entityData(std::move(m_Entries[0].positions),
+      std::move(m_Entries[0].normals), std::move(m_Entries[0].diffuseCoords),
+      std::move(m_Entries[0].boneWeights.first),
       std::move(m_Entries[0].boneWeights.second),
       std::move(m_Entries[0].indices), std::move(m_Entries[0].offsets),
       std::move(m_Materials[0]), std::move(bones),
@@ -143,14 +144,16 @@ const aiScene* gx::Mesh::LoadFile(Assimp::Importer& Importer,
   for(unsigned int i = 0; i < pScene->mNumAnimations; i++) {
     debugout << "animation: " << pScene->mAnimations[i]->mName.C_Str() << endl;
     debugout << "duration: " << pScene->mAnimations[i]->mDuration << endl;
-    debugout << "tics per second: " << pScene->mAnimations[i]->mTicksPerSecond << endl;
+    debugout << "tics per second: " << pScene->mAnimations[i]->mTicksPerSecond;
+    debugout << endl;
     debugout << "meshes: " << pScene->mAnimations[i]->mNumMeshChannels << endl;
     debugout << "bones: " << pScene->mAnimations[i]->mNumChannels << endl;
     for(unsigned int j = 0; j < pScene->mAnimations[i]->mNumChannels; j++) {
-      debugout << "  bonesName: " << pScene->mAnimations[i]->mChannels[j]->mNodeName.C_Str() << endl;
-      debugout << "    position keys " << pScene->mAnimations[i]->mChannels[j]->mNumPositionKeys << endl;
-      debugout << "    rotation keys " << pScene->mAnimations[i]->mChannels[j]->mNumRotationKeys << endl;
-      debugout << "    scaling keys " << pScene->mAnimations[i]->mChannels[j]->mNumScalingKeys << endl;
+      const auto& channel = pScene->mAnimations[i]->mChannels[j];
+      debugout << "  bonesName: " << channel->mNodeName.C_Str() << endl;
+      debugout << "    position keys " << channel->mNumPositionKeys << endl;
+      debugout << "    rotation keys " << channel->mNumRotationKeys << endl;
+      debugout << "    scaling keys " << channel->mNumScalingKeys << endl;
     }
   }
   //end print
@@ -176,7 +179,8 @@ std::vector<gx::Mesh::MeshEntry> gx::Mesh::InitFromScene(idMap_t& idMap,
   return Ret;
 }
 
-std::vector<gx::material> gx::Mesh::InitMaterials(const aiScene* pScene,const std::string& Filename){
+std::vector<gx::material>
+gx::Mesh::InitMaterials(const aiScene* pScene,const std::string& Filename) {
   if(pScene == nullptr) return std::vector<material>();
   // Extract the directory part from the file name
   std::string::size_type SlashIndex = Filename.find_last_of("/");
@@ -207,7 +211,6 @@ std::vector<gx::material> gx::Mesh::InitMaterials(const aiScene* pScene,const st
     if (pMaterial->GetTextureCount(aiTextureType_DIFFUSE) > 0 &&
         AI_SUCCESS == pMaterial->GetTexture(aiTextureType_DIFFUSE, 0, &Path)) {
       diffusePath = Dir + "/" + Path.C_Str();
-      std::cout << "name length " << Path.length << " for " << Filename << std::endl;
     } else {
       diffusePath = "models/white.png";
     }

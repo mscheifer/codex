@@ -9,7 +9,7 @@ const unsigned int defaultWindowWidth  = 800;
 const unsigned int defaultWindowHeight = 600;
 
 gx::graphicsEntity loadModel(const std::string& ModelPath) {
-  return std::move(gx::Mesh(ModelPath,5).entityData); //is std::move necessary here?
+  return gx::Mesh(ModelPath,5).entityData; //add std::move if this copies
 }
 
 std::vector<gx::graphicsEntity> staticModels() {
@@ -54,7 +54,8 @@ GLenum initGlew() {
 const gx::vector3f gx::graphicsClient::upDirection(0.0, 0.0, 1.0);
 
 void gx::graphicsClient::setCamera() {
-  //add the direction vector to the player's position to get the position to look at
+  //add the direction vector to the player's position to get the position to
+  //look at
   this->display.setView(playerPosition,
                         playerDirection + playerPosition,
                         upDirection);
@@ -85,7 +86,8 @@ std::vector<gx::uniform::block*> gx::graphicsClient::uniforms() {
 gx::graphicsClient::graphicsClient():
     window(sf::VideoMode(defaultWindowWidth, defaultWindowHeight),
            "DrChao", sf::Style::Default),
-    glewStatus(initGlew()), //glew needs to be called here, after window, before anything else
+    //glew needs to be called here, after window, before anything else
+    glewStatus(initGlew()),
     userInput(),
     light1(gx::vector4f(1,1,1),0.5,0.5,0.05f),
     display(),
@@ -93,9 +95,10 @@ gx::graphicsClient::graphicsClient():
     animatedDrawer(dynamicModels(),uniforms()),
     playerDirection(0.0, 1.0,0.0),//change to result of init packet
     playerStartDirection(0.0, 1.0,0.0),//change to result of init packet
-    playerStartRight(playerStartDirection.y,playerStartDirection.x,playerStartDirection.z),
+    playerStartRight(playerStartDirection.y,-playerStartDirection.x,
+                     playerStartDirection.z),
     playerPosition(0.0, 0.0, 0.0),//change to the result of init packet
-     fpsClock(), fpsFrames(0) , Hud(), Lobby() , Score(ConfigManager::numPlayers()) {
+    fpsClock(), fpsFrames(0),Hud(),Lobby(), Score(ConfigManager::numPlayers()) {
   this->window.setVerticalSyncEnabled(false);
   this->window.setMouseCursorVisible(true);
   if(!this->window.setActive()) {
@@ -126,7 +129,8 @@ ClientGameTimeAction gx::graphicsClient::handleInput() {
     reshape(this->userInput.windowWidth(),this->userInput.windowHeight());
   }
   auto newdir = this->userInput.turnPlayer();
-  this->playerDirection = toBasis(playerStartRight,playerStartDirection,upDirection) * newdir;
+  this->playerDirection =
+    toBasis(playerStartRight,playerStartDirection,upDirection) * newdir;
   this->setCamera(); //after setting new player position and direction
   if(jumped()) {
     action.jump = true;
@@ -152,7 +156,8 @@ void gx::graphicsClient::draw() {
   entities.draw();
   animatedDrawer.draw();
   
-  //render sfml please don't comment or uncomment anything from the following block
+  //render sfml please don't comment or uncomment anything from the following
+  //block
   glBindVertexArray(0);
   debugout << "Bound 0 draw loop" << endl;
   window.pushGLStates();
@@ -241,6 +246,7 @@ void gx::graphicsClient::gameEnd()
   Lobby.endGame();
 }
 
-void gx::graphicsClient::updateScores(std::vector<int> & pwins, std::vector<int> & pkills) {
+void gx::graphicsClient::updateScores(std::vector<int> & pwins,
+                                      std::vector<int> & pkills) {
   Score.updateScores(pwins,pkills);
 }

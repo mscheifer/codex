@@ -28,14 +28,10 @@ class rawAttrib {
 };
 
 template<typename T>
-rawAttrib<T> makeRawAttrib(std::string name, std::vector<T> data) {
-  return rawAttrib<T>(std::move(name),std::move(data));
-}
+rawAttrib<T> makeRawAttrib(std::string name, std::vector<T> data);
 
 template<typename T>
-std::shared_ptr<rawAttrib<T>> makeRawAttribPtr(std::string name, std::vector<T> data) {
-  return std::make_shared<rawAttrib<T>>(std::move(name),std::move(data));
-}
+std::shared_ptr<rawAttrib<T>> makeRawAttribPtr(std::string, std::vector<T>);
 
 struct graphicsEntity {
     template<typename T>
@@ -67,10 +63,11 @@ struct graphicsEntity {
                    std::vector<vector4f> bWeights,std::vector<GLuint>   indices,
                    std::map<int,matrix>, material, bone, matrix);
 
-    graphicsEntity(rawAttribPtr_t<vector4f>::t pos, rawAttribPtr_t<vector3f>::t norms,
-                   rawAttribPtr_t<vector2f>::t dcoos,rawAttribPtr_t<vector4i>::t bIDs,
-                   rawAttribPtr_t<vector4f>::t bWts,std::vector<GLuint> indices,
-                   std::map<int,matrix>, material, bone, matrix);
+    graphicsEntity(
+      rawAttribPtr_t<vector4f>::t positions,  rawAttribPtr_t<vector3f>::t norms,
+      rawAttribPtr_t<vector2f>::t diffuseCoos,rawAttribPtr_t<vector4i>::t bIDs,
+      rawAttribPtr_t<vector4f>::t bWts,       std::vector<GLuint> indices,
+      std::map<int,matrix>, material, bone, matrix);
 
     graphicsEntity(graphicsEntity const&);// = delete; //don't copy
     graphicsEntity& operator=(graphicsEntity const&);// = delete; //don't copy

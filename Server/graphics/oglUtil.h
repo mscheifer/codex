@@ -33,7 +33,7 @@ class debugStream {
   public:
     template<typename T>
     debugStream& operator<<(const T& a) {
-      bool userDebugOn = StringToBool(ConfigManager::configMap["graphicsDebug"]);
+      bool userDebugOn= StringToBool(ConfigManager::configMap["graphicsDebug"]);
       if(debugOn && userDebugOn) {
         logString << a;
         if(logString.str().back() == '\n') {

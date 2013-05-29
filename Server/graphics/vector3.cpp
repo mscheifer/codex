@@ -148,8 +148,8 @@ template<typename T>
 typename gx::vector3<T>::elem_t& gx::vector3<T>::operator[](index_type i) {
   return get(i);
 }
-template<typename T>
-const typename gx::vector3<T>::elem_t& gx::vector3<T>::operator[](index_type i) const {
+template<typename T> const typename gx::vector3<T>::elem_t&
+gx::vector3<T>::operator[](index_type i) const {
   return get(i);
 }
 template<typename T>

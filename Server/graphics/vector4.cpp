@@ -114,8 +114,8 @@ template<typename T>
 typename gx::vector4<T>::elem_t& gx::vector4<T>::operator[](index_type i) {
   return this->get(i);
 }
-template<typename T>
-const typename gx::vector4<T>::elem_t& gx::vector4<T>::operator[](index_type i) const {
+template<typename T> const typename gx::vector4<T>::elem_t&
+gx::vector4<T>::operator[](index_type i) const {
   return this->get(i);
 }
 template<typename T>

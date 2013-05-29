@@ -10,6 +10,8 @@ class material {
   public:
     material(Texture,vector4f);
     void bind() const;
+
+    static void setupBindings(shaderProgram const&);
 };
 } //end namespace gx
 #endif //MATERIAL_H
