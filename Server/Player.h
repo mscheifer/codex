@@ -38,7 +38,7 @@ public:
   Player(v3_t pos, int assigned_id, Map *);
   ~Player(void);
   std::string getString();
-  virtual bool attackBy(DeadlyEntity*);
+  virtual bool attackBy(Projectile*);
   void update();
   void handleCollisions();  
   void updateBounds();  
@@ -64,7 +64,7 @@ public:
   void restartSpeedUpCounter(void) { speedUpCounter.restart();};
   WeaponType getPickupWeaponType() const{ return pickupWeaponType; }
   void setAsMinotaur(bool b);
-  bool isMinotaur();
+  bool isMinotaur() const;
   Entity_Type getType() const { return type; }
   float getAttackCD() const;
   float getChargeCD() const;
@@ -77,7 +77,10 @@ public:
   
   void serialize(sf::Packet& packet) const;
   void deserialize(sf::Packet& packet);
-   bool charging;
+  bool charging;
+  bool walking;
+  bool shotProjectile;
+  bool attacked;
 private:
   Weapon* pickup;
   WeaponType pickupWeaponType;
@@ -105,7 +108,7 @@ private:
   Weapon* weapon[MAXWEAPONS]; //0 bare hand, 1 fireball
   int current_weapon_selection; //0 bare hand, 1 fireball
 
-  bool damageBy(DeadlyEntity *);
+  bool damageBy(Projectile *);
   void handleSelfAction(ClientGameTimeAction a);
   void handleOtherAction(ClientGameTimeAction a);
   void attack(ClientGameTimeAction a);

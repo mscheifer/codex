@@ -194,9 +194,21 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="..\Makefile" />
-    <None Include="graphics\Images\bar.png" />
+    <None Include="graphics\Images\aimer.png" />
+    <None Include="graphics\Images\badguy.png" />
+    <None Include="graphics\Images\burn.png" />
+    <None Include="graphics\Images\burn2.png" />
+    <None Include="graphics\Images\Empty_bar.png" />
+    <None Include="graphics\Images\frz.png" />
+    <None Include="graphics\Images\frz2.png" />
+    <None Include="graphics\Images\Full_life_bar.png" />
+    <None Include="graphics\Images\Full_mana_bar.png" />
+    <None Include="graphics\Images\grv.png" />
+    <None Include="graphics\Images\grv2.png" />
     <None Include="graphics\Images\heart_color.png" />
     <None Include="graphics\Images\magic_color.png" />
+    <None Include="graphics\Images\stn.png" />
+    <None Include="graphics\Images\stn2.png" />
     <None Include="masterConfig.txt" />
     <None Include="shaders\animated.frag" />
     <None Include="shaders\animated.vert" />
