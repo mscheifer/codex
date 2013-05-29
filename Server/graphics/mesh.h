@@ -33,7 +33,7 @@ class Mesh {
         MeshEntry& operator=(MeshEntry&&);// = delete; //define later
 
         std::vector<vector4f> positions;
-        std::vector<vector4f> colors;
+        std::vector<vector2f> diffuseCoords;
         std::vector<vector3f> normals;
         std::pair<std::vector<vector4i>,
                   std::vector<vector4f>> boneWeights;

@@ -118,7 +118,7 @@ gx::Mesh::Mesh(const std::string& Filename, length_t height)
     m_Materials(InitMaterials(mScene, Filename)),
   //just do the first one unless kangh has a model with more
     entityData(std::move(m_Entries[0].positions),std::move(m_Entries[0].normals),
-      std::move(m_Entries[0].colors), std::move(m_Entries[0].boneWeights.first),
+      std::move(m_Entries[0].diffuseCoords), std::move(m_Entries[0].boneWeights.first),
       std::move(m_Entries[0].boneWeights.second),
       std::move(m_Entries[0].indices), std::move(m_Entries[0].offsets),
       std::move(m_Materials[0]), std::move(bones),
@@ -127,9 +127,9 @@ gx::Mesh::Mesh(const std::string& Filename, length_t height)
 const aiScene* gx::Mesh::LoadFile(Assimp::Importer& Importer,
                                  const std::string& Filename) {
   const aiScene* pScene = Importer.ReadFile(Filename.c_str(), 
-        aiProcess_Triangulate       |
-        aiProcess_GenSmoothNormals |
-        aiProcess_FlipUVs);
+           aiProcess_Triangulate 
+         | aiProcess_GenSmoothNormals
+       /*| aiProcess_FlipUVs*/);
   if (!pScene) {
     std::cout << "Error parsing '" <<  Filename.c_str() << "': '";
     std::cout << Importer.GetErrorString() << std::endl;

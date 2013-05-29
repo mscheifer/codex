@@ -83,12 +83,9 @@ std::vector<gx::vector4f> initColors(const aiMesh* paiMesh) {
 
   std::vector<gx::vector4f> ret;
   for (unsigned int i = 0 ; i < paiMesh->mNumVertices ; i++) {
-    const aiVector3D* pTexCoord =
-      paiMesh->HasTextureCoords(0) ? &(paiMesh->mTextureCoords[0][i]) : &Zero3D;
       // temporary color filler. 
       // colors are stored in materials
     ret.push_back(gx::vector4f(1.0f,0.2f,0.0f));
-    //TODO: use texture coordinates
   }
 
   return ret;
@@ -121,7 +118,7 @@ std::map<int,gx::matrix> initOffsets(const gx::Mesh::idMap_t& ids, const aiMesh*
 } //end unnamed namespace
 
 gx::Mesh::MeshEntry::MeshEntry(const idMap_t& ids, const aiMesh* paiMesh)
-  : positions(initPositions(paiMesh)), colors(initColors(paiMesh)),
+  : positions(initPositions(paiMesh)), diffuseCoords(initTexCoords(paiMesh)),
     normals(initNormals(paiMesh)), boneWeights(initBoneWeights(ids,paiMesh)),
     indices(initIndices(paiMesh)), offsets(initOffsets(ids,paiMesh)),
     MaterialIndex(paiMesh->mMaterialIndex) {
@@ -136,7 +133,7 @@ gx::Mesh::MeshEntry::MeshEntry(const idMap_t& ids, const aiMesh* paiMesh)
 };
 
 gx::Mesh::MeshEntry::MeshEntry(MeshEntry&& other) noexcept
-  : positions(std::move(other.positions)), colors(std::move(other.colors)),
+  : positions(std::move(other.positions)), diffuseCoords(std::move(other.diffuseCoords)),
     normals(std::move(other.normals)),boneWeights(std::move(other.boneWeights)),
     indices(std::move(other.indices)),    offsets(std::move(other.offsets)),
     MaterialIndex(std::move(other.MaterialIndex)) {}

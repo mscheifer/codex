@@ -45,8 +45,8 @@ struct graphicsEntity {
     //-- this block
     rawAttribPtr_t<vector4f>::t positions;
     rawAttribPtr_t<vector3f>::t normals;
-    //rawAttribPtr_t<vector2f>::type texcoords;
-    rawAttribPtr_t<vector4f>::t colors;
+    rawAttribPtr_t<vector2f>::t diffuseCoords;
+    //rawAttribPtr_t<vector4f>::t colors;
     rawAttribPtr_t<vector4i>::t boneIDs;
     rawAttribPtr_t<vector4f>::t boneWeights;
     std::vector<GLuint>  indices;
@@ -63,12 +63,12 @@ struct graphicsEntity {
     matrix centerAndResize;
 
     graphicsEntity(std::vector<vector4f> position,std::vector<vector3f> normals,
-                   std::vector<vector4f> colors  ,std::vector<vector4i> boneIDs,
+                   std::vector<vector2f> diffTxCo,std::vector<vector4i> boneIDs,
                    std::vector<vector4f> bWeights,std::vector<GLuint>   indices,
                    std::map<int,matrix>, material, bone, matrix);
 
     graphicsEntity(rawAttribPtr_t<vector4f>::t pos, rawAttribPtr_t<vector3f>::t norms,
-                   rawAttribPtr_t<vector4f>::t cols,rawAttribPtr_t<vector4i>::t bIDs,
+                   rawAttribPtr_t<vector2f>::t dcoos,rawAttribPtr_t<vector4i>::t bIDs,
                    rawAttribPtr_t<vector4f>::t bWts,std::vector<GLuint> indices,
                    std::map<int,matrix>, material, bone, matrix);
 

@@ -38,8 +38,8 @@ gx::graphicsEntity::attribsList_t processAttribs(const gx::graphicsEntity& genti
     }
     gentity.normals->putProcessedData(shaderID,rawData);
   }
-  if(!gentity.colors->hasProcessedData(shaderID)) {
-    gentity.colors->putDefaultData(shaderID);
+  if(!gentity.diffuseCoords->hasProcessedData(shaderID)) {
+    gentity.diffuseCoords->putDefaultData(shaderID);
   }
   if(!gentity.boneIDs->hasProcessedData(shaderID)) {
     gentity.boneIDs->putDefaultData(shaderID);

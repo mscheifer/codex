@@ -31,7 +31,7 @@ std::vector<gx::graphicsEntity> staticModels() {
 std::vector<gx::graphicsEntity> dynamicModels() {
   // MODEL LOADING
   //auto modelTest   = loadModel("models/boblampclean.md5anim");
-  auto modelPlayer = loadModel("models/Test_Run.dae");
+  auto modelPlayer = loadModel("models/cat.dae");
 
     //setup drawing data
   std::vector<gx::graphicsEntity> entitiesData;
@@ -191,7 +191,7 @@ void gx::graphicsClient::updateEntities(std::vector<Entity*> data) {
   for(auto entityP = data.begin(); entityP != data.end(); ++entityP) {
     const auto& entity = **entityP;
     const auto& type = entity.getType();
-    if(type == PLAYER) { //TODO: change back to type == PLAYER
+    if(type == POWER_UP) { //TODO: change back to type == PLAYER
       dynamicDrawer::instanceData inst;
       inst. pos = entity.getPosition();
       inst.dirY = entity.getDirection();
