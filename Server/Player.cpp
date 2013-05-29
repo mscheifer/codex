@@ -48,6 +48,8 @@ void Player::init(v3_t pos, int assigned_id, Map * m)
   minotaur = false;
 	dead = false;
   canJump = true;
+  shotProjectile = false;
+  attacked = false;
   jumpCount = 0;
 	player_id = assigned_id;
 	position = pos;
@@ -124,7 +126,10 @@ bool Player::attackBy(Projectile *other)
 
 bool Player::damageBy(Projectile *deadly)
 {
+  
 	if (health==0) return true;
+
+  attacked = true;
   float damage = deadly->getStrength() - defense;
 	damage = ( damage > 0? damage: 0);
 	float newHealth = (health - damage);
@@ -219,6 +224,8 @@ bool Player::correctMovementHit( Entity* e ){
 
 void Player::clearEvents(){
   walking = false;
+  shotProjectile = false;
+  attacked = false;
 }
 
 void Player::die()
@@ -326,6 +333,7 @@ void Player::handleSelfAction(ClientGameTimeAction a) {
     chargedProjectile->fire(v,getStrengthMultiplier());
     chargedProjectile = nullptr;
     charging = false;
+    shotProjectile = true;
   }
 
   if(a.switchWeapon) {
@@ -567,6 +575,8 @@ void Player::serialize(sf::Packet& packet) const {
     packet << current_weapon_selection; 
     packet << charging;
     packet << walking;
+    packet << shotProjectile;
+    packet << attacked;
     packet << kills;
     packet << wins;
     packet << buffs.size();
@@ -604,6 +614,8 @@ void Player::serialize(sf::Packet& packet) const {
     packet >> current_weapon_selection; 
     packet >> charging;
     packet >> walking;
+    packet >> shotProjectile;
+    packet >> attacked;
     packet >> kills;
     packet >> wins;
     int size = 0; 
