@@ -3,7 +3,9 @@
 
 /* TODO the constants should really be defined somewhere */
 gx::HUD::HUD(void):health(100), maxHealth(100), HLossPercentage(0), 
-  mana(100), maxMana(100), MLossPercentage(0), canPickUp(false), currentSelect(0) {
+  mana(100), maxMana(100), MLossPercentage(0), canPickUp(false),
+  weapon1(0), weapon2(0), currentSelect(0), elapsedChargeTime(0),
+  totalChargeTime(-1), chargeMagicType(0), charging(false){
   font.loadFromFile("arial.ttf");
   emptyBarTexture.loadFromFile("graphics/Images/Empty_bar.png");
   //heart image
@@ -50,13 +52,17 @@ gx::HUD::HUD(void):health(100), maxHealth(100), HLossPercentage(0),
   positionText.setFont(font);
   positionText.setCharacterSize(24);
   positionText.setColor(sf::Color::Black);
-  positionText.setPosition(600,600);
+  positionText.setPosition(600,500);
   //aimer
   aimerTexture.loadFromFile("graphics/Images/aimer.png");
   aimer.setTexture(aimerTexture);
-  aimer.setPosition(300,200);
   //buffs
   initializeSprites();
+  //chargig
+  energeBarFrameTexture.loadFromFile("graphics/Images/chargebarempty.png"); 
+  energeBarFrameSprite.setTexture(energeBarFrameTexture);
+  energeBarTexture.loadFromFile("graphics/Images/chargebar.png"); 
+  energeBarSprite.setTexture(energeBarTexture);
 }
 
 gx::HUD::~HUD(void) {
@@ -111,7 +117,8 @@ void gx::HUD::draw(sf::RenderWindow & window) {
     window.draw(badGuySprite);
   if (canPickUp)
     window.draw(pickUp);
-  if (sf::Mouse::isButtonPressed(sf::Mouse::Right)) { //TODO this is bad
+  aimer.setPosition((window.getSize().x-200)/2, (window.getSize().y-200)/2);
+  if (sf::Mouse::isButtonPressed(sf::Mouse::Right) && charging) { //TODO this is bad
     window.draw(aimer);
   }
   int buffn = 0; 
@@ -134,6 +141,14 @@ void gx::HUD::draw(sf::RenderWindow & window) {
   weaponSprites[index2]->setScale(0.5,0.5);
   window.draw(*weaponSprites[index2]); 
   weaponSprites[index2]->setScale(1,1);
+
+  //charge bar
+  if (totalChargeTime != -1) {
+    energeBarFrameSprite.setPosition((window.getSize().x-400)/2,window.getSize().y*0.8);
+    energeBarSprite.setPosition((window.getSize().x-400)/2,window.getSize().y*(0.8));
+    window.draw(energeBarFrameSprite);
+    window.draw(energeBarSprite);
+  }
 }
 
 void gx::HUD::updateHUD(const Player& player) {
@@ -146,9 +161,9 @@ void gx::HUD::updateHUD(const Player& player) {
   pickUp.setString("Hold F to pick up " + WeaponNames[player.getPickupWeaponType()]);
   hBarSprite.setTextureRect(sf::IntRect(0,0, static_cast<int>(health/maxHealth*200), 40));
   mBarSprite.setTextureRect(sf::IntRect(0,0, static_cast<int>(mana/maxMana*200), 40));
-  //buffTextures.clear();
-  //buffSprites.clear();
-  
+  if (totalChargeTime)
+    energeBarSprite.setTextureRect(sf::IntRect(0,0,static_cast<int>(elapsedChargeTime/totalChargeTime*400),15));  
+
   positionText.setString(std::to_string(static_cast<long double>(player.getPosition().x))+" , "+
     std::to_string(static_cast<long double>(player.getPosition().y))+" , "+
     std::to_string(static_cast<long double>(player.getPosition().z)));  
@@ -165,11 +180,13 @@ void gx::HUD::updateHUD(const Player& player) {
   weapon1 = player.weapon1;
   weapon2 = player.weapon2;
   currentSelect = player.getCurrentWeaponSelection();
-  //std::cout<<"weapon selected is "<<currentSelect<<" I have "<< player.weapon1 << ","<<player.weapon2<<std::endl;
-  //std::cout<<"charge time is " << player.elapsedChargeTime <<std::endl;
-  //std::cout<<"total time is " << player.totalChargeTime <<std::endl;
-  //std::cout<<"magic type is " << player.chargeMagicType <<std::endl;
-
+  this->elapsedChargeTime = player.elapsedChargeTime;
+  this->totalChargeTime = player.totalChargeTime;
+  this->chargeMagicType = player.chargeMagicType;
+  std::cout<<"charge time is " << player.elapsedChargeTime <<std::endl;
+  std::cout<<"total time is " << player.totalChargeTime <<std::endl;
+  std::cout<<"magic type is " << player.chargeMagicType <<std::endl;
+  charging = player.charging;
 }
 
 void gx::HUD::buffHelper(std::string & path) {

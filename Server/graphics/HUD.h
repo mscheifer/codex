@@ -18,6 +18,13 @@ private :
   float MLossPercentage;
   bool minotaur;
   bool canPickUp;
+  int weapon1;
+  int weapon2;
+  int currentSelect;
+  float elapsedChargeTime;
+  float totalChargeTime;
+  int chargeMagicType;
+  bool charging;
   sf::Text healthText;
   sf::Text manaText;
   sf::Font font;
@@ -42,6 +49,10 @@ private :
   sf::Text pickUp;
   sf::Texture aimerTexture;
   sf::Sprite aimer;
+  sf::Texture energeBarTexture;
+  sf::Sprite energeBarSprite;
+  sf::Texture energeBarFrameTexture;
+  sf::Sprite energeBarFrameSprite;
   std::vector<sf::Texture*> buffTextures;
   std::vector<sf::Sprite*> buffSprites;
   std::vector<sf::Texture*> buffLTextures;
@@ -50,9 +61,6 @@ private :
   std::vector<sf::Sprite*> weaponSprites;
   std::vector<bool> renderBuff;
   std::vector<int> remainTime;
-  int weapon1;
-  int weapon2;
-  int currentSelect;
   void buffHelper(std::string & path);
   void buffLHelper(std::string & path);
   void weaponHelper(std::string & path);

@@ -69,6 +69,8 @@ void Player::init(v3_t pos, int assigned_id, Map * m)
   speedUp = false;
   charging = false;
   walking = false;
+  elapsedChargeTime = 0;
+  totalChargeTime = -1;
 	map = m;
 	weapon[0] = new WeaponFist(position, this->map); //has no bounds so it doesnt drop
   //weapon[1] = new WeaponFist(position, this->map);

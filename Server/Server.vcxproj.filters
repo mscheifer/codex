@@ -529,5 +529,11 @@
     <None Include="graphics\Images\weaponFist.png">
       <Filter>Resource Files\graphics\Images</Filter>
     </None>
+    <None Include="graphics\Images\chargebar.png">
+      <Filter>Resource Files\graphics\Images</Filter>
+    </None>
+    <None Include="graphics\Images\chargebarempty.png">
+      <Filter>Resource Files\graphics\Images</Filter>
+    </None>
   </ItemGroup>
 </Project>
