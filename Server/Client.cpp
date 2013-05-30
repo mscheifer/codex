@@ -57,14 +57,14 @@ void NetworkClient::receiveMessages() {
         }
         auto pos = s.players[this->id].getPosition();
         gxClient.updatePosition(gx::vector4f(pos.x,pos.y,pos.z));
-        entities.push_back(&(this->skybox)); //add skybox
+        //entities.push_back(&(this->skybox)); //add skybox
         gxClient.updateEntities(entities);
         gxClient.updateHUD(s.players[id]);
         gxClient.updateScores(wins,kills);
         //std::cout << "num entities received: " << entities.size() << std::endl;
         if (s.players[id].dead) { /*render death everytime ? */}
         //render WIN OR LOSE based on s.state
-        sf::Listener::setPosition(pos.x, pos.y, pos.z);
+        sf::Listener::setPosition(pos.x/AudioManager::soundScaling, pos.y/AudioManager::soundScaling, pos.z/AudioManager::soundScaling);
         auto dir = s.players[this->id].getDirection();
         sf::Listener::setDirection(dir.x, dir.y, dir.z);
 
@@ -146,6 +146,10 @@ void NetworkClient::processInput(){
 */
 void NetworkClient::doClient() {
   AudioManager::loadSounds();
+
+  sf::VideoMode m = sf::VideoMode::getDesktopMode();
+  std::cout << "width " << m.width << std::endl;
+  std::cout << "height " << m.height << std::endl;
   //AudioManager::playMusic("m1");
 
   //std::cout << "Waiting for other players to join" << std::endl;
@@ -161,7 +165,7 @@ void NetworkClient::doClient() {
       if (joined && this->gxClient.gameStart()) {
         initPacket << static_cast<sf::Uint32>(INIT); 
         netRecv.sendMessage(initPacket);
-        joined =false; //only send packet once
+        joined = false; //only send packet once
       }
       initPacket.clear();
       if (netRecv.receiveMessage(initPacket)) {

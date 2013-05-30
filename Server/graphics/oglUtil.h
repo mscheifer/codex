@@ -1,6 +1,7 @@
 #ifndef OGLUTIL_H
 #define OGLUTIL_H
 #include <GL/glew.h>
+#include <assert.h>
 #include <iostream>
 #include <string>
 #include <sstream>
@@ -32,19 +33,21 @@ class debugStream {
   public:
     template<typename T>
     debugStream& operator<<(const T& a) {
-      bool userDebugOn = StringToBool(ConfigManager::configMap["graphicsDebug"]);
+      bool userDebugOn= StringToBool(ConfigManager::configMap["graphicsDebug"]);
       if(debugOn && userDebugOn) {
         logString << a;
         if(logString.str().back() == '\n') {
           std::string toPrint;
           getline(logString, toPrint);
           std::cout << toPrint << std::endl;
+          ConfigManager::log(toPrint);
           GLenum err;
           while((err = glGetError())) {
             std::stringstream sserror;
-            sserror << "OpenGL error: " << err << std::endl;
-            std::cout << sserror.str();
+            sserror << "OpenGL error: " << err;
+            std::cout << sserror.str() << std::endl;
             ConfigManager::log(sserror.str());
+            assert(false);
           }
         }
       } 

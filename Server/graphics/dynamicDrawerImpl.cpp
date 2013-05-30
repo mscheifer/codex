@@ -38,8 +38,8 @@ gx::graphicsEntity::attribsList_t processAttribs(const gx::graphicsEntity& genti
     }
     gentity.normals->putProcessedData(shaderID,rawData);
   }
-  if(!gentity.colors->hasProcessedData(shaderID)) {
-    gentity.colors->putDefaultData(shaderID);
+  if(!gentity.diffuseCoords->hasProcessedData(shaderID)) {
+    gentity.diffuseCoords->putDefaultData(shaderID);
   }
   if(!gentity.boneIDs->hasProcessedData(shaderID)) {
     gentity.boneIDs->putDefaultData(shaderID);
@@ -61,13 +61,15 @@ const std::string gx::dynamicDrawerImpl::fragShader =
 gx::dynamicDrawerImpl::entityClass::entityClass(graphicsEntity drawData,
                                                 varSigs_t vars)
   : vertData(std::move(drawData.indices),processAttribs(drawData),
-             std::move(vars)), rootBone(std::move(drawData.rootBone)) {
+             std::move(vars)), mat(std::move(drawData.mat)),
+    rootBone(std::move(drawData.rootBone)) {
   this->rootBone.transform = std::move(drawData.centerAndResize) *
     this->rootBone.transform;
 }
 
 gx::dynamicDrawerImpl::entityClass::entityClass(entityClass&& other) noexcept
-  : vertData(std::move(other.vertData)), rootBone(std::move(other.rootBone)) {}
+  : instances(std::move(other.instances)), vertData(std::move(other.vertData)),
+    mat(std::move(other.mat)), rootBone(std::move(other.rootBone)) {}
 
 gx::dynamicDrawerImpl::entityClass&
 gx::dynamicDrawerImpl::entityClass::operator=(entityClass&&) {

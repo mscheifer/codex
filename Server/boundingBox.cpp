@@ -1,5 +1,4 @@
 #include "boundingBox.h"
-#include <cmath>
 #include "Quadtree.h"
 #include "graphics/matrix.h"
 

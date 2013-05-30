@@ -3,6 +3,7 @@
 #include <SFML/Window.hpp>
 #include "displaySet.h"
 #include "drawer.h"
+#include "SkyboxDraw.h"
 #include "light.h"
 #include "input.h"
 #include "HUD.h"
@@ -25,6 +26,11 @@ class graphicsClient {
 
     staticDrawer entities;
     dynamicDrawer animatedDrawer;
+    SkyboxDraw skyboxDrawer;
+
+    HUD Hud;
+    lobby Lobby;
+    scoreBoard Score;
 
     //player info
     static const vector3f upDirection;
@@ -39,9 +45,7 @@ class graphicsClient {
 
     sf::Clock fpsClock;
     int fpsFrames;
-    HUD Hud;
-    lobby Lobby;
-    scoreBoard Score;
+    
     void setCamera();
     void reshape(unsigned int, unsigned int);
     std::vector<gx::uniform::block*> uniforms();
@@ -63,12 +67,7 @@ class graphicsClient {
     void gameEnd();
     void updateScores(std::vector<int> & pwins, std::vector<int> & pkills);
 
-    //input functions
     bool closed()        { return this->userInput.getStop(); }
-    bool jumped()        { return this->userInput.getJump(); }
-    bool fire1 ()        { return this->userInput.fire1  (); }
-    bool fire2 ()        { return this->userInput.fire2  (); }
-    vector3f getDir()     { return this->playerDirection; }
 };
 
 } //end namespace gx

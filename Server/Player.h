@@ -2,7 +2,7 @@
 #include <typeinfo>
 #include <iostream>
 #include <sstream>
-#include <cmath>
+//#include <cmath>
 #include <algorithm>
 #include <string>
 #include "Entity.h"
@@ -24,6 +24,10 @@ public:
   static const float playerDepth;
   static const Entity_Type type = PLAYER;
   bool dead; //might be private. should be determined in handleAction
+  bool meleeAttack;
+  bool weaponCall;
+  WeaponType weaponCallType;
+  
   int player_id;
   std::string name;
   Projectile* chargedProjectile;
@@ -65,6 +69,9 @@ public:
   float getAttackCD() const;
   float getChargeCD() const;
   float getStrengthMultiplier() const;
+  float getMovementMultiplier() const;
+  float getManaRegenMultiplier() const;
+  float getHealthRegenMultiplier() const;
   int getKills() const { return kills; }
   int getWins() const { return wins; }
   
@@ -78,6 +85,7 @@ private:
   Weapon* pickup;
   WeaponType pickupWeaponType;
   std::list<std::pair<BUFF,int>> buffs;
+  std::list<std::pair<BUFF,int>> inactiveBuffs;
 
   v3_t oldJumpVelocity; //the x,y velocity that should be applied
   bool minotaur; 
@@ -113,6 +121,10 @@ private:
   void die();
   void respawn(v3_t pos);
   void applyBuff( BUFF b);
+  void addInactiveBuff( BUFF b, int time );
+  std::pair<BUFF, int> getBuffReplacement( BUFF b );
+  void updateBuffs();
+  v3_t getFeetOrigin();
 
     //helper functions for collisions
   bool collideWall(const std::pair<Entity*,BoundingObj::vec3_t>& p);

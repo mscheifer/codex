@@ -14,7 +14,7 @@ WeaponFire::WeaponFire(v3_t c, Map* m, MAGIC_POWER basicAttack1)
 
   BoundingBox* b = new BoundingBox(BoundingObj::vec4_t(c.x,c.y,c.z),
   BoundingObj::vec3_t(1,0,0),BoundingObj::vec3_t(0,1,0),BoundingObj::vec3_t(0,0,1),
-  1,1,1);
+  weaponWidth/2.f,weaponHeight/2.f,weaponDepth/2.f);
   b->setEntity(this);
   //BoundingSphere* b = new BoundingSphere(gx::vector4(x,y,z),sphereRadius);
   boundingObjs.push_back(b);
@@ -30,7 +30,7 @@ Projectile* WeaponFire::attackRange(v3_t dir , v3_t pos, Player* owner)
 	Projectile* pj = map->produceProjectile();
   //dir.normalize();
   //pj->setDirection(dir);
-  //dir.scale(projectileSpeed); //TODO @alvin I took these out becasuse 
+  //dir.scale(projectileSpeed);
   pj->setVelocity(ZEROVEC);
   //pj->setPosition(pos);
   pj->setOwner(owner);
@@ -38,7 +38,7 @@ Projectile* WeaponFire::attackRange(v3_t dir , v3_t pos, Player* owner)
 	//pj->setRange(100); //      based on the magic it is
   //pj->setFired(false); //defaults to false
   // pj->setChargeTime(1500);
-  std::cout << "set proj m type " << basicAttack << std::endl;
+  //std::cout << "set proj m type " << basicAttack << std::endl;
   pj->setMagicType(basicAttack);
 
   Range_Cool_Down_Counter.restart();

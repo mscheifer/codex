@@ -114,7 +114,9 @@ namespace {
 } //end unnamed namespace
 template<typename T>
 typename gx::vector3<T>::elem_t gx::vector3<T>::magnitude() const {
-  return static_cast<elem_t>(sqrt(static_cast<magnitudeType<T>::floatType>(this->magnitudesq())));
+  const auto& sq = this->magnitudesq();
+  const auto& sqCasted = static_cast<typename magnitudeType<T>::floatType>(sq);
+  return static_cast<elem_t>(sqrt(sqCasted));
 }
 template<typename T>
 void gx::vector3<T>::normalize() {
@@ -146,8 +148,8 @@ template<typename T>
 typename gx::vector3<T>::elem_t& gx::vector3<T>::operator[](index_type i) {
   return get(i);
 }
-template<typename T>
-const typename gx::vector3<T>::elem_t& gx::vector3<T>::operator[](index_type i) const {
+template<typename T> const typename gx::vector3<T>::elem_t&
+gx::vector3<T>::operator[](index_type i) const {
   return get(i);
 }
 template<typename T>

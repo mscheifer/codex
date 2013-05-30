@@ -9,8 +9,9 @@
 #include "vertexAttribSignature.h"
 
 namespace gx {
-class vao {
+struct vao {
     typedef vertexAttrib::attribsList_t attribsList_t;
+private:
         GLuint id;
        GLsizei numIndices;
         GLuint ibo;

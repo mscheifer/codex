@@ -2,10 +2,13 @@ uniform  mat4 modelToWorld;
  
 in vec4  position;
 in vec4  color;
+in vec2  diffuseCoord;
 in vec3  normal;
 in float normDiff;
+
  
 out vec4  interpColor;
+out vec2  interpDiffuseCoord;
 out float interpNormDiff;
 out vec3  interpNormal;
 out vec4  interpPosition; //position of vert / frag in eye space
@@ -21,6 +24,7 @@ void main() {
   mat3 normalMatrix = mat3(viewMatrix * modelToWorld);
 
   interpColor    =                                          color;
+  interpDiffuseCoord =                                      diffuseCoord;
   interpNormDiff =                                          normDiff;
   interpNormal   =                           normalMatrix * normal;
   interpPosition =              viewMatrix * modelToWorld * position;

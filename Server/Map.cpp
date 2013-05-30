@@ -34,33 +34,33 @@ void Map::mapReset()
 }
 
 void Map::initPowerUps() {
-  PowerUp* superPower = new PowerUp(v3_t(2,9,0), this, MOVEBOOST);
+  PowerUp* superPower = new PowerUp(v3_t(2,2,0), this, ICE3DEBUFF);
   superPower->setRespownTime(5000);
   this->entities.push_back(superPower);
 
-  PowerUp* p2 = new PowerUp(v3_t(10,-9,0), this, STRBOOST);//TOOD set respawn timer
+  PowerUp* p2 = new PowerUp(v3_t(2,5,0), this, THU2DEBUFF);
   p2->setRespownTime(5000);
   this->entities.push_back(p2);
 
-  PowerUp* p3 = new PowerUp(v3_t(-10,-9,0), this, ATTACKCD);
+  PowerUp* p3 = new PowerUp(v3_t(2,9,0), this, ICE1DEBUFF);
   p3->setRespownTime(5000);
   this->entities.push_back(p3);
 }
 
 void Map::initWallsOne(void)
 {
-  WeaponFire* w1 = new WeaponFire(v3_t(100,100,0), this, FIR1);
-  w1->dropDown(v3_t(10,10,0));
-  w1->setDirection(v3_t(0,1,0));
-  entities.push_back(w1);
-  WeaponFire* w2 = new WeaponFire(v3_t(120,120,0), this, THU1);
-  w2->dropDown(v3_t(10,-10,0));
-  w2->setDirection(v3_t(0,1,0));
-  entities.push_back(w2);
-  WeaponFire* w3 = new WeaponFire(v3_t(120,120,0), this, ICE1);
-  w3->dropDown(v3_t(-10,-10,0));
-  w3->setDirection(v3_t(0,1,0));
-  entities.push_back(w3);
+  //WeaponFire* w1 = new WeaponFire(v3_t(100,100,0), this, FIR1);
+  //w1->dropDown(v3_t(10,10,0));
+  //w1->setDirection(v3_t(0,1,0));
+  //entities.push_back(w1);
+  //WeaponFire* w2 = new WeaponFire(v3_t(120,120,0), this, THU1);
+  //w2->dropDown(v3_t(10,-10,0));
+  //w2->setDirection(v3_t(0,1,0));
+  //entities.push_back(w2);
+  //WeaponFire* w3 = new WeaponFire(v3_t(120,120,0), this, ICE1);
+  //w3->dropDown(v3_t(-10,-10,0));
+  //w3->setDirection(v3_t(0,1,0));
+  //entities.push_back(w3);
 
   spawnPositions.push_back(v3_t(4,-4,1));
   spawnPositions.push_back(v3_t(4,4,1));
@@ -409,7 +409,6 @@ std::vector<Entity *> Map::getEntity() {
    return ret;
  }
 
- //TODO should we just process all live projectiles, thenw e can remove
  void Map::destroyProjectile(Projectile * proj)
  {
    if(proj->getOwner() == nullptr) //has already been removed
@@ -497,8 +496,13 @@ void Map::removeFromQtree(Entity* e){
 }
 
 void Map::initScores() {
-  for (int i=0;i<ConfigManager::numPlayers();i++) {
+  for (unsigned int i=0;i<ConfigManager::numPlayers();i++) {
     kills.push_back(0);
     wins.push_back(0);
   }
+}
+
+void Map::addEntity(Entity* e){
+  entities.push_back(e);
+  addToQtree(e);
 }

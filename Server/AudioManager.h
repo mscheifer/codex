@@ -24,7 +24,9 @@ private:
   //and filename sound
   static void loadSound(std::string key, std::string sound);
   static void playSoundHelper(sf::Sound* s, v3_t pos, sf::SoundBuffer* sbuff);
-  
+
+  static std::string getWeaponCall(WeaponType w);
+
   //this is for music
   static int notCurrentlyPlaying(); //return the index of the not currently playing music
   static std::string getTrack( int track, int prox ); // get the string of music based on track and prox
@@ -33,6 +35,7 @@ private:
   static int getClosestProx(int prox); //return the next closest proximity to load in teh other music (this is done on init only)
 
 public:
+  static float soundScaling;
   //initialize the audio manager
   //load all the sounds
   static void loadSounds();

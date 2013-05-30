@@ -23,13 +23,15 @@ class input {
     unsigned int width;
     unsigned int height;
     bool resized;
+    int  mouseX;
+    int  mouseY;
   public:
     input();
     bool    getUpdated();
     bool       getJump();
     bool       getStop();
-    bool         fire1();
-    bool         fire2();
+    bool         fire1() const;
+    bool         fire2() const;
     bool        pickUp();
     bool       switchW();
     bool         drawS();
@@ -39,6 +41,9 @@ class input {
     bool resizedWindow();
     unsigned int windowWidth();
     unsigned int windowHeight();
+
+    int mouseXpos() const;
+    int mouseYpos() const;
 
     void setUpMouse();
     void handle(sf::Window&);

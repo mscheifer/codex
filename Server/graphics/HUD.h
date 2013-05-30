@@ -39,6 +39,8 @@ private :
   sf::Texture badGuyTexture;
   sf::Sprite badGuySprite;
   sf::Text pickUp;
+  sf::Texture aimerTexture;
+  sf::Sprite aimer;
 public:
   HUD(void);
   ~HUD(void);

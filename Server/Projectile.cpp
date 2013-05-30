@@ -3,13 +3,17 @@ int Projectile::ID_Counter = 0;
 const float Projectile::meleeWidth = 1.0f;
 const float Projectile::meleeHeight = 1.0f;
 const float Projectile::meleeDepth = 3.0f;
+const float Projectile::projWidth = 1.0f;
+const float Projectile::projHeight = 1.0f;
+const float Projectile::projDepth = 1.0f;
+
 
 Projectile::Projectile(Map* m):fired(false)
 {
 	this->map = m;
   charge_counter = sf::Clock();
   BoundingBox* b = new BoundingBox(BoundingObj::vec4_t(0,0,0),BoundingObj::vec3_t(1,0,0),BoundingObj::vec3_t(0,1,0),BoundingObj::vec3_t(0,0,1),
-  1,1,1);
+  projWidth/2.f,projHeight/2.f,projDepth/2.f);
   b->setEntity(this);
   id = ID_Counter;
   ID_Counter++;
@@ -28,7 +32,14 @@ void Projectile::reset(){
 
 bool Projectile::correctMovementHit( Entity* e ){
   Entity_Type etype = e->getType();
-  if( etype == WALL || etype == PROJECTILE ){
+  if( etype == WALL )
+    return true;
+  else if (etype == PROJECTILE && ((Projectile*) e)->charging){// check same team
+    if( owner->isMinotaur() )
+      return false;
+    else if( ((Projectile*) e)->getOwner()->isMinotaur() )
+      return false;
+
     return true;
   } else if ( etype == PLAYER ){
     return e != owner;
@@ -48,7 +59,7 @@ void Projectile::update(void) {
     }
   } else {
     v3_t distanceTravelled = velocity * ConfigManager::serverTickLengthSec();
-    distanceTravelled = correctMovement(distanceTravelled, false);
+    distanceTravelled = correctMovement(distanceTravelled, false, position);
 
     float mag = distanceTravelled.magnitude();
     if( mag > distanceLeftToTravel ){ //make sure you don't go past the range
@@ -112,22 +123,27 @@ void Projectile::handleCollisions() {
       break;
     case PROJECTILE:
       Projectile * proj = (Projectile*) e;
-      if(charging){      //TODO add combine sound
+      if(charging){
         setMagicType(combine(proj->getMagicType(), magicType));
         map->destroyProjectile(proj);
+        combined = true;
       } else if ( proj->charging ){
         proj->setMagicType(combine(proj->getMagicType(), magicType));
-        map->destroyProjectile(this);
-      } else {
-        map->destroyProjectile(proj);
+        proj->combined = true;
         map->destroyProjectile(this);
       }
+      
+      //else {
+      //  map->destroyProjectile(proj);
+      //  map->destroyProjectile(this);
+      //}
       break;
     }
   }
 }
 
 void Projectile::clearEvents(){
+  combined = false;
   fired = false;
 }
 
@@ -176,13 +192,13 @@ void Projectile::setMagicType( MAGIC_POWER m, bool melee ) {
   charge_counter.restart();
   float size = ProjInfo[magicType].size;
   if(melee){ //set size for melee
-    ((BoundingBox*) boundingObjs[0])->setHw( meleeWidth );
-    ((BoundingBox*) boundingObjs[0])->setHh( meleeHeight );
-    ((BoundingBox*) boundingObjs[0])->setHd( meleeDepth );
+    ((BoundingBox*) boundingObjs[0])->setHw( meleeWidth/2.f );
+    ((BoundingBox*) boundingObjs[0])->setHh( meleeHeight/2.f );
+    ((BoundingBox*) boundingObjs[0])->setHd( meleeDepth/2.f );
   } else {
-    ((BoundingBox*) boundingObjs[0])->setHw( size );
-    ((BoundingBox*) boundingObjs[0])->setHh( size );
-    ((BoundingBox*) boundingObjs[0])->setHd( size );
+    ((BoundingBox*) boundingObjs[0])->setHw( size/2.f );
+    ((BoundingBox*) boundingObjs[0])->setHh( size/2.f );
+    ((BoundingBox*) boundingObjs[0])->setHd( size/2.f );
   }
 }
 
@@ -190,6 +206,8 @@ void Projectile::serialize(sf::Packet & packet) const {
   Entity::serialize(packet);
   packet << fired;
   packet << id;
+  packet << combined;
+  packet << static_cast<sf::Uint32>(magicType);
   //(*owner).serialize(packet);
 }
 
@@ -197,6 +215,10 @@ void Projectile::deserialize( sf::Packet & packet ) {
   Entity::deserialize(packet);
   packet >> fired;
   packet >> id;
+  packet >> combined;
+  sf::Uint32 u32;
+  packet >> u32;
+  magicType = static_cast<MAGIC_POWER>(u32);
   //delete owner; this segfaults
   //Player* owner = new Player();
   //(*owner).deserialize(packet);

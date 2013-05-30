@@ -23,16 +23,16 @@ public:
   }
 };
 
-struct StartGamePacket
+struct StartGamePacket //is this used?
 {
   public:
   static const int packetType = STARTGAME;
   StartGamePacket() {}
 
-  void serialize(sf::Packet& packet) const{
+  void serialize(sf::Packet& ) const{
   }
 
-  void deserialize(sf::Packet& packet){
+  void deserialize(sf::Packet& ){
   }
 };
 

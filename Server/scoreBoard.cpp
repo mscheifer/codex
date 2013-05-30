@@ -12,7 +12,7 @@ scoreBoard::scoreBoard(int numPlayer) {
  frame.setOutlineThickness(5);
  frame.setPosition(20,20);
  frame.setSize(sf::Vector2f(200,25*(numPlayer+3)));
- frame.setFillColor(sf::Color::Color(255,255,0,100));
+ frame.setFillColor(sf::Color(255,255,0,100));
  sf::FloatRect boardRect = frame.getGlobalBounds(); 
  sf::FloatRect textRect = boardText.getGlobalBounds();
  //TOOD shouldn't hardcode position but might change based on whether using sprites
@@ -49,6 +49,7 @@ scoreBoard::scoreBoard(int numPlayer) {
    pkills.push_back(0);
    pwins.push_back(0);
  }
+
 }
 
 
@@ -60,7 +61,7 @@ void scoreBoard::draw(sf::RenderWindow & window) {
   window.draw(boardText);
   window.draw(killText);
   window.draw(winText);
-  for (int i=0; i<playerWins.size(); i++ ) {
+  for (unsigned int i=0; i<playerWins.size(); i++ ) {
     playerKills[i].setString(std::to_string((long long)pkills[i]));
     playerWins[i].setString(std::to_string((long long) pwins[i]));
     window.draw(playerScores[i]);

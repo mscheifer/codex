@@ -32,8 +32,8 @@ int sign( float number)
 std::pair<bool,BoundingObj::vec3_t> notSeparatedByAxis(const BoundingBox* a, const BoundingObj::vec3_t t,
   const BoundingObj::vec3_t axis, const BoundingBox* b){
 
-  float centerDist = abs(t.dot(axis));
-  float sumDist = 0;
+  v3_t::elem_t centerDist = std::abs(t.dot(axis));
+  v3_t::elem_t sumDist = 0;
 
   //Ax*Aw dot L
   BoundingObj::vec3_t axis2 = a->getAx();

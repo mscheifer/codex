@@ -9,11 +9,11 @@ const unsigned int defaultWindowWidth  = 800;
 const unsigned int defaultWindowHeight = 600;
 
 gx::graphicsEntity loadModel(const std::string& ModelPath) {
-  return std::move(gx::Mesh(ModelPath,5).entityData); //is std::move necessary here?
+  return gx::Mesh(ModelPath,10).entityData; //add std::move if this copies
 }
 
 std::vector<gx::graphicsEntity> staticModels() {
-  auto modelJack   = loadModel("models/weird_orange_thing.dae");
+  auto modelJack   = loadModel("models/Badguy_texture.dae");
   auto modelWall   = loadModel("models/wall.dae");
   auto modelPlayer = loadModel("models/Test_Run.dae");
   auto cubes = gx::loadCube();
@@ -31,7 +31,7 @@ std::vector<gx::graphicsEntity> staticModels() {
 std::vector<gx::graphicsEntity> dynamicModels() {
   // MODEL LOADING
   //auto modelTest   = loadModel("models/boblampclean.md5anim");
-  auto modelPlayer = loadModel("models/Test_Run.dae");
+  auto modelPlayer = loadModel("models/cat.dae");
 
     //setup drawing data
   std::vector<gx::graphicsEntity> entitiesData;
@@ -54,7 +54,8 @@ GLenum initGlew() {
 const gx::vector3f gx::graphicsClient::upDirection(0.0, 0.0, 1.0);
 
 void gx::graphicsClient::setCamera() {
-  //add the direction vector to the player's position to get the position to look at
+  //add the direction vector to the player's position to get the position to
+  //look at
   this->display.setView(playerPosition,
                         playerDirection + playerPosition,
                         upDirection);
@@ -63,13 +64,14 @@ void gx::graphicsClient::setCamera() {
 void gx::graphicsClient::reshape(unsigned int w, unsigned int h) {
   typedef displaySet::elem_t elem_t;
   const elem_t fov       = 53.13f;
-  const elem_t ratio     = elem_t(w) / elem_t(h);
+  const elem_t ratio     = static_cast<elem_t>(w) / static_cast<elem_t>(h);
   const elem_t nearPlane = 1.0f;
   const elem_t farPlane  = 3000.0f;
-  // adjust the viewport when the window is resized
-  //this->window.setView(w,h); //maybe better?
+  // RenderWindow automatically sets the viewport on a resize
+  // in Linux but not in windows so we have to do it here
   glViewport(0, 0, w, h);
-  gx::debugout << "glViewport(0, 0, " << w << ", " << h << ");" << gx::endl;
+  debugout << "glViewport(0, 0, " << w << ", " << h << ");" << endl;
+  this->window.setView(sf::View(sf::FloatRect(0,0,w,h)));
   this->display.setProjection(fov,ratio,nearPlane,farPlane);
 }
 
@@ -85,17 +87,21 @@ std::vector<gx::uniform::block*> gx::graphicsClient::uniforms() {
 gx::graphicsClient::graphicsClient():
     window(sf::VideoMode(defaultWindowWidth, defaultWindowHeight),
            "DrChao", sf::Style::Default),
-    glewStatus(initGlew()), //glew needs to be called here, after window, before anything else
+    //glew needs to be called here, after window, before anything else
+    glewStatus(initGlew()),
     userInput(),
     light1(gx::vector4f(1,1,1),0.5,0.5,0.05f),
     display(),
     entities(staticModels(),uniforms()),
     animatedDrawer(dynamicModels(),uniforms()),
+    skyboxDrawer(display.storage()),
+    Hud(),Lobby(), Score(ConfigManager::numPlayers()),
     playerDirection(0.0, 1.0,0.0),//change to result of init packet
     playerStartDirection(0.0, 1.0,0.0),//change to result of init packet
-    playerStartRight(playerStartDirection.y,playerStartDirection.x,playerStartDirection.z),
+    playerStartRight(playerStartDirection.y,-playerStartDirection.x,
+                     playerStartDirection.z),
     playerPosition(0.0, 0.0, 0.0),//change to the result of init packet
-     fpsClock(), fpsFrames(0) , Hud(), Lobby() , Score(ConfigManager::numPlayers()) {
+    fpsClock(), fpsFrames(0) {
   this->window.setVerticalSyncEnabled(false);
   this->window.setMouseCursorVisible(true);
   if(!this->window.setActive()) {
@@ -116,6 +122,7 @@ gx::graphicsClient::graphicsClient():
 
   this->setCamera();
   this->userInput.setUpMouse();
+
   this->reshape(defaultWindowWidth, defaultWindowHeight);
 }
 
@@ -126,17 +133,18 @@ ClientGameTimeAction gx::graphicsClient::handleInput() {
     reshape(this->userInput.windowWidth(),this->userInput.windowHeight());
   }
   auto newdir = this->userInput.turnPlayer();
-  this->playerDirection = toBasis(playerStartRight,playerStartDirection,upDirection) * newdir;
+  this->playerDirection =
+    toBasis(playerStartRight,playerStartDirection,upDirection) * newdir;
   this->setCamera(); //after setting new player position and direction
-  if(jumped()) {
+  if(this->userInput.getJump()) {
     action.jump = true;
   }
   action.movement = this->userInput.movePlayer();
-  auto dir = getDir();
+  auto dir = this->playerDirection;
   action.updated = this->userInput.getUpdated();
   action.facingDirection = dir;
-  action.attackMelee = fire1();
-  action.attackRange = fire2();
+  action.attackMelee = this->userInput.fire1();
+  action.attackRange = this->userInput.fire2();
   action.pickup = this->userInput.pickUp();
   action.switchWeapon = this->userInput.switchW();
   return action;
@@ -151,8 +159,10 @@ void gx::graphicsClient::draw() {
   // draw...
   entities.draw();
   animatedDrawer.draw();
+  skyboxDrawer.draw();
   
-  //render sfml please don't comment or uncomment anything from the following block
+  //render sfml please don't comment or uncomment anything from the following
+  //block
   glBindVertexArray(0);
   debugout << "Bound 0 draw loop" << endl;
   window.pushGLStates();
@@ -191,15 +201,15 @@ void gx::graphicsClient::updateEntities(std::vector<Entity*> data) {
   for(auto entityP = data.begin(); entityP != data.end(); ++entityP) {
     const auto& entity = **entityP;
     const auto& type = entity.getType();
-    if(type == PLAYER) { //TODO: change back to type == PLAYER
+    if(type == POWER_UP) { //TODO: change back to type == PLAYER
       dynamicDrawer::instanceData inst;
       inst. pos = entity.getPosition();
       inst.dirY = entity.getDirection();
       inst.type = 0; //TODO: somehow set this based on type but it can't be absolute type?
-      inst.animation    = 0;
+      inst.animation = 0; //TODO: select animation based on context
       ++aniFrame;
-      aniFrame %= 80;
-      inst.timePosition = aniFrame / 2;
+      aniFrame %= 2400;
+      inst.timePosition = static_cast<double>(aniFrame) / 1200.0;
       this->animatedDrawer.addInstance(inst);
     } else {
       staticDrawer::instanceData inst;
@@ -220,7 +230,12 @@ void gx::graphicsClient::drawLobby() {
   glBindVertexArray(0);
   window.pushGLStates();
   glBindBuffer(GL_ARRAY_BUFFER, 0);
-  this->Lobby.drawLobby(window);
+  this->userInput.handle(this->window);
+  if(this->userInput.resizedWindow()) {
+    reshape(this->userInput.windowWidth(),this->userInput.windowHeight());
+  }
+  this->Lobby.handleInput(this->userInput);
+  this->Lobby.drawLobby(this->window);
   window.popGLStates(); 
   window.display();
 }
@@ -241,6 +256,7 @@ void gx::graphicsClient::gameEnd()
   Lobby.endGame();
 }
 
-void gx::graphicsClient::updateScores(std::vector<int> & pwins, std::vector<int> & pkills) {
+void gx::graphicsClient::updateScores(std::vector<int> & pwins,
+                                      std::vector<int> & pkills) {
   Score.updateScores(pwins,pkills);
 }

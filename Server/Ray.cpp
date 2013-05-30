@@ -1,7 +1,6 @@
 #include "Ray.h"
 #include "Quadtree.h"
 
-//TODO is this right? can only move in 1 direction
 //void Ray::move(gx::vector3 v){
 //  setOrigorigin + v;
 //  getQtree()->remove(this);

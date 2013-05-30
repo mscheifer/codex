@@ -97,7 +97,11 @@ public:
   static const float meleeWidth;
   static const float meleeHeight;
   static const float meleeDepth;
+  static const float projWidth;
+  static const float projHeight;
+  static const float projDepth;
 
+  bool combined;
   length_t range;
   length_t distanceLeftToTravel;
 

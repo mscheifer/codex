@@ -15,16 +15,22 @@ struct bone {
   matrix transform; //applied if there is no animation active/present
   struct key {
     //assimp stuff
-    aiVectorKey position;
-    aiQuatKey   rotation;
-    aiVectorKey scaling;
+    vector4f     position;
+    aiQuaternion rotation; //aiQuaternion cause I'm not going to write my own
+    vector3f     scaling;
+  };
+  struct animation {
+    //TODO: move constructor
+    std::map<double,key> keyFrames;
+                  double duration;
+                  double ticksPerSecond;
   };
   //whether any verts have this bone or not
-  bool                          real; //could change this to id == -1
-  std::vector<std::vector<key>> animations;
-  std::vector<bone>             children;
+  bool                   real; //could change this to id != -1
+  std::vector<animation> animations;
+  std::vector<bone>      children;
 
-  bone(int,matrix,bool,std::vector<std::vector<key>>,std::vector<bone>);
+  bone(int,matrix,bool,decltype(animations),std::vector<bone>);
   bone(const bone&);// = delete;
   bone& operator=(const bone&);// = delete;
   bone(bone&&) noexcept;
@@ -35,13 +41,13 @@ struct bone {
   //could probably be optimized to not use heap
   //when we add interpolation, time will need to be handled differently
   //  we have to get it from the key and compare somehow
-  std::vector<GLfloat> getBonesData(unsigned int,unsigned int) const;
+  std::vector<GLfloat> getBonesData(unsigned int,double) const;
   //the number of bones to be actually written to shader, should be same as 
   //getBonesData().size() / 16
           unsigned int numBones() const;
   private:
     void walkBones(std::vector<GLfloat>&,const matrix&,unsigned int,
-                                                       unsigned int) const;
+                                                       double) const;
 };
 
 } //end namespace gx

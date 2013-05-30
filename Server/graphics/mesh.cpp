@@ -4,6 +4,7 @@
 #include <string>
 #include <algorithm>
 #include <limits>
+#include "assimpUtil.h"
 #include "matrix.h"
 #include "vertexAttrib.h"
 
@@ -26,9 +27,10 @@ void printNodes(aiNode* node, int level) {
 }
 
 gx::bone makeBone(gx::Mesh::idMap_t& idMap, int& nextId,
-                                       const std::set<std::string>& realBones,
-        const std::map<std::string,std::vector<const aiNodeAnim*>>& animations,
-        const aiNode* bon) {
+                    const std::set<std::string>& realBones,
+    const std::map<std::string,std::vector<
+          std::pair<const aiAnimation*,const aiNodeAnim*>>>& animations,
+                                               const aiNode* bon) {
   gx::matrix transform = gx::toMat(bon->mTransformation);
   bool real = false;
   int id = -1;
@@ -37,21 +39,45 @@ gx::bone makeBone(gx::Mesh::idMap_t& idMap, int& nextId,
     id = nextId++;
   }
   idMap.insert(std::make_pair(bon->mName.C_Str(),id));
-  std::vector<std::vector<gx::bone::key>> boneAnimations;
+  std::vector<gx::bone::animation> boneAnimations;
   const auto& anims = animations.find(bon->mName.C_Str())->second;
   for(auto itr = anims.begin(); itr != anims.end(); ++itr) {
-    const aiNodeAnim* animation = *itr;
-    std::vector<gx::bone::key> animKeys;
+    const aiNodeAnim* animation = itr->second;
+    std::map<double,gx::bone::key> animKeys;
     if(animation != nullptr) {
       for(unsigned int i = 0; i < animation->mNumPositionKeys; i++) {
         gx::bone::key k;
-        k.position = animation->mPositionKeys[i];
-        k.rotation = animation->mRotationKeys[i];
-        k.scaling  = animation->mScalingKeys [i];
-        animKeys.push_back(k);
+        k.position = gx::toVec4(animation->mPositionKeys[i].mValue);
+        k.rotation = animation->mRotationKeys[i].mValue;
+        k.scaling  = gx::toVec3(animation->mScalingKeys [i].mValue);
+        gx::debugout << "times " << animation->mPositionKeys[i].mTime << " ";
+        gx::debugout << animation->mRotationKeys[i].mTime << " ";
+        gx::debugout << animation->mScalingKeys[i].mTime << gx::endl;
+        animKeys.insert(animKeys.end(),
+          std::make_pair(animation->mPositionKeys[i].mTime,std::move(k)));
       }
+      //copy the last frame before the first and the first frame after the last
+      gx::bone::key below0;
+      auto last = animKeys.end(); --last;
+      below0.position = last->second.position;
+      below0.rotation = last->second.rotation;
+      below0.scaling  = last->second.scaling;
+      double below0Time = last->first - itr->first->mDuration;
+      gx::bone::key afterEnd;
+      afterEnd.position = animKeys.begin()->second.position;
+      afterEnd.rotation = animKeys.begin()->second.rotation;
+      afterEnd.scaling  = animKeys.begin()->second.scaling;
+      double afterEndTime = itr->first->mDuration + animKeys.begin()->first;
+      animKeys.insert(std::make_pair(  below0Time,std::move(below0)));
+      animKeys.insert(std::make_pair(afterEndTime,std::move(afterEnd)));
     }
-    boneAnimations.push_back(std::move(animKeys));
+    gx::bone::animation anim;
+    if(itr->first != nullptr) {
+      anim.duration = itr->first->mDuration;
+      anim.ticksPerSecond = itr->first->mTicksPerSecond;
+    }
+    anim.keyFrames = std::move(animKeys);
+    boneAnimations.push_back(std::move(anim));
   }
   std::vector<gx::bone> children;
   for(unsigned int i = 0; i < bon->mNumChildren; i++) {
@@ -63,11 +89,13 @@ gx::bone makeBone(gx::Mesh::idMap_t& idMap, int& nextId,
 }
 
 //should create an iterator for the node tree
-std::map<std::string,std::vector<const aiNodeAnim*>> 
+std::map<std::string,std::vector<
+         std::pair<const aiAnimation*,const aiNodeAnim*>>>
     walkNodesForAnims(const aiNode* node,unsigned int n) {
-  std::map<std::string,std::vector<const aiNodeAnim*>> ret;
-  ret.insert(std::make_pair(node->mName.C_Str(),
-                            std::vector<const aiNodeAnim*>(n,nullptr)));
+  std::map<std::string,std::vector<
+         std::pair<const aiAnimation*,const aiNodeAnim*>>> ret;
+  ret.insert(std::make_pair(node->mName.C_Str(),std::vector<std::pair<
+    const aiAnimation*,const aiNodeAnim*>>(n,std::make_pair(nullptr,nullptr))));
   for(unsigned int i = 0; i < node->mNumChildren; i++) {
     const auto& ch = walkNodesForAnims(node->mChildren[i],n);
     ret.insert(ch.begin(),ch.end());
@@ -78,7 +106,8 @@ std::map<std::string,std::vector<const aiNodeAnim*>>
 gx::bone initBones(std::map<std::string,unsigned int>& idMap,
                                         const aiScene* scene) {
   std::set<std::string>                                realBones;
-  std::map<std::string,std::vector<const aiNodeAnim*>> animations;
+  std::map<std::string,std::vector<
+     std::pair<const aiAnimation*,const aiNodeAnim*>>> animations;
   animations = walkNodesForAnims(scene->mRootNode,scene->mNumAnimations);
   for(unsigned int i = 0; i < scene->mNumMeshes; i++) {
     for(unsigned int j = 0; j < scene->mMeshes[i]->mNumBones; j++) {
@@ -88,9 +117,11 @@ gx::bone initBones(std::map<std::string,unsigned int>& idMap,
   }
   for(unsigned int i = 0; i < scene->mNumAnimations; i++) {
     const aiAnimation* anim = scene->mAnimations[i];
+    gx::debugout << "anim " << anim->mName.C_Str() << " " << anim->mDuration << " ";
+    gx::debugout << anim->mTicksPerSecond << gx::endl;
     for(unsigned int j = 0; j < anim->mNumChannels; j++) {
       const aiNodeAnim* nodeAnim = anim->mChannels[j];
-      animations.at(nodeAnim->mNodeName.C_Str()).at(i) = nodeAnim;
+      animations.at(nodeAnim->mNodeName.C_Str()).at(i) = std::make_pair(anim,nodeAnim);
       //TODO: fix for different numbers of keys
       if(nodeAnim->mNumPositionKeys != nodeAnim->mNumRotationKeys) {
         std::cout << "Error " << nodeAnim->mNumPositionKeys << " != ";
@@ -114,20 +145,21 @@ gx::Mesh::Mesh(const std::string& Filename, length_t height)
     m_boundary(CalcBoundBox(mScene, height)), idMap(),
     bones(initBones(idMap,mScene)),
     m_Entries(InitFromScene(idMap,mScene)),
-    m_Textures(InitMaterials(mScene, Filename)),
+    m_Materials(InitMaterials(mScene, Filename)),
   //just do the first one unless kangh has a model with more
-    entityData(std::move(m_Entries[0].positions),std::move(m_Entries[0].normals),
-      std::move(m_Entries[0].colors), std::move(m_Entries[0].boneWeights.first),
+    entityData(std::move(m_Entries[0].positions),
+      std::move(m_Entries[0].normals), std::move(m_Entries[0].diffuseCoords),
+      std::move(m_Entries[0].boneWeights.first),
       std::move(m_Entries[0].boneWeights.second),
       std::move(m_Entries[0].indices), std::move(m_Entries[0].offsets),
-      std::move(bones), std::move(m_boundary.centerAndResize)) {}
+      std::move(m_Materials[0]), std::move(bones),
+      std::move(m_boundary.centerAndResize)) {}
 
 const aiScene* gx::Mesh::LoadFile(Assimp::Importer& Importer,
                                  const std::string& Filename) {
-  const aiScene* pScene = Importer.ReadFile(Filename.c_str(), 
-        aiProcess_Triangulate       |
-        aiProcess_GenSmoothNormals |
-        aiProcess_FlipUVs);
+  const aiScene* pScene = Importer.ReadFile(Filename.c_str(), 0
+         | aiProcess_Triangulate
+         | aiProcess_GenSmoothNormals);
   if (!pScene) {
     std::cout << "Error parsing '" <<  Filename.c_str() << "': '";
     std::cout << Importer.GetErrorString() << std::endl;
@@ -141,14 +173,16 @@ const aiScene* gx::Mesh::LoadFile(Assimp::Importer& Importer,
   for(unsigned int i = 0; i < pScene->mNumAnimations; i++) {
     debugout << "animation: " << pScene->mAnimations[i]->mName.C_Str() << endl;
     debugout << "duration: " << pScene->mAnimations[i]->mDuration << endl;
-    debugout << "tics per second: " << pScene->mAnimations[i]->mTicksPerSecond << endl;
+    debugout << "tics per second: " << pScene->mAnimations[i]->mTicksPerSecond;
+    debugout << endl;
     debugout << "meshes: " << pScene->mAnimations[i]->mNumMeshChannels << endl;
     debugout << "bones: " << pScene->mAnimations[i]->mNumChannels << endl;
     for(unsigned int j = 0; j < pScene->mAnimations[i]->mNumChannels; j++) {
-      debugout << "  bonesName: " << pScene->mAnimations[i]->mChannels[j]->mNodeName.C_Str() << endl;
-      debugout << "    position keys " << pScene->mAnimations[i]->mChannels[j]->mNumPositionKeys << endl;
-      debugout << "    rotation keys " << pScene->mAnimations[i]->mChannels[j]->mNumRotationKeys << endl;
-      debugout << "    scaling keys " << pScene->mAnimations[i]->mChannels[j]->mNumScalingKeys << endl;
+      const auto& channel = pScene->mAnimations[i]->mChannels[j];
+      debugout << "  bonesName: " << channel->mNodeName.C_Str() << endl;
+      debugout << "    position keys " << channel->mNumPositionKeys << endl;
+      debugout << "    rotation keys " << channel->mNumRotationKeys << endl;
+      debugout << "    scaling keys " << channel->mNumScalingKeys << endl;
     }
   }
   //end print
@@ -174,8 +208,9 @@ std::vector<gx::Mesh::MeshEntry> gx::Mesh::InitFromScene(idMap_t& idMap,
   return Ret;
 }
 
-std::vector<gx::Texture> gx::Mesh::InitMaterials(const aiScene* pScene,const std::string& Filename){
-  if(pScene == nullptr) return std::vector<Texture>();
+std::vector<gx::material>
+gx::Mesh::InitMaterials(const aiScene* pScene,const std::string& Filename) {
+  if(pScene == nullptr) return std::vector<material>();
   // Extract the directory part from the file name
   std::string::size_type SlashIndex = Filename.find_last_of("/");
   std::string Dir;
@@ -188,32 +223,31 @@ std::vector<gx::Texture> gx::Mesh::InitMaterials(const aiScene* pScene,const std
     Dir = Filename.substr(0, SlashIndex);
   }
 
-  std::vector<Texture> Ret;
+  std::vector<material> ret;
 
   // Initialize the materials
   for (unsigned int i = 0 ; i < pScene->mNumMaterials ; i++) {
     const aiMaterial* pMaterial = pScene->mMaterials[i];
-
-    if (pMaterial->GetTextureCount(aiTextureType_DIFFUSE) > 0) {
-      aiString Path;
-
-      if(pMaterial->GetTexture(aiTextureType_DIFFUSE, 0, &Path) == AI_SUCCESS) {
-        std::string FullPath = Dir + "/" + Path.data;
-        Ret.push_back(Texture(GL_TEXTURE_2D, FullPath.c_str()));
-
-        if (!Ret.back().Load()) {
-          std::cout<<"Error loading texture '" << FullPath.c_str() << std::endl;
-          Ret.pop_back();
-          // Load a white texture in case the model does not include its own texture
-          Ret.push_back(Texture(GL_TEXTURE_2D, "./white.png"));
-          Ret.back().Load();
-        } else {
-          std::cout << "Loaded texture '" << FullPath.c_str() << std::endl; 
-        }
-      }
-    } 
+    vector4f diffuseColor;
+    aiColor3D	ColorDiffuse;
+    if (AI_SUCCESS == pMaterial->Get(AI_MATKEY_COLOR_DIFFUSE, ColorDiffuse)) {
+      diffuseColor = toVec4(ColorDiffuse);
+    } else {
+      diffuseColor = vector4f(1.0,1.0,1.0);
+    }
+    std::string diffusePath;
+    aiString Path;
+    if (pMaterial->GetTextureCount(aiTextureType_DIFFUSE) > 0 &&
+        AI_SUCCESS == pMaterial->GetTexture(aiTextureType_DIFFUSE, 0, &Path)) {
+      diffusePath = Dir + "/" + Path.C_Str();
+    } else {
+      diffusePath = "models/white.png";
+    }
+    Texture diffuseTex(GL_TEXTURE_2D, diffusePath);
+    //material index will correspond to the Mesh's material index
+    ret.push_back(material(std::move(diffuseTex),diffuseColor));
   }
-  return Ret;
+  return ret;
 }
 
 gx::Mesh::BoundParam gx::Mesh::CalcBoundBox(const aiScene* scene,

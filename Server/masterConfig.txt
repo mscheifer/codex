@@ -4,6 +4,7 @@ sound=1
 graphicsDebug=false
 serverTicksPerSec=30
 gameRestart=0
+soundScaling=1
 
 // Physics
 gravity=-20

@@ -1,5 +1,9 @@
 #include "PowerUp.h"
 
+const float PowerUp::powerUpWidth = 3.f;
+const float PowerUp::powerUpHeight = 3.f;
+const float PowerUp::powerUpDepth = 3.f;
+
 PowerUp::PowerUp(v3_t p, Map* m, BUFF buff1): buffType(buff1)
 {
   map = m;
@@ -8,7 +12,7 @@ PowerUp::PowerUp(v3_t p, Map* m, BUFF buff1): buffType(buff1)
 	Respown_Counter = sf::Clock();
 	active = true;
   BoundingBox* b = new BoundingBox(BoundingObj::vec4_t(0,0,0),BoundingObj::vec3_t(1,0,0),BoundingObj::vec3_t(0,1,0),BoundingObj::vec3_t(0,0,1),
-  1,1,1);
+  powerUpWidth/2.f,powerUpHeight/2.f,powerUpDepth/2.f);
   b->setEntity(this);
   //BoundingSphere* b = new BoundingSphere(gx::vector4(x,y,z),sphereRadius);
   boundingObjs.push_back(b);

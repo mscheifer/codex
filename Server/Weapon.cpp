@@ -2,6 +2,9 @@
 #include "Projectile.h"
 
 const float Weapon::meleeAttackMult = 1.25f;
+const float Weapon::weaponWidth = 2.0f;
+const float Weapon::weaponHeight = 2.0f;
+const float Weapon::weaponDepth = 2.0f;
 
 Weapon::Weapon(Map* m)
 {
@@ -11,14 +14,13 @@ Weapon::Weapon(Map* m)
   Range_Cool_Down_Counter = sf::Clock();
   Melee_Cool_Down_Counter = sf::Clock();
   this->map = m;
-  basicAttack = B1;
 }
 
 Weapon::~Weapon()
 {
 }
 
-Weapon::Weapon(float damage, float ran, v3_t pos, Map* m)
+Weapon::Weapon(float damage, float ran, v3_t pos, Map* m) : pickedUp(false)
 {
   Range_Cool_Down_Time = 0;
   Melee_Cool_Down_Time = 0;
@@ -32,6 +34,7 @@ Weapon::Weapon(float damage, float ran, v3_t pos, Map* m)
   projectileRange = 300; //pending removal
   projectileStrength = 26; //pending removal
   this->map = m;
+  basicAttack = B1;
 }
 
 bool Weapon::canUseWeapon(bool range_attack, Player* Owner) {
@@ -61,8 +64,8 @@ Projectile* Weapon::attackMelee(v3_t dir , v3_t pos, Player* owner)
 
   pj->setCharing(false); 
   pj->setMagicType(basicAttack, true); //TODO this is not a good way to do it
+  pj->setRender(false);
 
-  //pj->setFired(true); //TODO add a sound event for melee
   Melee_Cool_Down_Counter.restart();
   return pj;
 }
@@ -71,6 +74,7 @@ bool Weapon::pickUp(){
   if(pickedUp)
     return false;
   
+  pickedUp = true;
   render = false;
   map->removeFromQtree(this);
   return true;
@@ -91,6 +95,9 @@ bool Weapon::tossAway(v3_t dropPosition, v3_t dir){
   //if(!pickedUp)
   //  return false;
 
+  if( getWeaponType() == FIST )
+    return true;
+
   render = true;
   dropPosition.z += 0;
   position = dropPosition;
@@ -108,10 +115,13 @@ bool Weapon::tossAway(v3_t dropPosition, v3_t dir){
 
 void Weapon::update()
 {
+  if(pickedUp)
+    return;
+
   acceleration = getGravity();
   velocity += acceleration * ConfigManager::serverTickLengthSec();
   v3_t attemptMove = velocity * ConfigManager::serverTickLengthSec();
-  position += correctMovement( attemptMove, false );
+  position += correctMovement( attemptMove, false, position );
   updateBounds();
 }
 
@@ -121,7 +131,7 @@ void Weapon::updateBounds(){
 }
 
 bool Weapon::collideWall(const std::pair<Entity*,BoundingObj::vec3_t>& p){
-  BoundingObj::vec3_t fixShit = p.second;
+  BoundingObj::vec3_t fixShit = p.second; //why unused?
   position += p.second;
   updateBounds();
   velocity = v3_t(0,0,0);
@@ -136,7 +146,6 @@ void Weapon::handleCollisions(){
   for( auto it = entities.begin(); it != entities.end(); ){
     Entity * e = it->first;
 
-    //has already been processed //TODO @mc collision look at fix it vector, should never reprocess
     switch( e->getType() ) {
       case WALL:
        // std::cout << "wall" << << std::endl;

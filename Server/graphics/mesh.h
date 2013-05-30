@@ -4,9 +4,10 @@
 #include <vector>
 #include <set>
 #include <assimp/Importer.hpp>    // C++ importer interface
+#include "graphicsEntity.h"
+#include "material.h"
 #include "matrix.h"
 #include "texture.h"
-#include "graphicsEntity.h"
 
 struct aiMesh;
 
@@ -32,7 +33,7 @@ class Mesh {
         MeshEntry& operator=(MeshEntry&&);// = delete; //define later
 
         std::vector<vector4f> positions;
-        std::vector<vector4f> colors;
+        std::vector<vector2f> diffuseCoords;
         std::vector<vector3f> normals;
         std::pair<std::vector<vector4i>,
                   std::vector<vector4f>> boneWeights;
@@ -58,14 +59,14 @@ class Mesh {
        bone bones;
 
     std::vector<MeshEntry> m_Entries;
-    std::vector<Texture>   m_Textures;
+    std::vector<material>  m_Materials;
             graphicsEntity entityData;
 
     bool                   m_Good();
   private:
     static const aiScene*        LoadFile(Assimp::Importer&,const std::string&);
     static std::vector<MeshEntry> InitFromScene(idMap_t&, const aiScene*);
-    static std::vector<Texture>   InitMaterials(const aiScene*,
+    static std::vector<material>  InitMaterials(const aiScene*,
                                                 const std::string& Filename);
     // fill in our m_boundary object with the boundary info
     static BoundParam CalcBoundBox(const aiScene* scene,length_t);
