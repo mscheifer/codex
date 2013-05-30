@@ -35,6 +35,7 @@ private:
   static int getClosestProx(int prox); //return the next closest proximity to load in teh other music (this is done on init only)
 
 public:
+  static float soundScaling;
   //initialize the audio manager
   //load all the sounds
   static void loadSounds();

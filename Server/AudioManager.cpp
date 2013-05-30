@@ -9,6 +9,7 @@ std::map<std::string, std::string> AudioManager::musics;
 std::map<std::string, sf::Sound> AudioManager::sounds;
 bool AudioManager::useSound;
 int AudioManager::trackNo;
+float AudioManager::soundScaling;
 unsigned int AudioManager::currentlyPlayingMusic;
 
 void AudioManager::loadSound(std::string key, std::string sound){
@@ -26,6 +27,7 @@ void AudioManager::loadSounds(){
   if(!useSound)
     return;
   
+  soundScaling = StringToNumber<float>(ConfigManager::configMap["soundScaling"]);
   trackNo = 0;
   currentlyPlayingMusic = 0;
   for(unsigned int i = 0; i < musicProx.size(); i++){
@@ -87,7 +89,6 @@ void AudioManager::playSound(std::string key, std::string id, v3_t pos){
   }
 }
 
-
 void AudioManager::stopSound(std::string id) {
    if( sounds.find(id) !=  sounds.end()) {
      sounds.find(id)->second.stop();
@@ -96,7 +97,7 @@ void AudioManager::stopSound(std::string id) {
 }
 
 void AudioManager::playSoundHelper( sf::Sound* s, v3_t pos, sf::SoundBuffer* sbuff){
-  s->setPosition(pos.x,pos.y,pos.z);
+  s->setPosition(pos.x/soundScaling,pos.y/soundScaling,pos.z/soundScaling);
   if(s->getStatus() != sf::Sound::Playing)  {
     s->setBuffer(*sbuff);
     s->play();
