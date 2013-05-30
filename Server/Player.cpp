@@ -251,11 +251,6 @@ void Player::update(){
     return;
 
   updateBuffs();
-  
-  if( chargedProjectile ) {
-    chargedProjectile->setDirection(direction);
-    chargedProjectile->setPosition(getProjectilePosition());
-  }
 
   //pick up weapon stuff
   pickup = nullptr;
@@ -267,6 +262,11 @@ void Player::update(){
   v3_t attemptMove = velocity * ConfigManager::serverTickLengthSec();
   position += correctMovement( attemptMove, false, getFeetOrigin() );
   //position += velocity * ConfigManager::serverTickLengthSec();
+
+  if( chargedProjectile ) {
+    chargedProjectile->setDirection(direction);
+    chargedProjectile->setPosition(getProjectilePosition());
+  }
 
   health+= healthRegen*getHealthRegenMultiplier();
   health = (health > maxHealth ? maxHealth : health);
