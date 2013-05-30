@@ -14,7 +14,7 @@ gx::graphicsEntity loadModel(const std::string& ModelPath) {
 
 std::vector<gx::graphicsEntity> staticModels() {
   auto modelJack   = loadModel("models/Badguy_texture.dae");
-  auto modelWall   = loadModel("models/wall.dae");
+  auto modelWall   = loadModel("models/stone_wall.dae");
   auto modelPlayer = loadModel("models/Test_Run.dae");
   auto cubes = gx::loadCube();
   auto skybox = gx::loadSkybox();
