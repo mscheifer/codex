@@ -3,19 +3,20 @@
 #include "mesh.h"
 #include "loadCustom.h"
 #include "Entity.h"
+#include "PowerUp.h"
 
 namespace {
 const unsigned int defaultWindowWidth  = 800;
 const unsigned int defaultWindowHeight = 600;
 
-gx::graphicsEntity loadModel(const std::string& ModelPath) {
-  return gx::Mesh(ModelPath,10).entityData; //add std::move if this copies
+gx::graphicsEntity loadModel(const std::string& ModelPath,gx::Mesh::length_t height) {
+  return gx::Mesh(ModelPath,height).entityData;
 }
 
 std::vector<gx::graphicsEntity> staticModels() {
-  auto modelJack   = loadModel("models/Badguy_texture.dae");
-  auto modelWall   = loadModel("models/wall.dae");
-  auto modelPlayer = loadModel("models/Test_Run.dae");
+  auto modelJack   = loadModel("models/Badguy_texture.dae",PowerUp::powerUpHeight);
+  auto modelWall   = loadModel("models/wall.dae",10);
+  auto modelPlayer = loadModel("models/Test_Run.dae",Player::playerDepth);
   auto cubes = gx::loadCube();
   auto skybox = gx::loadSkybox();
   std::vector<gx::graphicsEntity> entitiesData;
@@ -31,7 +32,7 @@ std::vector<gx::graphicsEntity> staticModels() {
 std::vector<gx::graphicsEntity> dynamicModels() {
   // MODEL LOADING
   //auto modelTest   = loadModel("models/boblampclean.md5anim");
-  auto modelPlayer = loadModel("models/cat.dae");
+  auto modelPlayer = loadModel("models/cat.dae",10);
 
     //setup drawing data
   std::vector<gx::graphicsEntity> entitiesData;
@@ -90,7 +91,7 @@ gx::graphicsClient::graphicsClient():
     //glew needs to be called here, after window, before anything else
     glewStatus(initGlew()),
     userInput(),
-    light1(gx::vector4f(1,1,1),0.5,0.5,0.05f),
+    light1(gx::vector4f(1,1,1),0.5,0.5,0.0f),
     display(),
     entities(staticModels(),uniforms()),
     animatedDrawer(dynamicModels(),uniforms()),
@@ -118,7 +119,7 @@ gx::graphicsClient::graphicsClient():
   glCullFace(GL_BACK);
   glFrontFace(GL_CCW);
 
-  light1.updatePosition(gx::vector4f( 0, 5, -10));
+  light1.updatePosition(gx::vector4f( 0, 5, 10));
 
   this->setCamera();
   this->userInput.setUpMouse();
@@ -208,8 +209,8 @@ void gx::graphicsClient::updateEntities(std::vector<Entity*> data) {
       inst.type = 0; //TODO: somehow set this based on type but it can't be absolute type?
       inst.animation = 0; //TODO: select animation based on context
       ++aniFrame;
-      aniFrame %= 2400;
-      inst.timePosition = static_cast<double>(aniFrame) / 1200.0;
+      aniFrame %= 240;
+      inst.timePosition = static_cast<double>(aniFrame) / 120.0;
       this->animatedDrawer.addInstance(inst);
     } else {
       staticDrawer::instanceData inst;

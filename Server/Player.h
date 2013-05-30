@@ -2,7 +2,6 @@
 #include <typeinfo>
 #include <iostream>
 #include <sstream>
-//#include <cmath>
 #include <algorithm>
 #include <string>
 #include "Entity.h"
