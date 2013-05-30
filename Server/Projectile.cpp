@@ -203,6 +203,7 @@ void Projectile::serialize(sf::Packet & packet) const {
   packet << fired;
   packet << id;
   packet << combined;
+  packet << static_cast<sf::Uint32>(magicType);
   //(*owner).serialize(packet);
 }
 
@@ -211,6 +212,9 @@ void Projectile::deserialize( sf::Packet & packet ) {
   packet >> fired;
   packet >> id;
   packet >> combined;
+  sf::Uint32 u32;
+  packet >> u32;
+  magicType = static_cast<MAGIC_POWER>(u32);
   //delete owner; this segfaults
   //Player* owner = new Player();
   //(*owner).deserialize(packet);
