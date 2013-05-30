@@ -34,7 +34,7 @@ void Map::mapReset()
 }
 
 void Map::initPowerUps() {
-  PowerUp* superPower = new PowerUp(v3_t(2,2,0), this, MOVEBOOST);
+  PowerUp* superPower = new PowerUp(v3_t(2,2,0), this, FIR1DEBUFF);
   superPower->setRespownTime(5000);
   this->entities.push_back(superPower);
 

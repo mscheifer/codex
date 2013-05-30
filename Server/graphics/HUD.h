@@ -44,12 +44,17 @@ private :
   sf::Sprite aimer;
   std::vector<sf::Texture*> buffTextures;
   std::vector<sf::Sprite*> buffSprites;
+  std::vector<sf::Texture*> buffLTextures;
+  std::vector<sf::Sprite*> buffLSprites;
   std::vector<sf::Texture*> weaponTextures;
   std::vector<sf::Sprite*> weaponSprites;
   std::vector<bool> renderBuff;
-  std::vector<bool> renderWeapon;
+  std::vector<int> remainTime;
+  int weapon1;
+  int weapon2;
   int currentSelect;
   void buffHelper(std::string & path);
+  void buffLHelper(std::string & path);
   void weaponHelper(std::string & path);
 
 public:

@@ -66,6 +66,18 @@ gx::HUD::~HUD(void) {
   for (auto itr=buffTextures.begin();itr != buffTextures.end(); itr++) {
     delete *itr;
   }
+  for (auto itr=buffLSprites.begin();itr != buffLSprites.end(); itr++) {
+    delete *itr;
+  }
+  for (auto itr=buffLTextures.begin();itr != buffLTextures.end(); itr++) {
+    delete *itr;
+  }
+  for (auto itr=weaponSprites.begin();itr != weaponSprites.end(); itr++) {
+    delete *itr;
+  }
+  for (auto itr=weaponTextures.begin();itr != weaponTextures.end(); itr++) {
+    delete *itr;
+  }
 }
 
 void gx::HUD::draw(sf::RenderWindow & window) {
@@ -102,28 +114,26 @@ void gx::HUD::draw(sf::RenderWindow & window) {
   if (sf::Mouse::isButtonPressed(sf::Mouse::Right)) { //TODO this is bad
     window.draw(aimer);
   }
-  int n = 0; 
+  int buffn = 0; 
   for ( int i =0; i<renderBuff.size(); i++ ) {
     if (renderBuff[i]) {
-      buffSprites[i]->setPosition(10+n*37,window.getSize().y-42);
-      window.draw(*buffSprites[i]); 
-      n++;
+      buffSprites[i]->setPosition(10+buffn*37,window.getSize().y-42);
+      if (remainTime[i]<1000 && (remainTime[i]/100 % 2))
+        window.draw(*buffLSprites[i]);
+      else 
+        window.draw(*buffSprites[i]);
+      buffn++;
     }
   }
   //draw selected weapon
-  weaponSprites[currentSelect]->setPosition(window.getSize().x-111, 10);
-  window.draw(*weaponSprites[currentSelect]);
-  renderWeapon[currentSelect] = false;
-  for ( int i =0; i<renderWeapon.size(); i++ ) {
-    if (renderWeapon[i]) {
-      weaponSprites[i]->setPosition(window.getSize().x-42,26);
-      weaponSprites[i]->setScale(0.5,0.5);
-      window.draw(*weaponSprites[i]); 
-      n = i;
-      break;
-    }
-  }
-  weaponSprites[n]->setScale(1,1);
+  int index1 = (currentSelect) ? weapon2 : weapon1;
+  int index2 = (currentSelect) ? weapon1 : weapon2;
+  weaponSprites[index1]->setPosition(window.getSize().x-111, 10);
+  window.draw(*weaponSprites[index1]);
+  weaponSprites[index2]->setPosition(window.getSize().x-42,26);
+  weaponSprites[index2]->setScale(0.5,0.5);
+  window.draw(*weaponSprites[index2]); 
+  weaponSprites[index2]->setScale(1,1);
 }
 
 void gx::HUD::updateHUD(const Player& player) {
@@ -148,21 +158,17 @@ void gx::HUD::updateHUD(const Player& player) {
     *itr = false;
   }
   for (auto itr = player.getBuffs().begin(); itr != player.getBuffs().end(); itr++ ) {
-    std::cout<<"i am doing stupid shit with "<<std::endl;
-    std::cout<<itr->first<<std::endl;
-    std::cout << BuffInfo[(*itr).first].code <<std::endl;
     renderBuff[BuffInfo[(*itr).first].code] =  true; 
+    remainTime[BuffInfo[(*itr).first].code] = itr->second;
   }
  //update weapons
-  for (auto itr = renderWeapon.begin(); itr != renderWeapon.end(); itr++ ) {
-    *itr = false;
-  }
-  renderWeapon[player.weapon1] = true;
-  renderWeapon[player.weapon2] = true;
+  weapon1 = player.weapon1;
+  weapon2 = player.weapon2;
   currentSelect = player.getCurrentWeaponSelection();
-  std::cout<<"charge time is " << player.elapsedChargeTime <<std::endl;
-  std::cout<<"total time is " << player.totalChargeTime <<std::endl;
-  std::cout<<"magic type is " << player.chargeMagicType <<std::endl;
+  //std::cout<<"weapon selected is "<<currentSelect<<" I have "<< player.weapon1 << ","<<player.weapon2<<std::endl;
+  //std::cout<<"charge time is " << player.elapsedChargeTime <<std::endl;
+  //std::cout<<"total time is " << player.totalChargeTime <<std::endl;
+  //std::cout<<"magic type is " << player.chargeMagicType <<std::endl;
 
 }
 
@@ -179,6 +185,19 @@ void gx::HUD::buffHelper(std::string & path) {
    renderBuff.push_back(false);
 }
 
+void gx::HUD::buffLHelper(std::string & path) {
+   sf::Texture* tText;
+   sf::Sprite* tSprite;
+   tText = new sf::Texture();
+   tSprite = new sf::Sprite();
+   tText->loadFromFile(path);
+   tSprite->setTexture(*tText);
+   tSprite->setScale(0.5,0.5);
+   buffLTextures.push_back(tText);
+   buffLSprites.push_back(tSprite);
+   remainTime.push_back(0);
+}
+
 void gx::HUD::weaponHelper(std::string & path) {
    sf::Texture* tText;
    sf::Sprite* tSprite;
@@ -188,11 +207,10 @@ void gx::HUD::weaponHelper(std::string & path) {
    tSprite->setTexture(*tText);
    weaponTextures.push_back(tText);
    weaponSprites.push_back(tSprite);
-   renderWeapon.push_back(false);
 }
 
 void gx::HUD::initializeSprites() {
-   //none
+   //buff
    buffTextures.push_back(new sf::Texture());
    buffSprites.push_back(new sf::Sprite());
    renderBuff.push_back(false);
@@ -204,14 +222,34 @@ void gx::HUD::initializeSprites() {
    buffHelper(std::string("graphics/Images/powerCharge.png"));
    buffHelper(std::string("graphics/Images/statF.png"));
    buffHelper(std::string("graphics/Images/statI.png"));
+   buffHelper(std::string("graphics/Images/stunT.png"));
    buffHelper(std::string("graphics/Images/statT.png"));
    buffHelper(std::string("graphics/Images/statG.png"));
+   buffHelper(std::string("graphics/Images/stunG.png"));
+   
+   //buffL
+   buffLTextures.push_back(new sf::Texture());
+   buffLSprites.push_back(new sf::Sprite());
+   remainTime.push_back(0);
+   buffLHelper(std::string("graphics/Images/powerMove.png"));
+   buffLHelper(std::string("graphics/Images/powerMana.png"));
+   buffLHelper(std::string("graphics/Images/powerHealth.png"));
+   buffLHelper(std::string("graphics/Images/powerStr.png"));
+   buffLHelper(std::string("graphics/Images/powerAttack.png"));
+   buffLHelper(std::string("graphics/Images/powerCharge.png"));
+   buffLHelper(std::string("graphics/Images/statF.png"));
+   buffLHelper(std::string("graphics/Images/statI.png"));
+   buffLHelper(std::string("graphics/Images/stunT.png"));
+   buffLHelper(std::string("graphics/Images/statT.png"));
+   buffLHelper(std::string("graphics/Images/statG.png"));
+   buffLHelper(std::string("graphics/Images/stunG.png"));
+
+   //waepon
    weaponTextures.push_back(new sf::Texture());
    weaponSprites.push_back(new sf::Sprite());
-   renderWeapon.push_back(false);
    weaponHelper(std::string("graphics/Images/weaponFire.png"));
    weaponHelper(std::string("graphics/Images/weaponIce.png"));
    weaponHelper(std::string("graphics/Images/weaponThu.png"));
-   weaponHelper(std::string("graphics/Images/weaponBasic.png"));
+   weaponHelper(std::string("graphics/Images/weaponFist.png"));
    weaponHelper(std::string("graphics/Images/weaponBasic.png"));
 }

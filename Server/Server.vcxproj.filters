@@ -484,5 +484,50 @@
     <None Include="graphics\Images\weaponThu.png">
       <Filter>Resource Files\graphics\Images</Filter>
     </None>
+    <None Include="graphics\Images\powerAttackL.png">
+      <Filter>Resource Files\graphics\Images</Filter>
+    </None>
+    <None Include="graphics\Images\powerChargeL.png">
+      <Filter>Resource Files\graphics\Images</Filter>
+    </None>
+    <None Include="graphics\Images\powerHealthL.png">
+      <Filter>Resource Files\graphics\Images</Filter>
+    </None>
+    <None Include="graphics\Images\powerManaL.png">
+      <Filter>Resource Files\graphics\Images</Filter>
+    </None>
+    <None Include="graphics\Images\powerMoveL.png">
+      <Filter>Resource Files\graphics\Images</Filter>
+    </None>
+    <None Include="graphics\Images\powerStrL.png">
+      <Filter>Resource Files\graphics\Images</Filter>
+    </None>
+    <None Include="graphics\Images\statFL.png">
+      <Filter>Resource Files\graphics\Images</Filter>
+    </None>
+    <None Include="graphics\Images\statGL.png">
+      <Filter>Resource Files\graphics\Images</Filter>
+    </None>
+    <None Include="graphics\Images\statIL.png">
+      <Filter>Resource Files\graphics\Images</Filter>
+    </None>
+    <None Include="graphics\Images\statTL.png">
+      <Filter>Resource Files\graphics\Images</Filter>
+    </None>
+    <None Include="graphics\Images\stunG.png">
+      <Filter>Resource Files\graphics\Images</Filter>
+    </None>
+    <None Include="graphics\Images\stunGL.png">
+      <Filter>Resource Files\graphics\Images</Filter>
+    </None>
+    <None Include="graphics\Images\stunT.png">
+      <Filter>Resource Files\graphics\Images</Filter>
+    </None>
+    <None Include="graphics\Images\stunTL.png">
+      <Filter>Resource Files\graphics\Images</Filter>
+    </None>
+    <None Include="graphics\Images\weaponFist.png">
+      <Filter>Resource Files\graphics\Images</Filter>
+    </None>
   </ItemGroup>
 </Project>
