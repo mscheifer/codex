@@ -1,10 +1,6 @@
 #pragma once
-//#define _USE_MATH_DEFINES
-//#include <math.h>
-#include <ctgmath>
+#include <cmath>
 #include <string>
-
-//const int NUM_PLAYERS = 2; use the config file now
 
 enum move_t {
   FORWARD = 0,
