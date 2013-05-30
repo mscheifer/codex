@@ -124,7 +124,7 @@ struct BuffData{
 };
 
 const BuffData BuffInfo[] = {
-  //                  codelvl  time  |  move       |mpRegen      | hpRegen | str           | atkCD      |  chargeCD  
+  //                  code lvl time  |  move       |mpRegen      | hpRegen | str           | atkCD      |  chargeCD  
   BuffData(NONE,        0,  1, 100,    false, 0,    false, 0,     false, 0,    false, 0,    false, 0,    false, 0),
   BuffData(MOVEBOOST,   1,  1, 120000, true, 2,     false, 0,     false, 0,    false, 0,    false, 0,    false, 0),
   BuffData(MANABOOST,   2,  1, 120000, false, 0,    true, 5,      false, 0,    false, 0,    false, 0,    false, 0),
