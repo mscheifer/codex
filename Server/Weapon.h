@@ -8,6 +8,9 @@ class Projectile;
 class Weapon : public DeadlyEntity
 {
 public:
+  static const float weaponWidth;
+  static const float weaponHeight;
+  static const float weaponDepth;
   static const Entity_Type type = WEAPON;
   static const WeaponType wtype = UNK; //this is to get the weapon name
   static const bool hasRangedAttack = false;

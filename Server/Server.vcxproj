@@ -43,7 +43,7 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <AdditionalIncludeDirectories>$(ProjectDir);$(SolutionDir)SFML-2.0\include;$(SolutionDir)assimp\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>_MBCS;_CRT_SECURE_NO_WARNINGS;GRAPHICSDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_MBCS;_CRT_SECURE_NO_WARNINGS;_USE_MATH_DEFINES;GRAPHICSDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -61,7 +61,7 @@
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
       <MinimalRebuild>true</MinimalRebuild>
       <EnableEnhancedInstructionSet>StreamingSIMDExtensions2</EnableEnhancedInstructionSet>
-      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;_USE_MATH_DEFINES;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -120,9 +120,6 @@
     <ClCompile Include="NetworkServices.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="PowerUp.cpp" />
-    <ClCompile Include="PowerUpHealthPack.cpp" />
-    <ClCompile Include="PowerUpManaPack.cpp" />
-    <ClCompile Include="PowerUpSpeedPack.cpp" />
     <ClCompile Include="Projectile.cpp" />
     <ClCompile Include="Quadtree.cpp" />
     <ClCompile Include="ray.cpp" />
@@ -184,9 +181,6 @@
     <ClInclude Include="Physics.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="PowerUp.h" />
-    <ClInclude Include="PowerUpHealthPack.h" />
-    <ClInclude Include="PowerUpManaPack.h" />
-    <ClInclude Include="PowerUpSpeedPack.h" />
     <ClInclude Include="Projectile.h" />
     <ClInclude Include="Quadtree.h" />
     <ClInclude Include="Ray.h" />

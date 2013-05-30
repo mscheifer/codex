@@ -14,7 +14,7 @@ gx::graphicsEntity loadModel(const std::string& ModelPath) {
 
 std::vector<gx::graphicsEntity> staticModels() {
   auto modelJack   = loadModel("models/Badguy_texture.dae");
-  auto modelWall   = loadModel("models/wall.dae");
+  auto modelWall   = loadModel("models/stone_wall.dae");
   auto modelPlayer = loadModel("models/Test_Run.dae");
   auto cubes = gx::loadCube();
   auto skybox = gx::loadSkybox();
@@ -69,9 +69,9 @@ void gx::graphicsClient::reshape(unsigned int w, unsigned int h) {
   const elem_t farPlane  = 3000.0f;
   // RenderWindow automatically sets the viewport on a resize
   // in Linux but not in windows so we have to do it here
+  glViewport(0, 0, w, h);
+  debugout << "glViewport(0, 0, " << w << ", " << h << ");" << endl;
   this->window.setView(sf::View(sf::FloatRect(0,0,w,h)));
-  std::cout << this->window.getView().getSize().x << " ";
-  std::cout << this->window.getView().getSize().y << std::endl;
   this->display.setProjection(fov,ratio,nearPlane,farPlane);
 }
 
@@ -201,15 +201,15 @@ void gx::graphicsClient::updateEntities(std::vector<Entity*> data) {
   for(auto entityP = data.begin(); entityP != data.end(); ++entityP) {
     const auto& entity = **entityP;
     const auto& type = entity.getType();
-    if(type == PLAYER) { //TODO: change back to type == PLAYER
+    if(type == POWER_UP) { //TODO: change back to type == PLAYER
       dynamicDrawer::instanceData inst;
       inst. pos = entity.getPosition();
       inst.dirY = entity.getDirection();
       inst.type = 0; //TODO: somehow set this based on type but it can't be absolute type?
-      inst.animation    = 0;
+      inst.animation = 0; //TODO: select animation based on context
       ++aniFrame;
-      aniFrame %= 80;
-      inst.timePosition = aniFrame / 2;
+      aniFrame %= 2400;
+      inst.timePosition = static_cast<double>(aniFrame) / 1200.0;
       this->animatedDrawer.addInstance(inst);
     } else {
       staticDrawer::instanceData inst;

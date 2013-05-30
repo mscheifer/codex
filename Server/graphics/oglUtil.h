@@ -40,11 +40,12 @@ class debugStream {
           std::string toPrint;
           getline(logString, toPrint);
           std::cout << toPrint << std::endl;
+          ConfigManager::log(toPrint);
           GLenum err;
           while((err = glGetError())) {
             std::stringstream sserror;
-            sserror << "OpenGL error: " << err << std::endl;
-            std::cout << sserror.str();
+            sserror << "OpenGL error: " << err;
+            std::cout << sserror.str() << std::endl;
             ConfigManager::log(sserror.str());
             assert(false);
           }
