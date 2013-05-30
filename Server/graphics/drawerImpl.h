@@ -56,7 +56,7 @@ class dynamicDrawerImpl {
       struct instance {
         matrix position;
         unsigned int animation;
-        unsigned int timePos;
+              double timePos;
       };
       std::vector<instance> instances;
       vao                   vertData;
@@ -73,7 +73,7 @@ class dynamicDrawerImpl {
     void setUniforms(const entityClass&,const entityClass::instance&) const;
     struct instanceData : public staticDrawerImpl::instanceData {
       unsigned int animation;
-      unsigned int timePosition;
+      double timePosition;
     };
     void addInstance(instanceData,std::vector<entityClass>&);
 };

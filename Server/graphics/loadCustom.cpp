@@ -69,9 +69,9 @@ std::vector<gx::graphicsEntity> gx::loadCube() {
   auto boneWeightAttrib =
     makeRawAttribPtr("boneWeight",std::vector<vector4f>(1,vector4f(1,0,0,0)));
 
-  bone root1(1,identity,true,std::vector<std::vector<bone::key>>(),
+  bone root1(1,identity,true,std::vector<bone::animation>(),
                             std::vector<bone>());
-  bone root2(1,identity,true,std::vector<std::vector<bone::key>>(),
+  bone root2(1,identity,true,std::vector<bone::animation>(),
                             std::vector<bone>());
 
   material blueMat(Texture(GL_TEXTURE_2D, "models/white.png"),vector4f(0,0,1,1));
@@ -130,7 +130,7 @@ gx::graphicsEntity gx::loadSkybox() {
 
   std::map<int,matrix> skyboxOffsets;
 
-  bone root(1,identity,true,std::vector<std::vector<bone::key>>(),
+  bone root(1,identity,true,std::vector<bone::animation>(),
                             std::vector<bone>());
 
   material mat(Texture(GL_TEXTURE_2D, "models/white.png"),vector4f(0.4f,0.4f,1.0f));
