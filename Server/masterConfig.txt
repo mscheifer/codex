@@ -9,7 +9,7 @@ gameRestart=0
 gravity=-20
 
 // Player configuration
-players=2
+players=1
 movescale=2
 airMovescale=1
 maxJump=1000

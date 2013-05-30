@@ -61,26 +61,26 @@ const std::vector<BUFF> NONEV(NONEarr,NONEarr+1);
 const ProjectileData ProjInfo[] = { //TODO fix all these numbers
   //             type,  rng, spd size str mp buff chrgTime
   ProjectileData(FIR1,  300, 30, 1,   10, 2, FIR1V, 1500),
-  ProjectileData(FIR2,  300, 30, 2,   12, 0, FIR2V, 5000),
-  ProjectileData(FIR3,  300, 30, 3,   20, 0, FIR3V, -1),
+  ProjectileData(FIR2,  300, 30, 1,   12, 0, FIR2V, 5000),
+  ProjectileData(FIR3,  300, 30, 1,   20, 0, FIR3V, -1),
   ProjectileData(ICE1,  300, 30, 1,   10, 0, ICE1V, 1500),
-  ProjectileData(ICE2,  300, 30, 2,   12, 0, ICE2V, 5000),
-  ProjectileData(ICE3,  300, 30, 3,   20, 0, ICE3V, -1),
+  ProjectileData(ICE2,  300, 30, 1,   12, 0, ICE2V, 5000),
+  ProjectileData(ICE3,  300, 30, 1,   20, 0, ICE3V, -1),
   ProjectileData(THU1,  300, 30, 1,   10, 0, THU1V, 1500),
-  ProjectileData(THU2,  300, 30, 2,   12, 0, THU2V, 5000),
-  ProjectileData(THU3,  300, 30, 3,   20, 0, THU3V, -1),
+  ProjectileData(THU2,  300, 30, 1,   12, 0, THU2V, 5000),
+  ProjectileData(THU3,  300, 30, 1,   20, 0, THU3V, -1),
 
   ProjectileData(G_IT,  300, 30, 1,   12, 0, G1MV, -1),
   ProjectileData(G_FT,  300, 30, 1,   12, 0, G1MV, -1),
   ProjectileData(G_FI,  300, 30, 1,   12, 0, G1MV, -1),
 
-  ProjectileData(G2,    300, 30, 2,   25, 0, G2V, -1),
+  ProjectileData(G2,    300, 30, 1,   25, 0, G2V, -1),
 
-  ProjectileData(G_IT2, 300, 30, 2,   20, 0, G2MV, -1),
-  ProjectileData(G_FT2, 300, 30, 2,   20, 0, G2MV, -1),
-  ProjectileData(G_FI2, 300, 30, 2,   20, 0, G2MV, -1),
+  ProjectileData(G_IT2, 300, 30, 1,   20, 0, G2MV, -1),
+  ProjectileData(G_FT2, 300, 30, 1,   20, 0, G2MV, -1),
+  ProjectileData(G_FI2, 300, 30, 1,   20, 0, G2MV, -1),
 
-  ProjectileData(G3,    300, 30, 3,   50, 0, G3V, -1),
+  ProjectileData(G3,    300, 30, 1,   50, 0, G3V, -1),
 
   ProjectileData(B1,    50,  30, 1,   5, 0, NONEV, -1)
 };
@@ -137,6 +137,7 @@ public:
   Player* getOwner(){return owner;}
   void setChargeTime(int t) { Charge_Time = t ;};
   Entity_Type getType() const { return type; }
+  int getElapsedTime() const { return charge_counter.getElapsedTime().asMilliseconds(); }
   void serialize(sf::Packet & packet) const;
   void deserialize(sf::Packet & packet);
 };

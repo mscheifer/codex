@@ -72,7 +72,7 @@ void Player::init(v3_t pos, int assigned_id, Map * m)
 	map = m;
 	weapon[0] = new WeaponFist(position, this->map); //has no bounds so it doesnt drop
   //weapon[1] = new WeaponFist(position, this->map);
-	weapon[1] = new WeaponFire(position, this->map, B1); 
+	weapon[1] = new WeaponFire(position, this->map, ICE1); 
 	m->addEntity(weapon[1]);
   weapon[1]->pickUp();
   buffs.clear();
@@ -254,6 +254,9 @@ void Player::update(){
   updateBuffs();
   
   if( chargedProjectile ) {
+    elapsedChargeTime = chargedProjectile->getElapsedTime();
+    totalChargeTime = ProjInfo[chargedProjectile->getMagicType()].chargeTime * getChargeCD();
+    chargeMagicType = chargedProjectile->getMagicType();
     chargedProjectile->setDirection(direction);
     chargedProjectile->setPosition(getProjectilePosition());
   }
@@ -314,9 +317,11 @@ void Player::handleSelfAction(ClientGameTimeAction a) {
   //std::cout << " attackRng " << a.attackRange << " chrg " << (chargedProjectile == nullptr) << std::endl;
 	if( (a.attackRange && chargedProjectile == nullptr) || a.attackMelee) {
 		attack(a);
-	} else if ( chargedProjectile && !a.attackRange ) { //@Fire the projectile!
+	} else if ( chargedProjectile && !a.attackRange ) { //@fire the projectile!
     v3_t v = direction;
     v.normalize();
+    
+    elapsedChargeTime = totalChargeTime = -1;
 
     chargedProjectile->fire(v,getStrengthMultiplier());
     chargedProjectile = nullptr;
@@ -693,6 +698,15 @@ void Player::serialize(sf::Packet& packet) const {
     packet << meleeAttack;
     packet << weaponCall;
     packet << static_cast<sf::Uint32>(weaponCallType);
+
+    //held weapons
+    packet << static_cast<sf::Uint32>(weapon[0]->getWeaponType());
+    packet << static_cast<sf::Uint32>(weapon[1]->getWeaponType());
+
+    //this is for charing HUD
+    packet << elapsedChargeTime;
+    packet << totalChargeTime;
+    packet << static_cast<sf::Uint32>(chargeMagicType);
   }
 
   void Player::deserialize(sf::Packet& packet) {
@@ -743,5 +757,17 @@ void Player::serialize(sf::Packet& packet) const {
     sf::Uint32 weaponCallType32;
     packet >> weaponCallType32;
     weaponCallType = static_cast<WeaponType>(weaponCallType32);
+    
+    //held weapons
+    sf::Uint32 weaponType32;
+    packet >> weaponType32;
+    weapon1 = static_cast<WeaponType>(weaponType32);
+    packet >> weaponType32;
+    weapon2 = static_cast<WeaponType>(weaponType32);
 
+    //this is for charging HUD
+    packet >> elapsedChargeTime;
+    packet >> totalChargeTime;
+    packet >> weaponType32;
+    chargeMagicType = static_cast<MAGIC_POWER>(weaponType32);
   }

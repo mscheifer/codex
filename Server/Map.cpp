@@ -34,15 +34,15 @@ void Map::mapReset()
 }
 
 void Map::initPowerUps() {
-  PowerUp* superPower = new PowerUp(v3_t(2,2,0), this, ICE3DEBUFF);
+  PowerUp* superPower = new PowerUp(v3_t(2,2,0), this, MOVEBOOST);
   superPower->setRespownTime(5000);
   this->entities.push_back(superPower);
 
-  PowerUp* p2 = new PowerUp(v3_t(2,5,0), this, THU2DEBUFF);
+  PowerUp* p2 = new PowerUp(v3_t(2,5,0), this, MANABOOST);
   p2->setRespownTime(5000);
   this->entities.push_back(p2);
 
-  PowerUp* p3 = new PowerUp(v3_t(2,9,0), this, ICE1DEBUFF);
+  PowerUp* p3 = new PowerUp(v3_t(2,9,0), this, HEALTHBOOST);
   p3->setRespownTime(5000);
   this->entities.push_back(p3);
 }
