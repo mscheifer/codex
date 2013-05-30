@@ -162,15 +162,6 @@
     <ClCompile Include="ClientGameTimeAction.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="PowerUpHealthPack.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="PowerUpManaPack.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="PowerUpSpeedPack.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="graphics\bone.cpp">
       <Filter>Source Files\graphics</Filter>
     </ClCompile>
@@ -363,15 +354,6 @@
       <Filter>Header Files\graphics</Filter>
     </ClInclude>
     <ClInclude Include="EntityPool.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="PowerUpHealthPack.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="PowerUpManaPack.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="PowerUpSpeedPack.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="graphics\graphicsEntity.h">

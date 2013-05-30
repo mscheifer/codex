@@ -1,7 +1,6 @@
 #pragma once
 #include "Ray.h"
 #include "boundingObj.h"
-#include <math.h>
 #include <iostream>
 
 class BoundingSphere : public BoundingObj{

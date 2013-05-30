@@ -206,7 +206,6 @@ bool Player::moveTowardDirection(move_t inputDir, bool jump)
     movementDirection.scale(speed * MOVESCALE());
 
   movementDirection.scale(getMovementMultiplier());
-
   movementDirection = correctMovement(movementDirection, true, getFeetOrigin());
   
   if(movementDirection.magnitude() > 1.0E-8 ){
