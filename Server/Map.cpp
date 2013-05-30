@@ -69,9 +69,9 @@ void Map::initWallsOne(void)
 
   v3_t facingEast(1,0,0);
   v3_t facingNorth(0,1,0);
-  unsigned int width = 10;
-  unsigned int height = 1; 
-  unsigned int depth = 4;
+  unsigned int width = ConfigManager::wallWidth();
+  unsigned int height = ConfigManager::wallHeight(); 
+  unsigned int depth = ConfigManager::wallDepth();
 
   float wallX = 25;
   float wallY = 25;
@@ -227,9 +227,9 @@ void Map::initWalls(void)
 
   v3_t facingEast(1,0,0);
   v3_t facingNorth(0,1,0);
-  unsigned int width = 10;
-  unsigned int height = 1; 
-  unsigned int depth = 4;
+  unsigned int width = ConfigManager::wallWidth();
+  unsigned int height = ConfigManager::wallHeight(); 
+  unsigned int depth = ConfigManager::wallDepth();
 
   float wallX = 7;
   float wallY = 7;
@@ -358,9 +358,9 @@ v3_t Map::getRespawnPosition(std::size_t player_id)
  */
 void Map::addWallDirection(float startingX, float startingY, float startingZ, v3_t dir, int values[])
 {
-  int width = 10;
-  int height = 1; 
-  int depth = 4;
+  unsigned int width = ConfigManager::wallWidth();
+  unsigned int height = ConfigManager::wallHeight(); 
+  unsigned int depth = ConfigManager::wallDepth();
   int x = 0;
   int j = 0;
   while(values[j] != -1)

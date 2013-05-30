@@ -11,8 +11,8 @@ gravity=-20
 
 // Player configuration
 players=1
-movescale=2
-airMovescale=1
+movescale=1
+airMovescale=.5
 maxJump=1000
 jumpSpeed=10
 playerHpRegen=.1
@@ -32,3 +32,8 @@ minotaurMaxMp=100
 
 // Projectile
 projectileRange=300
+
+// Wall
+wallWidth=37
+wallHeight=5
+wallDepth=10
