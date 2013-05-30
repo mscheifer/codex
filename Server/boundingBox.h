@@ -3,7 +3,6 @@
 #include "graphics/vector3.h"
 #include "Ray.h"
 #include "boundingObj.h"
-#include <math.h>
 #include <iostream>
 
 class BoundingBox : public BoundingObj{

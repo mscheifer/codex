@@ -27,9 +27,10 @@ void printNodes(aiNode* node, int level) {
 }
 
 gx::bone makeBone(gx::Mesh::idMap_t& idMap, int& nextId,
-                                       const std::set<std::string>& realBones,
-        const std::map<std::string,std::vector<const aiNodeAnim*>>& animations,
-        const aiNode* bon) {
+                    const std::set<std::string>& realBones,
+    const std::map<std::string,std::vector<
+          std::pair<const aiAnimation*,const aiNodeAnim*>>>& animations,
+                                               const aiNode* bon) {
   gx::matrix transform = gx::toMat(bon->mTransformation);
   bool real = false;
   int id = -1;
@@ -38,21 +39,45 @@ gx::bone makeBone(gx::Mesh::idMap_t& idMap, int& nextId,
     id = nextId++;
   }
   idMap.insert(std::make_pair(bon->mName.C_Str(),id));
-  std::vector<std::vector<gx::bone::key>> boneAnimations;
+  std::vector<gx::bone::animation> boneAnimations;
   const auto& anims = animations.find(bon->mName.C_Str())->second;
   for(auto itr = anims.begin(); itr != anims.end(); ++itr) {
-    const aiNodeAnim* animation = *itr;
-    std::vector<gx::bone::key> animKeys;
+    const aiNodeAnim* animation = itr->second;
+    std::map<double,gx::bone::key> animKeys;
     if(animation != nullptr) {
       for(unsigned int i = 0; i < animation->mNumPositionKeys; i++) {
         gx::bone::key k;
-        k.position = animation->mPositionKeys[i];
-        k.rotation = animation->mRotationKeys[i];
-        k.scaling  = animation->mScalingKeys [i];
-        animKeys.push_back(k);
+        k.position = gx::toVec4(animation->mPositionKeys[i].mValue);
+        k.rotation = animation->mRotationKeys[i].mValue;
+        k.scaling  = gx::toVec3(animation->mScalingKeys [i].mValue);
+        gx::debugout << "times " << animation->mPositionKeys[i].mTime << " ";
+        gx::debugout << animation->mRotationKeys[i].mTime << " ";
+        gx::debugout << animation->mScalingKeys[i].mTime << gx::endl;
+        animKeys.insert(animKeys.end(),
+          std::make_pair(animation->mPositionKeys[i].mTime,std::move(k)));
       }
+      //copy the last frame before the first and the first frame after the last
+      gx::bone::key below0;
+      auto last = animKeys.end(); --last;
+      below0.position = last->second.position;
+      below0.rotation = last->second.rotation;
+      below0.scaling  = last->second.scaling;
+      double below0Time = last->first - itr->first->mDuration;
+      gx::bone::key afterEnd;
+      afterEnd.position = animKeys.begin()->second.position;
+      afterEnd.rotation = animKeys.begin()->second.rotation;
+      afterEnd.scaling  = animKeys.begin()->second.scaling;
+      double afterEndTime = itr->first->mDuration + animKeys.begin()->first;
+      animKeys.insert(std::make_pair(  below0Time,std::move(below0)));
+      animKeys.insert(std::make_pair(afterEndTime,std::move(afterEnd)));
     }
-    boneAnimations.push_back(std::move(animKeys));
+    gx::bone::animation anim;
+    if(itr->first != nullptr) {
+      anim.duration = itr->first->mDuration;
+      anim.ticksPerSecond = itr->first->mTicksPerSecond;
+    }
+    anim.keyFrames = std::move(animKeys);
+    boneAnimations.push_back(std::move(anim));
   }
   std::vector<gx::bone> children;
   for(unsigned int i = 0; i < bon->mNumChildren; i++) {
@@ -64,11 +89,13 @@ gx::bone makeBone(gx::Mesh::idMap_t& idMap, int& nextId,
 }
 
 //should create an iterator for the node tree
-std::map<std::string,std::vector<const aiNodeAnim*>> 
+std::map<std::string,std::vector<
+         std::pair<const aiAnimation*,const aiNodeAnim*>>>
     walkNodesForAnims(const aiNode* node,unsigned int n) {
-  std::map<std::string,std::vector<const aiNodeAnim*>> ret;
-  ret.insert(std::make_pair(node->mName.C_Str(),
-                            std::vector<const aiNodeAnim*>(n,nullptr)));
+  std::map<std::string,std::vector<
+         std::pair<const aiAnimation*,const aiNodeAnim*>>> ret;
+  ret.insert(std::make_pair(node->mName.C_Str(),std::vector<std::pair<
+    const aiAnimation*,const aiNodeAnim*>>(n,std::make_pair(nullptr,nullptr))));
   for(unsigned int i = 0; i < node->mNumChildren; i++) {
     const auto& ch = walkNodesForAnims(node->mChildren[i],n);
     ret.insert(ch.begin(),ch.end());
@@ -79,7 +106,8 @@ std::map<std::string,std::vector<const aiNodeAnim*>>
 gx::bone initBones(std::map<std::string,unsigned int>& idMap,
                                         const aiScene* scene) {
   std::set<std::string>                                realBones;
-  std::map<std::string,std::vector<const aiNodeAnim*>> animations;
+  std::map<std::string,std::vector<
+     std::pair<const aiAnimation*,const aiNodeAnim*>>> animations;
   animations = walkNodesForAnims(scene->mRootNode,scene->mNumAnimations);
   for(unsigned int i = 0; i < scene->mNumMeshes; i++) {
     for(unsigned int j = 0; j < scene->mMeshes[i]->mNumBones; j++) {
@@ -89,9 +117,11 @@ gx::bone initBones(std::map<std::string,unsigned int>& idMap,
   }
   for(unsigned int i = 0; i < scene->mNumAnimations; i++) {
     const aiAnimation* anim = scene->mAnimations[i];
+    gx::debugout << "anim " << anim->mName.C_Str() << " " << anim->mDuration << " ";
+    gx::debugout << anim->mTicksPerSecond << gx::endl;
     for(unsigned int j = 0; j < anim->mNumChannels; j++) {
       const aiNodeAnim* nodeAnim = anim->mChannels[j];
-      animations.at(nodeAnim->mNodeName.C_Str()).at(i) = nodeAnim;
+      animations.at(nodeAnim->mNodeName.C_Str()).at(i) = std::make_pair(anim,nodeAnim);
       //TODO: fix for different numbers of keys
       if(nodeAnim->mNumPositionKeys != nodeAnim->mNumRotationKeys) {
         std::cout << "Error " << nodeAnim->mNumPositionKeys << " != ";

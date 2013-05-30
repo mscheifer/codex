@@ -1,5 +1,4 @@
 #pragma once
-#include <math.h>
 #include "graphics/vector3.h"
 #include "graphics/vector4.h"
 #include "ConfigManager.h"

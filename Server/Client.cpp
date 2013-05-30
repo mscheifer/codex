@@ -64,7 +64,7 @@ void NetworkClient::receiveMessages() {
         //std::cout << "num entities received: " << entities.size() << std::endl;
         if (s.players[id].dead) { /*render death everytime ? */}
         //render WIN OR LOSE based on s.state
-        sf::Listener::setPosition(pos.x, pos.y, pos.z);
+        sf::Listener::setPosition(pos.x/AudioManager::soundScaling, pos.y/AudioManager::soundScaling, pos.z/AudioManager::soundScaling);
         auto dir = s.players[this->id].getDirection();
         sf::Listener::setDirection(dir.x, dir.y, dir.z);
 
@@ -146,6 +146,10 @@ void NetworkClient::processInput(){
 */
 void NetworkClient::doClient() {
   AudioManager::loadSounds();
+
+  sf::VideoMode m = sf::VideoMode::getDesktopMode();
+  std::cout << "width " << m.width << std::endl;
+  std::cout << "height " << m.height << std::endl;
   //AudioManager::playMusic("m1");
 
   //std::cout << "Waiting for other players to join" << std::endl;

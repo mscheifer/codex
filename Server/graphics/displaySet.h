@@ -1,8 +1,6 @@
 #ifndef DISPLAY_SET_H
 #define DISPLAY_SET_H
 #include <GL/glew.h>
-#define _USE_MATH_DEFINES
-#include <math.h>
 #include "oglUtil.h"
 #include "matrix.h"
 #include "uniformBlock.h"

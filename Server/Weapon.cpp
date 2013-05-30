@@ -2,6 +2,9 @@
 #include "Projectile.h"
 
 const float Weapon::meleeAttackMult = 1.25f;
+const float Weapon::weaponWidth = 2.0f;
+const float Weapon::weaponHeight = 2.0f;
+const float Weapon::weaponDepth = 2.0f;
 
 Weapon::Weapon(Map* m)
 {
