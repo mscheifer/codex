@@ -210,7 +210,7 @@ void AudioManager::playMusic(std::string musicN, int index){
 
 void AudioManager::playPlayerSound(std::string sound, int player_id , std::string name, v3_t pos) {
 
-  std::cout << " player id is : " << player_id << std::endl;
+//c  std::cout << " player id is : " << player_id << std::endl;
   int copy_id = player_id;
   std::map<std::string,sf::SoundBuffer*>::iterator it = soundBuffers.find(sound);
 
@@ -225,8 +225,17 @@ void AudioManager::playPlayerSound(std::string sound, int player_id , std::strin
   }
 }
 
+void AudioManager::updatePlayerSoundsPosition(int player_id , v3_t pos ) {
+ std::map<std::string,sf::Sound>::iterator it =  playerSounds[player_id].begin();
+ while( it != playerSounds[player_id].end()) {
+   it->second.setPosition(pos.x/soundScaling,pos.y/soundScaling,pos.z/soundScaling);
+   it++;
+ }
+
+}
 void AudioManager::processPlayerSound(Player& o){
   static bool walk_toggle[4] = { false, false, false, false};
+  updatePlayerSoundsPosition(o.player_id , o.getPosition());
 
   if(o.meleeAttack)
     playSound("melee", "melee", o.getPosition());
@@ -235,7 +244,7 @@ void AudioManager::processPlayerSound(Player& o){
     //stopSound( "playerCall: " + o.player_id );
     std::stringstream ss;
     ss << "playerCall: " << o.player_id;
-    playSound(getWeaponCall(o.weaponCallType), ss.str(), o.getPosition());
+    playPlayerSound(getWeaponCall(o.weaponCallType),o.player_id, "weaponCall", o.getPosition());
   }
 
   if(o.collectPowerUp){
@@ -245,11 +254,11 @@ void AudioManager::processPlayerSound(Player& o){
   }
 
   if(o.charging) {
-    std::cout << " player is charging"<< std::endl;
+//    std::cout << " player is charging"<< std::endl;
     playPlayerSound("c1", o.player_id,  "charging", o.getPosition());
   } else {
-     std::cout << " player is NOT charging"<< std::endl;
-    stopPlayerSound( o.player_id , "charging");
+//     std::cout << " player is NOT charging"<< std::endl;
+     stopPlayerSound( o.player_id , "charging");
   }
 
   if(o.shotProjectile) {  
