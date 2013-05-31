@@ -371,7 +371,6 @@ v3_t Player::getProjectilePosition() {
 // this do substraction of stemina, respond to the user to render the attak animation  
 void Player::attack( ClientGameTimeAction a) {
 	Weapon* currentWeapon = weapon[current_weapon_selection];
-  std::cout << "attack " << std::endl;
   if(a.attackRange && !chargedProjectile){
     if( !currentWeapon->canUseWeapon(true, this) || currentWeapon->getMpCost() > mana){
       charging = false;
