@@ -10,12 +10,12 @@
 
 const float Map::Item_Pick_Up_Ranges = 1.0f;
 
-//TODO the rectangle should be the actual world bounds
+//TODO the rectangle should be the actual world bounds 
 Map::Map(void): spawnPositions(), freeProjectiles(), q(0,Rectangle(BoundingObj::vec4_t(0,0,0),1000,1000))
 {
 	map_size = 15;
 	freeProjectiles = new std::stack<Projectile *>();
-  initWallsOne();
+  initWalls();
   initPowerUps();
 }
 
@@ -34,17 +34,21 @@ void Map::mapReset()
 }
 
 void Map::initPowerUps() {
-  PowerUp* superPower = new PowerUp(v3_t(2,2,0), this, ICE3DEBUFF);
-  superPower->setRespownTime(5000);
-  this->entities.push_back(superPower);
+  //PowerUp* superPower = new PowerUp(v3_t(5,5,0), this, THU1DEBUFF);
+  //superPower->setRespownTime(5000);
+  //this->entities.push_back(superPower);
 
-  PowerUp* p2 = new PowerUp(v3_t(2,5,0), this, THU2DEBUFF);
-  p2->setRespownTime(5000);
-  this->entities.push_back(p2);
+  //PowerUp* p2 = new PowerUp(v3_t(-10,-10,0), this, FIR1DEBUFF);
+  //p2->setRespownTime(5000);
+  //this->entities.push_back(p2);
 
-  PowerUp* p3 = new PowerUp(v3_t(2,9,0), this, ICE1DEBUFF);
-  p3->setRespownTime(5000);
-  this->entities.push_back(p3);
+  //PowerUp* p3 = new PowerUp(v3_t(-10,10,0), this, ICE1DEBUFF);
+  //p3->setRespownTime(5000);
+  //this->entities.push_back(p3);
+
+  //PowerUp* p4 = new PowerUp(v3_t(10,-10,0), this, G2DEBUFF);
+  //p4->setRespownTime(5000);
+  //this->entities.push_back(p4);
 }
 
 void Map::initWallsOne(void)
@@ -69,9 +73,9 @@ void Map::initWallsOne(void)
 
   v3_t facingEast(1,0,0);
   v3_t facingNorth(0,1,0);
-  unsigned int width = 10;
-  unsigned int height = 1; 
-  unsigned int depth = 4;
+  unsigned int width = ConfigManager::wallWidth();
+  unsigned int height = ConfigManager::wallHeight(); 
+  unsigned int depth = ConfigManager::wallDepth();
 
   float wallX = 25;
   float wallY = 25;
@@ -227,9 +231,9 @@ void Map::initWalls(void)
 
   v3_t facingEast(1,0,0);
   v3_t facingNorth(0,1,0);
-  unsigned int width = 10;
-  unsigned int height = 1; 
-  unsigned int depth = 4;
+  unsigned int width = ConfigManager::wallWidth();
+  unsigned int height = ConfigManager::wallHeight(); 
+  unsigned int depth = ConfigManager::wallDepth();
 
   float wallX = 7;
   float wallY = 7;
@@ -358,9 +362,9 @@ v3_t Map::getRespawnPosition(std::size_t player_id)
  */
 void Map::addWallDirection(float startingX, float startingY, float startingZ, v3_t dir, int values[])
 {
-  int width = 10;
-  int height = 1; 
-  int depth = 4;
+  unsigned int width = ConfigManager::wallWidth();
+  unsigned int height = ConfigManager::wallHeight(); 
+  unsigned int depth = ConfigManager::wallDepth();
   int x = 0;
   int j = 0;
   while(values[j] != -1)

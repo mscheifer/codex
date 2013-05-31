@@ -69,10 +69,14 @@ void Player::init(v3_t pos, int assigned_id, Map * m)
   speedUp = false;
   charging = false;
   walking = false;
+  collectPowerUp = false;
+  elapsedChargeTime = 0;
+  totalChargeTime = -1;
 	map = m;
-	weapon[0] = new WeaponFist(position, this->map); //has no bounds so it doesnt drop
+	weapon[0] = new WeaponFire(position, this->map, ICE1);
+    //new WeaponFist(position, this->map); //has no bounds so it doesnt drop
   //weapon[1] = new WeaponFist(position, this->map);
-	weapon[1] = new WeaponFire(position, this->map, B1); 
+	weapon[1] = new WeaponFire(position, this->map, FIR1); //TODO make this basic
 	m->addEntity(weapon[1]);
   weapon[1]->pickUp();
   buffs.clear();
@@ -137,13 +141,13 @@ bool Player::damageBy(Projectile *deadly)
 	if (health==0) return true;
 
   attacked = true;
-  float damage = deadly->getStrength() - defense;
+  float damage = deadly->getStrength() - defense*getDefenseMultiplier();
 	damage = ( damage > 0? damage: 0);
 	float newHealth = (health - damage);
 	health = (newHealth > 0 ? newHealth : 0);
   dead = health==0;
 
-  if(charging == true) {
+  if(charging) {
     map->destroyProjectile(chargedProjectile);
     chargedProjectile = nullptr;
     charging = false;
@@ -180,8 +184,10 @@ bool Player::moveTowardDirection(move_t inputDir, bool jump)
   }
 
   //if jump add jump velocity, 
+  // not stunned
   // and not free fall with no jumps
   if(jump && canJump && 
+    getMovementMultiplier() != 0 &&
     !(jumpCount == 0 && velocity.z < getGravity().z * ConfigManager::serverTickLengthSec() * 5)){
     //add jump velocity
     v3_t jumpDir = movementDirection;
@@ -230,6 +236,7 @@ void Player::clearEvents(){
   attacked = false;
   meleeAttack = false;
   weaponCall = false;
+  collectPowerUp = false;
 }
 
 void Player::die()
@@ -251,11 +258,6 @@ void Player::update(){
     return;
 
   updateBuffs();
-  
-  if( chargedProjectile ) {
-    chargedProjectile->setDirection(direction);
-    chargedProjectile->setPosition(getProjectilePosition());
-  }
 
   //pick up weapon stuff
   pickup = nullptr;
@@ -267,6 +269,14 @@ void Player::update(){
   v3_t attemptMove = velocity * ConfigManager::serverTickLengthSec();
   position += correctMovement( attemptMove, false, getFeetOrigin() );
   //position += velocity * ConfigManager::serverTickLengthSec();
+
+  if( chargedProjectile ) {
+    elapsedChargeTime = chargedProjectile->getElapsedTime();
+    totalChargeTime = ProjInfo[chargedProjectile->getMagicType()].chargeTime * getChargeCD();
+    chargeMagicType = chargedProjectile->getMagicType();
+    chargedProjectile->setDirection(direction);
+    chargedProjectile->setPosition(getProjectilePosition());
+  }
 
   health+= healthRegen*getHealthRegenMultiplier();
   health = (health > maxHealth ? maxHealth : health);
@@ -290,6 +300,9 @@ void Player::restartJump(length_t zPosFix){
 }
 
 void Player::handleSelfAction(ClientGameTimeAction a) {
+  if(dead)
+    return;
+
 	// User is still casting their spell (in case we have spell cast time)
 	// This is NOT spell cool down time.
  	if(castDownCounter.getElapsedTime().asMilliseconds() < castDownTime )
@@ -311,16 +324,13 @@ void Player::handleSelfAction(ClientGameTimeAction a) {
 
 	//start of attacking logic
   //std::cout << " attackRng " << a.attackRange << " chrg " << (chargedProjectile == nullptr) << std::endl;
-	if( (a.attackRange && chargedProjectile == nullptr) || a.attackMelee) {
-		attack(a);
-	} else if ( chargedProjectile && !a.attackRange ) { //@Fire the projectile!
-    v3_t v = direction;
-    v.normalize();
+  if ( chargedProjectile && !a.attackRange ) { //@fire the projectile!
+    elapsedChargeTime = totalChargeTime = -1;
+    fireProjectile();
+  }
 
-    chargedProjectile->fire(v,getStrengthMultiplier());
-    chargedProjectile = nullptr;
-    charging = false;
-    shotProjectile = true;
+  if( a.attackRange || a.attackRange ) {
+		attack(a);
   }
 
   if(a.switchWeapon) {
@@ -332,6 +342,14 @@ void Player::handleSelfAction(ClientGameTimeAction a) {
   }
 }
 
+void Player::fireProjectile() {
+    v3_t v = direction;
+    v.normalize();
+    chargedProjectile->fire(v,getStrengthMultiplier());
+    chargedProjectile = nullptr;
+    charging = false;
+    shotProjectile = true;
+}
 void Player::handleOtherAction( ClientGameTimeAction) {
 	//since we are modeling projectiles, we are just gonna check for melee
 }
@@ -353,9 +371,9 @@ v3_t Player::getProjectilePosition() {
 // this do substraction of stemina, respond to the user to render the attak animation  
 void Player::attack( ClientGameTimeAction a) {
 	Weapon* currentWeapon = weapon[current_weapon_selection];
-  std::cout << "attack " << std::endl;
-	if(a.attackRange){
+  if(a.attackRange && !chargedProjectile){
     if( !currentWeapon->canUseWeapon(true, this) || currentWeapon->getMpCost() > mana){
+      charging = false;
 		  return;
 	  }
 	  mana -= currentWeapon->getMpCost();
@@ -366,7 +384,6 @@ void Player::attack( ClientGameTimeAction a) {
 		if( !currentWeapon->canUseWeapon(false, this)){
 		  return;
 		}
-
     meleeAttack = true;
     v3_t dir = direction;
     dir.normalize();
@@ -408,6 +425,7 @@ v3_t Player::getFeetOrigin(){
 
 void Player::handleCollisions(){
   std::vector<std::pair<Entity*,BoundingObj::vec3_t>> entities =  detectCollision();
+  std::vector<Entity *> alreadyCollided;
   bool restart = false;
   int restarts = 0;
 
@@ -423,10 +441,22 @@ void Player::handleCollisions(){
         //std::cout << "player" << std::endl;
         restart = collidePlayer(*it);
         break;
-      case PROJECTILE:
-        //std::cout << "proj" << std::endl;
-        restart = collideProjectile(*it);
+      case PROJECTILE:{
+        //prevent dup collisions
+        auto oldColls = alreadyCollided.begin();
+        for( ; oldColls != alreadyCollided.end(); oldColls++ ){
+          if(*oldColls == e)
+            break;
+        }
+
+        if( oldColls == alreadyCollided.end() ){ //has not already collided
+          //std::cout << "proj" << std::endl;
+          restart = collideProjectile(*it);
+          alreadyCollided.push_back(e);
+        }
+
         break;
+      }
       case WEAPON:
         pickup = (Weapon*)e;
         pickupWeaponType = ((Weapon*)e)->getWeaponType();
@@ -470,7 +500,7 @@ bool Player::collidePlayer(const std::pair<Entity*,BoundingObj::vec3_t>& p){
   return true;
 }
 
-bool Player::collideProjectile(const std::pair<Entity*,BoundingObj::vec3_t>& p){
+bool Player::collideProjectile(const std::pair<Entity*,BoundingObj::vec3_t>& p){  
   Projectile * proj = ((Projectile *)p.first);
   if(proj->getOwner() != this) {
     std::cout << "OW hit "<< player_id << std::endl;
@@ -488,6 +518,7 @@ bool Player::collidePowerUp(const std::pair<Entity*,BoundingObj::vec3_t>& p){
   BUFF ptype = ((PowerUp*)p.first)->getBuffType();
   applyBuff(ptype);
   ((PowerUp*)p.first)->pickUp();
+  collectPowerUp = true;
   return false;
 }
 
@@ -654,6 +685,15 @@ float Player::getHealthRegenMultiplier() const{
   return healthMultiplier;
 }
 
+float Player::getDefenseMultiplier() const{
+  float defenseMultiplier = 1;
+  for(auto buff = buffs.begin(); buff != buffs.end(); buff++){
+    if( BuffInfo[buff->first].affectDefense )
+        defenseMultiplier *= BuffInfo[buff->first].defenseMult;
+  }
+  return defenseMultiplier;
+}
+
 void Player::serialize(sf::Packet& packet) const {
     Entity::serialize(packet);
     packet << this->player_id;
@@ -682,6 +722,7 @@ void Player::serialize(sf::Packet& packet) const {
     packet << walking;
     packet << shotProjectile;
     packet << attacked;
+    packet << player_id;
     packet << kills;
     packet << wins;
     packet << static_cast<sf::Uint32>(buffs.size());
@@ -692,6 +733,17 @@ void Player::serialize(sf::Packet& packet) const {
     packet << meleeAttack;
     packet << weaponCall;
     packet << static_cast<sf::Uint32>(weaponCallType);
+
+    //held weapons
+    packet << static_cast<sf::Uint32>(weapon[0]->getWeaponType());
+    packet << static_cast<sf::Uint32>(weapon[1]->getWeaponType());
+
+    //this is for charing HUD
+    packet << elapsedChargeTime;
+    packet << totalChargeTime;
+    packet << static_cast<sf::Uint32>(chargeMagicType);
+
+    packet << collectPowerUp;
   }
 
   void Player::deserialize(sf::Packet& packet) {
@@ -724,6 +776,7 @@ void Player::serialize(sf::Packet& packet) const {
     packet >> walking;
     packet >> shotProjectile;
     packet >> attacked;
+    packet >> player_id;
     packet >> kills;
     packet >> wins;
     sf::Uint32 size = 0; 
@@ -742,5 +795,19 @@ void Player::serialize(sf::Packet& packet) const {
     sf::Uint32 weaponCallType32;
     packet >> weaponCallType32;
     weaponCallType = static_cast<WeaponType>(weaponCallType32);
+    
+    //held weapons
+    sf::Uint32 weaponType32;
+    packet >> weaponType32;
+    weapon1 = static_cast<WeaponType>(weaponType32);
+    packet >> weaponType32;
+    weapon2 = static_cast<WeaponType>(weaponType32);
 
+    //this is for charging HUD
+    packet >> elapsedChargeTime;
+    packet >> totalChargeTime;
+    packet >> weaponType32;
+    chargeMagicType = static_cast<MAGIC_POWER>(weaponType32);
+
+    packet >> collectPowerUp;
   }

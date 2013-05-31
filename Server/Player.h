@@ -25,7 +25,13 @@ public:
   bool dead; //might be private. should be determined in handleAction
   bool meleeAttack;
   bool weaponCall;
+  bool collectPowerUp;
   WeaponType weaponCallType;
+  WeaponType weapon1;
+  WeaponType weapon2;
+  float elapsedChargeTime;
+  float totalChargeTime;
+  MAGIC_POWER chargeMagicType;
   
   int player_id;
   std::string name;
@@ -49,6 +55,7 @@ public:
   void handleAction(ClientGameTimeAction a);
   
   //getters and setters
+  int getCurrentWeaponSelection() const { return current_weapon_selection; };
   float getHealth() const { return health; }
   void setHealth(float);
   float getMana() const {return mana;}
@@ -71,11 +78,13 @@ public:
   float getMovementMultiplier() const;
   float getManaRegenMultiplier() const;
   float getHealthRegenMultiplier() const;
+  float getDefenseMultiplier() const;
   int getKills() const { return kills; }
   int getWins() const { return wins; }
   
   void serialize(sf::Packet& packet) const;
   void deserialize(sf::Packet& packet);
+  const std::list<std::pair<BUFF,int>> & getBuffs() const { return buffs;}
   bool charging;
   bool walking;
   bool shotProjectile;
@@ -116,6 +125,7 @@ private:
   void generateBounds(v3_t pos);
   void restartJump(length_t zPosFix);
   bool correctMovementHit( Entity* e );
+  void fireProjectile();
   v3_t getProjectilePosition(void);
   void die();
   void respawn(v3_t pos);

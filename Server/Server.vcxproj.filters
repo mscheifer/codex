@@ -428,43 +428,112 @@
       <Filter>Resource Files\graphics</Filter>
     </None>
     <None Include="graphics\Images\aimer.png">
-      <Filter>Resource Files</Filter>
+      <Filter>Resource Files\graphics\Images</Filter>
     </None>
     <None Include="graphics\Images\badguy.png">
-      <Filter>Resource Files</Filter>
-    </None>
-    <None Include="graphics\Images\burn.png">
-      <Filter>Resource Files</Filter>
-    </None>
-    <None Include="graphics\Images\burn2.png">
-      <Filter>Resource Files</Filter>
+      <Filter>Resource Files\graphics\Images</Filter>
     </None>
     <None Include="graphics\Images\Empty_bar.png">
-      <Filter>Resource Files</Filter>
-    </None>
-    <None Include="graphics\Images\frz.png">
-      <Filter>Resource Files</Filter>
-    </None>
-    <None Include="graphics\Images\frz2.png">
-      <Filter>Resource Files</Filter>
+      <Filter>Resource Files\graphics\Images</Filter>
     </None>
     <None Include="graphics\Images\Full_life_bar.png">
-      <Filter>Resource Files</Filter>
+      <Filter>Resource Files\graphics\Images</Filter>
     </None>
     <None Include="graphics\Images\Full_mana_bar.png">
-      <Filter>Resource Files</Filter>
+      <Filter>Resource Files\graphics\Images</Filter>
     </None>
-    <None Include="graphics\Images\grv.png">
-      <Filter>Resource Files</Filter>
+    <None Include="graphics\Images\powerAttack.png">
+      <Filter>Resource Files\graphics\Images</Filter>
     </None>
-    <None Include="graphics\Images\grv2.png">
-      <Filter>Resource Files</Filter>
+    <None Include="graphics\Images\powerCharge.png">
+      <Filter>Resource Files\graphics\Images</Filter>
     </None>
-    <None Include="graphics\Images\stn.png">
-      <Filter>Resource Files</Filter>
+    <None Include="graphics\Images\powerHealth.png">
+      <Filter>Resource Files\graphics\Images</Filter>
     </None>
-    <None Include="graphics\Images\stn2.png">
-      <Filter>Resource Files</Filter>
+    <None Include="graphics\Images\powerMana.png">
+      <Filter>Resource Files\graphics\Images</Filter>
+    </None>
+    <None Include="graphics\Images\powerMove.png">
+      <Filter>Resource Files\graphics\Images</Filter>
+    </None>
+    <None Include="graphics\Images\powerStr.png">
+      <Filter>Resource Files\graphics\Images</Filter>
+    </None>
+    <None Include="graphics\Images\statF.png">
+      <Filter>Resource Files\graphics\Images</Filter>
+    </None>
+    <None Include="graphics\Images\statG.png">
+      <Filter>Resource Files\graphics\Images</Filter>
+    </None>
+    <None Include="graphics\Images\statI.png">
+      <Filter>Resource Files\graphics\Images</Filter>
+    </None>
+    <None Include="graphics\Images\statT.png">
+      <Filter>Resource Files\graphics\Images</Filter>
+    </None>
+    <None Include="graphics\Images\weaponBasic.png">
+      <Filter>Resource Files\graphics\Images</Filter>
+    </None>
+    <None Include="graphics\Images\weaponFire.png">
+      <Filter>Resource Files\graphics\Images</Filter>
+    </None>
+    <None Include="graphics\Images\weaponIce.png">
+      <Filter>Resource Files\graphics\Images</Filter>
+    </None>
+    <None Include="graphics\Images\weaponThu.png">
+      <Filter>Resource Files\graphics\Images</Filter>
+    </None>
+    <None Include="graphics\Images\powerAttackL.png">
+      <Filter>Resource Files\graphics\Images</Filter>
+    </None>
+    <None Include="graphics\Images\powerChargeL.png">
+      <Filter>Resource Files\graphics\Images</Filter>
+    </None>
+    <None Include="graphics\Images\powerHealthL.png">
+      <Filter>Resource Files\graphics\Images</Filter>
+    </None>
+    <None Include="graphics\Images\powerManaL.png">
+      <Filter>Resource Files\graphics\Images</Filter>
+    </None>
+    <None Include="graphics\Images\powerMoveL.png">
+      <Filter>Resource Files\graphics\Images</Filter>
+    </None>
+    <None Include="graphics\Images\powerStrL.png">
+      <Filter>Resource Files\graphics\Images</Filter>
+    </None>
+    <None Include="graphics\Images\statFL.png">
+      <Filter>Resource Files\graphics\Images</Filter>
+    </None>
+    <None Include="graphics\Images\statGL.png">
+      <Filter>Resource Files\graphics\Images</Filter>
+    </None>
+    <None Include="graphics\Images\statIL.png">
+      <Filter>Resource Files\graphics\Images</Filter>
+    </None>
+    <None Include="graphics\Images\statTL.png">
+      <Filter>Resource Files\graphics\Images</Filter>
+    </None>
+    <None Include="graphics\Images\stunG.png">
+      <Filter>Resource Files\graphics\Images</Filter>
+    </None>
+    <None Include="graphics\Images\stunGL.png">
+      <Filter>Resource Files\graphics\Images</Filter>
+    </None>
+    <None Include="graphics\Images\stunT.png">
+      <Filter>Resource Files\graphics\Images</Filter>
+    </None>
+    <None Include="graphics\Images\stunTL.png">
+      <Filter>Resource Files\graphics\Images</Filter>
+    </None>
+    <None Include="graphics\Images\weaponFist.png">
+      <Filter>Resource Files\graphics\Images</Filter>
+    </None>
+    <None Include="graphics\Images\chargebar.png">
+      <Filter>Resource Files\graphics\Images</Filter>
+    </None>
+    <None Include="graphics\Images\chargebarempty.png">
+      <Filter>Resource Files\graphics\Images</Filter>
     </None>
   </ItemGroup>
 </Project>

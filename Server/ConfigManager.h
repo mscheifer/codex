@@ -65,6 +65,11 @@ public:
   /// Projectile ///
   static float projectileRange(){ return StringToNumber<float>(ConfigManager::configMap["projectileRange"]); }
 
+  /// Wall ///
+  static unsigned int wallDepth(){ return StringToNumber<unsigned int>(ConfigManager::configMap["wallDepth"]); }
+  static unsigned int wallHeight(){ return StringToNumber<unsigned int>(ConfigManager::configMap["wallHeight"]); }
+  static unsigned int wallWidth(){ return StringToNumber<unsigned int>(ConfigManager::configMap["wallWidth"]); }
+
   /// Physics ///
   static float gravity(){  return StringToNumber<float>(ConfigManager::configMap["gravity"]); }
 };

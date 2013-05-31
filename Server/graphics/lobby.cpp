@@ -29,7 +29,6 @@ void gx::lobby::handleInput(input const& userInput) {
     button.setColor(sf::Color(250, 20, 20));
     if(userInput.fire1()) {
       start = true;
-      std::cout<<"i clicked!"<<std::endl;           
     }
   } else {
     button.setColor(sf::Color(150, 50, 50));
