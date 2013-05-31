@@ -10,7 +10,7 @@
 
 const float Map::Item_Pick_Up_Ranges = 1.0f;
 
-//TODO the rectangle should be the actual world bounds
+//TODO the rectangle should be the actual world bounds 
 Map::Map(void): spawnPositions(), freeProjectiles(), q(0,Rectangle(BoundingObj::vec4_t(0,0,0),1000,1000))
 {
 	map_size = 15;
@@ -34,15 +34,15 @@ void Map::mapReset()
 }
 
 void Map::initPowerUps() {
-  PowerUp* superPower = new PowerUp(v3_t(2,2,0), this, FIR1DEBUFF);
+  PowerUp* superPower = new PowerUp(v3_t(2,2,0), this, THU1DEBUFF);
   superPower->setRespownTime(5000);
   this->entities.push_back(superPower);
 
-  PowerUp* p2 = new PowerUp(v3_t(2,5,0), this, MANABOOST);
+  PowerUp* p2 = new PowerUp(v3_t(2,5,0), this, THUSTUN);
   p2->setRespownTime(5000);
   this->entities.push_back(p2);
 
-  PowerUp* p3 = new PowerUp(v3_t(2,9,0), this, HEALTHBOOST);
+  PowerUp* p3 = new PowerUp(v3_t(2,9,0), this, FIR3DEBUFF);
   p3->setRespownTime(5000);
   this->entities.push_back(p3);
 }

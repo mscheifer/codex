@@ -82,7 +82,7 @@ const ProjectileData ProjInfo[] = { //TODO fix all these numbers
 
   ProjectileData(G3,    300, 30, 1,   50, 0, G3V, -1),
 
-  ProjectileData(B1,    50,  30, 1,   5, 0, NONEV, -1)
+  ProjectileData(B1,    50,  30, 1,   15, 0, NONEV, -1)
 };
 
 class Projectile :

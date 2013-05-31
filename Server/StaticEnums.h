@@ -125,7 +125,7 @@ const BuffData BuffInfo[] = {
   BuffData(NONE,        0,  1, 100,    false, 0,    false, 0,     false, 0,    false, 0,    false, 0,    false, 0),
   BuffData(MOVEBOOST,   1,  1, 120000, true, 2,     false, 0,     false, 0,    false, 0,    false, 0,    false, 0),
   BuffData(MANABOOST,   2,  1, 120000, false, 0,    true, 5,      false, 0,    false, 0,    false, 0,    false, 0),
-  BuffData(HEALTHBOOST, 3,  1, 120000, false, 0,    false, 0,     true, 5,     false, 0,    false, 0,    false, 0),
+  BuffData(HEALTHBOOST, 3,  1, 5000, false, 0,    false, 0,     true, 5,     false, 0,    false, 0,    false, 0),
   BuffData(STRBOOST,    4,  1, 120000, false, 0,    false, 0,     false, 0,    true, 2,     false, 0,    false, 0),
   BuffData(ATTACKCD,    5,  1, 120000, false, 0,    false, 0,     false, 0,    false, 0,    true, 0.25,  false, 0),
   BuffData(CHARGECD,    6,  1, 120000, false, 0,    false, 0,     false, 0,    false, 0,    false, 0,    true, 0.25),
@@ -138,7 +138,7 @@ const BuffData BuffInfo[] = {
   BuffData(ICE2DEBUFF,  8,  2, 1500,   true, 0.75f, false, 0,     false, 0,    false, 0,    false, 0,    false, 0),
   BuffData(ICE3DEBUFF,  8,  3, 1500,   true, 0.65f, false, 0,     false, 0,    false, 0,    false, 0,    false, 0),
 
-  BuffData(THUSTUN,     9,  1, 300,    true, 0,     false, 0,     false, 0,    false, 0,    false, 0,    false, 0),
+  BuffData(THUSTUN,     9,  1, 5000,    true, 0,     false, 0,     false, 0,    false, 0,    false, 0,    false, 0),
   BuffData(THUSTUN2,    9,  2, 400,    true, 0,     false, 0,     false, 0,    false, 0,    false, 0,    false, 0),
   BuffData(THU1DEBUFF,  10, 1, 1500,   false, 0,    true, -1.5f,  false, 0,    false, 0,    false, 0,    false, 0),
   BuffData(THU2DEBUFF,  10, 2, 1500,   false, 0,    true, -2,     false, 0,    false, 0,    false, 0,    false, 0),
