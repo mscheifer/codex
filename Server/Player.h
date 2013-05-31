@@ -26,6 +26,7 @@ public:
   bool dead; //might be private. should be determined in handleAction
   bool meleeAttack;
   bool weaponCall;
+  bool collectPowerUp;
   WeaponType weaponCallType;
   WeaponType weapon1;
   WeaponType weapon2;

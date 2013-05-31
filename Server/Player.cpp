@@ -69,12 +69,13 @@ void Player::init(v3_t pos, int assigned_id, Map * m)
   speedUp = false;
   charging = false;
   walking = false;
+  collectPowerUp = false;
   elapsedChargeTime = 0;
   totalChargeTime = -1;
 	map = m;
 	weapon[0] = new WeaponFist(position, this->map); //has no bounds so it doesnt drop
   //weapon[1] = new WeaponFist(position, this->map);
-	weapon[1] = new WeaponFire(position, this->map, ICE1); 
+	weapon[1] = new WeaponFire(position, this->map, B1); 
 	m->addEntity(weapon[1]);
   weapon[1]->pickUp();
   buffs.clear();
@@ -232,6 +233,7 @@ void Player::clearEvents(){
   attacked = false;
   meleeAttack = false;
   weaponCall = false;
+  collectPowerUp = false;
 }
 
 void Player::die()
@@ -295,6 +297,9 @@ void Player::restartJump(length_t zPosFix){
 }
 
 void Player::handleSelfAction(ClientGameTimeAction a) {
+  if(dead)
+    return;
+
 	// User is still casting their spell (in case we have spell cast time)
 	// This is NOT spell cool down time.
  	if(castDownCounter.getElapsedTime().asMilliseconds() < castDownTime )
@@ -501,6 +506,8 @@ bool Player::collidePowerUp(const std::pair<Entity*,BoundingObj::vec3_t>& p){
   BUFF ptype = ((PowerUp*)p.first)->getBuffType();
   applyBuff(ptype);
   ((PowerUp*)p.first)->pickUp();
+  std::cout << "wtf" << std::endl;
+  collectPowerUp = true;
   return false;
 }
 
@@ -714,6 +721,8 @@ void Player::serialize(sf::Packet& packet) const {
     packet << elapsedChargeTime;
     packet << totalChargeTime;
     packet << static_cast<sf::Uint32>(chargeMagicType);
+
+    packet << collectPowerUp;
   }
 
   void Player::deserialize(sf::Packet& packet) {
@@ -777,4 +786,6 @@ void Player::serialize(sf::Packet& packet) const {
     packet >> totalChargeTime;
     packet >> weaponType32;
     chargeMagicType = static_cast<MAGIC_POWER>(weaponType32);
+
+    packet >> collectPowerUp;
   }

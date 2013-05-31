@@ -15,7 +15,7 @@ Map::Map(void): spawnPositions(), freeProjectiles(), q(0,Rectangle(BoundingObj::
 {
 	map_size = 15;
 	freeProjectiles = new std::stack<Projectile *>();
-  initWallsOne();
+  initWalls();
   initPowerUps();
 }
 
@@ -207,10 +207,10 @@ void Map::initWallsOne(void)
 void Map::initWalls(void)
 {
   //TODO move this
-  //WeaponFire* w1 = new WeaponFire(v3_t(100,100,0), this, FIR1);
-  //w1->dropDown(v3_t(10,10,0));
-  //w1->setDirection(v3_t(0,1,0));
-  //entities.push_back(w1);
+  WeaponFire* w1 = new WeaponFire(v3_t(100,100,0), this, FIR1);
+  w1->dropDown(v3_t(10,10,0));
+  w1->setDirection(v3_t(0,1,0));
+  entities.push_back(w1);
   WeaponFire* w2 = new WeaponFire(v3_t(120,120,0), this, THU1);
   w2->dropDown(v3_t(10,-10,0));
   w2->setDirection(v3_t(0,1,0));
