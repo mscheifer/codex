@@ -73,9 +73,10 @@ void Player::init(v3_t pos, int assigned_id, Map * m)
   elapsedChargeTime = 0;
   totalChargeTime = -1;
 	map = m;
-	weapon[0] = new WeaponFist(position, this->map); //has no bounds so it doesnt drop
+	weapon[0] = new WeaponFire(position, this->map, ICE1);
+    //new WeaponFist(position, this->map); //has no bounds so it doesnt drop
   //weapon[1] = new WeaponFist(position, this->map);
-	weapon[1] = new WeaponFire(position, this->map, B1); 
+	weapon[1] = new WeaponFire(position, this->map, FIR1); //TODO make this basic
 	m->addEntity(weapon[1]);
   weapon[1]->pickUp();
   buffs.clear();
@@ -140,13 +141,13 @@ bool Player::damageBy(Projectile *deadly)
 	if (health==0) return true;
 
   attacked = true;
-  float damage = deadly->getStrength() - defense;
+  float damage = deadly->getStrength() - defense*getDefenseMultiplier();
 	damage = ( damage > 0? damage: 0);
 	float newHealth = (health - damage);
 	health = (newHealth > 0 ? newHealth : 0);
   dead = health==0;
 
-  if(charging == true) {
+  if(charging) {
     map->destroyProjectile(chargedProjectile);
     chargedProjectile = nullptr;
     charging = false;
@@ -183,8 +184,10 @@ bool Player::moveTowardDirection(move_t inputDir, bool jump)
   }
 
   //if jump add jump velocity, 
+  // not stunned
   // and not free fall with no jumps
   if(jump && canJump && 
+    getMovementMultiplier() != 0 &&
     !(jumpCount == 0 && velocity.z < getGravity().z * ConfigManager::serverTickLengthSec() * 5)){
     //add jump velocity
     v3_t jumpDir = movementDirection;
@@ -368,7 +371,6 @@ v3_t Player::getProjectilePosition() {
 // this do substraction of stemina, respond to the user to render the attak animation  
 void Player::attack( ClientGameTimeAction a) {
 	Weapon* currentWeapon = weapon[current_weapon_selection];
-  std::cout << "attack " << std::endl;
   if(a.attackRange && !chargedProjectile){
     if( !currentWeapon->canUseWeapon(true, this) || currentWeapon->getMpCost() > mana){
       charging = false;
@@ -423,6 +425,7 @@ v3_t Player::getFeetOrigin(){
 
 void Player::handleCollisions(){
   std::vector<std::pair<Entity*,BoundingObj::vec3_t>> entities =  detectCollision();
+  std::vector<Entity *> alreadyCollided;
   bool restart = false;
   int restarts = 0;
 
@@ -438,10 +441,22 @@ void Player::handleCollisions(){
         //std::cout << "player" << std::endl;
         restart = collidePlayer(*it);
         break;
-      case PROJECTILE:
-        //std::cout << "proj" << std::endl;
-        restart = collideProjectile(*it);
+      case PROJECTILE:{
+        //prevent dup collisions
+        auto oldColls = alreadyCollided.begin();
+        for( ; oldColls != alreadyCollided.end(); oldColls++ ){
+          if(*oldColls == e)
+            break;
+        }
+
+        if( oldColls == alreadyCollided.end() ){ //has not already collided
+          //std::cout << "proj" << std::endl;
+          restart = collideProjectile(*it);
+          alreadyCollided.push_back(e);
+        }
+
         break;
+      }
       case WEAPON:
         pickup = (Weapon*)e;
         pickupWeaponType = ((Weapon*)e)->getWeaponType();
@@ -485,7 +500,7 @@ bool Player::collidePlayer(const std::pair<Entity*,BoundingObj::vec3_t>& p){
   return true;
 }
 
-bool Player::collideProjectile(const std::pair<Entity*,BoundingObj::vec3_t>& p){
+bool Player::collideProjectile(const std::pair<Entity*,BoundingObj::vec3_t>& p){  
   Projectile * proj = ((Projectile *)p.first);
   if(proj->getOwner() != this) {
     std::cout << "OW hit "<< player_id << std::endl;
@@ -503,7 +518,6 @@ bool Player::collidePowerUp(const std::pair<Entity*,BoundingObj::vec3_t>& p){
   BUFF ptype = ((PowerUp*)p.first)->getBuffType();
   applyBuff(ptype);
   ((PowerUp*)p.first)->pickUp();
-  std::cout << "wtf" << std::endl;
   collectPowerUp = true;
   return false;
 }
@@ -669,6 +683,15 @@ float Player::getHealthRegenMultiplier() const{
         healthMultiplier += BuffInfo[buff->first].healthBonus;
   }
   return healthMultiplier;
+}
+
+float Player::getDefenseMultiplier() const{
+  float defenseMultiplier = 1;
+  for(auto buff = buffs.begin(); buff != buffs.end(); buff++){
+    if( BuffInfo[buff->first].affectDefense )
+        defenseMultiplier *= BuffInfo[buff->first].defenseMult;
+  }
+  return defenseMultiplier;
 }
 
 void Player::serialize(sf::Packet& packet) const {

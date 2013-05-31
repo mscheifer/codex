@@ -10,7 +10,7 @@
 
 const float Map::Item_Pick_Up_Ranges = 1.0f;
 
-//TODO the rectangle should be the actual world bounds
+//TODO the rectangle should be the actual world bounds 
 Map::Map(void): spawnPositions(), freeProjectiles(), q(0,Rectangle(BoundingObj::vec4_t(0,0,0),1000,1000))
 {
 	map_size = 15;
@@ -36,17 +36,21 @@ void Map::mapReset()
 }
 
 void Map::initPowerUps() {
-  PowerUp* superPower = new PowerUp(v3_t(2,2,0), this, FIR1DEBUFF);
-  superPower->setRespownTime(5000);
-  this->entities.push_back(superPower);
+  //PowerUp* superPower = new PowerUp(v3_t(5,5,0), this, THU1DEBUFF);
+  //superPower->setRespownTime(5000);
+  //this->entities.push_back(superPower);
 
-  PowerUp* p2 = new PowerUp(v3_t(2,5,0), this, MANABOOST);
-  p2->setRespownTime(5000);
-  this->entities.push_back(p2);
+  //PowerUp* p2 = new PowerUp(v3_t(-10,-10,0), this, FIR1DEBUFF);
+  //p2->setRespownTime(5000);
+  //this->entities.push_back(p2);
 
-  PowerUp* p3 = new PowerUp(v3_t(2,9,0), this, HEALTHBOOST);
-  p3->setRespownTime(5000);
-  this->entities.push_back(p3);
+  //PowerUp* p3 = new PowerUp(v3_t(-10,10,0), this, ICE1DEBUFF);
+  //p3->setRespownTime(5000);
+  //this->entities.push_back(p3);
+
+  //PowerUp* p4 = new PowerUp(v3_t(10,-10,0), this, G2DEBUFF);
+  //p4->setRespownTime(5000);
+  //this->entities.push_back(p4);
 }
 
 void Map::initWallsTwo(void)
@@ -307,10 +311,10 @@ void Map::initWallsOne(void)
 void Map::initWalls(void)
 {
   //TODO move this
-  WeaponFire* w1 = new WeaponFire(v3_t(100,100,0), this, FIR1);
-  w1->dropDown(v3_t(10,10,0));
-  w1->setDirection(v3_t(0,1,0));
-  entities.push_back(w1);
+  //WeaponFire* w1 = new WeaponFire(v3_t(100,100,0), this, FIR1);
+  //w1->dropDown(v3_t(10,10,0));
+  //w1->setDirection(v3_t(0,1,0));
+  //entities.push_back(w1);
   WeaponFire* w2 = new WeaponFire(v3_t(120,120,0), this, THU1);
   w2->dropDown(v3_t(10,-10,0));
   w2->setDirection(v3_t(0,1,0));

@@ -125,6 +125,7 @@ void gx::HUD::draw(sf::RenderWindow & window) {
   for ( int i =0; i<renderBuff.size(); i++ ) {
     if (renderBuff[i]) {
       buffSprites[i]->setPosition(10+buffn*37,window.getSize().y-42);
+      buffLSprites[i]->setPosition(10+buffn*37,window.getSize().y-42);
       if (remainTime[i]<1000 && (remainTime[i]/100 % 2))
         window.draw(*buffLSprites[i]);
       else 
@@ -248,18 +249,18 @@ void gx::HUD::initializeSprites() {
    buffLTextures.push_back(new sf::Texture());
    buffLSprites.push_back(new sf::Sprite());
    remainTime.push_back(0);
-   buffLHelper(std::string("graphics/Images/powerMove.png"));
-   buffLHelper(std::string("graphics/Images/powerMana.png"));
-   buffLHelper(std::string("graphics/Images/powerHealth.png"));
-   buffLHelper(std::string("graphics/Images/powerStr.png"));
-   buffLHelper(std::string("graphics/Images/powerAttack.png"));
-   buffLHelper(std::string("graphics/Images/powerCharge.png"));
-   buffLHelper(std::string("graphics/Images/statF.png"));
-   buffLHelper(std::string("graphics/Images/statI.png"));
-   buffLHelper(std::string("graphics/Images/stunT.png"));
-   buffLHelper(std::string("graphics/Images/statT.png"));
-   buffLHelper(std::string("graphics/Images/statG.png"));
-   buffLHelper(std::string("graphics/Images/stunG.png"));
+   buffLHelper(std::string("graphics/Images/powerMoveL.png"));
+   buffLHelper(std::string("graphics/Images/powerManaL.png"));
+   buffLHelper(std::string("graphics/Images/powerHealthL.png"));
+   buffLHelper(std::string("graphics/Images/powerStrL.png"));
+   buffLHelper(std::string("graphics/Images/powerAttackL.png"));
+   buffLHelper(std::string("graphics/Images/powerChargeL.png"));
+   buffLHelper(std::string("graphics/Images/statFL.png"));
+   buffLHelper(std::string("graphics/Images/statIL.png"));
+   buffLHelper(std::string("graphics/Images/stunTL.png"));
+   buffLHelper(std::string("graphics/Images/statTL.png"));
+   buffLHelper(std::string("graphics/Images/statGL.png"));
+   buffLHelper(std::string("graphics/Images/stunGL.png"));
 
    //waepon
    weaponTextures.push_back(new sf::Texture());
