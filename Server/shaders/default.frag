@@ -1,4 +1,3 @@
-in vec4  interpColor;
 in vec2	 interpDiffuseCoord;
 in float interpNormDiff;
 in vec3  interpNormal;

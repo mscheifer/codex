@@ -1,13 +1,10 @@
 uniform  mat4 modelToWorld;
  
 in vec4  position;
-in vec4  color;
 in vec2  diffuseCoord;
 in vec3  normal;
 in float normDiff;
 
- 
-out vec4  interpColor;
 out vec2  interpDiffuseCoord;
 out float interpNormDiff;
 out vec3  interpNormal;
@@ -23,7 +20,6 @@ void main() {
   //works as long as we don't scale models non-uniformly
   mat3 normalMatrix = mat3(viewMatrix * modelToWorld);
 
-  interpColor    =                                          color;
   interpDiffuseCoord =                                      diffuseCoord;
   interpNormDiff =                                          normDiff;
   interpNormal   =                           normalMatrix * normal;

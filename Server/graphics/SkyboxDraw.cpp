@@ -8,24 +8,33 @@ namespace {
 	const unsigned int textureUnit = 0;
 
 	std::vector<GLuint> initIndices() {
-		std::array<GLuint,5*6> skyboxIndices = {{ 0, 2, 1, 0, 3, 2,
-                                            1, 5, 0, 0, 5, 4,
-                                            0, 7, 3, 0, 4, 7,
-                                            2, 6, 1, 6, 5, 1,
-                                            3, 6, 2, 3, 7, 6}};
-		
+		std::array<GLuint,6*6> skyboxIndices = {{ 0, 2, 1,		0, 3, 2,
+		                                          2, 6, 1, 		6, 5, 1,
+		                                          0, 7, 3, 		0, 4, 7,
+											      1, 5, 0, 		0, 5, 4,
+		                                          3, 6, 2, 		3, 7, 6,
+		                                          6, 7, 5,		7, 4, 5}};
+
 		return std::vector<GLuint>(skyboxIndices.begin(), skyboxIndices.end());
 	}
 
 	gx::vao::attribsList_t initAttrib() {
-		std::array<GLfloat,8*4> skyboxVtArr = {{  1000.0f, 1000.0f, 500.0f, 1.0f,
-                                          -1000.0f, 1000.0f, 500.0f, 1.0f,
-                                          -1000.0f,-1000.0f, 500.0f, 1.0f,
-                                           1000.0f,-1000.0f, 500.0f, 1.0f,
-                                           1000.0f, 1000.0f,   0.0f, 1.0f,
-                                          -1000.0f, 1000.0f,   0.0f, 1.0f,
-                                          -1000.0f,-1000.0f,   0.0f, 1.0f,
-                                           1000.0f,-1000.0f,   0.0f, 1.0f }};
+		std::array<GLfloat,8*4> skyboxVtArr = {{  1000.0f, 1000.0f, 1000.0f, 1.0f,
+												 -1000.0f, 1000.0f, 1000.0f, 1.0f,
+												 -1000.0f,-1000.0f, 1000.0f, 1.0f,
+												  1000.0f,-1000.0f, 1000.0f, 1.0f,
+												  1000.0f, 1000.0f,-1000.0f, 1.0f,
+												 -1000.0f, 1000.0f,-1000.0f, 1.0f,
+												 -1000.0f,-1000.0f,-1000.0f, 1.0f,
+												  1000.0f,-1000.0f,-1000.0f, 1.0f }};
+		//std::array<GLfloat,8*4> skyboxVtArr = {{  1000.0f, 1000.0f,2000.0f, 1.0f,
+		//										 -1000.0f, 1000.0f,2000.0f, 1.0f,
+		//										 -1000.0f,-1000.0f,2000.0f, 1.0f,
+		//										  1000.0f,-1000.0f,2000.0f, 1.0f,
+		//										  1000.0f, 1000.0f, 0.0f, 1.0f,
+		//										 -1000.0f, 1000.0f, 0.0f, 1.0f,
+		//										 -1000.0f,-1000.0f, 0.0f, 1.0f,
+		//										  1000.0f,-1000.0f, 0.0f, 1.0f }};
 
 		std::vector<GLfloat> positions(skyboxVtArr.begin(), skyboxVtArr.end());
 		auto posAttrib = std::make_shared<gx::vertexAttrib>("position",4,0,positions);

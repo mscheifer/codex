@@ -2,14 +2,14 @@
 
 namespace {
 	const GLenum cubemap_types[6] = {  GL_TEXTURE_CUBE_MAP_POSITIVE_X,
-		GL_TEXTURE_CUBE_MAP_NEGATIVE_X,
-		GL_TEXTURE_CUBE_MAP_POSITIVE_Z,
-		GL_TEXTURE_CUBE_MAP_NEGATIVE_Z,
-		GL_TEXTURE_CUBE_MAP_POSITIVE_Y,
-		GL_TEXTURE_CUBE_MAP_NEGATIVE_Y};
+									   GL_TEXTURE_CUBE_MAP_NEGATIVE_X,
+									   GL_TEXTURE_CUBE_MAP_POSITIVE_Y,
+									   GL_TEXTURE_CUBE_MAP_NEGATIVE_Y,
+									   GL_TEXTURE_CUBE_MAP_POSITIVE_Z,
+									   GL_TEXTURE_CUBE_MAP_NEGATIVE_Z};
 
 	const std::string fileExt = ".jpg";
-	const std::string dir = "./models/skybox/";
+	const std::string dir = "./models/skybox_prerotated/";
 	const std::string right = "right" + fileExt;
 	const std::string left = "left" + fileExt;
 	const std::string front = "front" + fileExt;
@@ -32,13 +32,12 @@ gx::CubemapTexture::CubemapTexture()
 								   : m_fileNames(6), 
 								     m_textureObj() 
 {
-	m_fileNames[0] = dir + right;
-	m_fileNames[1] = dir + left;
+	m_fileNames[0] = dir + left;
+	m_fileNames[1] = dir + right;
 	m_fileNames[2] = dir + front;
 	m_fileNames[3] = dir + back;
 	m_fileNames[4] = dir + top;
 	m_fileNames[5] = dir + bottom;
-
 	this->Load();
 }
 
@@ -48,6 +47,8 @@ gx::CubemapTexture::~CubemapTexture() {}
 
 GLuint gx::CubemapTexture::Load()
 {
+	//glEnable(GL_TEXTURE_CUBE_MAP_SEAMLESS);
+	//debugout << "glEnable(GL_TEXTURE_CUBE_MAP_SEAMLESS);" << endl;
 	glGenTextures(1, &m_textureObj);
 	debugout << "glGenTextures(1, &m_textureObj@" << &m_textureObj << ");" << endl;
 	glBindTexture(GL_TEXTURE_CUBE_MAP, m_textureObj);
