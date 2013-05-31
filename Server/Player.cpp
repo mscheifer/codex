@@ -69,12 +69,13 @@ void Player::init(v3_t pos, int assigned_id, Map * m)
   speedUp = false;
   charging = false;
   walking = false;
+  collectPowerUp = false;
   elapsedChargeTime = 0;
   totalChargeTime = -1;
 	map = m;
 	weapon[0] = new WeaponFist(position, this->map); //has no bounds so it doesnt drop
   //weapon[1] = new WeaponFist(position, this->map);
-	weapon[1] = new WeaponFire(position, this->map, ICE1); 
+	weapon[1] = new WeaponFire(position, this->map, B1); 
 	m->addEntity(weapon[1]);
   weapon[1]->pickUp();
   buffs.clear();
@@ -232,6 +233,7 @@ void Player::clearEvents(){
   attacked = false;
   meleeAttack = false;
   weaponCall = false;
+  collectPowerUp = false;
 }
 
 void Player::die()
@@ -253,14 +255,6 @@ void Player::update(){
     return;
 
   updateBuffs();
-  
-  if( chargedProjectile ) {
-    elapsedChargeTime = chargedProjectile->getElapsedTime();
-    totalChargeTime = ProjInfo[chargedProjectile->getMagicType()].chargeTime * getChargeCD();
-    chargeMagicType = chargedProjectile->getMagicType();
-    chargedProjectile->setDirection(direction);
-    chargedProjectile->setPosition(getProjectilePosition());
-  }
 
   //pick up weapon stuff
   pickup = nullptr;
@@ -272,6 +266,14 @@ void Player::update(){
   v3_t attemptMove = velocity * ConfigManager::serverTickLengthSec();
   position += correctMovement( attemptMove, false, getFeetOrigin() );
   //position += velocity * ConfigManager::serverTickLengthSec();
+
+  if( chargedProjectile ) {
+    elapsedChargeTime = chargedProjectile->getElapsedTime();
+    totalChargeTime = ProjInfo[chargedProjectile->getMagicType()].chargeTime * getChargeCD();
+    chargeMagicType = chargedProjectile->getMagicType();
+    chargedProjectile->setDirection(direction);
+    chargedProjectile->setPosition(getProjectilePosition());
+  }
 
   health+= healthRegen*getHealthRegenMultiplier();
   health = (health > maxHealth ? maxHealth : health);
@@ -295,6 +297,9 @@ void Player::restartJump(length_t zPosFix){
 }
 
 void Player::handleSelfAction(ClientGameTimeAction a) {
+  if(dead)
+    return;
+
 	// User is still casting their spell (in case we have spell cast time)
 	// This is NOT spell cool down time.
  	if(castDownCounter.getElapsedTime().asMilliseconds() < castDownTime )
@@ -316,18 +321,13 @@ void Player::handleSelfAction(ClientGameTimeAction a) {
 
 	//start of attacking logic
   //std::cout << " attackRng " << a.attackRange << " chrg " << (chargedProjectile == nullptr) << std::endl;
-	if( (a.attackRange && chargedProjectile == nullptr) || a.attackMelee) {
-		attack(a);
-	} else if ( chargedProjectile && !a.attackRange ) { //@fire the projectile!
-    v3_t v = direction;
-    v.normalize();
-    
+  if ( chargedProjectile && !a.attackRange ) { //@fire the projectile!
     elapsedChargeTime = totalChargeTime = -1;
+    fireProjectile();
+  }
 
-    chargedProjectile->fire(v,getStrengthMultiplier());
-    chargedProjectile = nullptr;
-    charging = false;
-    shotProjectile = true;
+  if( a.attackRange || a.attackRange ) {
+		attack(a);
   }
 
   if(a.switchWeapon) {
@@ -339,6 +339,14 @@ void Player::handleSelfAction(ClientGameTimeAction a) {
   }
 }
 
+void Player::fireProjectile() {
+    v3_t v = direction;
+    v.normalize();
+    chargedProjectile->fire(v,getStrengthMultiplier());
+    chargedProjectile = nullptr;
+    charging = false;
+    shotProjectile = true;
+}
 void Player::handleOtherAction( ClientGameTimeAction) {
 	//since we are modeling projectiles, we are just gonna check for melee
 }
@@ -361,8 +369,9 @@ v3_t Player::getProjectilePosition() {
 void Player::attack( ClientGameTimeAction a) {
 	Weapon* currentWeapon = weapon[current_weapon_selection];
   std::cout << "attack " << std::endl;
-	if(a.attackRange){
+  if(a.attackRange && !chargedProjectile){
     if( !currentWeapon->canUseWeapon(true, this) || currentWeapon->getMpCost() > mana){
+      charging = false;
 		  return;
 	  }
 	  mana -= currentWeapon->getMpCost();
@@ -373,7 +382,6 @@ void Player::attack( ClientGameTimeAction a) {
 		if( !currentWeapon->canUseWeapon(false, this)){
 		  return;
 		}
-
     meleeAttack = true;
     v3_t dir = direction;
     dir.normalize();
@@ -495,6 +503,8 @@ bool Player::collidePowerUp(const std::pair<Entity*,BoundingObj::vec3_t>& p){
   BUFF ptype = ((PowerUp*)p.first)->getBuffType();
   applyBuff(ptype);
   ((PowerUp*)p.first)->pickUp();
+  std::cout << "wtf" << std::endl;
+  collectPowerUp = true;
   return false;
 }
 
@@ -689,6 +699,7 @@ void Player::serialize(sf::Packet& packet) const {
     packet << walking;
     packet << shotProjectile;
     packet << attacked;
+    packet << player_id;
     packet << kills;
     packet << wins;
     packet << static_cast<sf::Uint32>(buffs.size());
@@ -708,6 +719,8 @@ void Player::serialize(sf::Packet& packet) const {
     packet << elapsedChargeTime;
     packet << totalChargeTime;
     packet << static_cast<sf::Uint32>(chargeMagicType);
+
+    packet << collectPowerUp;
   }
 
   void Player::deserialize(sf::Packet& packet) {
@@ -740,6 +753,7 @@ void Player::serialize(sf::Packet& packet) const {
     packet >> walking;
     packet >> shotProjectile;
     packet >> attacked;
+    packet >> player_id;
     packet >> kills;
     packet >> wins;
     sf::Uint32 size = 0; 
@@ -771,4 +785,6 @@ void Player::serialize(sf::Packet& packet) const {
     packet >> totalChargeTime;
     packet >> weaponType32;
     chargeMagicType = static_cast<MAGIC_POWER>(weaponType32);
+
+    packet >> collectPowerUp;
   }

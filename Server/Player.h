@@ -26,6 +26,7 @@ public:
   bool dead; //might be private. should be determined in handleAction
   bool meleeAttack;
   bool weaponCall;
+  bool collectPowerUp;
   WeaponType weaponCallType;
   WeaponType weapon1;
   WeaponType weapon2;
@@ -124,6 +125,7 @@ private:
   void generateBounds(v3_t pos);
   void restartJump(length_t zPosFix);
   bool correctMovementHit( Entity* e );
+  void fireProjectile();
   v3_t getProjectilePosition(void);
   void die();
   void respawn(v3_t pos);
