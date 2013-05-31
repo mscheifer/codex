@@ -3,8 +3,10 @@
 #include "graphicsEntity.h"
 
 namespace gx {
-std::vector<gx::graphicsEntity> loadCube();
+	std::vector<graphicsEntity> loadCube();
 
-gx::graphicsEntity loadSkybox();
+	graphicsEntity loadSkybox();
+	graphicsEntity loadGround(const float zLevel, 
+							  std::string texPath = "models/white.png");
 } //end namespace gx
 #endif //LOADCUSTOM_H
