@@ -47,8 +47,8 @@ gx::CubemapTexture::~CubemapTexture() {}
 
 GLuint gx::CubemapTexture::Load()
 {
-	//glEnable(GL_TEXTURE_CUBE_MAP_SEAMLESS);
-	//debugout << "glEnable(GL_TEXTURE_CUBE_MAP_SEAMLESS);" << endl;
+	glEnable(GL_TEXTURE_CUBE_MAP_SEAMLESS);
+	debugout << "glEnable(GL_TEXTURE_CUBE_MAP_SEAMLESS);" << endl;
 	glGenTextures(1, &m_textureObj);
 	debugout << "glGenTextures(1, &m_textureObj@" << &m_textureObj << ");" << endl;
 	glBindTexture(GL_TEXTURE_CUBE_MAP, m_textureObj);

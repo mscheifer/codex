@@ -49,11 +49,22 @@ void AudioManager::loadSounds(){
   loadSound("m1", "sounds/music_mono.wav");
   loadSound("f1", "sounds/fire_1.wav");
   loadSound("melee", "sounds/52458__audione__sword-01_.wav");
-  loadSound("combine", "sounds/SE1_BMP_MAGIC_REBLOW1_2.wav");
-  loadSound("weapI", "sounds/weaponIce.wav");
-  loadSound("weapB", "sounds/weaponBas.wav");
-  loadSound("weapF", "sounds/weaponFir.wav");
-  loadSound("weapT", "sounds/weaponThu.wav");
+  loadSound("combine", "sounds/combine.wav");
+
+  loadSound("weapIce", "sounds/weaponIce.wav");
+  loadSound("weapBasic", "sounds/weaponBasic.wav");
+  loadSound("weapFire", "sounds/weaponFire.wav");
+  loadSound("weapThu", "sounds/weaponThu.wav");
+  loadSound("weapFist", "sounds/weaponFist.wav");
+  
+  loadSound("shootFir", "sounds/shootFir.wav");
+  loadSound("shootIce", "sounds/shootIce.wav");
+  loadSound("shootThu", "sounds/shootThu.wav");
+  loadSound("shootBasic", "sounds/shootBasic.wav");
+  loadSound("shootGrav", "sounds/shootGrav.wav");
+
+  loadSound("collectPowerup", "sounds/collectPowerup.wav");
+
   //loadSound("s5", "sound_5.wav");
 
   musics["m1"] = "sounds/music.wav";
@@ -221,8 +232,16 @@ void AudioManager::processPlayerSound(Player& o){
     playSound("melee", "melee", o.getPosition());
 
   if(o.weaponCall){
-    stopPlayerSound(  o.player_id, "weapon" );
-    playPlayerSound(getWeaponCall(o.weaponCallType), o.player_id, "weapon" ,  o.getPosition());
+    //stopSound( "playerCall: " + o.player_id );
+    std::stringstream ss;
+    ss << "playerCall: " << o.player_id;
+    playSound(getWeaponCall(o.weaponCallType), ss.str(), o.getPosition());
+  }
+
+  if(o.collectPowerUp){
+    std::stringstream ss;
+    ss << "playcerCollectPowerUp: " << o.player_id;
+    playSound("collectPowerup", ss.str(), o.getPosition());
   }
 
   if(o.charging) {
@@ -239,7 +258,7 @@ void AudioManager::processPlayerSound(Player& o){
     static int id = 0;
 
     ss << id << "fplayer:" << o.player_id;
-    playSound("f1", ss.str(), o.getPosition());
+    playSound(getShootSound(o.chargeMagicType), ss.str(), o.getPosition());
     id++;
   }
 
@@ -280,7 +299,7 @@ void AudioManager::processPlayerSound(Player& o){
 }
 
 void AudioManager::processProjectileSound(Projectile& o){
-  if(o.getFired()){
+  if(o.getFired()){ //TODO pick one
     playSound( "f1", "fire:"+o.id, o.getPosition());
   } else if (o.combined){
     playSound( "combine", "combine:"+o.id, o.getPosition());
@@ -296,13 +315,36 @@ int AudioManager::notCurrentlyPlaying(){
 std::string AudioManager::getWeaponCall(WeaponType w){
   switch(w){
   case FIRE:
-    return "weapF";
+    return "weapFire";
   case ICE:
-    return "weapI";
+    return "weapIce";
   case THUNDER:
-    return "weapT";
+    return "weapThu";
+  case BASIC:
+    return "weapBasic";
   default:
-    return "weapB";
+    return "weapFist";
+  }
+}
+
+std::string AudioManager::getShootSound(MAGIC_POWER m){
+  switch(m){
+  case FIR1:
+  case FIR2:
+  case FIR3:
+    return "shootFir";
+  case ICE1:
+  case ICE2:
+  case ICE3:
+    return "shootIce";
+  case THU1:
+  case THU2:
+  case THU3:
+    return "shootThu";
+  case B1:
+    return "shootBasic";
+  default:
+    return "shootGrav";
   }
 }
 

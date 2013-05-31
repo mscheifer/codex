@@ -140,3 +140,44 @@ gx::graphicsEntity gx::loadSkybox() {
     std::move(skyboxindices), skyboxOffsets, std::move(mat), std::move(root),
     identity);
 }
+gx::graphicsEntity gx::loadGround(const float zLevel, std::string texPath) {
+
+	std::array<vector4f,4> floorVtArr = {{ vector4f( 1000.0f, 1000.0f, zLevel, 1.0f),
+							                vector4f(-1000.0f, 1000.0f, zLevel, 1.0f),
+                                            vector4f(-1000.0f,-1000.0f, zLevel, 1.0f),
+											vector4f( 1000.0f,-1000.0f, zLevel, 1.0f)}};
+
+	std::array<vector3f,4> floorNormA = {{ vector3f(-1.0f,-1.0f, 1.0f),
+                                            vector3f( 1.0f,-1.0f, 1.0f), 
+											vector3f(-1.0f, 1.0f, 1.0f), 
+											vector3f( 1.0f, 1.0f, 1.0f)}};
+
+	std::array<GLuint,6>  floorIndices = {{ 0, 1, 2, 1, 3, 2}};
+
+	for(auto itr = floorNormA.begin(); itr != floorNormA.end(); itr++) {
+		auto& norm = *itr;
+		norm.normalize();
+	}
+
+
+	std::vector<vector4f> floorVerts(    floorVtArr.begin(),   floorVtArr.end());
+	std::vector<vector3f> floornormals(  floorNormA.begin(),   floorNormA.end());
+	std::vector<GLuint>  floorindices(floorIndices.begin(), floorIndices.end());
+
+	std::vector<vector2f> texCoords(8,vector2f(0,0));
+
+	std::vector<vector4i> floorBoneIDs(1,vector4i(0,-1,-1,-1));
+	std::vector<vector4f> floorBWeight(1,vector4f(1, 0, 0, 0));
+
+	std::map<int,matrix> floorOffsets;
+
+	bone root(1,identity,true,std::vector<bone::animation>(),
+		std::vector<bone>());
+
+	material mat(Texture(GL_TEXTURE_2D, texPath),vector4f(0.4f,0.4f,1.0f));
+
+	return graphicsEntity(std::move(floorVerts), std::move(floornormals),
+		std::move(texCoords), std::move(floorBoneIDs), std::move(floorBWeight), 
+		std::move(floorindices), floorOffsets, std::move(mat), std::move(root),
+		identity);
+}

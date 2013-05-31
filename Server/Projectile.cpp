@@ -119,7 +119,8 @@ void Projectile::handleCollisions() {
       if(e == owner)
         break;
     case WALL:
-      map->destroyProjectile(this);
+      if(!charging)
+        map->destroyProjectile(this);
       break;
     case PROJECTILE:
       Projectile * proj = (Projectile*) e;

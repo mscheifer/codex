@@ -34,15 +34,15 @@ void Map::mapReset()
 }
 
 void Map::initPowerUps() {
-  PowerUp* superPower = new PowerUp(v3_t(2,2,0), this, ICE3DEBUFF);
+  PowerUp* superPower = new PowerUp(v3_t(2,2,0), this, FIR1DEBUFF);
   superPower->setRespownTime(5000);
   this->entities.push_back(superPower);
 
-  PowerUp* p2 = new PowerUp(v3_t(2,5,0), this, THU2DEBUFF);
+  PowerUp* p2 = new PowerUp(v3_t(2,5,0), this, MANABOOST);
   p2->setRespownTime(5000);
   this->entities.push_back(p2);
 
-  PowerUp* p3 = new PowerUp(v3_t(2,9,0), this, ICE1DEBUFF);
+  PowerUp* p3 = new PowerUp(v3_t(2,9,0), this, HEALTHBOOST);
   p3->setRespownTime(5000);
   this->entities.push_back(p3);
 }
@@ -69,9 +69,9 @@ void Map::initWallsOne(void)
 
   v3_t facingEast(1,0,0);
   v3_t facingNorth(0,1,0);
-  unsigned int width = 10;
-  unsigned int height = 1; 
-  unsigned int depth = 4;
+  unsigned int width = ConfigManager::wallWidth();
+  unsigned int height = ConfigManager::wallHeight(); 
+  unsigned int depth = ConfigManager::wallDepth();
 
   float wallX = 25;
   float wallY = 25;
@@ -207,10 +207,10 @@ void Map::initWallsOne(void)
 void Map::initWalls(void)
 {
   //TODO move this
-  //WeaponFire* w1 = new WeaponFire(v3_t(100,100,0), this, FIR1);
-  //w1->dropDown(v3_t(10,10,0));
-  //w1->setDirection(v3_t(0,1,0));
-  //entities.push_back(w1);
+  WeaponFire* w1 = new WeaponFire(v3_t(100,100,0), this, FIR1);
+  w1->dropDown(v3_t(10,10,0));
+  w1->setDirection(v3_t(0,1,0));
+  entities.push_back(w1);
   WeaponFire* w2 = new WeaponFire(v3_t(120,120,0), this, THU1);
   w2->dropDown(v3_t(10,-10,0));
   w2->setDirection(v3_t(0,1,0));
@@ -227,9 +227,9 @@ void Map::initWalls(void)
 
   v3_t facingEast(1,0,0);
   v3_t facingNorth(0,1,0);
-  unsigned int width = 10;
-  unsigned int height = 1; 
-  unsigned int depth = 4;
+  unsigned int width = ConfigManager::wallWidth();
+  unsigned int height = ConfigManager::wallHeight(); 
+  unsigned int depth = ConfigManager::wallDepth();
 
   float wallX = 7;
   float wallY = 7;
@@ -358,9 +358,9 @@ v3_t Map::getRespawnPosition(std::size_t player_id)
  */
 void Map::addWallDirection(float startingX, float startingY, float startingZ, v3_t dir, int values[])
 {
-  int width = 10;
-  int height = 1; 
-  int depth = 4;
+  unsigned int width = ConfigManager::wallWidth();
+  unsigned int height = ConfigManager::wallHeight(); 
+  unsigned int depth = ConfigManager::wallDepth();
   int x = 0;
   int j = 0;
   while(values[j] != -1)

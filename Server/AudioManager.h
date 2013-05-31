@@ -27,6 +27,7 @@ private:
   static void playSoundHelper(sf::Sound* s, v3_t pos, sf::SoundBuffer* sbuff);
 
   static std::string getWeaponCall(WeaponType w);
+  static std::string getShootSound(MAGIC_POWER m);
 
   //this is for music
   static int notCurrentlyPlaying(); //return the index of the not currently playing music
