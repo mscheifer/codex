@@ -230,6 +230,7 @@ void Player::clearEvents(){
   attacked = false;
   meleeAttack = false;
   weaponCall = false;
+
 }
 
 void Player::die()
@@ -682,6 +683,7 @@ void Player::serialize(sf::Packet& packet) const {
     packet << walking;
     packet << shotProjectile;
     packet << attacked;
+    packet << player_id;
     packet << kills;
     packet << wins;
     packet << static_cast<sf::Uint32>(buffs.size());
@@ -724,6 +726,7 @@ void Player::serialize(sf::Packet& packet) const {
     packet >> walking;
     packet >> shotProjectile;
     packet >> attacked;
+    packet >> player_id;
     packet >> kills;
     packet >> wins;
     sf::Uint32 size = 0; 
