@@ -183,9 +183,9 @@ void gx::HUD::updateHUD(const Player& player) {
   this->elapsedChargeTime = player.elapsedChargeTime;
   this->totalChargeTime = player.totalChargeTime;
   this->chargeMagicType = player.chargeMagicType;
-  std::cout<<"charge time is " << player.elapsedChargeTime <<std::endl;
-  std::cout<<"total time is " << player.totalChargeTime <<std::endl;
-  std::cout<<"magic type is " << player.chargeMagicType <<std::endl;
+  //std::cout<<"charge time is " << player.elapsedChargeTime <<std::endl;
+  //std::cout<<"total time is " << player.totalChargeTime <<std::endl;
+  //std::cout<<"magic type is " << player.chargeMagicType <<std::endl;
   charging = player.charging;
 }
 
