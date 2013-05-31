@@ -73,9 +73,10 @@ void Player::init(v3_t pos, int assigned_id, Map * m)
   elapsedChargeTime = 0;
   totalChargeTime = -1;
 	map = m;
-	weapon[0] = new WeaponFist(position, this->map); //has no bounds so it doesnt drop
+	weapon[0] = new WeaponFire(position, this->map, ICE1);
+    //new WeaponFist(position, this->map); //has no bounds so it doesnt drop
   //weapon[1] = new WeaponFist(position, this->map);
-	weapon[1] = new WeaponFire(position, this->map, B1); 
+	weapon[1] = new WeaponFire(position, this->map, FIR1); //TODO make this basic
 	m->addEntity(weapon[1]);
   weapon[1]->pickUp();
   buffs.clear();
@@ -140,13 +141,13 @@ bool Player::damageBy(Projectile *deadly)
 	if (health==0) return true;
 
   attacked = true;
-  float damage = deadly->getStrength() - defense;
+  float damage = deadly->getStrength() - defense*getDefenseMultiplier();
 	damage = ( damage > 0? damage: 0);
 	float newHealth = (health - damage);
 	health = (newHealth > 0 ? newHealth : 0);
   dead = health==0;
 
-  if(charging == true) {
+  if(charging) {
     map->destroyProjectile(chargedProjectile);
     chargedProjectile = nullptr;
     charging = false;
@@ -686,6 +687,15 @@ float Player::getHealthRegenMultiplier() const{
         healthMultiplier += BuffInfo[buff->first].healthBonus;
   }
   return healthMultiplier;
+}
+
+float Player::getDefenseMultiplier() const{
+  float defenseMultiplier = 1;
+  for(auto buff = buffs.begin(); buff != buffs.end(); buff++){
+    if( BuffInfo[buff->first].affectDefense )
+        defenseMultiplier *= BuffInfo[buff->first].defenseMult;
+  }
+  return defenseMultiplier;
 }
 
 void Player::serialize(sf::Packet& packet) const {

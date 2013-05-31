@@ -30,8 +30,8 @@ public:
   WeaponType weaponCallType;
   WeaponType weapon1;
   WeaponType weapon2;
-  int elapsedChargeTime;
-  int totalChargeTime;
+  float elapsedChargeTime;
+  float totalChargeTime;
   MAGIC_POWER chargeMagicType;
   
   int player_id;
@@ -79,6 +79,7 @@ public:
   float getMovementMultiplier() const;
   float getManaRegenMultiplier() const;
   float getHealthRegenMultiplier() const;
+  float getDefenseMultiplier() const;
   int getKills() const { return kills; }
   int getWins() const { return wins; }
   

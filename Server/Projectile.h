@@ -29,9 +29,9 @@ const BUFF FIR1arr[] = {FIR1DEBUFF};
 const BUFF FIR2arr[] = {FIR2DEBUFF};
 const BUFF FIR3arr[] = {FIR3DEBUFF};
 const BUFF ICE1arr[] = {ICE1DEBUFF};
-const BUFF ICE2arr[] = {ICE2DEBUFF};
-const BUFF ICE3arr[] = {ICE3DEBUFF};
-const BUFF THU1arr[] = {THU1DEBUFF, THUSTUN};
+const BUFF ICE2arr[] = {ICE2DEBUFF, ICESTUN};
+const BUFF ICE3arr[] = {ICE3DEBUFF, ICESTUN2};
+const BUFF THU1arr[] = {THU1DEBUFF};
 const BUFF THU2arr[] = {THU2DEBUFF, THUSTUN};
 const BUFF THU3arr[] = {THU3DEBUFF, THUSTUN2};
 const BUFF G1Marr[] = {G1MDEBUFF};
@@ -46,11 +46,11 @@ const std::vector<BUFF> FIR1V(FIR1arr,FIR1arr+1);
 const std::vector<BUFF> FIR2V(FIR2arr,FIR2arr+1);
 const std::vector<BUFF> FIR3V(FIR3arr,FIR3arr+1);
 const std::vector<BUFF> ICE1V(ICE1arr,ICE1arr+1);
-const std::vector<BUFF> ICE2V(ICE2arr,ICE2arr+1);
-const std::vector<BUFF> ICE3V(ICE3arr,ICE3arr+1);
+const std::vector<BUFF> ICE2V(ICE2arr,ICE2arr+2);
+const std::vector<BUFF> ICE3V(ICE3arr,ICE3arr+2);
 const std::vector<BUFF> THU1V(THU1arr,THU1arr+1);
-const std::vector<BUFF> THU2V(THU2arr,THU2arr+1);
-const std::vector<BUFF> THU3V(THU3arr,THU3arr+1);
+const std::vector<BUFF> THU2V(THU2arr,THU2arr+2);
+const std::vector<BUFF> THU3V(THU3arr,THU3arr+2);
 const std::vector<BUFF> G1MV(G1Marr,G1Marr+1);
 const std::vector<BUFF> G2V(G2arr,G2arr+1);
 const std::vector<BUFF> G2MV(G2Marr,G2Marr+1);
@@ -58,15 +58,16 @@ const std::vector<BUFF> G3V(G3arr,G3arr+2);
 
 const std::vector<BUFF> NONEV(NONEarr,NONEarr+1);
 
+//these need to match the MAGIC_POWER enum, the type is just for readability
 const ProjectileData ProjInfo[] = { //TODO fix all these numbers
   //             type,  rng, spd size str mp buff chrgTime
-  ProjectileData(FIR1,  300, 30, 1,   10, 2, FIR1V, 1500),
+  ProjectileData(FIR1,  300, 30, 1,   10, 2, FIR1V, 15000),
   ProjectileData(FIR2,  300, 30, 1,   12, 0, FIR2V, 5000),
   ProjectileData(FIR3,  300, 30, 1,   20, 0, FIR3V, -1),
-  ProjectileData(ICE1,  300, 30, 1,   10, 0, ICE1V, 1500),
+  ProjectileData(ICE1,  300, 30, 1,   10, 0, ICE1V, 5000),
   ProjectileData(ICE2,  300, 30, 1,   12, 0, ICE2V, 5000),
   ProjectileData(ICE3,  300, 30, 1,   20, 0, ICE3V, -1),
-  ProjectileData(THU1,  300, 30, 1,   10, 0, THU1V, 1500),
+  ProjectileData(THU1,  300, 30, 1,   10, 0, THU1V, 5000),
   ProjectileData(THU2,  300, 30, 1,   12, 0, THU2V, 5000),
   ProjectileData(THU3,  300, 30, 1,   20, 0, THU3V, -1),
 
@@ -120,11 +121,13 @@ public:
 private:
   Player * owner;
   bool fired;
-  bool correctMovementHit( Entity* e );
   bool charging;
   MAGIC_POWER magicType;
   sf::Clock charge_counter;
-  int Charge_Time; 
+  int Charge_Time;
+
+  bool correctMovementHit( Entity* e );
+  bool sameTeam( Projectile * p );
 
 public:
   int id;
