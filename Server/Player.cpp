@@ -253,14 +253,6 @@ void Player::update(){
     return;
 
   updateBuffs();
-  
-  if( chargedProjectile ) {
-    elapsedChargeTime = chargedProjectile->getElapsedTime();
-    totalChargeTime = ProjInfo[chargedProjectile->getMagicType()].chargeTime * getChargeCD();
-    chargeMagicType = chargedProjectile->getMagicType();
-    chargedProjectile->setDirection(direction);
-    chargedProjectile->setPosition(getProjectilePosition());
-  }
 
   //pick up weapon stuff
   pickup = nullptr;
@@ -272,6 +264,14 @@ void Player::update(){
   v3_t attemptMove = velocity * ConfigManager::serverTickLengthSec();
   position += correctMovement( attemptMove, false, getFeetOrigin() );
   //position += velocity * ConfigManager::serverTickLengthSec();
+
+  if( chargedProjectile ) {
+    elapsedChargeTime = chargedProjectile->getElapsedTime();
+    totalChargeTime = ProjInfo[chargedProjectile->getMagicType()].chargeTime * getChargeCD();
+    chargeMagicType = chargedProjectile->getMagicType();
+    chargedProjectile->setDirection(direction);
+    chargedProjectile->setPosition(getProjectilePosition());
+  }
 
   health+= healthRegen*getHealthRegenMultiplier();
   health = (health > maxHealth ? maxHealth : health);
@@ -316,7 +316,10 @@ void Player::handleSelfAction(ClientGameTimeAction a) {
 
 	//start of attacking logic
   //std::cout << " attackRng " << a.attackRange << " chrg " << (chargedProjectile == nullptr) << std::endl;
-	if( (a.attackRange && chargedProjectile == nullptr) || a.attackMelee) {
+	if( (a.attackRange && chargedProjectile == nullptr)) {
+		attack(a);
+  }
+  else if( a.attackMelee) {
 		attack(a);
 	} else if ( chargedProjectile && !a.attackRange ) { //@fire the projectile!
     v3_t v = direction;
@@ -363,6 +366,7 @@ void Player::attack( ClientGameTimeAction a) {
   std::cout << "attack " << std::endl;
 	if(a.attackRange){
     if( !currentWeapon->canUseWeapon(true, this) || currentWeapon->getMpCost() > mana){
+      charging = false;
 		  return;
 	  }
 	  mana -= currentWeapon->getMpCost();
@@ -373,6 +377,8 @@ void Player::attack( ClientGameTimeAction a) {
 		if( !currentWeapon->canUseWeapon(false, this)){
 		  return;
 		}
+
+    charging = false;
 
     meleeAttack = true;
     v3_t dir = direction;
