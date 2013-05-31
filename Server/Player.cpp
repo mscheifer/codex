@@ -324,21 +324,13 @@ void Player::handleSelfAction(ClientGameTimeAction a) {
 
 	//start of attacking logic
   //std::cout << " attackRng " << a.attackRange << " chrg " << (chargedProjectile == nullptr) << std::endl;
-	if( (a.attackRange && chargedProjectile == nullptr)) {
-		attack(a);
-  }
-  else if( a.attackMelee) {
-		attack(a);
-	} else if ( chargedProjectile && !a.attackRange ) { //@fire the projectile!
-    v3_t v = direction;
-    v.normalize();
-    
+  if ( chargedProjectile && !a.attackRange ) { //@fire the projectile!
     elapsedChargeTime = totalChargeTime = -1;
+    fireProjectile();
+  }
 
-    chargedProjectile->fire(v,getStrengthMultiplier());
-    chargedProjectile = nullptr;
-    charging = false;
-    shotProjectile = true;
+  if( a.attackRange || a.attackRange ) {
+		attack(a);
   }
 
   if(a.switchWeapon) {
@@ -350,6 +342,14 @@ void Player::handleSelfAction(ClientGameTimeAction a) {
   }
 }
 
+void Player::fireProjectile() {
+    v3_t v = direction;
+    v.normalize();
+    chargedProjectile->fire(v,getStrengthMultiplier());
+    chargedProjectile = nullptr;
+    charging = false;
+    shotProjectile = true;
+}
 void Player::handleOtherAction( ClientGameTimeAction) {
 	//since we are modeling projectiles, we are just gonna check for melee
 }
@@ -372,7 +372,7 @@ v3_t Player::getProjectilePosition() {
 void Player::attack( ClientGameTimeAction a) {
 	Weapon* currentWeapon = weapon[current_weapon_selection];
   std::cout << "attack " << std::endl;
-	if(a.attackRange){
+  if(a.attackRange && !chargedProjectile){
     if( !currentWeapon->canUseWeapon(true, this) || currentWeapon->getMpCost() > mana){
       charging = false;
 		  return;
@@ -385,9 +385,6 @@ void Player::attack( ClientGameTimeAction a) {
 		if( !currentWeapon->canUseWeapon(false, this)){
 		  return;
 		}
-
-    charging = false;
-
     meleeAttack = true;
     v3_t dir = direction;
     dir.normalize();
@@ -726,6 +723,7 @@ void Player::serialize(sf::Packet& packet) const {
     packet << walking;
     packet << shotProjectile;
     packet << attacked;
+    packet << player_id;
     packet << kills;
     packet << wins;
     packet << static_cast<sf::Uint32>(buffs.size());
@@ -779,6 +777,7 @@ void Player::serialize(sf::Packet& packet) const {
     packet >> walking;
     packet >> shotProjectile;
     packet >> attacked;
+    packet >> player_id;
     packet >> kills;
     packet >> wins;
     sf::Uint32 size = 0; 

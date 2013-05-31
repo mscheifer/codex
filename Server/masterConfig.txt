@@ -1,6 +1,6 @@
 // System configuration
 log=0
-sound=0
+sound=1
 graphicsDebug=false
 serverTicksPerSec=30
 gameRestart=0
@@ -10,7 +10,7 @@ soundScaling=1
 gravity=-20
 
 // Player configuration
-players=2
+players=1
 movescale=1
 airMovescale=.5
 maxJump=1000

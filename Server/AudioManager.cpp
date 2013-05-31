@@ -7,6 +7,7 @@ std::array<int,2> AudioManager::musicProx;
 std::map<std::string, sf::SoundBuffer*> AudioManager::soundBuffers;
 std::map<std::string, std::string> AudioManager::musics;
 std::map<std::string, sf::Sound> AudioManager::sounds;
+std::map<std::string, sf::Sound> AudioManager::playerSounds[4];
 bool AudioManager::useSound;
 int AudioManager::trackNo;
 float AudioManager::soundScaling;
@@ -107,6 +108,12 @@ void AudioManager::stopSound(std::string id) {
    }
 }
 
+void AudioManager::stopPlayerSound(int player_id, std::string key) {
+   if( playerSounds[player_id].find(key) != playerSounds[player_id].end()) {
+     playerSounds[player_id].find(key)->second.stop();
+     playerSounds[player_id].erase(key);
+   }
+}
 void AudioManager::playSoundHelper( sf::Sound* s, v3_t pos, sf::SoundBuffer* sbuff){
   s->setPosition(pos.x/soundScaling,pos.y/soundScaling,pos.z/soundScaling);
   if(s->getStatus() != sf::Sound::Playing)  {
@@ -201,11 +208,28 @@ void AudioManager::playMusic(std::string musicN, int index){
   }
 }
 
+void AudioManager::playPlayerSound(std::string sound, int player_id , std::string name, v3_t pos) {
+
+  std::cout << " player id is : " << player_id << std::endl;
+  int copy_id = player_id;
+  std::map<std::string,sf::SoundBuffer*>::iterator it = soundBuffers.find(sound);
+
+  if(it != soundBuffers.end()){ //element exists
+
+    if(playerSounds[copy_id].find(name) ==  playerSounds[copy_id].end()) {
+      playerSounds[copy_id].insert(std::pair<std::string,sf::Sound>(name,sf::Sound()));
+    }
+
+    playSoundHelper( & playerSounds[copy_id].find(name)->second ,pos, it->second);
+  
+  }
+}
+
 void AudioManager::processPlayerSound(Player& o){
   static bool walk_toggle[4] = { false, false, false, false};
 
   if(o.meleeAttack)
-    playSound("melee", "playerM:"+ o.player_id, o.getPosition());
+    playSound("melee", "melee", o.getPosition());
 
   if(o.weaponCall){
     //stopSound( "playerCall: " + o.player_id );
@@ -221,40 +245,56 @@ void AudioManager::processPlayerSound(Player& o){
   }
 
   if(o.charging) {
-    playSound("c1", "cplayer:"+ o.player_id, o.getPosition());
+    std::cout << " player is charging"<< std::endl;
+    playPlayerSound("c1", o.player_id,  "charging", o.getPosition());
   } else {
-    stopSound( "cplayer:"+ o.player_id);
+     std::cout << " player is NOT charging"<< std::endl;
+    stopPlayerSound( o.player_id , "charging");
   }
 
   if(o.shotProjectile) {  
-    static int id = 0;
     std::stringstream ss;
+  
+    static int id = 0;
+
     ss << id << "fplayer:" << o.player_id;
     playSound(getShootSound(o.chargeMagicType), ss.str(), o.getPosition());
     id++;
   }
 
   if(o.attacked) {  
+    std::stringstream ss;
+  
     static int id = 0;
-    playSound("sc1", id+"scplayer:"+ o.player_id, o.getPosition());
+
+    ss << id << "scplayer:" << o.player_id;
+    playSound("sc1", ss.str(), o.getPosition());
     id++;
   }
 
-  if(o.walking) {
+  if(o.walking && o.getPosition().z <1.6) {
 
     if(walk_toggle[o.player_id]) {
      
       walk_toggle[o.player_id] = false;
-      playSound("w1", "w1player:"+o.player_id, o.getPosition());
+      std::stringstream ss;
+      ss << "w1player:" << o.player_id;
+      playSound("w1",ss.str(), o.getPosition());
 
-    } else {     
+    } else { 
       walk_toggle[o.player_id] = true;
-      playSound("w2", "w2player:"+o.player_id, o.getPosition());
+      std::stringstream ss;
+      ss <<"w2player:" << o.player_id;
+      playSound("w2", ss.str(), o.getPosition());
     }
    
   } else {
-    stopSound("w1player:"+o.player_id);   
-    stopSound("w2player:"+o.player_id);
+    std::stringstream ss;
+    ss << "w1player:" << o.player_id;
+    stopSound(ss.str());   
+    std::stringstream ss2;
+    ss2 <<"w2player:" << o.player_id;
+    stopSound(ss2.str());
   }
 }
 
