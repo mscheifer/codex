@@ -87,7 +87,7 @@ std::vector<gx::uniform::block*> gx::graphicsClient::uniforms() {
 //last so we have an opengl context for destructors
 gx::graphicsClient::graphicsClient():
     window(sf::VideoMode(defaultWindowWidth, defaultWindowHeight),
-           "DrChao", sf::Style::Default),
+      "DrChao", sf::Style::Default, sf::ContextSettings(24,0,4)),
     //glew needs to be called here, after window, before anything else
     glewStatus(initGlew()),
     userInput(),
@@ -103,6 +103,13 @@ gx::graphicsClient::graphicsClient():
                      playerStartDirection.z),
     playerPosition(0.0, 0.0, 0.0),//change to the result of init packet
     fpsClock(), fpsFrames(0) {
+  sf::ContextSettings settings = this->window.getSettings();
+
+  debugout << "depth bits:" << settings.depthBits << endl;
+  debugout << "stencil bits:" << settings.stencilBits << endl;
+  debugout << "antialiasing level:" << settings.antialiasingLevel << endl;
+  debugout << "version:" << settings.majorVersion << "." << settings.minorVersion << endl;
+
   this->window.setVerticalSyncEnabled(false);
   this->window.setMouseCursorVisible(true);
   if(!this->window.setActive()) {
