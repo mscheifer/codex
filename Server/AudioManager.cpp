@@ -210,7 +210,6 @@ void AudioManager::playMusic(std::string musicN, int index){
 
 void AudioManager::playPlayerSound(std::string sound, int player_id , std::string name, v3_t pos) {
 
-  std::cout << " player id is : " << player_id << std::endl;
   int copy_id = player_id;
   std::map<std::string,sf::SoundBuffer*>::iterator it = soundBuffers.find(sound);
 
@@ -235,6 +234,7 @@ void AudioManager::processPlayerSound(Player& o){
     //stopSound( "playerCall: " + o.player_id );
     std::stringstream ss;
     ss << "playerCall: " << o.player_id;
+    stopSound( ss.str() );
     playSound(getWeaponCall(o.weaponCallType), ss.str(), o.getPosition());
   }
 
@@ -245,10 +245,8 @@ void AudioManager::processPlayerSound(Player& o){
   }
 
   if(o.charging) {
-    std::cout << " player is charging"<< std::endl;
     playPlayerSound("c1", o.player_id,  "charging", o.getPosition());
   } else {
-     std::cout << " player is NOT charging"<< std::endl;
     stopPlayerSound( o.player_id , "charging");
   }
 
@@ -299,9 +297,10 @@ void AudioManager::processPlayerSound(Player& o){
 }
 
 void AudioManager::processProjectileSound(Projectile& o){
-  if(o.getFired()){ //TODO pick one
-    playSound( "f1", "fire:"+o.id, o.getPosition());
-  } else if (o.combined){
+  //if(o.getFired()){
+  //  playSound( "f1", "fire:"+o.id, o.getPosition());
+  //} else 
+  if (o.combined){
     playSound( "combine", "combine:"+o.id, o.getPosition());
   }
 }
