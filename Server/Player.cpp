@@ -290,6 +290,9 @@ void Player::restartJump(length_t zPosFix){
 }
 
 void Player::handleSelfAction(ClientGameTimeAction a) {
+  if(dead)
+    return;
+
 	// User is still casting their spell (in case we have spell cast time)
 	// This is NOT spell cool down time.
  	if(castDownCounter.getElapsedTime().asMilliseconds() < castDownTime )

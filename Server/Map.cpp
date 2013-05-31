@@ -215,10 +215,10 @@ void Map::initWalls(void)
   w2->dropDown(v3_t(10,-10,0));
   w2->setDirection(v3_t(0,1,0));
   entities.push_back(w2);
-  WeaponFire* w3 = new WeaponFire(v3_t(120,120,0), this, ICE1);
-  w3->dropDown(v3_t(-10,-10,0));
-  w3->setDirection(v3_t(0,1,0));
-  entities.push_back(w3);
+  //WeaponFire* w3 = new WeaponFire(v3_t(120,120,0), this, ICE1);
+  //w3->dropDown(v3_t(-10,-10,0));
+  //w3->setDirection(v3_t(0,1,0));
+  //entities.push_back(w3);
 
   spawnPositions.push_back(v3_t(4,-4,1));
   spawnPositions.push_back(v3_t(4,4,1));
