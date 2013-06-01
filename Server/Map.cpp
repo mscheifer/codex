@@ -15,8 +15,9 @@ Map::Map(void): spawnPositions(), freeProjectiles(), q(0,Rectangle(BoundingObj::
 {
 	map_size = 15;
 	freeProjectiles = new std::stack<Projectile *>();
-  initWallsOne();
-  initWallsTwo();
+  initWalls();
+  //initWallsOne();
+  //initWallsTwo();
   initPowerUps();
 }
 
@@ -26,8 +27,9 @@ void Map::mapReset()
   spawnPositions.clear();
   entities.clear();
   liveProjectTile.clear();
-  initWallsOne();
-  initWallsTwo();
+  initWalls();
+  //initWallsOne();
+  //initWallsTwo();
   initPowerUps();
   for(unsigned int i = 0; i < players.size(); i++)
   {
@@ -36,9 +38,9 @@ void Map::mapReset()
 }
 
 void Map::initPowerUps() {
-  //PowerUp* superPower = new PowerUp(v3_t(5,5,0), this, THU1DEBUFF);
-  //superPower->setRespownTime(5000);
-  //this->entities.push_back(superPower);
+  PowerUp* superPower = new PowerUp(v3_t(5,5,0), this, MOVEBOOST);
+  superPower->setRespownTime(5000);
+  this->entities.push_back(superPower);
 
   //PowerUp* p2 = new PowerUp(v3_t(-10,-10,0), this, FIR1DEBUFF);
   //p2->setRespownTime(5000);

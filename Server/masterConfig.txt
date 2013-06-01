@@ -4,14 +4,14 @@ sound=1
 graphicsDebug=false
 serverTicksPerSec=30
 gameRestart=0
-soundScaling=1
+soundScaling=10
 
 // Physics
 gravity=-20
 
 // Player configuration
 players=1
-movescale=1
+movescale=.3
 airMovescale=.5
 maxJump=1000
 jumpSpeed=10
@@ -20,14 +20,14 @@ playerMpRegen=.08
 playerDef=5
 playerHp=100
 playerMaxHp=100
-playerMp=5
+playerMp=50
 playerMaxMp=100
 minotaurHpRegen=.01
-minotaurMpRegen=.001
+minotaurMpRegen=.01
 minotaurDef=5
 minotaurHp=100
 minotaurMaxHp=100
-minotaurMp=5
+minotaurMp=50
 minotaurMaxMp=100
 
 // Projectile

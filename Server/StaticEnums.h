@@ -32,7 +32,7 @@ enum Opcode {INIT,JOINID,STARTGAME, CHAT, T1, T2, CGTA, SGTR, ERROR};
 
 enum Entity_Type {UNDEFINED=0, PLAYER, WALL, PROJECTILE, WEAPON, POWER_UP};
 
-//used to determine names
+//used to determine names 
 enum WeaponType{UNK=0, FIRE, ICE, THUNDER, FIST, BASIC};
 
 const std::string WeaponNames[] = {
