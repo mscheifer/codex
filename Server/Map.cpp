@@ -42,23 +42,21 @@ void Map::initPowerUps() {
   superPower->setRespownTime(5000);
   this->entities.push_back(superPower);
 
-  //PowerUp* p2 = new PowerUp(v3_t(-10,-10,0), this, FIR1DEBUFF);
+  //PowerUp* p2 = new PowerUp(v3_t(-10,-10,0), this, HEALTHBOOST);
   //p2->setRespownTime(5000);
   //this->entities.push_back(p2);
 
-  //PowerUp* p3 = new PowerUp(v3_t(-10,10,0), this, ICE1DEBUFF);
+  //PowerUp* p3 = new PowerUp(v3_t(-10,10,0), this, MANABOOST);
   //p3->setRespownTime(5000);
   //this->entities.push_back(p3);
 
-  //PowerUp* p4 = new PowerUp(v3_t(10,-10,0), this, G2DEBUFF);
+  //PowerUp* p4 = new PowerUp(v3_t(10,-10,0), this, STRBOOST);
   //p4->setRespownTime(5000);
   //this->entities.push_back(p4);
 }
 
 void Map::initWallsTwo(void)
 {
- 
-
   v3_t facingEast(1,0,0);
   v3_t facingNorth(0,1,0);
   unsigned int width = ConfigManager::wallWidth();
@@ -589,7 +587,7 @@ void Map::separatePlayers(Player* player){
           if(res2.first){
             if(res2.second.magnitudesq() > res.second.magnitudesq()){
               e = (*boxes)->getEntity();
-              res = res;
+              res = res2;
             }
           }
         }

@@ -61,29 +61,29 @@ const std::vector<BUFF> NONEV(NONEarr,NONEarr+1);
 //these need to match the MAGIC_POWER enum, the type is just for readability
 const ProjectileData ProjInfo[] = { //TODO fix all these numbers
   //             type,  rng, spd size str mp buff chrgTime
-  ProjectileData(FIR1,  300, 400, 1,   10, 2, FIR1V, 15000),
-  ProjectileData(FIR2,  300, 30, 1,   12, 0, FIR2V, 5000),
-  ProjectileData(FIR3,  300, 30, 1,   20, 0, FIR3V, -1),
-  ProjectileData(ICE1,  300, 200, 1,   10, 0, ICE1V, 5000),
-  ProjectileData(ICE2,  300, 30, 1,   12, 0, ICE2V, 5000),
-  ProjectileData(ICE3,  300, 30, 1,   20, 0, ICE3V, -1),
-  ProjectileData(THU1,  300, 300, 1,   10, 0, THU1V, 5000),
-  ProjectileData(THU2,  300, 30, 1,   12, 0, THU2V, 5000),
-  ProjectileData(THU3,  300, 30, 1,   20, 0, THU3V, -1),
+  ProjectileData(FIR1,  300, 400, 1,   10, 10, FIR1V, 15000),
+  ProjectileData(FIR2,  300, 300, 1,   12, 0, FIR2V, 5000),
+  ProjectileData(FIR3,  300, 300, 1,   20, 0, FIR3V, -1),
+  ProjectileData(ICE1,  300, 200, 1,   10, 10, ICE1V, 5000),
+  ProjectileData(ICE2,  300, 300, 1,   12, 0, ICE2V, 5000),
+  ProjectileData(ICE3,  300, 300, 1,   20, 0, ICE3V, -1),
+  ProjectileData(THU1,  300, 300, 1,   10, 10, THU1V, 5000),
+  ProjectileData(THU2,  300, 300, 1,   12, 0, THU2V, 5000),
+  ProjectileData(THU3,  300, 300, 1,   20, 0, THU3V, -1),
 
-  ProjectileData(G_IT,  300, 30, 1,   12, 0, G1MV, -1),
-  ProjectileData(G_FT,  300, 30, 1,   12, 0, G1MV, -1),
-  ProjectileData(G_FI,  300, 30, 1,   12, 0, G1MV, -1),
+  ProjectileData(G_IT,  300, 300, 1,   12, 0, G1MV, -1),
+  ProjectileData(G_FT,  300, 300, 1,   12, 0, G1MV, -1),
+  ProjectileData(G_FI,  300, 300, 1,   12, 0, G1MV, -1),
 
-  ProjectileData(G2,    300, 30, 1,   25, 0, G2V, -1),
+  ProjectileData(G2,    300, 300, 1,   25, 0, G2V, -1),
 
-  ProjectileData(G_IT2, 300, 30, 1,   20, 0, G2MV, -1),
-  ProjectileData(G_FT2, 300, 30, 1,   20, 0, G2MV, -1),
-  ProjectileData(G_FI2, 300, 30, 1,   20, 0, G2MV, -1),
+  ProjectileData(G_IT2, 300, 300, 1,   20, 0, G2MV, -1),
+  ProjectileData(G_FT2, 300, 300, 1,   20, 0, G2MV, -1),
+  ProjectileData(G_FI2, 300, 300, 1,   20, 0, G2MV, -1),
 
-  ProjectileData(G3,    300, 30, 1,   50, 0, G3V, -1),
+  ProjectileData(G3,    300, 300, 1,   50, 0, G3V, -1),
 
-  ProjectileData(B1,    50,  30, 1,   15, 0, NONEV, -1)
+  ProjectileData(B1,    50,  300, 1,   15, 0, NONEV, -1)
 };
 
 class Projectile :

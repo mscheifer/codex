@@ -7,25 +7,25 @@ gameRestart=0
 soundScaling=10
 
 // Physics
-gravity=-20
+gravity=-40
 
 // Player configuration
-players=1
-movescale=.3
+players=2
+movescale=.6
 airMovescale=.5
-maxJump=1000
-jumpSpeed=10
+maxJump=2
+jumpSpeed=20.18
 playerHpRegen=.005
-playerMpRegen=.08
+playerMpRegen=.008
 playerDef=5
-playerHp=100
+playerHp=50
 playerMaxHp=100
 playerMp=50
 playerMaxMp=100
 minotaurHpRegen=.01
-minotaurMpRegen=.01
+minotaurMpRegen=.035
 minotaurDef=5
-minotaurHp=100
+minotaurHp=50
 minotaurMaxHp=100
 minotaurMp=50
 minotaurMaxMp=100

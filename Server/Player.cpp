@@ -191,8 +191,9 @@ bool Player::moveTowardDirection(move_t inputDir, bool jump)
     !(jumpCount == 0 && velocity.z < getGravity().z * ConfigManager::serverTickLengthSec() * 5)){
     //add jump velocity
     v3_t jumpDir = movementDirection;
-    jumpDir.z = 1;
-    jumpDir.scale(JUMPSPEED());
+    jumpDir.z = 0;
+    jumpDir.scale(AIRMOVESCALE());
+    jumpDir.z = JUMPSPEED();
     velocity = velocity - oldJumpVelocity;
     velocity += jumpDir;
     velocity.z = jumpDir.z; //reset z velocity (for double jumping)
@@ -212,6 +213,7 @@ bool Player::moveTowardDirection(move_t inputDir, bool jump)
     movementDirection.scale(speed * MOVESCALE());
 
   movementDirection.scale(getMovementMultiplier());
+   std::cout << std::fabs(movementDirection.z) << std::endl;
   movementDirection = correctMovement(movementDirection, true, getFeetOrigin());
 
   //walking if not moving, jumps are 0, or free fall
