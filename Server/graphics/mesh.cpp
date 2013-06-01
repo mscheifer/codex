@@ -140,8 +140,8 @@ gx::bone initBones(std::map<std::string,unsigned int>& idMap,
 }
 } //end unnamed namespace
 
-gx::Mesh::Mesh(const std::string& Filename, length_t height)
-  : mImporter(), mScene(LoadFile(mImporter, Filename)),
+gx::Mesh::Mesh(const std::string& Filename, length_t height, bool flipUVs)
+  : mImporter(), mScene(LoadFile(mImporter, Filename, flipUVs)),
     m_boundary(CalcBoundBox(mScene, height)), idMap(),
     bones(initBones(idMap,mScene)),
     m_Entries(InitFromScene(idMap,mScene)),
@@ -156,10 +156,11 @@ gx::Mesh::Mesh(const std::string& Filename, length_t height)
       std::move(m_boundary.centerAndResize)) {}
 
 const aiScene* gx::Mesh::LoadFile(Assimp::Importer& Importer,
-                                 const std::string& Filename) {
+                                 const std::string& Filename, bool flipUVs) {
   const aiScene* pScene = Importer.ReadFile(Filename.c_str(), 0
          | aiProcess_Triangulate
-         | aiProcess_GenSmoothNormals);
+         | aiProcess_GenSmoothNormals
+         | (flipUVs ? aiProcess_FlipUVs : 0));
   if (!pScene) {
     std::cout << "Error parsing '" <<  Filename.c_str() << "': '";
     std::cout << Importer.GetErrorString() << std::endl;
