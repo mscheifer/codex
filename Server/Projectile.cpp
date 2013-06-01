@@ -34,16 +34,13 @@ bool Projectile::correctMovementHit( Entity* e ){
   Entity_Type etype = e->getType();
   if( etype == WALL )
     return true;
-  else if (etype == PROJECTILE && ((Projectile*) e)->charging){// check same team
-    if( owner->isMinotaur() )
-      return false;
-    else if( ((Projectile*) e)->getOwner()->isMinotaur() )
-      return false;
-
-    return true;
+  else if (etype == PROJECTILE && ((Projectile*) e)->charging){
+    //same team check TODO decide to add or not
+    return sameTeam((Projectile*)e);
   } else if ( etype == PLAYER ){
     return e != owner;
   }
+
   return false;
 }
 
@@ -55,7 +52,6 @@ void Projectile::update(void) {
     if(chargeTime != -1 && charge_counter.getElapsedTime().asMilliseconds() > chargeTime*cdr ) {
       charge_counter.restart();
       setMagicType(upgrade(magicType));
-      std::cout << "increase level to " << magicType <<  std::endl;
     }
   } else {
     v3_t distanceTravelled = velocity * ConfigManager::serverTickLengthSec();
@@ -119,21 +115,22 @@ void Projectile::handleCollisions() {
       if(e == owner)
         break;
     case WALL:
-      map->destroyProjectile(this);
+      if(!charging)
+        map->destroyProjectile(this);
       break;
     case PROJECTILE:
       Projectile * proj = (Projectile*) e;
-      if(charging){
+      if(charging && sameTeam(proj) ){ //this one is charging
         setMagicType(combine(proj->getMagicType(), magicType));
         map->destroyProjectile(proj);
         combined = true;
-      } else if ( proj->charging ){
+      } else if ( proj->charging && sameTeam(proj) ){ //the other one is charging
         proj->setMagicType(combine(proj->getMagicType(), magicType));
         proj->combined = true;
         map->destroyProjectile(this);
       }
       
-      //else {
+      //else { //2 in the air
       //  map->destroyProjectile(proj);
       //  map->destroyProjectile(this);
       //}
@@ -187,6 +184,12 @@ MAGIC_POWER Projectile::combine( MAGIC_POWER m1, MAGIC_POWER m2 ){
   return combinations[m1][m2];
 }
 
+bool Projectile::sameTeam( Projectile * p ){
+  if(p == nullptr || p->getOwner() == nullptr || this == nullptr || this->getOwner() == nullptr)
+    return false;
+  return p->getOwner()->isMinotaur() == getOwner()->isMinotaur();
+}
+
 void Projectile::setMagicType( MAGIC_POWER m, bool melee ) {
   magicType = m;
   charge_counter.restart();
@@ -226,7 +229,7 @@ void Projectile::deserialize( sf::Packet & packet ) {
 
 std::string Projectile::toString(){
   std::stringstream ss;
-  ss << "mtype " << magicType << std::endl
+  ss << "mtype " << spellNames[magicType] << std::endl
   << "range " << range << std::endl
   << "strength " << strength << std::endl;
   return ss.str();

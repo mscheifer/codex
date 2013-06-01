@@ -2,9 +2,9 @@
 #include "Projectile.h"
 
 const float Weapon::meleeAttackMult = 1.25f;
-const float Weapon::weaponWidth = 2.0f;
-const float Weapon::weaponHeight = 2.0f;
-const float Weapon::weaponDepth = 2.0f;
+const float Weapon::weaponWidth = 1.0f;
+const float Weapon::weaponHeight = 1.0f;
+const float Weapon::weaponDepth = 1.0f;
 
 Weapon::Weapon(Map* m)
 {
@@ -30,7 +30,7 @@ Weapon::Weapon(float damage, float ran, v3_t pos, Map* m) : pickedUp(false)
   range = ran;
   position = pos;
   direction = v3_t(0,0,1);
-  projectileSpeed = 100.0; // TODO pending removal
+  projectileSpeed = 100.0; // TODO pending removal these will be the melee values
   projectileRange = 300; //pending removal
   projectileStrength = 26; //pending removal
   this->map = m;
@@ -59,7 +59,8 @@ Projectile* Weapon::attackMelee(v3_t dir , v3_t pos, Player* owner)
   pj->setVelocity(dir);
   pj->setPosition(pos);
   pj->setOwner(owner);
-	pj->setStrength(projectileStrength*owner->getStrengthMultiplier()*meleeAttackMult);
+  pj->setStrength(projectileStrength*owner->getStrengthMultiplier()*meleeAttackMult);
+  std::cout << "pj str " << pj->getStrength() << std::endl;
   pj->setRange(1);
 
   pj->setCharing(false); 

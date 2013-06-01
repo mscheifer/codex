@@ -7,6 +7,7 @@ std::array<int,2> AudioManager::musicProx;
 std::map<std::string, sf::SoundBuffer*> AudioManager::soundBuffers;
 std::map<std::string, std::string> AudioManager::musics;
 std::map<std::string, sf::Sound> AudioManager::sounds;
+std::map<std::string, sf::Sound> AudioManager::playerSounds[4];
 bool AudioManager::useSound;
 int AudioManager::trackNo;
 float AudioManager::soundScaling;
@@ -48,11 +49,22 @@ void AudioManager::loadSounds(){
   loadSound("m1", "sounds/music_mono.wav");
   loadSound("f1", "sounds/fire_1.wav");
   loadSound("melee", "sounds/52458__audione__sword-01_.wav");
-  loadSound("combine", "sounds/SE1_BMP_MAGIC_REBLOW1_2.wav");
-  loadSound("weapI", "sounds/weaponIce.wav");
-  loadSound("weapB", "sounds/weaponBas.wav");
-  loadSound("weapF", "sounds/weaponFir.wav");
-  loadSound("weapT", "sounds/weaponThu.wav");
+  loadSound("combine", "sounds/combine.wav");
+
+  loadSound("weapIce", "sounds/weaponIce.wav");
+  loadSound("weapBasic", "sounds/weaponBasic.wav");
+  loadSound("weapFire", "sounds/weaponFire.wav");
+  loadSound("weapThu", "sounds/weaponThu.wav");
+  loadSound("weapFist", "sounds/weaponFist.wav");
+  
+  loadSound("shootFir", "sounds/shootFir.wav");
+  loadSound("shootIce", "sounds/shootIce.wav");
+  loadSound("shootThu", "sounds/shootThu.wav");
+  loadSound("shootBasic", "sounds/shootBasic.wav");
+  loadSound("shootGrav", "sounds/shootGrav.wav");
+
+  loadSound("collectPowerup", "sounds/collectPowerup.wav");
+
   //loadSound("s5", "sound_5.wav");
 
   musics["m1"] = "sounds/music.wav";
@@ -96,6 +108,12 @@ void AudioManager::stopSound(std::string id) {
    }
 }
 
+void AudioManager::stopPlayerSound(int player_id, std::string key) {
+   if( playerSounds[player_id].find(key) != playerSounds[player_id].end()) {
+     playerSounds[player_id].find(key)->second.stop();
+     playerSounds[player_id].erase(key);
+   }
+}
 void AudioManager::playSoundHelper( sf::Sound* s, v3_t pos, sf::SoundBuffer* sbuff){
   s->setPosition(pos.x/soundScaling,pos.y/soundScaling,pos.z/soundScaling);
   if(s->getStatus() != sf::Sound::Playing)  {
@@ -190,57 +208,108 @@ void AudioManager::playMusic(std::string musicN, int index){
   }
 }
 
+void AudioManager::playPlayerSound(std::string sound, int player_id , std::string name, v3_t pos) {
+
+  int copy_id = player_id;
+  std::map<std::string,sf::SoundBuffer*>::iterator it = soundBuffers.find(sound);
+
+  if(it != soundBuffers.end()){ //element exists
+
+    if(playerSounds[copy_id].find(name) ==  playerSounds[copy_id].end()) {
+      playerSounds[copy_id].insert(std::pair<std::string,sf::Sound>(name,sf::Sound()));
+    }
+
+    playSoundHelper( & playerSounds[copy_id].find(name)->second ,pos, it->second);
+  
+  }
+}
+
+void AudioManager::updatePlayerSoundsPosition(int player_id , v3_t pos ) {
+ std::map<std::string,sf::Sound>::iterator it =  playerSounds[player_id].begin();
+ while( it != playerSounds[player_id].end()) {
+   it->second.setPosition(pos.x/soundScaling,pos.y/soundScaling,pos.z/soundScaling);
+   it++;
+ }
+
+}
 void AudioManager::processPlayerSound(Player& o){
   static bool walk_toggle[4] = { false, false, false, false};
+  updatePlayerSoundsPosition(o.player_id , o.getPosition());
 
   if(o.meleeAttack)
-    playSound("melee", "playerM:"+ o.player_id, o.getPosition());
+    playSound("melee", "melee", o.getPosition());
 
   if(o.weaponCall){
-    stopSound( "playerCall: " + o.player_id );
-    playSound(getWeaponCall(o.weaponCallType), "playerCall: " + o.player_id, o.getPosition());
+    //stopSound( "playerCall: " + o.player_id );
+    std::stringstream ss;
+    ss << "playerCall: " << o.player_id;
+    playPlayerSound(getWeaponCall(o.weaponCallType),o.player_id, "weaponCall", o.getPosition());
+  }
+
+  if(o.collectPowerUp){
+    std::stringstream ss;
+    ss << "playcerCollectPowerUp: " << o.player_id;
+    playSound("collectPowerup", ss.str(), o.getPosition());
   }
 
   if(o.charging) {
-    playSound("c1", "cplayer:"+ o.player_id, o.getPosition());
+//    std::cout << " player is charging"<< std::endl;
+    playPlayerSound("c1", o.player_id,  "charging", o.getPosition());
   } else {
-    stopSound( "cplayer:"+ o.player_id);
+     stopPlayerSound( o.player_id , "charging");
   }
 
   if(o.shotProjectile) {  
+    std::stringstream ss;
+  
     static int id = 0;
-    playSound("f1", id+"fplayer:"+ o.player_id, o.getPosition());
+
+    ss << id << "fplayer:" << o.player_id;
+    playSound(getShootSound(o.chargeMagicType), ss.str(), o.getPosition());
     id++;
   }
 
   if(o.attacked) {  
+    std::stringstream ss;
+  
     static int id = 0;
-    playSound("sc1", id+"scplayer:"+ o.player_id, o.getPosition());
+
+    ss << id << "scplayer:" << o.player_id;
+    playSound("sc1", ss.str(), o.getPosition());
     id++;
   }
 
-  if(o.walking) {
+  if(o.walking && o.getPosition().z <1.6) {
 
     if(walk_toggle[o.player_id]) {
      
       walk_toggle[o.player_id] = false;
-      playSound("w1", "w1player:"+o.player_id, o.getPosition());
+      std::stringstream ss;
+      ss << "w1player:" << o.player_id;
+      playSound("w1",ss.str(), o.getPosition());
 
-    } else {     
+    } else { 
       walk_toggle[o.player_id] = true;
-      playSound("w2", "w2player:"+o.player_id, o.getPosition());
+      std::stringstream ss;
+      ss <<"w2player:" << o.player_id;
+      playSound("w2", ss.str(), o.getPosition());
     }
    
   } else {
-    stopSound("w1player:"+o.player_id);   
-    stopSound("w2player:"+o.player_id);
+    std::stringstream ss;
+    ss << "w1player:" << o.player_id;
+    stopSound(ss.str());   
+    std::stringstream ss2;
+    ss2 <<"w2player:" << o.player_id;
+    stopSound(ss2.str());
   }
 }
 
 void AudioManager::processProjectileSound(Projectile& o){
-  if(o.getFired()){
-    playSound( "f1", "fire:"+o.id, o.getPosition());
-  } else if (o.combined){
+  //if(o.getFired()){
+  //  playSound( "f1", "fire:"+o.id, o.getPosition());
+  //} else 
+  if (o.combined){
     playSound( "combine", "combine:"+o.id, o.getPosition());
   }
 }
@@ -254,13 +323,36 @@ int AudioManager::notCurrentlyPlaying(){
 std::string AudioManager::getWeaponCall(WeaponType w){
   switch(w){
   case FIRE:
-    return "weapF";
+    return "weapFire";
   case ICE:
-    return "weapI";
+    return "weapIce";
   case THUNDER:
-    return "weapT";
+    return "weapThu";
+  case BASIC:
+    return "weapBasic";
   default:
-    return "weapB";
+    return "weapFist";
+  }
+}
+
+std::string AudioManager::getShootSound(MAGIC_POWER m){
+  switch(m){
+  case FIR1:
+  case FIR2:
+  case FIR3:
+    return "shootFir";
+  case ICE1:
+  case ICE2:
+  case ICE3:
+    return "shootIce";
+  case THU1:
+  case THU2:
+  case THU3:
+    return "shootThu";
+  case B1:
+    return "shootBasic";
+  default:
+    return "shootGrav";
   }
 }
 

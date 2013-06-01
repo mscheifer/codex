@@ -40,7 +40,7 @@ Projectile* WeaponFire::attackRange(v3_t dir , v3_t pos, Player* owner)
   // pj->setChargeTime(1500);
   //std::cout << "set proj m type " << basicAttack << std::endl;
   pj->setMagicType(basicAttack);
-
+  pj->setRender(true);
   Range_Cool_Down_Counter.restart();
 	return pj;
 }
