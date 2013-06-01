@@ -14,12 +14,13 @@
 class NetworkServer{
   int connectionCount;
   StartGamePacket startTheGame;
+  Game_State gameState;
 public:
   ServerServices server;
   Game game;
   ClientGameTimeAction pPacket;
 
-  NetworkServer(): connectionCount(0), startTheGame(), server() {}
+  NetworkServer(): connectionCount(0), startTheGame(), gameState(WAIT), server() {}
 
   ~NetworkServer() {}
   

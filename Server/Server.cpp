@@ -55,12 +55,12 @@ void NetworkServer::doServer() {
   game.initScores();
  
   //lobby code
-  //send id to to the player
   while (connectionCount < ConfigManager::numPlayers()) {
     // add a new client if can
     if(server.size() < ConfigManager::numPlayers() && server.getNewClient())
     {
       IdPacket newPacket = IdPacket(game.join());
+      //send id to to the player
       if(!server.sendPacket<IdPacket>(newPacket,server.size() - 1)) {
         std::cout << "Error sending game join packet" << std::endl;
 	    } else {
@@ -76,6 +76,7 @@ void NetworkServer::doServer() {
       this->receiveMessages(i);
     }
   }
+  //game loop
   while(true)
   {
     //Wait for players to start
@@ -90,10 +91,6 @@ void NetworkServer::doServer() {
           std::cout << "Error sending init packet" << std::endl;
 	      }
     }
-
-    //if(!server.sendToAll(initPacket)) {
-	  //  std::cout << "Error sending game start packet" << std::endl;
-    //}
     std::cout << "server start game" << std::endl;
     while(true) {
       clock.restart();

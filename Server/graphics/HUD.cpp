@@ -71,6 +71,10 @@ gx::HUD::HUD(void):health(100), maxHealth(100), HLossPercentage(0),
   nextSpell.setCharacterSize(18);
   currentSpell.setColor(sf::Color::Black);
   nextSpell.setColor(sf::Color::Black);
+  clockText.setFont(font);
+  clockText.setCharacterSize(36);
+  clockText.setColor(sf::Color::Yellow);
+  startClock.restart();
 }
 
 gx::HUD::~HUD(void) {
@@ -164,6 +168,16 @@ void gx::HUD::draw(sf::RenderWindow & window) {
     currentSpell.setPosition( (window.getSize().x-400)/2,  window.getSize().y*0.8+20 );
     window.draw(currentSpell);
   } 
+  float remaining = (6 - startClock.getElapsedTime().asSeconds());
+  if (remaining > 0 ) {
+    clockText.setString(std::string("Game starts in ") +
+      std::to_string(static_cast<long long>(remaining)) +
+      std::string(" seconds"));
+  } else {
+    startClock.restart();
+  }
+  clockText.setPosition((window.getSize().x -clockText.getGlobalBounds().width)/2,200);
+  window.draw(clockText);
 }
 
 void gx::HUD::updateHUD(const Player& player) {

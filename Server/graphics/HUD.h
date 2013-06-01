@@ -63,6 +63,8 @@ private :
   std::vector<int> remainTime;
   sf::Text currentSpell;
   sf::Text nextSpell;
+  sf::Text clockText;
+  sf::Clock startClock;
   void buffHelper(std::string & path);
   void buffLHelper(std::string & path);
   void weaponHelper(std::string & path);

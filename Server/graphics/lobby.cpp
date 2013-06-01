@@ -46,8 +46,10 @@ void gx::lobby::updateLobby(std::vector<std::pair<int,bool>> & playerStatus ) {
       players.push_back(sf::Sprite());
     }
   }
+
   if (playerStatus.size() > players.size())
     players.push_back(sf::Sprite());
+
   for (int i=0;i<playerStatus.size();i++) {
     if (status[i]) {
       players[i].setTexture(readyTexture);
