@@ -17,20 +17,22 @@ void NetworkServer::receiveMessages(int i) {
   sf::Packet packet;
   bool packetReceived = false;
   while(this->server.receiveMessage(packet,i)) {
-    packetReceived = true;
-    sf::Packet copy = packet; //TODO: maybe we don't need this. fix later
     ClientGameTimeAction cgta;
+    bool status;
     sf::Uint32 packetType;
     packet >> packetType;
     switch (packetType) {
       case CGTA:
+        packetReceived = true;
         cgta.deserialize(packet);
         combinePackets(cgta);
         //ConfigManager::log(cgta.toString()); 
         break;
-      case CHAT: //chat should be part of CGTA  
-        this->server.sendToAll(copy); //right now just echoing what received
-        break;
+      case INIT:
+        packet >> status;
+        connectionCount = (status) ? (connectionCount+1):(connectionCount-1);
+        startTheGame.changeStatus(i);
+        this->server.sendPacketToAll<StartGamePacket>(startTheGame);
       default:
         std::cout << "Error: received bad packet: " << packetType<< std::endl;
         break;
@@ -40,7 +42,6 @@ void NetworkServer::receiveMessages(int i) {
     //ConfigManager::log("------------------------------------");
     //ConfigManager::log(pPacket.toString()); 
     game.evaluate(pPacket);
-
     pPacket.clear();
   }
 }
@@ -50,48 +51,34 @@ void NetworkServer::doServer() {
   std::cout << "Server Ip Address: " << myIpAddress.toString() << std::endl;
   sf::Clock clock;
   
+  //scores should not change
+  game.initScores();
+ 
+  //lobby code
   //send id to to the player
-  while (server.size() < ConfigManager::numPlayers()) {
-    if(server.getNewClient())
+  while (connectionCount < ConfigManager::numPlayers()) {
+    // add a new client if can
+    if(server.size() < ConfigManager::numPlayers() && server.getNewClient())
     {
       IdPacket newPacket = IdPacket(game.join());
       if(!server.sendPacket<IdPacket>(newPacket,server.size() - 1)) {
         std::cout << "Error sending game join packet" << std::endl;
 	    } else {
 	      std::cout << "I sent the id " << std::endl;
+        //after sending ID, broad cast to all players
+        startTheGame.addPlayer();
+        this->server.sendPacketToAll<StartGamePacket>(startTheGame);
       }
     }
+    // wait for players to start
+    for(unsigned int i = 0; i < server.size(); i++){
+      sf::Packet packet;
+      this->receiveMessages(i);
+    }
   }
-
-  game.initScores();
-  StartGamePacket startTheGame(server.size());
-  this->server.sendPacketToAll<StartGamePacket>(startTheGame);
-  std::cout<<"i sent start"<<std::endl;
   while(true)
   {
     //Wait for players to start
-    unsigned int connectionCount = 0;
-    while (connectionCount < ConfigManager::numPlayers()) {
-      for(unsigned int i = 0; i < server.size(); i++){
-        sf::Packet packet;
-        if (this->server.receiveMessage(packet,i)) {
-          sf::Uint32 packetType;
-          packet >> packetType;
-          if (packetType == INIT) {
-              bool status;
-              packet >> status;
-              if (status) {
-                connectionCount++;
-              } else { 
-                connectionCount--;
-              }
-              startTheGame.changeStatus(i);
-              this->server.sendPacketToAll<StartGamePacket>(startTheGame);
-          }
-        }
-      }
-    }
-
     game.restartGame();
     //choose minotaur
     game.chooseMinotaur();

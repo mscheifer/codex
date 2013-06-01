@@ -12,12 +12,14 @@
 #include "ServerGameTimeRespond.h"
 
 class NetworkServer{
+  int connectionCount;
+  StartGamePacket startTheGame;
 public:
   ServerServices server;
   Game game;
   ClientGameTimeAction pPacket;
 
-  NetworkServer(): server() {}
+  NetworkServer(): connectionCount(0), startTheGame(), server() {}
 
   ~NetworkServer() {}
   
