@@ -77,6 +77,7 @@
     <ClCompile Include="boundingManager.cpp" />
     <ClCompile Include="boundingObj.cpp" />
     <ClCompile Include="boundingSphere.cpp" />
+    <ClCompile Include="buffer.cpp" />
     <ClCompile Include="ChatHandler.cpp" />
     <ClCompile Include="Client.cpp" />
     <ClCompile Include="ClientGameTimeAction.cpp" />
@@ -118,6 +119,7 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Map.cpp" />
     <ClCompile Include="NetworkServices.cpp" />
+    <ClCompile Include="particleSystem.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="PowerUp.cpp" />
     <ClCompile Include="Projectile.cpp" />
@@ -137,6 +139,7 @@
     <ClInclude Include="boundingManager.h" />
     <ClInclude Include="boundingObj.h" />
     <ClInclude Include="boundingSphere.h" />
+    <ClInclude Include="buffer.h" />
     <ClInclude Include="ChatHandler.h" />
     <ClInclude Include="Client.h" />
     <ClInclude Include="ConfigManager.h" />

@@ -3,19 +3,11 @@
 gx::vertexAttrib::vertexAttrib(vertexAttrib&& other) noexcept
   : varName(std::move(other.varName)), vectorSize(std::move(other.vectorSize)),
     glType(std::move(other.glType)), byteOffset(std::move(other.byteOffset)),
-    buffer(std::move(other.buffer)) {
-  other.buffer = 0; //destructor won't do anything  
-}
+    buff(std::move(other.buff)) {}
 
-gx::vertexAttrib::~vertexAttrib() noexcept {
-  glDeleteBuffers(1, &(this->buffer));
-  debugout << "glDeleteBuffers(1, &(this->buffer): " << this->buffer << ");";
-  debugout << endl;
-}
 
 void gx::vertexAttrib::bindBuffer() const {
-  glBindBuffer(GL_ARRAY_BUFFER, this->buffer);
-  debugout << "glBindBuffer(GL_ARRAY_BUFFER, " << this->buffer << ");" << endl;
+  this->buff.bind(GL_ARRAY_BUFFER);
 }
 
 std::string gx::vertexAttrib::name() const {
