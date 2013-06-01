@@ -263,6 +263,8 @@ void gx::HUD::initializeSprites() {
    buffHelper(std::string("graphics/Images/statT.png"));
    buffHelper(std::string("graphics/Images/statG.png"));
    buffHelper(std::string("graphics/Images/stunG.png"));
+   buffLHelper(std::string("graphics/Images/stunI.png"));
+   buffLHelper(std::string("graphics/Images/powerDef.png"));
    
    //buffL
    buffLTextures.push_back(new sf::Texture());
@@ -280,6 +282,9 @@ void gx::HUD::initializeSprites() {
    buffLHelper(std::string("graphics/Images/statTL.png"));
    buffLHelper(std::string("graphics/Images/statGL.png"));
    buffLHelper(std::string("graphics/Images/stunGL.png"));
+   buffLHelper(std::string("graphics/Images/stunIL.png"));
+   buffLHelper(std::string("graphics/Images/powerDefL.png"));
+
 
    //waepon
    weaponTextures.push_back(new sf::Texture());
