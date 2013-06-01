@@ -43,7 +43,7 @@ void gx::light::clear() {
 
 void gx::light::addLight(vector4f pos) {
   if(this->data.numLights < maxLights) {
-    std::array<GLfloat,4> newpos = {{ pos.x, pos.y, pos.z, pos.w }};
+    auto newpos = pos.oglVec4();
     auto startItr = this->data.position.begin() + (this->data.numLights * 4);
     std::copy(newpos.begin(),newpos.end(),startItr);
     this->data.numLights++;

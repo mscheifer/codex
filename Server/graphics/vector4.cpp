@@ -87,6 +87,10 @@ void gx::vector4<T>::dehomogenize() {
   this->w = 1;
 }
 template<typename T>
+std::array<typename gx::vector4<T>::elem_t,4> gx::vector4<T>::oglVec4() const {
+  return elems;
+}
+template<typename T>
 typename std::array<T,4>::iterator gx::vector4<T>::begin() {
   return this->elems.begin();
 }

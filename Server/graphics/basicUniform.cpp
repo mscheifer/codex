@@ -76,7 +76,7 @@ std::string gx::uniform::vec4f::declaration() const {
 }
 
 gx::uniform::vec4fArray::vec4fArray(std::string name, unsigned int size)
-  : _locations<GL_FLOAT_VEC4>(std::move(name),size), storage(size) {}
+  : _locations<GL_FLOAT_VEC4>(std::move(name),size), storage(4*size) {}
 
 void gx::uniform::vec4fArray::write(const GLfloat* src) {
   std::copy(src,src + this->storage.size(),this->storage.begin());
