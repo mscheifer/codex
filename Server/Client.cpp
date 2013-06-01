@@ -27,20 +27,26 @@ void NetworkClient::receiveMessages() {
       //  std::cout<<s.state<<std::endl;
         std::vector<int> kills;
         std::vector<int> wins;
+        auto pos = s.players[this->id].getPosition();
+
+        int proximity = 2;
+        bool minotaur = s.players[this->id].isMinotaur();
+        static float maxProx = 10.f;
+        
         for(auto playerP = s.players.begin(); playerP != s.players.end(); playerP++) {
           if(playerP->player_id != this->id) {
             //make sure the SGTR stays in scope
             entities.push_back(&(*playerP));
+
+            v3_t dist = playerP->getPosition() - pos; //audio prox calculation
+            if(std::abs(dist.magnitude()) >= maxProx){
+              proximity--;
+            } else if (playerP->isMinotaur())
+              minotaur = true;
           }
           kills.push_back((*playerP).kills);
           wins.push_back((*playerP).wins);
           AudioManager::processPlayerSound(*playerP);
-        
-          if(cycle  == 100 ) {
-             cycle = 0;
-             std::cout << "Current health is " << (*playerP).getHealth() << std::endl;
-          }
-
         }
         for(auto entP = s.walls.begin(); entP != s.walls.end(); entP++) {
           entities.push_back(*entP);
@@ -55,7 +61,7 @@ void NetworkClient::receiveMessages() {
         for(auto entP = s.weapons.begin(); entP != s.weapons.end(); entP++) {
           entities.push_back(*entP);
         }
-        auto pos = s.players[this->id].getPosition();
+        
         gxClient.updatePosition(gx::vector4f(pos.x,pos.y,pos.z));
         //entities.push_back(&(this->skybox)); //add skybox
         gxClient.updateEntities(entities);
@@ -73,19 +79,20 @@ void NetworkClient::receiveMessages() {
           std::cout << "can pick up weapon type " << WeaponNames[s.players[id].getPickupWeaponType()] << std::endl;
         
         //calculate proximity of players
-        //TODO actually base this on proximity of players 
         //can do -- instead of ++ so we can have more intense if less players
-        int proximity = 0;
-        if(s.players[this->id].getPosition().x > 0){
-          proximity++;
-        }
-        if(s.players[this->id].getPosition().y > 0){
-          proximity++;
-        }
-        if(s.players[this->id].getPosition().y > 10){
-          proximity++;
-        }
-        AudioManager::updateMusic(proximity);
+        
+        //if(s.players[this->id].getPosition().y > -5){
+        //  proximity++;
+        //}
+        //if(s.players[this->id].getPosition().y > 5){
+        //  proximity++;
+        //}
+
+        //if(s.players[this->id].getPosition().x > 0){
+        //  minotaur = false;
+        //}
+        //std::cout<<"prox " << proximity << "mino " << minotaur << std::endl;
+        AudioManager::updateMusic(proximity, minotaur);
         
         break;
     }
@@ -157,15 +164,25 @@ void NetworkClient::doClient() {
   while(true)
   {
     gameRestart = false;
-    bool joined = false;
+    bool joined = false;  //joined is used for receiving game start from server
+    bool clickedButton = false;
     while(true) {
       cycle++;
 	    sf::Packet initPacket;
-      this->gxClient.drawLobby();
       if (joined && this->gxClient.gameStart()) {
+        //received start game and clicked
         initPacket << static_cast<sf::Uint32>(INIT); 
-        netRecv.sendMessage(initPacket);
-        joined = false; //only send packet once
+        if (!clickedButton) { 
+          initPacket << true;
+          netRecv.sendMessage(initPacket);
+//          std::cout<<"joining"<<std::endl;
+          clickedButton = true;
+        } else {
+          initPacket << false;
+          netRecv.sendMessage(initPacket);
+          clickedButton = false;
+//          std::cout<<"quiting"<<std::endl;
+        }
       }
       initPacket.clear();
       if (netRecv.receiveMessage(initPacket)) {
@@ -182,10 +199,17 @@ void NetworkClient::doClient() {
            //TODO: init the position
           break;
         } else if(packetType==STARTGAME){
+          joined = true; 
           std::cout<<"CLIENT RECEIVED START GAME"<<std::endl;
-          joined = true;
+          StartGamePacket playerSt;
+          playerSt.deserialize(initPacket);
+          gxClient.updateLobby(playerSt.playerStatus);
+          for (auto itr= playerSt.playerStatus.begin(); itr != playerSt.playerStatus.end(); itr++ ) {
+            std::cout<<"Player "<< (*itr).first<< " is "<<(*itr).second<<std::endl;
+          }
         }
 	    }
+      this->gxClient.drawLobby();
     }
     this->gxClient.disableCursor();
     std::cout << "game started" << std::endl;

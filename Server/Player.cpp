@@ -6,9 +6,9 @@
 #include "WeaponFire.h"
 #include "Wall.h"
 
-const float Player::playerWidth = 1.0f;
-const float Player::playerHeight = 1.0f;
-const float Player::playerDepth = 3.0f;
+const float Player::playerWidth = 3.0f;
+const float Player::playerHeight = 3.0f;
+const float Player::playerDepth = 7.0f;
 
 //these have to be functions because calling configManager stuff to initialize
 //globals is undefined behavior
@@ -191,8 +191,9 @@ bool Player::moveTowardDirection(move_t inputDir, bool jump)
     !(jumpCount == 0 && velocity.z < getGravity().z * ConfigManager::serverTickLengthSec() * 5)){
     //add jump velocity
     v3_t jumpDir = movementDirection;
-    jumpDir.z = 1;
-    jumpDir.scale(JUMPSPEED());
+    jumpDir.z = 0;
+    jumpDir.scale(AIRMOVESCALE());
+    jumpDir.z = JUMPSPEED();
     velocity = velocity - oldJumpVelocity;
     velocity += jumpDir;
     velocity.z = jumpDir.z; //reset z velocity (for double jumping)
@@ -212,9 +213,12 @@ bool Player::moveTowardDirection(move_t inputDir, bool jump)
     movementDirection.scale(speed * MOVESCALE());
 
   movementDirection.scale(getMovementMultiplier());
+   std::cout << std::fabs(movementDirection.z) << std::endl;
   movementDirection = correctMovement(movementDirection, true, getFeetOrigin());
-  
-  if(movementDirection.magnitude() > 1.0E-8 ){
+
+  //walking if not moving, jumps are 0, or free fall
+  if((std::abs(movementDirection.magnitude()) > 1.0E-8  && jumpCount == 0)){
+  //  || velocity.z >= getGravity().z * ConfigManager::serverTickLengthSec() * 5){
     walking = true;
   } else {
     walking = false;
