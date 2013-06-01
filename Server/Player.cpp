@@ -329,7 +329,7 @@ void Player::handleSelfAction(ClientGameTimeAction a) {
     fireProjectile();
   }
 
-  if( a.attackRange || a.attackRange ) {
+  if( a.attackRange || a.attackMelee ) {
 		attack(a);
   }
 
@@ -370,8 +370,10 @@ v3_t Player::getProjectilePosition() {
 
 // this do substraction of stemina, respond to the user to render the attak animation  
 void Player::attack( ClientGameTimeAction a) {
+  if(chargedProjectile)
+    return;
 	Weapon* currentWeapon = weapon[current_weapon_selection];
-  if(a.attackRange && !chargedProjectile){
+  if(a.attackRange){
     if( !currentWeapon->canUseWeapon(true, this) || currentWeapon->getMpCost() > mana){
       charging = false;
 		  return;

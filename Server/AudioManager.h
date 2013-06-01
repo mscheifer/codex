@@ -2,7 +2,6 @@
 #include <SFML/Audio.hpp>
 #include <map>
 #include <array>
-
 #include "Player.h"
 #include "Wall.h"
 #include "Projectile.h"
@@ -35,7 +34,7 @@ private:
   static void loadTrack( int i ); //load the track
   static void playMusic(std::string music, int index); //helper which playes music onto given index
   static int getClosestProx(int prox); //return the next closest proximity to load in teh other music (this is done on init only)
-
+  static void updatePlayerSoundsPosition(int player_id , v3_t pos);
 public:
   static float soundScaling;
   //initialize the audio manager

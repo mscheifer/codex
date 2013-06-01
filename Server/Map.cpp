@@ -15,7 +15,8 @@ Map::Map(void): spawnPositions(), freeProjectiles(), q(0,Rectangle(BoundingObj::
 {
 	map_size = 15;
 	freeProjectiles = new std::stack<Projectile *>();
-  initWalls();
+  initWallsOne();
+  initWallsTwo();
   initPowerUps();
 }
 
@@ -25,7 +26,8 @@ void Map::mapReset()
   spawnPositions.clear();
   entities.clear();
   liveProjectTile.clear();
-  initWalls();
+  initWallsOne();
+  initWallsTwo();
   initPowerUps();
   for(unsigned int i = 0; i < players.size(); i++)
   {
@@ -49,6 +51,104 @@ void Map::initPowerUps() {
   //PowerUp* p4 = new PowerUp(v3_t(10,-10,0), this, G2DEBUFF);
   //p4->setRespownTime(5000);
   //this->entities.push_back(p4);
+}
+
+void Map::initWallsTwo(void)
+{
+ 
+
+  v3_t facingEast(1,0,0);
+  v3_t facingNorth(0,1,0);
+  unsigned int width = ConfigManager::wallWidth();
+  unsigned int height = ConfigManager::wallHeight(); 
+  unsigned int depth = ConfigManager::wallDepth();
+
+  float wallX = 25;
+  float wallY = 25;
+
+  float centerX = 0;
+  float centerY = 0;
+  int i;
+  float startingX;
+  float startingXNeg;
+  float startingY;
+  float startingYNeg;
+  float startingZ = depth/2.0f;
+
+
+  int row1[] = {-1};
+  int row2[] = {-1};
+  int row3[] = {-1};
+  int row4[] = {-1};
+  int row5[] = {      3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,       -1};
+  int row6[] = {   1,2,                                                 22,23,    -1};
+  int row7[] = {-1};
+  int row8[] = {-1};
+  int row9[] =  {-1};
+  int row10[] = {-1};
+  int row11[] = {      4,5,6,7,8,9,10,          14,15,16,17,18,19,20,             -1};
+  int row12[] = {-1};
+  int row13[] = {      4,5,6,7,8,9,10,          14,15,16,17,18,19,20,             -1};
+  int row14[] = {-1};
+  int row15[] = {-1};
+  int row16[] = {-1};
+  int row17[] = {-1};
+  int row18[] = {-1};
+  int row19[] = {   1,2,                                                22,23,   -1};
+  int row20[] = {      3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,      -1};
+  
+  int * rows[] = {row1, row2, row3, row4, row5, row6, row7, row8, row9,
+                  row10, row11, row12, row13, row14, row15, row16, row17,
+                  row18, row19, row20};
+ 
+
+  for( i = 0,
+    startingX = ((wallX*width)/-2)+(width/2)+centerX,
+    startingY = ((wallY*width)/2)-width+centerY;
+    i < 20; i++, startingY -= width)
+  {
+   
+    addWallChange(false, startingX, startingY, startingZ, facingNorth, rows[i]);
+  }
+
+    
+  int column1[] = {                               -1};
+  int column2[] = {                               -1};
+  int column3[] = {     2,                     22,-1};
+  int column4[] = {     2,                     22,-1};
+  int column5[] = {                               -1};
+  int column6[] = {      2,    10,   13,          21,       -1};
+  int column7[] = {      2,    10,   13, 21,       -1};
+  int column8[] = {      2,    10,   13, 21,       -1};
+  int column9[] = {      2,    10,   13, 21,       -1};
+  int column10[] = {     2,    10,   13,    21,       -1};
+  int column11[] = {     2,              21,       -1};
+  int column12[] = {     2,              21,       -1};
+  int column13[] = {     2,    10,    13,   21,       -1};
+  int column14[] = {     2,    10,    13,   21,       -1};
+  int column15[] = {     2,    10,    13,   21,       -1};
+  int column16[] = {     2,    10,    13,   21,       -1};
+  int column17[] = {     2,    10,    13, 21,       -1};
+  int column18[] = {     2,    10,    13, 21,       -1};
+  int column19[] = {                 -1};
+  int column20[] = {     2,                    22,-1};
+  int column21[] = {     2,                    22,-1};
+  int column22[] = {-1};
+  int column23[] = {-1};
+  int column24[] = {-1};
+
+  
+  int * columns[] = {column1, column2, column3, column4, column5, column6,
+                     column7, column8, column9, column10, column11, column12,
+                     column13, column14, column15, column16, column17, column18, column19, column20, column21, column22, column23, column24 };
+  for( i = 0,
+    startingX = ((wallX*width)/-2)+width+centerX,
+    startingY = ((wallY*width)/2)-(width*1.5f)+centerY;
+    i < 24; i++, startingY -= width)
+  {
+    addWallChange(false, startingX, startingY, startingZ, facingEast, columns[i]);
+  }
+  
 }
 
 void Map::initWallsOne(void)
@@ -165,7 +265,7 @@ void Map::initWallsOne(void)
     i < 20; i++, startingY -= width)
   {
    
-    addWallDirection(startingX, startingY, startingZ, facingNorth, rows[i]);
+    addWallChange(true, startingX, startingY, startingZ, facingNorth, rows[i]);
   }
 
     
@@ -203,7 +303,7 @@ void Map::initWallsOne(void)
     startingY = ((wallY*width)/2)-(width*1.5f)+centerY;
     i < 24; i++, startingY -= width)
   {
-    addWallDirection(startingX, startingY, startingZ, facingEast, columns[i]);
+    addWallChange( true, startingX, startingY, startingZ, facingEast, columns[i]);
   }
   
 }
@@ -371,6 +471,42 @@ void Map::addWallDirection(float startingX, float startingY, float startingZ, v3
   {
     if(values[j] == x){
       Wall* wall = new Wall(width, depth, height, v3_t(startingX,startingY, startingZ), dir, this);
+      std::cout << "(" << startingX << "," << startingY << "," << startingZ << ")" << std::endl;
+
+      this->entities.push_back(wall);
+      j++;
+    }
+
+    x++;
+    startingX += width;
+  }
+}
+
+/*
+ * Add walls from left to right. Assumes array ends with -1
+ */
+void Map::addWallChange(bool start, float startingX, float startingY, float startingZ, v3_t dir, int values[])
+{
+  unsigned int width = ConfigManager::wallWidth();
+  unsigned int height = ConfigManager::wallHeight(); 
+  unsigned int depth = ConfigManager::wallDepth();
+  int x = 0;
+  int j = 0;
+  while(values[j] != -1)
+  {
+    if(values[j] == x){
+       Wall* wall;
+     if(start) {
+      wall = new Wall(width, depth, height, v3_t(startingX,startingY, startingZ), dir, this);
+      wall->setWallChangeTime(15000.f);
+      wall->addNewCenter(v3_t(startingX,startingY, startingZ - 20));
+     } else {
+       wall = new Wall(width, depth, height, v3_t(startingX,startingY, startingZ - 20), dir, this);
+       wall->setWallChangeTime(15000.f);
+       wall->addNewCenter(v3_t(startingX,startingY, startingZ ));
+     }
+      std::cout << "(" << startingX << "," << startingY << "," << startingZ << ")" << std::endl;
+
       this->entities.push_back(wall);
       j++;
     }
@@ -415,7 +551,7 @@ std::vector<Entity *> Map::getEntity() {
 
  void Map::destroyProjectile(Projectile * proj)
  {
-   if(proj->getOwner() == nullptr) //has already been removed
+   if(proj == nullptr || proj->getOwner() == nullptr) //has already been removed
      return;
 
    if(proj->getOwner()->chargedProjectile == proj )

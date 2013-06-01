@@ -52,6 +52,9 @@ private:
   Quadtree q;
   void initWalls(void);
   void initWallsOne(void);
+  void initWallsTwo(void);
   void initPowerUps(void);
   void addWallDirection(float startingX, float startingY, float startingZ, v3_t dir, int values[]);
+  
+  void addWallChange(bool start, float startingX, float startingY, float startingZ, v3_t dir, int values[]);
 };

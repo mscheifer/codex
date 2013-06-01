@@ -114,6 +114,8 @@ void Projectile::handleCollisions() {
     case PLAYER:
       if(e == owner)
         break;
+      else
+        map->destroyProjectile(this);
     case WALL:
       if(!charging)
         map->destroyProjectile(this);

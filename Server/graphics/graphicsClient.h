@@ -21,7 +21,7 @@ class graphicsClient {
     GLenum     glewStatus;
     input      userInput;
     //scene data
-    light light1;
+    light lights;
     displaySet display;
 
     staticDrawer entities;

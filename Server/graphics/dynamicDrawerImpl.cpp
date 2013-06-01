@@ -56,7 +56,7 @@ const std::string gx::dynamicDrawerImpl::shaderID = "dynamic";
 const std::string gx::dynamicDrawerImpl::vertShader =
   readFile("shaders/animated.vert");
 const std::string gx::dynamicDrawerImpl::fragShader =
-  readFile("shaders/animated.frag");
+  readFile("shaders/default.frag");
 
 gx::dynamicDrawerImpl::entityClass::entityClass(graphicsEntity drawData,
                                                 varSigs_t vars)

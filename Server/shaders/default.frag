@@ -3,32 +3,37 @@ in float interpNormDiff;
 in vec3  interpNormal;
 in vec4  interpPosition; //position of frag in eye space
 
-in vec3  light1Dir; //direction of light in world space
+const uint maxLights = 10u; //must be the same as defined in lights.h
+
+in vec3  lightDir[maxLights]; //direction of light in world space
 
 out vec4 outputF;
 
 uniform sampler2D diffuseTex;
 
 const float outlineThickness = 0.2f;
- 
+
 void main() {
   //because the position is in eye space, it's the same as the view direction
   vec3 viewDirection = normalize(-vec3(interpPosition));
   vec3 normal = normalize(interpNormal);
 
-  float light1Dist = length(light1Dir);
+  vec4 lightVal = vec4(0,0,0,0);
+  for(uint i = 0u; i < numLights; i++) {
+    float lightDist = length(lightDir[i]);
 
-  float att = 1.0 / (constantAttenuation + linearAttenuation * light1Dist +
-                     quadraticAttenuation * light1Dist * light1Dist);
-  
-  vec4 color = vec4(0,1,0.4,1) * texture(diffuseTex, interpDiffuseCoord) +
-               att * light1color * max(dot(normal,normalize(light1Dir)),0);
+	float att = 1.0 / (constantAttenuation + linearAttenuation * lightDist +
+                     quadraticAttenuation * lightDist * lightDist);
 
-  if(dot(viewDirection, normal) < outlineThickness) {
-    color = vec4(0.0,0.0,0.0,1.0);
+	lightVal += att * lightColor * max(dot(normal,normalize(lightDir[i])),0);
   }
-  if(interpNormDiff > 3) {
+  vec4 color = texture(diffuseTex, interpDiffuseCoord) * lightVal;
+
+  //if(dot(viewDirection, normal) < outlineThickness) {
+  //  color = vec4(0.0,0.0,0.0,1.0);
+  //}
+  //if(interpNormDiff > 3) {
     //color = vec4(0.0,0.0,0.0,1.0); //disable until better models
-  }
+  //}
   outputF = color;
 }

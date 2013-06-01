@@ -409,9 +409,6 @@
     <None Include="masterConfig.txt">
       <Filter>Resource Files</Filter>
     </None>
-    <None Include="shaders\animated.frag">
-      <Filter>Resource Files\graphics</Filter>
-    </None>
     <None Include="shaders\animated.vert">
       <Filter>Resource Files\graphics</Filter>
     </None>
