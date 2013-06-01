@@ -25,7 +25,7 @@ void main() {
 
   vec4 lightVal = att * lightColor * max(dot(normal,normalize(lightDir[0])),0);
   
-  vec4 color = texture(diffuseTex, interpDiffuseCoord) * lightVal;
+  vec4 color = vec4(0,0.4,1,1) * texture(diffuseTex, interpDiffuseCoord) + lightVal;
 
   if(dot(viewDirection, normal) < outlineThickness) {
     color = vec4(0.0,0.0,0.0,1.0);
