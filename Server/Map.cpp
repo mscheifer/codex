@@ -551,7 +551,7 @@ std::vector<Entity *> Map::getEntity() {
 
  void Map::destroyProjectile(Projectile * proj)
  {
-   if(proj->getOwner() == nullptr) //has already been removed
+   if(proj == nullptr || proj->getOwner() == nullptr) //has already been removed
      return;
 
    if(proj->getOwner()->chargedProjectile == proj )

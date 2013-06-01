@@ -12,6 +12,10 @@ namespace gx {
 class shaderProgram;
 
 namespace uniform {
+typedef std::pair<GLenum,unsigned int> type_t;
+typedef std::string name_t;
+typedef std::pair<name_t,type_t> sigs_t;
+
 class block {
     static GLuint nextUniformBindPoint;
     static GLuint freshBindPoint();
@@ -24,7 +28,7 @@ class block {
     std::map<std::string,unsigned int>  storageNums;
     void writeBuffer(GLintptr,GLsizeiptr,const GLvoid*) const;
   public:
-    block(std::string,std::map<std::string,GLenum>);
+    block(std::string,std::map<name_t,type_t>);
     block(const block&);// = delete;
     block& operator=(const block&);// = delete;
     block(block&&);// = delete;

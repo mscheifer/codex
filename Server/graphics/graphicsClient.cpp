@@ -14,18 +14,20 @@ gx::graphicsEntity loadModel(const std::string& ModelPath,gx::Mesh::length_t hei
 }
 
 std::vector<gx::graphicsEntity> staticModels() {
-  auto modelJack   = loadModel("models/Badguy_texture.dae",PowerUp::powerUpHeight);
+  auto modelBadGuy = loadModel("models/badguy.dae",PowerUp::powerUpHeight);
+  auto modelJack   = loadModel("models/weird_orange_thing.dae",Player::playerDepth);
   auto modelWall   = loadModel("models/stone_wall.dae",10);
   auto modelPlayer = loadModel("models/Test_Run.dae",Player::playerDepth);
   auto cubes = gx::loadCube();
   auto ground = gx::loadGround(0.0f, "models/concrete.jpg");
   std::vector<gx::graphicsEntity> entitiesData;
-  entitiesData.push_back(std::move(ground));
-  entitiesData.push_back(std::move(modelPlayer));
-  entitiesData.push_back(std::move(modelWall));
-  entitiesData.insert(entitiesData.end(),std::make_move_iterator(cubes.begin()),
-                                         std::make_move_iterator(cubes.end()));
-  entitiesData.push_back(std::move(modelJack));
+  entitiesData.push_back(std::move(ground));  //ground
+  entitiesData.push_back(std::move(modelPlayer)); //player
+  entitiesData.push_back(std::move(modelWall));  //wall
+  entitiesData.push_back(std::move(modelJack)); //projectile
+  entitiesData.push_back(std::move(modelBadGuy)); //weapon
+  entitiesData.insert(entitiesData.end(),std::make_move_iterator(cubes.begin()), //powerup
+                                         std::make_move_iterator(cubes.end())); 
   return entitiesData;
 }
 
@@ -68,18 +70,14 @@ void gx::graphicsClient::reshape(unsigned int w, unsigned int h) {
   const elem_t ratio     = static_cast<elem_t>(w) / static_cast<elem_t>(h);
   const elem_t nearPlane = 1.0f;
   const elem_t farPlane  = 3000.0f;
-  // RenderWindow automatically sets the viewport on a resize
-  // in Linux but not in windows so we have to do it here
-  glViewport(0, 0, w, h);
-  debugout << "glViewport(0, 0, " << w << ", " << h << ");" << endl;
-  this->window.setView(sf::View(sf::FloatRect(0,0,w,h)));
+  this->window.setView(sf::View(sf::FloatRect(0,0,static_cast<float>(w),static_cast<float>(h))));
   this->display.setProjection(fov,ratio,nearPlane,farPlane);
 }
 
 std::vector<gx::uniform::block*> gx::graphicsClient::uniforms() {
   std::vector<gx::uniform::block*> ret;
   ret.push_back(&this->display.storage());
-  ret.push_back(&this->light1.storage());
+  ret.push_back(&this->lights.storage());
   return ret;
 }
 // create the window
@@ -87,11 +85,11 @@ std::vector<gx::uniform::block*> gx::graphicsClient::uniforms() {
 //last so we have an opengl context for destructors
 gx::graphicsClient::graphicsClient():
     window(sf::VideoMode(defaultWindowWidth, defaultWindowHeight),
-           "DrChao", sf::Style::Default),
+      "DrChao", sf::Style::Default, sf::ContextSettings(24,0,4)),
     //glew needs to be called here, after window, before anything else
     glewStatus(initGlew()),
     userInput(),
-    light1(gx::vector4f(1,1,1),0.5,0.5,0.0f),
+    lights(gx::vector4f(1,1,1),0.1,0.1,0.0f),
     display(),
     entities(staticModels(),uniforms()),
     animatedDrawer(dynamicModels(),uniforms()),
@@ -103,6 +101,13 @@ gx::graphicsClient::graphicsClient():
                      playerStartDirection.z),
     playerPosition(0.0, 0.0, 0.0),//change to the result of init packet
     fpsClock(), fpsFrames(0) {
+  sf::ContextSettings settings = this->window.getSettings();
+
+  debugout << "depth bits:" << settings.depthBits << endl;
+  debugout << "stencil bits:" << settings.stencilBits << endl;
+  debugout << "antialiasing level:" << settings.antialiasingLevel << endl;
+  debugout << "version:" << settings.majorVersion << "." << settings.minorVersion << endl;
+
   this->window.setVerticalSyncEnabled(false);
   this->window.setMouseCursorVisible(true);
   if(!this->window.setActive()) {
@@ -118,8 +123,6 @@ gx::graphicsClient::graphicsClient():
   glEnable(GL_CULL_FACE);
   glCullFace(GL_BACK);
   glFrontFace(GL_CCW);
-
-  light1.updatePosition(gx::vector4f( 0, 5, 10));
 
   this->setCamera();
   this->userInput.setUpMouse();
@@ -156,7 +159,7 @@ void gx::graphicsClient::draw() {
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
   gx::debugout << "glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT";
   gx::debugout << "| GL_STENCIL_BUFFER_BIT);" << gx::endl;
-  
+
   // draw...
   entities.draw();
   animatedDrawer.draw();
@@ -195,13 +198,20 @@ void gx::graphicsClient::updatePosition(vector4f pos) {
   this->setCamera();
 }
 int aniFrame = 0;
-void gx::graphicsClient::updateEntities(std::vector<Entity*> data) {
+void gx::graphicsClient::updateEntities(std::vector<Entity*> data) {  
+  lights.clear();
+
   this->entities.reset();
   this->animatedDrawer.reset();
 
   for(auto entityP = data.begin(); entityP != data.end(); ++entityP) {
     const auto& entity = **entityP;
     const auto& type = entity.getType();
+    //lights
+    if(type == PROJECTILE) {
+      lights.addLight(vector4f(0,0,0) + entity.getPosition());
+    }
+
     if(type == POWER_UP) { //TODO: change back to type == PLAYER
       dynamicDrawer::instanceData inst;
       inst. pos = entity.getPosition();

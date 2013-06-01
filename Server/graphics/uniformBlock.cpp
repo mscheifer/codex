@@ -15,7 +15,7 @@ GLuint gx::uniform::block::freshBindPoint() {
 }
 
 gx::uniform::block::block(std::string n,
-                          std::map<std::string,GLenum> varNameType)
+                          std::map<name_t,type_t> varNameType)
   : blockName(n), bindingIndex(freshBindPoint()), bufferName(), offsets(),
     basicStorage(), storageNums() {
   if(gx::sharedUniformsOn) {
@@ -36,7 +36,7 @@ gx::uniform::block::block(std::string n,
     debugout << ", " << this->bufferName << ");" << endl;
   } else {
     for(auto varp = varNameType.begin(); varp != varNameType.end(); varp++) {
-      basicStorage.push_back(make_uniform(varp->first,varp->second));
+      basicStorage.push_back(make_uniform(varp->first,varp->second.first,varp->second.second));
       storageNums.insert(std::make_pair(varp->first,basicStorage.size() - 1));
     }
   }

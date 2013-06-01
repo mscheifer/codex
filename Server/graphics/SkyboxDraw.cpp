@@ -60,5 +60,5 @@ void gx::SkyboxDraw::draw() {
 	program.use();
 	this->VPStorage.frameUpdate(&(this->program));
 	texture.Bind(GL_TEXTURE0 + textureUnit);
-	drawData.draw();
+	drawData.drawOnce();
 }

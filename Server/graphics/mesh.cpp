@@ -17,10 +17,10 @@ void printNodes(aiNode* node, int level) {
   }
   gx::debugout << node->mName.C_Str() << " meshes ";
   gx::debugout << node->mNumMeshes << gx::endl;
-  //for(int i = 0; i < level; i++) {
-  //  gx::debugout << "  ";
-  //}
-  //gx::debugout << gx::toMat(node->mTransformation) << gx::endl;
+  for(int i = 0; i < level; i++) {
+    gx::debugout << "  ";
+  }
+  gx::debugout << gx::toMat(node->mTransformation) << gx::endl;
   for(unsigned int i = 0; i < node->mNumChildren; i++) {
     printNodes(node->mChildren[i],level+1);
   }
