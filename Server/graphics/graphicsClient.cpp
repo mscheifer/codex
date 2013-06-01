@@ -89,7 +89,7 @@ gx::graphicsClient::graphicsClient():
     //glew needs to be called here, after window, before anything else
     glewStatus(initGlew()),
     userInput(),
-    lights(gx::vector4f(1,1,1),0.5,0.1,0.0f),
+    lights(gx::vector4f(1,1,1),0.1,0.1,0.0f),
     display(),
     entities(staticModels(),uniforms()),
     animatedDrawer(dynamicModels(),uniforms()),
@@ -123,9 +123,6 @@ gx::graphicsClient::graphicsClient():
   glEnable(GL_CULL_FACE);
   glCullFace(GL_BACK);
   glFrontFace(GL_CCW);
-
-  lights.addLight(gx::vector4f( 0, 5, 10));
-  lights.addLight(gx::vector4f( 25, 5, 10));
 
   this->setCamera();
   this->userInput.setUpMouse();
@@ -162,7 +159,7 @@ void gx::graphicsClient::draw() {
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
   gx::debugout << "glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT";
   gx::debugout << "| GL_STENCIL_BUFFER_BIT);" << gx::endl;
-  
+
   // draw...
   entities.draw();
   animatedDrawer.draw();
@@ -201,13 +198,20 @@ void gx::graphicsClient::updatePosition(vector4f pos) {
   this->setCamera();
 }
 int aniFrame = 0;
-void gx::graphicsClient::updateEntities(std::vector<Entity*> data) {
+void gx::graphicsClient::updateEntities(std::vector<Entity*> data) {  
+  lights.clear();
+
   this->entities.reset();
   this->animatedDrawer.reset();
 
   for(auto entityP = data.begin(); entityP != data.end(); ++entityP) {
     const auto& entity = **entityP;
     const auto& type = entity.getType();
+    //lights
+    if(type == PROJECTILE) {
+      lights.addLight(vector4f(0,0,0) + entity.getPosition());
+    }
+
     if(type == POWER_UP) { //TODO: change back to type == PLAYER
       dynamicDrawer::instanceData inst;
       inst. pos = entity.getPosition();

@@ -16,7 +16,7 @@ out vec3  lightDir[maxLights]; //direction of light in eye space
  
 void main() {
   for(uint i = 0u; i < numLights; i++) {
-	lightDir[i] = vec3(viewMatrix * (lightPosition[0] - modelToWorld * position));
+	lightDir[i] = vec3(viewMatrix * (lightPosition[i] - modelToWorld * position));
   }
 
   //the correct way

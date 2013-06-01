@@ -18,20 +18,22 @@ void main() {
   vec3 viewDirection = normalize(-vec3(interpPosition));
   vec3 normal = normalize(interpNormal);
 
-  float lightDist = length(lightDir[0]);
+  vec4 lightVal = vec4(0,0,0,0);
+  for(uint i = 0u; i < numLights; i++) {
+    float lightDist = length(lightDir[i]);
 
-  float att = 1.0 / (constantAttenuation + linearAttenuation * lightDist +
+	float att = 1.0 / (constantAttenuation + linearAttenuation * lightDist +
                      quadraticAttenuation * lightDist * lightDist);
 
-  vec4 lightVal = att * lightColor * max(dot(normal,normalize(lightDir[0])),0);
-  
-  vec4 color = vec4(0,0.4,1,1) * texture(diffuseTex, interpDiffuseCoord) + lightVal;
+	lightVal += att * lightColor * max(dot(normal,normalize(lightDir[i])),0);
+  }
+  vec4 color = texture(diffuseTex, interpDiffuseCoord) * lightVal;
 
-  if(dot(viewDirection, normal) < outlineThickness) {
-    color = vec4(0.0,0.0,0.0,1.0);
-  }
-  if(interpNormDiff > 3) {
+  //if(dot(viewDirection, normal) < outlineThickness) {
+  //  color = vec4(0.0,0.0,0.0,1.0);
+  //}
+  //if(interpNormDiff > 3) {
     //color = vec4(0.0,0.0,0.0,1.0); //disable until better models
-  }
+  //}
   outputF = color;
 }

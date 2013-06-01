@@ -34,7 +34,7 @@ void main() {
   if(boneIDs[3] != -1) boneTransform += boneTransformations[boneIDs[3]] * boneWeights[3];
 
   for(uint i = 0u; i < numLights; i++) {
-	lightDir[i] = vec3(viewMatrix * (lightPosition[0] - modelToWorld * position));
+	lightDir[i] = vec3(viewMatrix * (lightPosition[i] - modelToWorld * position));
   }
 
   //the correct way
