@@ -70,6 +70,10 @@ void gx::graphicsClient::reshape(unsigned int w, unsigned int h) {
   const elem_t ratio     = static_cast<elem_t>(w) / static_cast<elem_t>(h);
   const elem_t nearPlane = 1.0f;
   const elem_t farPlane  = 3000.0f;
+  // RenderWindow automatically sets the viewport on a resize
+  // in Linux but not in windows so we have to do it here
+  glViewport(0, 0, w, h);
+  debugout << "glViewport(0, 0, " << w << ", " << h << ");" << endl;
   this->window.setView(sf::View(sf::FloatRect(0,0,static_cast<float>(w),static_cast<float>(h))));
   this->display.setProjection(fov,ratio,nearPlane,farPlane);
 }
