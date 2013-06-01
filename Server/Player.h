@@ -50,7 +50,6 @@ public:
   void updateBoundsSoft();
   void clearEvents();
   bool collidePlayer(const std::pair<Entity*,BoundingObj::vec3_t>& p);
-  
   bool moveTowardDirection(move_t degree, bool jump); //handle movement input WADS jump
   void handleAction(ClientGameTimeAction a);
   
@@ -137,7 +136,5 @@ private:
 
     //helper functions for collisions
   bool collideWall(const std::pair<Entity*,BoundingObj::vec3_t>& p);
-  bool collideProjectile(const std::pair<Entity*,BoundingObj::vec3_t>& p);
   bool collidePowerUp(const std::pair<Entity*,BoundingObj::vec3_t>& p);
- 
 };

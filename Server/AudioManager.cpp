@@ -117,8 +117,11 @@ void AudioManager::playSoundHelper( sf::Sound* s, v3_t pos, sf::SoundBuffer* sbu
 }
 
 void AudioManager::updateMusic( int numPlayers, bool minotaur ){
-  return;
   if(!useSound)
+    return;
+
+  static bool useMusic = StringToNumber<int>(ConfigManager::configMap["music"]) == 1;
+  if(!useMusic)
     return;
 
   //less intensive way

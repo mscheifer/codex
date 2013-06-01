@@ -61,9 +61,10 @@ void Game::updateAndResolveCollision() {
 	for( unsigned int i = 0; i < currentEntities.size(); i++ ) {
 		currentEntities[i]->handleCollisions();
 	}
-
+  currentProjectile = world.getLiveProjectTile();
   for( unsigned int i = 0; i < currentProjectile.size(); i++ ) {
-		currentProjectile[i]->handleCollisions();
+    if(currentProjectile[i]->live) //TODO (but not really) fix this to use live
+		  currentProjectile[i]->handleCollisions();
 	}
 }
 

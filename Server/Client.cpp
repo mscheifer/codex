@@ -31,7 +31,7 @@ void NetworkClient::receiveMessages() {
 
         int proximity = 2;
         bool minotaur = s.players[this->id].isMinotaur();
-        static float maxProx = 10.f;
+        static float maxProx = 30.f;
         
         for(auto playerP = s.players.begin(); playerP != s.players.end(); playerP++) {
           if(playerP->player_id != this->id) {
