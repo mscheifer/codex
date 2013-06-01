@@ -17,7 +17,7 @@ out float interpNormDiff;
 out vec3  interpNormal;
 out vec4  interpPosition; //position of vert / frag in eye space
 
-out vec3  light1Dir; //direction of light in eye space
+out vec3  lightDir; //direction of light in eye space
  
 void main() {
   //fix this logic for no bone possibility
@@ -31,7 +31,7 @@ void main() {
   if(boneIDs[2] != -1) boneTransform += boneTransformations[boneIDs[2]] * boneWeights[2];
   if(boneIDs[3] != -1) boneTransform += boneTransformations[boneIDs[3]] * boneWeights[3];
 
-  light1Dir = vec3(viewMatrix * (light1position - modelToWorld * position));
+  lightDir = vec3(viewMatrix * (lightPosition[0] - modelToWorld * position));
 
   //the correct way
   //mat3 normalMatrix = inverse(transpose(mat3(viewMatrix * modelToWorld)));

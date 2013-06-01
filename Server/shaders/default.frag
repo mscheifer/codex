@@ -3,7 +3,9 @@ in float interpNormDiff;
 in vec3  interpNormal;
 in vec4  interpPosition; //position of frag in eye space
 
-in vec3  light1Dir; //direction of light in world space
+const uint maxLights = 10; //must be the same as defined in lights.h
+
+in vec3  lightDir[maxLights]; //direction of light in world space
 
 out vec4 outputF;
 
@@ -16,12 +18,12 @@ void main() {
   vec3 viewDirection = normalize(-vec3(interpPosition));
   vec3 normal = normalize(interpNormal);
 
-  float light1Dist = length(light1Dir);
+  float lightDist = length(lightDir[0]);
 
-  float att = 1.0 / (constantAttenuation + linearAttenuation * light1Dist +
-                     quadraticAttenuation * light1Dist * light1Dist);
+  float att = 1.0 / (constantAttenuation + linearAttenuation * lightDist +
+                     quadraticAttenuation * lightDist * lightDist);
 
-  vec4 lightVal = att * light1color * max(dot(normal,normalize(light1Dir)),0);
+  vec4 lightVal = att * lightColor * max(dot(normal,normalize(lightDir)),0);
   
   vec4 color = texture(diffuseTex, interpDiffuseCoord) * lightVal;
 

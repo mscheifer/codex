@@ -5,18 +5,22 @@
 
 namespace gx {
 
-class light {
+struct light {
+    static const unsigned int maxLights = 10;
+  private:
     struct lightData {
-      std::array<GLfloat,4> position;
+      std::array<GLfloat,4 * maxLights> position;
       std::array<GLfloat,4> color;
+      GLuint                numLights;
       GLfloat               constantAttenuation;
       GLfloat               linearAttenuation;
       GLfloat               quadraticAttenuation;
     } data;
     uniform::block unif;
   public:
+    void clear();
     light(vector4f,GLfloat,GLfloat,GLfloat);
-    void updatePosition(vector4f);
+    void addLight(vector4f);
     uniform::block& storage();
 };
 

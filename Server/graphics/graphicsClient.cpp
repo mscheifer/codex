@@ -68,18 +68,14 @@ void gx::graphicsClient::reshape(unsigned int w, unsigned int h) {
   const elem_t ratio     = static_cast<elem_t>(w) / static_cast<elem_t>(h);
   const elem_t nearPlane = 1.0f;
   const elem_t farPlane  = 3000.0f;
-  // RenderWindow automatically sets the viewport on a resize
-  // in Linux but not in windows so we have to do it here
-  glViewport(0, 0, w, h);
-  debugout << "glViewport(0, 0, " << w << ", " << h << ");" << endl;
-  this->window.setView(sf::View(sf::FloatRect(0,0,w,h)));
+  this->window.setView(sf::View(sf::FloatRect(0,0,static_cast<float>(w),static_cast<float>(h))));
   this->display.setProjection(fov,ratio,nearPlane,farPlane);
 }
 
 std::vector<gx::uniform::block*> gx::graphicsClient::uniforms() {
   std::vector<gx::uniform::block*> ret;
   ret.push_back(&this->display.storage());
-  ret.push_back(&this->light1.storage());
+  ret.push_back(&this->lights.storage());
   return ret;
 }
 // create the window
@@ -91,7 +87,7 @@ gx::graphicsClient::graphicsClient():
     //glew needs to be called here, after window, before anything else
     glewStatus(initGlew()),
     userInput(),
-    light1(gx::vector4f(1,1,1),0.5,0.5,0.0f),
+    lights(gx::vector4f(1,1,1),0.5,0.5,0.0f),
     display(),
     entities(staticModels(),uniforms()),
     animatedDrawer(dynamicModels(),uniforms()),
@@ -126,7 +122,7 @@ gx::graphicsClient::graphicsClient():
   glCullFace(GL_BACK);
   glFrontFace(GL_CCW);
 
-  light1.updatePosition(gx::vector4f( 0, 5, 10));
+  lights.addLight(gx::vector4f( 0, 5, 10));
 
   this->setCamera();
   this->userInput.setUpMouse();

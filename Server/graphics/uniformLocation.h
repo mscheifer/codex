@@ -39,6 +39,16 @@ class loc<GL_FLOAT> {
     void write(const GLfloat*,GLsizei) const;
     void write(const GLfloat) const;
 };
+template <>
+class loc<GL_UNSIGNED_INT> {
+    GLint   location;
+    GLsizei size;
+  public:
+    loc(const shaderProgram&,std::string,GLsizei);
+    void write(const GLuint*) const;
+    void write(const GLuint*,GLsizei) const;
+    void write(const GLuint) const;
+};
 
 typedef loc<GL_FLOAT_MAT4> mat4floc;
 } //end namespace uniform
