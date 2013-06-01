@@ -23,7 +23,9 @@ private:
     vao(vao&&);
     vao& operator=(vao&&);
     ~vao();
-    void draw() const;
+    void drawOnce() const;
+    void drawHead() const;
+    void drawInstance() const;
 };
 
 } //end namespace gx
