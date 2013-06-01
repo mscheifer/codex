@@ -66,6 +66,7 @@ class graphicsClient {
     bool gameStart() const;
     void gameEnd();
     void updateScores(std::vector<int> & pwins, std::vector<int> & pkills);
+    void updateLobby(std::vector<std::pair<int,bool>> & playerStatus );
 
     bool closed()        { return this->userInput.getStop(); }
 };

@@ -32,7 +32,7 @@ enum Opcode {INIT,JOINID,STARTGAME, CHAT, T1, T2, CGTA, SGTR, ERROR};
 
 enum Entity_Type {UNDEFINED=0, PLAYER, WALL, PROJECTILE, WEAPON, POWER_UP};
 
-//used to determine names
+//used to determine names 
 enum WeaponType{UNK=0, FIRE, ICE, THUNDER, FIST, BASIC};
 
 const std::string WeaponNames[] = {
@@ -144,7 +144,7 @@ struct BuffData{
 const BuffData BuffInfo[] = {
   //                  code lvl time  |  move       |mpRegen      | hpRegen | str           | atkCD      |  chargeCD  |defense
   BuffData(NONE,        0,  1, 100,    false, 0,    false, 0,     false, 0,    false, 0,    false, 0,    false, 0,     false, 0),
-  BuffData(MOVEBOOST,   1,  1, 120000, true, 2,     false, 0,     false, 0,    false, 0,    false, 0,    false, 0,     false, 0),
+  BuffData(MOVEBOOST,   1,  1, 4000, true, 2,     false, 0,     false, 0,    false, 0,    false, 0,    false, 0,     false, 0),
   BuffData(MANABOOST,   2,  1, 120000, false, 0,    true, 5,      false, 0,    false, 0,    false, 0,    false, 0,     false, 0),
   BuffData(HEALTHBOOST, 3,  1, 120000, false, 0,    false, 0,     true, 2,     false, 0,    false, 0,    false, 0,     false, 0),
   BuffData(STRBOOST,    4,  1, 120000, false, 0,    false, 0,     false, 0,    true, 2,     false, 0,    false, 0,     false, 0),

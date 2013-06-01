@@ -275,3 +275,7 @@ void gx::graphicsClient::updateScores(std::vector<int> & pwins,
                                       std::vector<int> & pkills) {
   Score.updateScores(pwins,pkills);
 }
+
+void gx::graphicsClient::updateLobby(std::vector<std::pair<int,bool>> & playerStatus ) {
+  Lobby.updateLobby(playerStatus);
+}

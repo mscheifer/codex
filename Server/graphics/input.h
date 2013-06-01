@@ -20,6 +20,7 @@ class input {
     bool   fired2;
     bool   pickup;
     bool   switchWeapon;
+    bool   clicked;
     unsigned int width;
     unsigned int height;
     bool resized;
@@ -35,6 +36,7 @@ class input {
     bool        pickUp();
     bool       switchW();
     bool         drawS();
+    bool  mouseClicked() const;
     move_t  movePlayer();
     vector3f turnPlayer();
 
