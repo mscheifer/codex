@@ -14,18 +14,20 @@ gx::graphicsEntity loadModel(const std::string& ModelPath,gx::Mesh::length_t hei
 }
 
 std::vector<gx::graphicsEntity> staticModels() {
-  auto modelJack   = loadModel("models/Badguy_texture.dae",PowerUp::powerUpHeight);
+  auto modelBadGuy = loadModel("models/badguy.dae",PowerUp::powerUpHeight);
+  auto modelJack   = loadModel("models/weird_orange_thing.dae",Player::playerDepth);
   auto modelWall   = loadModel("models/stone_wall.dae",10);
   auto modelPlayer = loadModel("models/Test_Run.dae",Player::playerDepth);
   auto cubes = gx::loadCube();
   auto ground = gx::loadGround(0.0f, "models/concrete.jpg");
   std::vector<gx::graphicsEntity> entitiesData;
-  entitiesData.push_back(std::move(ground));
-  entitiesData.push_back(std::move(modelPlayer));
-  entitiesData.push_back(std::move(modelWall));
-  entitiesData.insert(entitiesData.end(),std::make_move_iterator(cubes.begin()),
-                                         std::make_move_iterator(cubes.end()));
-  entitiesData.push_back(std::move(modelJack));
+  entitiesData.push_back(std::move(ground));  //ground
+  entitiesData.push_back(std::move(modelPlayer)); //player
+  entitiesData.push_back(std::move(modelWall));  //wall
+  entitiesData.push_back(std::move(modelJack)); //projectile
+  entitiesData.push_back(std::move(modelBadGuy)); //weapon
+  entitiesData.insert(entitiesData.end(),std::make_move_iterator(cubes.begin()), //powerup
+                                         std::make_move_iterator(cubes.end())); 
   return entitiesData;
 }
 
@@ -87,7 +89,7 @@ gx::graphicsClient::graphicsClient():
     //glew needs to be called here, after window, before anything else
     glewStatus(initGlew()),
     userInput(),
-    lights(gx::vector4f(1,1,1),0.5,0.5,0.0f),
+    lights(gx::vector4f(1,1,1),0.5,0.1,0.0f),
     display(),
     entities(staticModels(),uniforms()),
     animatedDrawer(dynamicModels(),uniforms()),
@@ -123,6 +125,7 @@ gx::graphicsClient::graphicsClient():
   glFrontFace(GL_CCW);
 
   lights.addLight(gx::vector4f( 0, 5, 10));
+  lights.addLight(gx::vector4f( 25, 5, 10));
 
   this->setCamera();
   this->userInput.setUpMouse();

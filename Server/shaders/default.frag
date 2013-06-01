@@ -3,7 +3,7 @@ in float interpNormDiff;
 in vec3  interpNormal;
 in vec4  interpPosition; //position of frag in eye space
 
-const uint maxLights = 10; //must be the same as defined in lights.h
+const uint maxLights = 10u; //must be the same as defined in lights.h
 
 in vec3  lightDir[maxLights]; //direction of light in world space
 
@@ -12,7 +12,7 @@ out vec4 outputF;
 uniform sampler2D diffuseTex;
 
 const float outlineThickness = 0.2f;
- 
+
 void main() {
   //because the position is in eye space, it's the same as the view direction
   vec3 viewDirection = normalize(-vec3(interpPosition));
@@ -23,7 +23,7 @@ void main() {
   float att = 1.0 / (constantAttenuation + linearAttenuation * lightDist +
                      quadraticAttenuation * lightDist * lightDist);
 
-  vec4 lightVal = att * lightColor * max(dot(normal,normalize(lightDir)),0);
+  vec4 lightVal = att * lightColor * max(dot(normal,normalize(lightDir[0])),0);
   
   vec4 color = texture(diffuseTex, interpDiffuseCoord) * lightVal;
 
