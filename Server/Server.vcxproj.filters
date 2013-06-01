@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <Filter Include="Source Files">
@@ -213,7 +213,7 @@
     <ClCompile Include="particleSystem.cpp">
       <Filter>Source Files\graphics</Filter>
     </ClCompile>
-    <ClCompile Include="buffer.cpp">
+    <ClCompile Include="graphics\buffer.cpp">
       <Filter>Source Files\graphics</Filter>
     </ClCompile>
   </ItemGroup>
@@ -401,7 +401,10 @@
     <ClInclude Include="graphics\HUD.h">
       <Filter>Header Files\graphics</Filter>
     </ClInclude>
-    <ClInclude Include="buffer.h">
+    <ClInclude Include="graphics\buffer.h">
+      <Filter>Header Files\graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="graphics\particleSystem.h">
       <Filter>Header Files\graphics</Filter>
     </ClInclude>
   </ItemGroup>
