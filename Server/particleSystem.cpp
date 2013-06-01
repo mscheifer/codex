@@ -1,3 +1,4 @@
+/*
 const unsigned int maxParticles = ;
 
 struct particle {
@@ -28,3 +29,4 @@ void drawInstance() {
   }
 
 }
+*/

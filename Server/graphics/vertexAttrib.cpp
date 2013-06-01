@@ -7,7 +7,7 @@ gx::vertexAttrib::vertexAttrib(vertexAttrib&& other) noexcept
 
 
 void gx::vertexAttrib::bindBuffer() const {
-  this->buff.bind(GL_ARRAY_BUFFER);
+  this->buff.bind();
 }
 
 std::string gx::vertexAttrib::name() const {

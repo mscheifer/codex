@@ -4,18 +4,20 @@
 #include "loadCustom.h"
 #include "Entity.h"
 #include "PowerUp.h"
+#include "Projectile.h"
 
 namespace {
 const unsigned int defaultWindowWidth  = 800;
 const unsigned int defaultWindowHeight = 600;
 
-gx::graphicsEntity loadModel(const std::string& ModelPath,gx::Mesh::length_t height) {
-  return gx::Mesh(ModelPath,height).entityData;
+gx::graphicsEntity loadModel(const std::string& ModelPath,
+    gx::Mesh::length_t height, bool flipUVs = false) {
+  return gx::Mesh(ModelPath,height,flipUVs).entityData;
 }
 
 std::vector<gx::graphicsEntity> staticModels() {
-  auto modelBadGuy = loadModel("models/badguy.dae",PowerUp::powerUpHeight);
-  auto modelJack   = loadModel("models/weird_orange_thing.dae",Player::playerDepth);
+  auto modelBadGuy = loadModel("models/badguy.dae",PowerUp::powerUpHeight,true);
+  auto modelJack   = loadModel("models/weird_orange_thing.dae",Projectile::projDepth);
   auto modelWall   = loadModel("models/stone_wall.dae",10);
   auto modelPlayer = loadModel("models/Test_Run.dae",Player::playerDepth);
   auto cubes = gx::loadCube();
@@ -33,7 +35,6 @@ std::vector<gx::graphicsEntity> staticModels() {
 
 std::vector<gx::graphicsEntity> dynamicModels() {
   // MODEL LOADING
-  //auto modelTest   = loadModel("models/boblampclean.md5anim");
   auto modelPlayer = loadModel("models/cat.dae",10);
 
     //setup drawing data
@@ -216,7 +217,7 @@ void gx::graphicsClient::updateEntities(std::vector<Entity*> data) {
       lights.addLight(vector4f(0,0,0) + entity.getPosition());
     }
 
-    if(type == POWER_UP) { //TODO: change back to type == PLAYER
+    if(type == PLAYER) { //TODO: change back to type == PLAYER
       dynamicDrawer::instanceData inst;
       inst. pos = entity.getPosition();
       inst.dirY = entity.getDirection();

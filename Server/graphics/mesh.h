@@ -17,7 +17,7 @@ class Mesh {
     static const unsigned int maxBonesPerVertex = 4;
     typedef float length_t;
 
-    Mesh(const std::string& Filename,length_t);
+    Mesh(const std::string& Filename,length_t, bool flipUVs = false);
     Mesh(const Mesh&);// = delete; //don't copy
     Mesh& operator=(const Mesh&);// = delete; //don't assign
     Mesh(Mesh&&);// = delete //define later
@@ -64,7 +64,7 @@ class Mesh {
 
     bool                   m_Good();
   private:
-    static const aiScene*        LoadFile(Assimp::Importer&,const std::string&);
+    static const aiScene*  LoadFile(Assimp::Importer&,const std::string&,bool);
     static std::vector<MeshEntry> InitFromScene(idMap_t&, const aiScene*);
     static std::vector<material>  InitMaterials(const aiScene*,
                                                 const std::string& Filename);
