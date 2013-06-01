@@ -33,6 +33,7 @@ class vector4 {
     void subtract(const vector3<T>&);
     void subtract(const vector4<T>&,const vector3<T>&);
     void dehomogenize();
+    std::array<elem_t,4> oglVec4() const;
 
     typename std::array<T,4>::iterator begin();
     typename std::array<T,4>::const_iterator begin() const;

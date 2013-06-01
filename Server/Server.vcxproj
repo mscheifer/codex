@@ -236,7 +236,6 @@
     <None Include="graphics\Images\weaponIce.png" />
     <None Include="graphics\Images\weaponThu.png" />
     <None Include="masterConfig.txt" />
-    <None Include="shaders\animated.frag" />
     <None Include="shaders\animated.vert" />
     <None Include="shaders\default.frag" />
     <None Include="shaders\default.vert" />
