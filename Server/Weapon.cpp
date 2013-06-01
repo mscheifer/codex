@@ -65,7 +65,7 @@ Projectile* Weapon::attackMelee(v3_t dir , v3_t pos, Player* owner)
 
   pj->setCharing(false); 
   pj->setMagicType(basicAttack, true); //TODO this is not a good way to do it
-  pj->setRender(true);
+  pj->setRender(false);
 
   Melee_Cool_Down_Counter.restart();
   return pj;

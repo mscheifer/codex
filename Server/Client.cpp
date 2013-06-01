@@ -164,15 +164,25 @@ void NetworkClient::doClient() {
   while(true)
   {
     gameRestart = false;
-    bool joined = false;
+    bool joined = false;  //joined is used for receiving game start from server
+    bool clickedButton = false;
     while(true) {
       cycle++;
 	    sf::Packet initPacket;
-      this->gxClient.drawLobby();
       if (joined && this->gxClient.gameStart()) {
+        //received start game and clicked
         initPacket << static_cast<sf::Uint32>(INIT); 
-        netRecv.sendMessage(initPacket);
-        joined = false; //only send packet once
+        if (!clickedButton) { 
+          initPacket << true;
+          netRecv.sendMessage(initPacket);
+//          std::cout<<"joining"<<std::endl;
+          clickedButton = true;
+        } else {
+          initPacket << false;
+          netRecv.sendMessage(initPacket);
+          clickedButton = false;
+//          std::cout<<"quiting"<<std::endl;
+        }
       }
       initPacket.clear();
       if (netRecv.receiveMessage(initPacket)) {
@@ -189,10 +199,17 @@ void NetworkClient::doClient() {
            //TODO: init the position
           break;
         } else if(packetType==STARTGAME){
+          joined = true; 
           std::cout<<"CLIENT RECEIVED START GAME"<<std::endl;
-          joined = true;
+          StartGamePacket playerSt;
+          playerSt.deserialize(initPacket);
+          gxClient.updateLobby(playerSt.playerStatus);
+          for (auto itr= playerSt.playerStatus.begin(); itr != playerSt.playerStatus.end(); itr++ ) {
+            std::cout<<"Player "<< (*itr).first<< " is "<<(*itr).second<<std::endl;
+          }
         }
 	    }
+      this->gxClient.drawLobby();
     }
     this->gxClient.disableCursor();
     std::cout << "game started" << std::endl;

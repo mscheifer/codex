@@ -64,10 +64,11 @@ void NetworkServer::doServer() {
   }
 
   game.initScores();
-  StartGamePacket startTheGame;
+  StartGamePacket startTheGame(server.size());
+  this->server.sendPacketToAll<StartGamePacket>(startTheGame);
+  std::cout<<"i sent start"<<std::endl;
   while(true)
   {
-    this->server.sendPacketToAll<StartGamePacket>(startTheGame);
     //Wait for players to start
     unsigned int connectionCount = 0;
     while (connectionCount < ConfigManager::numPlayers()) {
@@ -77,7 +78,15 @@ void NetworkServer::doServer() {
           sf::Uint32 packetType;
           packet >> packetType;
           if (packetType == INIT) {
-              connectionCount++;
+              bool status;
+              packet >> status;
+              if (status) {
+                connectionCount++;
+              } else { 
+                connectionCount--;
+              }
+              startTheGame.changeStatus(i);
+              this->server.sendPacketToAll<StartGamePacket>(startTheGame);
           }
         }
       }

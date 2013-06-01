@@ -106,16 +106,13 @@ void Projectile::updateBoundsSoft(){
 }
 
 void Projectile::handleCollisions() {
-  std::cout<<"IN PROJECTILE COLLISIONS " << id <<std::endl;
   std::vector<std::pair<Entity*,BoundingObj::vec3_t>> entities =  detectCollision();
   bool destroy = false;
-  if(this->owner == nullptr)
-    std::cout<<"HAVE NO OWNER"<<std::endl;
+
   for( auto it = entities.begin(); it != entities.end(); it++ ){
     Entity * e = it->first; 
     switch(e->getType()){
     case PLAYER:
-        std::cout << "HIt Player" << std::endl;
       if(e == owner)
         break;
       else{
@@ -123,12 +120,10 @@ void Projectile::handleCollisions() {
         destroy = true;
       }
     case WALL:
-        std::cout << "HIt Wall" << std::endl;
       if(!charging)
         destroy = true;
       break;
     case PROJECTILE:
-        std::cout << "HIt Proj" << std::endl;
       Projectile * proj = (Projectile*) e;
       //if(charging && sameTeam(proj) ){ //this one is charging
       //  setMagicType(combine(proj->getMagicType(), magicType));
@@ -137,7 +132,6 @@ void Projectile::handleCollisions() {
       //} 
       //else
       if ( proj->charging && sameTeam(proj) ){ //the other one is charging
-        std::cout << "charging and same team" << std::endl;
         proj->setMagicType(combine(proj->getMagicType(), magicType));
         proj->combined = true;
         destroy = true;
@@ -152,9 +146,7 @@ void Projectile::handleCollisions() {
     }
   }
 
-  if(destroy)
-  {
-    std::cout<<"destroything projectile id:"<<id<<std::endl;
+  if(destroy){
     map->destroyProjectile(this);
   }
 }

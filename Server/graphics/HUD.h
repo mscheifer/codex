@@ -61,6 +61,8 @@ private :
   std::vector<sf::Sprite*> weaponSprites;
   std::vector<bool> renderBuff;
   std::vector<int> remainTime;
+  sf::Text currentSpell;
+  sf::Text nextSpell;
   void buffHelper(std::string & path);
   void buffLHelper(std::string & path);
   void weaponHelper(std::string & path);
