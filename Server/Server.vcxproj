@@ -211,6 +211,8 @@
     <None Include="graphics\Images\powerAttackL.png" />
     <None Include="graphics\Images\powerCharge.png" />
     <None Include="graphics\Images\powerChargeL.png" />
+    <None Include="graphics\Images\powerDef.png" />
+    <None Include="graphics\Images\powerDefL.png" />
     <None Include="graphics\Images\powerHealth.png" />
     <None Include="graphics\Images\powerHealthL.png" />
     <None Include="graphics\Images\powerMana.png" />
@@ -230,6 +232,8 @@
     <None Include="graphics\Images\statTL.png" />
     <None Include="graphics\Images\stunG.png" />
     <None Include="graphics\Images\stunGL.png" />
+    <None Include="graphics\Images\stunI.png" />
+    <None Include="graphics\Images\stunIL.png" />
     <None Include="graphics\Images\stunT.png" />
     <None Include="graphics\Images\stunTL.png" />
     <None Include="graphics\Images\weaponBasic.png" />

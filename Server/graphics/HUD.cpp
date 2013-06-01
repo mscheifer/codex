@@ -263,8 +263,8 @@ void gx::HUD::initializeSprites() {
    buffHelper(std::string("graphics/Images/statT.png"));
    buffHelper(std::string("graphics/Images/statG.png"));
    buffHelper(std::string("graphics/Images/stunG.png"));
-   buffLHelper(std::string("graphics/Images/stunI.png"));
-   buffLHelper(std::string("graphics/Images/powerDef.png"));
+   buffHelper(std::string("graphics/Images/stunI.png"));
+   buffHelper(std::string("graphics/Images/powerDef.png"));
    
    //buffL
    buffLTextures.push_back(new sf::Texture());

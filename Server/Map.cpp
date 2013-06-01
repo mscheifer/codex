@@ -42,9 +42,9 @@ void Map::initPowerUps() {
   superPower->setRespownTime(5000);
   this->entities.push_back(superPower);
 
-  //PowerUp* p2 = new PowerUp(v3_t(-10,-10,0), this, HEALTHBOOST);
-  //p2->setRespownTime(5000);
-  //this->entities.push_back(p2);
+  PowerUp* p2 = new PowerUp(v3_t(-10,-10,0), this, DEFENSEBOOST);
+  p2->setRespownTime(5000);
+  this->entities.push_back(p2);
 
   //PowerUp* p3 = new PowerUp(v3_t(-10,10,0), this, MANABOOST);
   //p3->setRespownTime(5000);
