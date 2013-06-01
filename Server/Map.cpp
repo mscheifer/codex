@@ -166,10 +166,10 @@ void Map::initWallsOne(void)
   //w3->setDirection(v3_t(0,1,0));
   //entities.push_back(w3);
 
-  spawnPositions.push_back(v3_t(4,-4,1));
-  spawnPositions.push_back(v3_t(4,4,1));
-  spawnPositions.push_back(v3_t(-4,-4,1));
-  spawnPositions.push_back(v3_t(-4,4,1));
+  spawnPositions.push_back(v3_t(10,-10,1));
+  spawnPositions.push_back(v3_t(10,10,1));
+  spawnPositions.push_back(v3_t(-10,-10,1));
+  spawnPositions.push_back(v3_t(-10,10,1));
 
   v3_t facingEast(1,0,0);
   v3_t facingNorth(0,1,0);
