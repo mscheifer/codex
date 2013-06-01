@@ -41,6 +41,10 @@ public:
   //setup the logfile
   static void setupLog(std::string str = "");
 
+  //graphics
+  static float fullscreen(){ return StringToBool(ConfigManager::configMap["fullscreen"]); }
+  static unsigned int antiAliasingLevel(){ return StringToNumber<unsigned int>(ConfigManager::configMap["anti-alias"]); }
+
   /// Player/Minotaur Related///
   static float playerMovescale();
   static float playerAirMovescale(){ return StringToNumber<float>(ConfigManager::configMap["airMovescale"]); }

@@ -5,6 +5,8 @@ graphicsDebug=false
 serverTicksPerSec=30
 gameRestart=0
 soundScaling=10
+fullscreen=false
+anti-alias=0
 
 // Physics
 gravity=-40
