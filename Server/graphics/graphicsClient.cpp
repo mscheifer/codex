@@ -15,28 +15,34 @@ gx::graphicsEntity loadModel(const std::string& ModelPath,
   return gx::Mesh(ModelPath,height,flipUVs).entityData;
 }
 
+std::string configModelName(std::string s) {
+  return "models/" + ConfigManager::configMap["model-" + s];
+}
+
 std::vector<gx::graphicsEntity> staticModels() {
-  auto modelBadGuy = loadModel("models/badguy.dae",PowerUp::powerUpHeight,true);
-  auto modelJack   = loadModel("models/weird_orange_thing.dae",Projectile::projDepth);
-  //auto modelHaduken= loadModel("models/haduken.dae",Projectile::projDepth);
-  auto modelWall   = loadModel("models/stone_wall.dae",10);
-  auto modelPlayer = loadModel("models/Test_Run.dae",Player::playerDepth);
+  auto modelBadGuy     = loadModel(configModelName("badguy"),Player::playerDepth,true);
+  auto modelWeapon     = loadModel(configModelName("weapon"),5,true);
+  auto modelProjectile = loadModel(configModelName("projectile"),Projectile::projDepth);
+  auto modelPowerUp    = loadModel(configModelName("powerup"),PowerUp::powerUpDepth);
+  auto modelWall       = loadModel(configModelName("wall"),10);
+  auto modelPlayer     = loadModel(configModelName("goodguy"),Player::playerDepth,true);
   auto cubes = gx::loadCube();
   auto ground = gx::loadGround(0.0f, "models/concrete.jpg");
   std::vector<gx::graphicsEntity> entitiesData;
   entitiesData.push_back(std::move(ground));  //ground
   entitiesData.push_back(std::move(modelPlayer)); //player
   entitiesData.push_back(std::move(modelWall));  //wall
-  entitiesData.push_back(std::move(modelJack)); //projectile
-  entitiesData.push_back(std::move(modelBadGuy)); //weapon
-  entitiesData.insert(entitiesData.end(),std::make_move_iterator(cubes.begin()), //powerup
+  entitiesData.push_back(std::move(modelProjectile)); //projectile
+  entitiesData.push_back(std::move(modelWeapon)); //weapon
+  entitiesData.push_back(std::move(modelPowerUp)); //powerup
+  entitiesData.insert(entitiesData.end(),std::make_move_iterator(cubes.begin()),
                                          std::make_move_iterator(cubes.end())); 
   return entitiesData;
 }
 
 std::vector<gx::graphicsEntity> dynamicModels() {
   // MODEL LOADING
-  auto modelPlayer = loadModel("models/cat.dae",10);
+  auto modelPlayer = loadModel(configModelName("badguy"),Player::playerDepth,true);
 
     //setup drawing data
   std::vector<gx::graphicsEntity> entitiesData;

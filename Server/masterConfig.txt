@@ -10,6 +10,14 @@ soundScaling=10
 fullscreen=false
 anti-alias=0
 
+//models
+model-badguy=cat.dae
+model-goodguy=goodguy.dae
+model-wall=stone_wall.dae
+model-projectile=weird_orange_thing.dae
+model-powerup=cat.dae
+model-weapon=badguy.dae
+
 // Physics
 gravity=-40
 
