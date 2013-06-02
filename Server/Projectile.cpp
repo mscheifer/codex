@@ -228,7 +228,7 @@ MAGIC_POWER Projectile::combine( MAGIC_POWER m1, MAGIC_POWER m2 ){
 }
 
 bool Projectile::sameTeam( Projectile * p ){
-  if(p == nullptr || p->getOwner() == nullptr || this == nullptr || this->getOwner() == nullptr)
+  if(p == nullptr || p->getOwner() == nullptr || this == nullptr || this->getOwner() == nullptr || p->getOwner() != this->getOwner())
     return false;
   return p->getOwner()->isMinotaur() == getOwner()->isMinotaur();
 }
