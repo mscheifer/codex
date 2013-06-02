@@ -209,6 +209,7 @@ void NetworkClient::doClient() {
   clock.restart();
   gameRestart = true;
   while(this->running) {
+    if(gameStart) { 
     /*sf::Clock profilerTime;
     float processInputTime;
     float receiveMessagesTime;
@@ -227,6 +228,7 @@ void NetworkClient::doClient() {
       if (!this->running) 
         break;
       if (gameRestart) {
+        gameStart = false;
         clock.restart();
         continue;
       }
@@ -249,5 +251,6 @@ void NetworkClient::doClient() {
       gxClient.updateHUDTimer(remaining);
       this->gxClient.draw();
     }
+    } else { receiveMessages();}
   }
 }
