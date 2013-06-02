@@ -42,11 +42,11 @@ void gx::lobby::updateLobby(std::vector<std::pair<int,bool>> & playerStatus ) {
   if (!joined) {
     welcome.setString("Please click join to start.");
     joined = true;
-    for (int i=0;i<playerStatus.size();i++) {
+    for (unsigned int i=0;i<playerStatus.size();i++) {
       players.push_back(sf::Sprite());
     }
   }
-  for (int i=0;i<playerStatus.size();i++) {
+  for (unsigned int i=0;i<playerStatus.size();i++) {
     if (status[i]) {
       players[i].setTexture(readyTexture);
     } else {
@@ -77,7 +77,7 @@ void gx::lobby::drawLobby(sf::RenderWindow & window) {
   window.draw(buttonRect);
   window.draw(button);
   if (joined ) {
-    for (int i=0;i<players.size();i++) {
+    for (unsigned int i=0;i<players.size();i++) {
       players[i].setPosition(window.getSize().x/players.size()/2-50+i*(window.getSize().x/players.size()), 300); 
       window.draw(players[i]);
     }
