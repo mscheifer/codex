@@ -35,6 +35,7 @@ void AudioManager::loadSounds(){
     musicProx[i] = proxStruct(-1,false);
   }
 
+  static int i = 0;
   loadSound("sc1", "sounds/scream_1.wav");
   
   loadSound("c1", "sounds/charge1.wav");
@@ -51,13 +52,13 @@ void AudioManager::loadSounds(){
   loadSound("weapFire", "sounds/weaponFire.wav");
   loadSound("weapThu", "sounds/weaponThu.wav");
   loadSound("weapFist", "sounds/weaponFist.wav");
-  
+
   loadSound("shootFir", "sounds/shootFir.wav");
   loadSound("shootIce", "sounds/shootIce.wav");
   loadSound("shootThu", "sounds/shootThu.wav");
   loadSound("shootBasic", "sounds/shootBasic.wav");
   loadSound("shootGrav", "sounds/shootGrav.wav");
-
+        
   loadSound("collectPowerup", "sounds/collectPowerup.wav");
 
   //track 0
@@ -78,7 +79,6 @@ void AudioManager::loadSounds(){
 void AudioManager::playSound(std::string key, std::string id, v3_t pos){
   if(!useSound) 
     return;
-
   std::map<std::string,sf::SoundBuffer*>::iterator it;
   it = soundBuffers.find(key);
 
@@ -222,14 +222,12 @@ void AudioManager::loadTrack(int i){
 void AudioManager::playMusic(std::string musicN, int index){
   if(!useSound) 
     return;
-
   if (music[index].openFromFile(musics[musicN])){
     music[index].play();
   }
 }
 
 void AudioManager::playPlayerSound(std::string sound, int player_id , std::string name, v3_t pos) {
-
   int copy_id = player_id;
   std::map<std::string,sf::SoundBuffer*>::iterator it = soundBuffers.find(sound);
 
@@ -281,8 +279,6 @@ void AudioManager::processPlayerSound(Player& o){
 
   if(o.shotProjectile) {  
     std::stringstream ss;
-  
-    static int id = 0;
 
     ss << id << "fplayer:" << o.player_id;
     playSound(getShootSound(o.chargeMagicType), ss.str(), o.getPosition());
@@ -402,8 +398,8 @@ std::string AudioManager::getTrack( int track, int prox, bool minotaur ){
 
 int AudioManager::getClosestProx( int prox ){
   ++prox;
-  if(prox > 3)
-    prox = 2;
+  if(prox > 2)
+    prox = 0;
   return prox;
 }
 
