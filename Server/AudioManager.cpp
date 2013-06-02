@@ -2,7 +2,7 @@
 #include "ConfigManager.h"
 #include "util.h"
 
-std::array<sf::Music,6> AudioManager::music;
+std::array<sf::Music,2> AudioManager::music;
 std::array<proxStruct,2> AudioManager::musicProx;
 std::map<std::string, sf::SoundBuffer*> AudioManager::soundBuffers;
 std::map<std::string, std::string> AudioManager::musics;
@@ -115,7 +115,7 @@ void AudioManager::playSoundHelper( sf::Sound* s, v3_t pos, sf::SoundBuffer* sbu
 
 }
 
-void AudioManager::updateMusic( int numPlayers, bool minotaur ){
+void AudioManager::updateMusic(const int numPlayers,const bool minotaur ){
   if(!useSound)
     return;
 
@@ -157,7 +157,7 @@ void AudioManager::updateMusic( int numPlayers, bool minotaur ){
     music[currentlyPlayingMusic].setVolume(100);
     music[notCurrentlyPlaying()].setVolume(0);
     musicProx[currentlyPlayingMusic] = proxStruct(numPlayers,minotaur);
-    musicProx[currentlyPlayingMusic] = proxStruct(getClosestProx(numPlayers),minotaur);
+    musicProx[notCurrentlyPlaying()] = proxStruct(getClosestProx(numPlayers),minotaur);
   }
 
   //get the one taht is playing the right prox song
