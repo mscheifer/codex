@@ -6,9 +6,9 @@
 #include "WeaponFire.h"
 #include "Wall.h"
 
-const float Player::playerWidth = 1.0f;
-const float Player::playerHeight = 1.0f;
-const float Player::playerDepth = 3.0f;
+const float Player::playerWidth = 3.0f;
+const float Player::playerHeight = 3.0f;
+const float Player::playerDepth = 7.0f;
 
 //these have to be functions because calling configManager stuff to initialize
 //globals is undefined behavior
@@ -73,7 +73,7 @@ void Player::init(v3_t pos, int assigned_id, Map * m)
   elapsedChargeTime = 0;
   totalChargeTime = -1;
 	map = m;
-	weapon[0] = new WeaponFire(position, this->map, ICE1);
+	weapon[0] = new WeaponFire(position, this->map, B1);
     //new WeaponFist(position, this->map); //has no bounds so it doesnt drop
   //weapon[1] = new WeaponFist(position, this->map);
 	weapon[1] = new WeaponFire(position, this->map, FIR1); //TODO make this basic
@@ -130,7 +130,7 @@ void Player::generateBounds(v3_t pos){
 
 bool Player::attackBy(Projectile *other)
 {
-	if(other)
+	if(other && other->getOwner() != this)
 	{
 		return damageBy(other);
 	}
@@ -140,7 +140,6 @@ bool Player::attackBy(Projectile *other)
 
 bool Player::damageBy(Projectile *deadly)
 {
-  
 	if (health==0) return true;
 
   attacked = true;
@@ -159,14 +158,18 @@ bool Player::damageBy(Projectile *deadly)
     charging = false;
   }
 
-  std::cout<<" i am attacked by"<< deadly->getOwner()->player_id<<std::endl;
   if(dead) {
     die();
     //This is a hack
-    map->kills[((Projectile *) deadly)->getOwner()->player_id]++;
-    std::cout<<"updating kills"<<std::endl;
-    std::cout<<map->kills[((Projectile *) deadly)->getOwner()->player_id]<<std::endl;
+    map->kills[deadly->getOwner()->player_id]++;
   }
+
+  std::vector<BUFF> debuffs = ProjInfo[deadly->getMagicType()].debuff;
+  for( auto d = debuffs.begin(); d != debuffs.end(); d++)
+    applyBuff(*d);
+
+  std::cout << health  << " HP left" << " for " << player_id << std::endl;
+
 	return true;
 }
 
@@ -197,8 +200,9 @@ bool Player::moveTowardDirection(move_t inputDir, bool jump)
     !(jumpCount == 0 && velocity.z < getGravity().z * ConfigManager::serverTickLengthSec() * 5)){
     //add jump velocity
     v3_t jumpDir = movementDirection;
-    jumpDir.z = 1;
-    jumpDir.scale(JUMPSPEED());
+    jumpDir.z = 0;
+    jumpDir.scale(AIRMOVESCALE());
+    jumpDir.z = JUMPSPEED();
     velocity = velocity - oldJumpVelocity;
     velocity += jumpDir;
     velocity.z = jumpDir.z; //reset z velocity (for double jumping)
@@ -219,8 +223,10 @@ bool Player::moveTowardDirection(move_t inputDir, bool jump)
 
   movementDirection.scale(getMovementMultiplier());
   movementDirection = correctMovement(movementDirection, true, getFeetOrigin());
-  
-  if(movementDirection.magnitude() > 1.0E-8 ){
+
+  //walking if not moving, jumps are 0, or free fall
+  if((std::abs(movementDirection.magnitude()) > 1.0E-8  && jumpCount == 0)){
+  //  || velocity.z >= getGravity().z * ConfigManager::serverTickLengthSec() * 5){
     walking = true;
   } else {
     walking = false;
@@ -354,7 +360,7 @@ void Player::fireProjectile() {
     v3_t v = direction;
     v.normalize();
     if(minotaur) {
-     chargedProjectile->fireMutiple(v,getStrengthMultiplier(),3);
+     chargedProjectile->fireMutiple(v,getStrengthMultiplier(),10);
     } else {
      chargedProjectile->fire(v,getStrengthMultiplier());
     }
@@ -403,9 +409,8 @@ void Player::attack( ClientGameTimeAction a) {
     meleeAttack = true;
     v3_t dir = direction;
     dir.normalize();
-    dir.scale(Projectile::meleeWidth);
+    dir.scale(Projectile::meleeWidth/2.f);
 	  currentWeapon->attackMelee(direction, position+dir, this);
-    
 	}
 
 	attacking = true; //todo wtf is this
@@ -457,22 +462,6 @@ void Player::handleCollisions(){
         //std::cout << "player" << std::endl;
         restart = collidePlayer(*it);
         break;
-      case PROJECTILE:{
-        //prevent dup collisions
-        auto oldColls = alreadyCollided.begin();
-        for( ; oldColls != alreadyCollided.end(); oldColls++ ){
-          if(*oldColls == e)
-            break;
-        }
-
-        if( oldColls == alreadyCollided.end() ){ //has not already collided
-          //std::cout << "proj" << std::endl;
-          restart = collideProjectile(*it);
-          alreadyCollided.push_back(e);
-        }
-
-        break;
-      }
       case WEAPON:
         pickup = (Weapon*)e;
         pickupWeaponType = ((Weapon*)e)->getWeaponType();
@@ -516,19 +505,6 @@ bool Player::collidePlayer(const std::pair<Entity*,BoundingObj::vec3_t>& p){
   return true;
 }
 
-bool Player::collideProjectile(const std::pair<Entity*,BoundingObj::vec3_t>& p){  
-  Projectile * proj = ((Projectile *)p.first);
-  if(proj->getOwner() != this) {
-    std::cout << "OW hit "<< player_id << std::endl;
-    attackBy(proj);
-    //apply debuffs
-    std::vector<BUFF> debuffs = ProjInfo[proj->getMagicType()].debuff;
-    for( auto d = debuffs.begin(); d != debuffs.end(); d++)
-      applyBuff(*d);
-    std::cout << health  << " HP left" << " for " << player_id << std::endl;
-  }
-  return false;
-}
 
 bool Player::collidePowerUp(const std::pair<Entity*,BoundingObj::vec3_t>& p){
   BUFF ptype = ((PowerUp*)p.first)->getBuffType();
@@ -698,6 +674,7 @@ float Player::getHealthRegenMultiplier() const{
     if( BuffInfo[buff->first].affectHealthRegen )
         healthMultiplier += BuffInfo[buff->first].healthBonus;
   }
+  //std::cout << "health Mult " << healthMultiplier << std::endl;
   return healthMultiplier;
 }
 

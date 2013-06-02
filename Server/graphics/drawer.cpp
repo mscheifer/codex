@@ -36,11 +36,12 @@ void gx::drawer<T>::draw() {
                                                                  ++entityCp) {
     const auto& entityC = *entityCp;
     entityC.mat.bind();
+    entityC.vertData.drawHead();
     for(auto instp = entityC.instances.begin();instp != entityC.instances.end();
                                                                       ++instp) {
       const auto& inst = *instp;
       this->impl.setUniforms(entityC,inst);
-      entityC.vertData.draw();
+      entityC.vertData.drawInstance();
     }
   }
 }

@@ -25,14 +25,37 @@ public:
 
 struct StartGamePacket //is this used?
 {
+  std::vector<std::pair<int,bool>> playerStatus;
   public:
   static const int packetType = STARTGAME;
-  StartGamePacket() {}
-
-  void serialize(sf::Packet& ) const{
+  // int can be string 
+  StartGamePacket() { }
+  void addPlayer() {
+    playerStatus.push_back(std::pair<int,bool>(playerStatus.size(),false));
+  }
+  void changeStatus(int i ) {
+    playerStatus[i].second = !playerStatus[i].second;
   }
 
-  void deserialize(sf::Packet& ){
+  void serialize(sf::Packet& packet ) const{
+    packet << playerStatus.size();
+    for (auto itr = playerStatus.begin(); itr != playerStatus.end(); itr++) {
+      packet << (*itr).first;
+      packet << (*itr).second;
+    }
+  }
+
+  void deserialize(sf::Packet& packet ){
+    int size;
+    packet >> size;
+    playerStatus.clear();
+    int id;
+    bool status;
+    for (int i = 0; i< size ; i++ ) {
+      packet >> id;
+      packet >> status;
+      playerStatus.push_back(std::pair<int,bool>(id,status));
+    }
   }
 };
 

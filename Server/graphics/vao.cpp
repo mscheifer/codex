@@ -65,9 +65,17 @@ gx::vao::~vao() {
   debugout << "glDeleteVertexArrays(1, &(this->id): " << this->id << ");\n";
 }
 
-void gx::vao::draw() const {
+void gx::vao::drawOnce() const {
+  this->drawHead();
+  this->drawInstance();
+}
+
+void gx::vao::drawHead() const {
   glBindVertexArray(this->id);
   debugout << "glBindVertexArray(" << this->id << ");" << endl;
+}
+
+void gx::vao::drawInstance() const {
   glDrawElements(GL_TRIANGLES, this->numIndices, GL_UNSIGNED_INT, nullptr);
   debugout << "glDrawElements(GL_TRIANGLES, " << this->numIndices;
   debugout << ", GL_UNSIGNED_INT, nullptr);" << endl;

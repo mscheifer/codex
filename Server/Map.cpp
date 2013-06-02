@@ -38,27 +38,25 @@ void Map::mapReset()
 }
 
 void Map::initPowerUps() {
-  //PowerUp* superPower = new PowerUp(v3_t(5,5,0), this, THU1DEBUFF);
-  //superPower->setRespownTime(5000);
-  //this->entities.push_back(superPower);
+  PowerUp* superPower = new PowerUp(v3_t(5,5,0), this, MANABOOST);
+  superPower->setRespownTime(5000);
+  this->entities.push_back(superPower);
 
-  //PowerUp* p2 = new PowerUp(v3_t(-10,-10,0), this, FIR1DEBUFF);
-  //p2->setRespownTime(5000);
-  //this->entities.push_back(p2);
+  PowerUp* p2 = new PowerUp(v3_t(-10,-10,0), this, HEALTHBOOST);
+  p2->setRespownTime(5000);
+  this->entities.push_back(p2);
 
-  //PowerUp* p3 = new PowerUp(v3_t(-10,10,0), this, ICE1DEBUFF);
+  //PowerUp* p3 = new PowerUp(v3_t(-10,10,0), this, MANABOOST);
   //p3->setRespownTime(5000);
   //this->entities.push_back(p3);
 
-  //PowerUp* p4 = new PowerUp(v3_t(10,-10,0), this, G2DEBUFF);
+  //PowerUp* p4 = new PowerUp(v3_t(10,-10,0), this, STRBOOST);
   //p4->setRespownTime(5000);
   //this->entities.push_back(p4);
 }
 
 void Map::initWallsTwo(void)
 {
- 
-
   v3_t facingEast(1,0,0);
   v3_t facingNorth(0,1,0);
   unsigned int width = ConfigManager::wallWidth();
@@ -317,7 +315,7 @@ void Map::initWalls(void)
   //w1->dropDown(v3_t(10,10,0));
   //w1->setDirection(v3_t(0,1,0));
   //entities.push_back(w1);
-  WeaponFire* w2 = new WeaponFire(v3_t(120,120,0), this, THU1);
+  WeaponFire* w2 = new WeaponFire(v3_t(120,120,0), this, ICE1);
   w2->dropDown(v3_t(10,-10,0));
   w2->setDirection(v3_t(0,1,0));
   entities.push_back(w2);
@@ -548,6 +546,7 @@ std::vector<Entity *> Map::getEntity() {
    liveProjectTile.push_back(ret);
    ret->reset();
    addToQtree(ret);
+   ret->live = true;
    return ret;
  }
 
@@ -556,14 +555,18 @@ std::vector<Entity *> Map::getEntity() {
    if(proj == nullptr || proj->getOwner() == nullptr) //has already been removed
      return;
 
+   if(proj->getOwner()->chargedProjectile == proj )
+     proj->getOwner()->chargedProjectile = nullptr;
 
-   proj->setOwner(NULL);
-   freeProjectiles->push(proj);
+   proj->setOwner(nullptr);
+   proj->live = false;
    // should probably use a hasmap soon
-   for(unsigned int i = 0; i < liveProjectTile.size(); i++) {
-	   if(liveProjectTile.at(i) == proj) {
-			liveProjectTile.erase(liveProjectTile.begin() + i);
-	   }
+   for(auto it = liveProjectTile.begin(); it != liveProjectTile.end(); it++) {
+     if(*it == proj){
+        liveProjectTile.erase(it);
+        freeProjectiles->push(proj);
+        break;
+     }
    }
    removeFromQtree(proj);
  }
@@ -587,7 +590,7 @@ void Map::separatePlayers(Player* player){
           if(res2.first){
             if(res2.second.magnitudesq() > res.second.magnitudesq()){
               e = (*boxes)->getEntity();
-              res = res;
+              res = res2;
             }
           }
         }

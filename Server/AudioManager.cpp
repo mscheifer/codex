@@ -2,8 +2,8 @@
 #include "ConfigManager.h"
 #include "util.h"
 
-std::array<sf::Music,2> AudioManager::music;
-std::array<int,2> AudioManager::musicProx;
+std::array<sf::Music,6> AudioManager::music;
+std::array<proxStruct,2> AudioManager::musicProx;
 std::map<std::string, sf::SoundBuffer*> AudioManager::soundBuffers;
 std::map<std::string, std::string> AudioManager::musics;
 std::map<std::string, sf::Sound> AudioManager::sounds;
@@ -32,22 +32,17 @@ void AudioManager::loadSounds(){
   trackNo = 0;
   currentlyPlayingMusic = 0;
   for(unsigned int i = 0; i < musicProx.size(); i++){
-    musicProx[i] = -1;
+    musicProx[i] = proxStruct(-1,false);
   }
 
   loadSound("sc1", "sounds/scream_1.wav");
   
   loadSound("c1", "sounds/charge1.wav");
   
-
   loadSound("w1", "sounds/foot_step_1.wav");
   loadSound("w2", "sounds/foot_step_2.wav");
 
-  loadSound("s1", "sounds/sound_1.wav");
-  loadSound("s2", "sounds/sound_2.wav");
-  loadSound("s3", "sounds/sound_3.wav");
-  loadSound("m1", "sounds/music_mono.wav");
-  loadSound("f1", "sounds/fire_1.wav");
+  //loadSound("f1", "sounds/fire_1.wav");
   loadSound("melee", "sounds/52458__audione__sword-01_.wav");
   loadSound("combine", "sounds/combine.wav");
 
@@ -65,21 +60,19 @@ void AudioManager::loadSounds(){
 
   loadSound("collectPowerup", "sounds/collectPowerup.wav");
 
-  //loadSound("s5", "sound_5.wav");
-
-  musics["m1"] = "sounds/music.wav";
-
   //track 0
-  musics["m1_1"] = "sounds/m1_1.wav";
-  musics["m1_2"] = "sounds/m1_2.wav";
-  musics["m1_3"] = "sounds/m1_3.wav";
-  musics["m1_4"] = "sounds/m1_4.aif";
+  musics["m1_0_t"] = "sounds/m1_0_t.wav";
+  musics["m1_1_t"] = "sounds/m1_1_t.wav";
+  musics["m1_2_t"] = "sounds/m1_2_t.wav";
+  musics["m1_0_f"] = "sounds/m1_0_f.wav";
+  musics["m1_1_f"] = "sounds/m1_1_f.wav";
+  musics["m1_2_f"] = "sounds/m1_2_f.wav";
 
-  //track 1
-  musics["m2_1"] = "sounds/m2_1.wav";
-  musics["m2_2"] = "sounds/m2_2.wav";
-  musics["m2_3"] = "sounds/m2_3.wav";
-  musics["m2_4"] = "sounds/m2_4.aif";
+  ////track 1
+  //musics["m2_1"] = "sounds/m2_1.wav";
+  //musics["m2_2"] = "sounds/m2_2.wav";
+  //musics["m2_3"] = "sounds/m2_3.wav";
+  //musics["m2_4"] = "sounds/m2_4.aif";
 }
 
 void AudioManager::playSound(std::string key, std::string id, v3_t pos){
@@ -123,39 +116,64 @@ void AudioManager::playSoundHelper( sf::Sound* s, v3_t pos, sf::SoundBuffer* sbu
 
 }
 
-void AudioManager::updateMusic( int numPlayers ){
-  return;
+void AudioManager::updateMusic( int numPlayers, bool minotaur ){
   if(!useSound)
     return;
 
-  //switch tracks
+  static bool useMusic = StringToNumber<int>(ConfigManager::configMap["music"]) == 1;
+  if(!useMusic)
+    return;
+
+  //less intensive way
+  //static int index = -1;
+
+  //if(music[0].getStatus() != sf::Sound::Playing){
+  //  loadTrack(trackNo);
+  //  index =  minotaur ? numPlayers : numPlayers + 3;
+  //  music[index].setVolume(100);
+  //}
+
+  //int temp = minotaur ? numPlayers : numPlayers + 3;
+  //if(temp != index){
+  //  index = temp;
+  //  
+  //  for( unsigned int i = 0; i < music.size(); i++ ){
+  //    if( i == index ){
+  //      music[i].setVolume(100);
+  //    } else {
+  //      music[i].setVolume(0);
+  //    }
+  //  }
+  //
+  //}
+
+  ////switch tracks too cpu intensive way of doing it
   if(music[0].getStatus() != sf::Sound::Playing){
-    ++trackNo;
-    trackNo = trackNo % maxTracks;
-    playMusic( getTrack(trackNo, numPlayers), currentlyPlayingMusic );
-    playMusic( getTrack(trackNo, getClosestProx(numPlayers)), notCurrentlyPlaying() );
+    //++trackNo; only 1 track
+    //trackNo = trackNo % maxTracks;
+    playMusic( getTrack(trackNo, numPlayers, minotaur), currentlyPlayingMusic );
+    playMusic( getTrack(trackNo, getClosestProx(numPlayers), minotaur), notCurrentlyPlaying() );
 
     //set the track to currently play
     music[currentlyPlayingMusic].setVolume(100);
     music[notCurrentlyPlaying()].setVolume(0);
-    musicProx[currentlyPlayingMusic] = numPlayers;
-    musicProx[currentlyPlayingMusic] = getClosestProx(numPlayers);
+    musicProx[currentlyPlayingMusic] = proxStruct(numPlayers,minotaur);
+    musicProx[currentlyPlayingMusic] = proxStruct(getClosestProx(numPlayers),minotaur);
   }
 
   //get the one taht is playing the right prox song
   int keepPlaying = -1;
   for( unsigned int i = 0; i < musicProx.size(); i++){
-    if (musicProx[i] == numPlayers)
+    if (musicProx[i].prox == numPlayers && musicProx[i].minotaur == minotaur)
       keepPlaying = i;
   }
 
   //switch the songs if needed
   if(keepPlaying == -1){
-    sf::Time offset = music[notCurrentlyPlaying()].getPlayingOffset();
-    playMusic( getTrack(trackNo, numPlayers), notCurrentlyPlaying() );
-    music[notCurrentlyPlaying()].setPlayingOffset(offset);
     music[notCurrentlyPlaying()].setVolume(0);
-    musicProx[notCurrentlyPlaying()] = numPlayers;
+    playMusic( getTrack(trackNo, numPlayers, minotaur), notCurrentlyPlaying() );
+    music[notCurrentlyPlaying()].setPlayingOffset(music[currentlyPlayingMusic].getPlayingOffset());
+    musicProx[notCurrentlyPlaying()] = proxStruct(numPlayers,minotaur);
     currentlyPlayingMusic = notCurrentlyPlaying();
   } else {
     currentlyPlayingMusic = keepPlaying;
@@ -166,7 +184,7 @@ void AudioManager::updateMusic( int numPlayers ){
   for( unsigned int i = 0; i < music.size(); i++ ){
     if( i == currentlyPlayingMusic ){ //FADE IN
       volume = music[i].getVolume();
-      volume += 5;
+      volume += 3;
       if(volume > 100)
         volume = 100;
       music[i].setVolume(volume);
@@ -183,16 +201,18 @@ void AudioManager::updateMusic( int numPlayers ){
 
 void AudioManager::loadTrack(int i){
   if( i == 0 ){
-    playMusic("m1_1", 0);
-    playMusic("m1_2", 1);
-    playMusic("m1_3", 2);
-    playMusic("m1_4", 3);
-  } else if( i == 1 ){
+    playMusic("m1_0_f", 0);
+    playMusic("m1_1_f", 1);
+    playMusic("m1_2_f", 2);
+    playMusic("m1_0_t", 3);
+    playMusic("m1_1_t", 4);
+    playMusic("m1_2_t", 5);
+  } /*else if( i == 1 ){
     playMusic("m2_1", 0);
     playMusic("m2_2", 1);
     playMusic("m2_3", 2);
     playMusic("m2_4", 3);
-  }
+  }*/
 
   for(auto itr = music.begin(); itr != music.end(); itr++) {
     itr->setVolume(0);
@@ -240,10 +260,10 @@ void AudioManager::processPlayerSound(Player& o){
     playSound("melee", "melee", o.getPosition());
 
   if(o.weaponCall){
-    //stopSound( "playerCall: " + o.player_id );
-    std::stringstream ss;
+    std::stringstream ss; 
     ss << "playerCall: " << o.player_id;
-    playPlayerSound(getWeaponCall(o.weaponCallType),o.player_id, "weaponCall", o.getPosition());
+    stopPlayerSound( o.player_id, ss.str() );
+    playPlayerSound(getWeaponCall(o.weaponCallType), o.player_id, ss.str(), o.getPosition());
   }
 
   if(o.collectPowerUp){
@@ -279,8 +299,8 @@ void AudioManager::processPlayerSound(Player& o){
     id++;
   }
 
-  if(o.walking && o.getPosition().z <1.6) {
 
+  if(o.walking) {
     if(walk_toggle[o.player_id]) {
      
       walk_toggle[o.player_id] = false;
@@ -356,29 +376,24 @@ std::string AudioManager::getShootSound(MAGIC_POWER m){
   }
 }
 
-std::string AudioManager::getTrack( int track, int prox ){
+std::string AudioManager::getTrack( int track, int prox, bool minotaur ){
   if( track == 0 ){
     switch(prox){
     case 0:
-      return "m1_1";
+      if(minotaur)
+        return "m1_0_t";
+      else
+        return "m1_0_f";
     case 1:
-      return "m1_2";
+      if(minotaur)
+        return "m1_1_t";
+      else
+        return "m1_1_f";
     case 2:
-      return "m1_3";
-    case 3:
-      return "m1_4";
-    }
-  }
-  else if( track == 1 ){
-    switch(prox){
-    case 0:
-      return "m2_1";
-    case 1:
-      return "m2_2";
-    case 2:
-      return "m2_3";
-    case 3:
-      return "m2_4";
+      if(minotaur)
+        return "m1_2_t";
+      else
+        return "m1_2_f";
     }
   }
   std::cout << "error, trying to load track that does not exist" << std::endl;

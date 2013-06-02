@@ -409,9 +409,6 @@
     <None Include="masterConfig.txt">
       <Filter>Resource Files</Filter>
     </None>
-    <None Include="shaders\animated.frag">
-      <Filter>Resource Files\graphics</Filter>
-    </None>
     <None Include="shaders\animated.vert">
       <Filter>Resource Files\graphics</Filter>
     </None>
@@ -533,6 +530,24 @@
       <Filter>Resource Files\graphics\Images</Filter>
     </None>
     <None Include="graphics\Images\chargebarempty.png">
+      <Filter>Resource Files\graphics\Images</Filter>
+    </None>
+    <None Include="graphics\Images\notready.png">
+      <Filter>Resource Files\graphics\Images</Filter>
+    </None>
+    <None Include="graphics\Images\ready.png">
+      <Filter>Resource Files\graphics\Images</Filter>
+    </None>
+    <None Include="graphics\Images\powerDef.png">
+      <Filter>Resource Files\graphics\Images</Filter>
+    </None>
+    <None Include="graphics\Images\powerDefL.png">
+      <Filter>Resource Files\graphics\Images</Filter>
+    </None>
+    <None Include="graphics\Images\stunI.png">
+      <Filter>Resource Files\graphics\Images</Filter>
+    </None>
+    <None Include="graphics\Images\stunIL.png">
       <Filter>Resource Files\graphics\Images</Filter>
     </None>
   </ItemGroup>

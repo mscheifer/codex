@@ -61,9 +61,10 @@ void Game::updateAndResolveCollision() {
 	for( unsigned int i = 0; i < currentEntities.size(); i++ ) {
 		currentEntities[i]->handleCollisions();
 	}
-
+  currentProjectile = world.getLiveProjectTile();
   for( unsigned int i = 0; i < currentProjectile.size(); i++ ) {
-		currentProjectile[i]->handleCollisions();
+    if(currentProjectile[i]->live) //TODO (but not really) fix this to use live
+		  currentProjectile[i]->handleCollisions();
 	}
 }
 
@@ -93,14 +94,14 @@ ServerGameTimeRespond Game::prepResponse() {
         minotaurLose = true;
      }
   }
-
-	if (minotaurLose) {
-	  s.state = CIVILIAN_WIN; 
-	}
-	if (deadPlayers == currentPlayers.size()-1 ) {
-		s.state = MANOTAUR_WIN;
-	}
-
+  if (currentPlayers.size() > 1) {
+    if (minotaurLose) {
+      s.state = CIVILIAN_WIN; 
+    }
+    if (deadPlayers == currentPlayers.size()-1 ) {
+      s.state = MANOTAUR_WIN;
+    }
+  }
 	for( unsigned int i = 0; i < currentPlayers.size(); i++ ) {
      /*for testing
      if (currentPlayers[i]->getHealth() > 0) {
