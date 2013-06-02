@@ -33,6 +33,7 @@ void NetworkServer::receiveMessages(int i) {
         connectionCount = (status) ? (connectionCount+1):(connectionCount-1);
         startTheGame.changeStatus(i);
         this->server.sendPacketToAll<StartGamePacket>(startTheGame);
+        break;
       default:
         std::cout << "Error: received bad packet: " << packetType<< std::endl;
         break;
