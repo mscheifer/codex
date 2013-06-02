@@ -12,11 +12,11 @@ soundScaling=10
 gravity=-40
 
 // Player configuration
-players=2
+players=1
 movescale=.6
 airMovescale=.5
 maxJump=2
-jumpSpeed=20.18
+jumpSpeed=20.17
 playerHpRegen=.01
 playerMpRegen=.035
 playerDef=5

@@ -114,6 +114,7 @@ void NetworkClient::receiveMessages() {
           break;
       default:
         std::cout<<"There is an error when receiving"<<std::endl;
+        std::cout << "of packet type " << packetType << std::endl;
         break;
     }
   }
