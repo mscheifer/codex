@@ -57,8 +57,7 @@ void NetworkServer::doServer() {
   //lobby code
   while (connectionCount < ConfigManager::numPlayers()) {
     // add a new client if can
-    if(server.size() < ConfigManager::numPlayers() && server.getNewClient())
-    {
+    if(server.size() < ConfigManager::numPlayers() && server.getNewClient()){
       IdPacket newPacket = IdPacket(game.join());
       //send id to to the player
       if(!server.sendPacket<IdPacket>(newPacket,server.size() - 1)) {
@@ -123,7 +122,6 @@ void NetworkServer::doServer() {
         sf::sleep( sf::milliseconds( static_cast<sf::Int32>(ConfigManager::serverTickLengthMilli()) -
                                    clock.getElapsedTime().asMilliseconds()) );
       } else {
-        std::cout<<"still waiting"<<std::endl;
         if (clock.getElapsedTime().asSeconds() > 5) {
           gameState = PLAYING; 
         }

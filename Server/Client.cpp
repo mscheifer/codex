@@ -27,7 +27,7 @@ void NetworkClient::receiveMessages() {
         if (s.state != PLAYING)
           gameRestart = true;
         pos = s.players[this->id].getPosition();
-
+        proximity = 2;
         minotaur = s.players[this->id].isMinotaur();
         
         this->gxClient.clearEntities();
@@ -228,7 +228,7 @@ void NetworkClient::doClient() {
         break;
       if (gameRestart) {
         clock.restart();
-        break;
+        continue;
       }
       this->gxClient.draw();
       //drawTime = profilerTime.getElapsedTime().asMilliseconds();
