@@ -53,6 +53,7 @@ private:
   void initWalls(void);
   void initWallsOne(void);
   void initWallsTwo(void);
+  void initStaticWalls(void);
   void initPowerUps(void);
   void addWallDirection(float startingX, float startingY, float startingZ, v3_t dir, int values[]);
   

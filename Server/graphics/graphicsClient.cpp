@@ -4,18 +4,21 @@
 #include "loadCustom.h"
 #include "Entity.h"
 #include "PowerUp.h"
+#include "Projectile.h"
 
 namespace {
 const unsigned int defaultWindowWidth  = 800;
 const unsigned int defaultWindowHeight = 600;
 
-gx::graphicsEntity loadModel(const std::string& ModelPath,gx::Mesh::length_t height) {
-  return gx::Mesh(ModelPath,height).entityData;
+gx::graphicsEntity loadModel(const std::string& ModelPath,
+    gx::Mesh::length_t height, bool flipUVs = false) {
+  return gx::Mesh(ModelPath,height,flipUVs).entityData;
 }
 
 std::vector<gx::graphicsEntity> staticModels() {
-  auto modelBadGuy = loadModel("models/badguy.dae",PowerUp::powerUpHeight);
-  auto modelJack   = loadModel("models/weird_orange_thing.dae",Player::playerDepth);
+  auto modelBadGuy = loadModel("models/badguy.dae",PowerUp::powerUpHeight,true);
+  auto modelJack   = loadModel("models/weird_orange_thing.dae",Projectile::projDepth);
+  //auto modelHaduken= loadModel("models/haduken.dae",Projectile::projDepth);
   auto modelWall   = loadModel("models/stone_wall.dae",10);
   auto modelPlayer = loadModel("models/Test_Run.dae",Player::playerDepth);
   auto cubes = gx::loadCube();
@@ -33,7 +36,6 @@ std::vector<gx::graphicsEntity> staticModels() {
 
 std::vector<gx::graphicsEntity> dynamicModels() {
   // MODEL LOADING
-  //auto modelTest   = loadModel("models/boblampclean.md5anim");
   auto modelPlayer = loadModel("models/cat.dae",10);
 
     //setup drawing data
@@ -70,6 +72,10 @@ void gx::graphicsClient::reshape(unsigned int w, unsigned int h) {
   const elem_t ratio     = static_cast<elem_t>(w) / static_cast<elem_t>(h);
   const elem_t nearPlane = 1.0f;
   const elem_t farPlane  = 3000.0f;
+  // RenderWindow automatically sets the viewport on a resize
+  // in Linux but not in windows so we have to do it here
+  glViewport(0, 0, w, h);
+  debugout << "glViewport(0, 0, " << w << ", " << h << ");" << endl;
   this->window.setView(sf::View(sf::FloatRect(0,0,static_cast<float>(w),static_cast<float>(h))));
   this->display.setProjection(fov,ratio,nearPlane,farPlane);
 }
@@ -84,8 +90,9 @@ std::vector<gx::uniform::block*> gx::graphicsClient::uniforms() {
 //make sure this is above al opengl objects so that the desctructor is called
 //last so we have an opengl context for destructors
 gx::graphicsClient::graphicsClient():
-    window(sf::VideoMode(defaultWindowWidth, defaultWindowHeight),
-      "DrChao", sf::Style::Default, sf::ContextSettings(24,0,4)),
+    window(sf::VideoMode(defaultWindowWidth, defaultWindowHeight), "DrChao",
+    (ConfigManager::fullscreen() ? sf::Style::Fullscreen : sf::Style::Default),
+    sf::ContextSettings(24,0,ConfigManager::antiAliasingLevel())),
     //glew needs to be called here, after window, before anything else
     glewStatus(initGlew()),
     userInput(),
@@ -197,39 +204,51 @@ void gx::graphicsClient::updatePosition(vector4f pos) {
   this->playerPosition = pos;
   this->setCamera();
 }
+
 int aniFrame = 0;
-void gx::graphicsClient::updateEntities(std::vector<Entity*> data) {  
+
+void gx::graphicsClient::clearEntities() {
   lights.clear();
 
   this->entities.reset();
   this->animatedDrawer.reset();
+}
 
-  for(auto entityP = data.begin(); entityP != data.end(); ++entityP) {
-    const auto& entity = **entityP;
-    const auto& type = entity.getType();
-    //lights
-    if(type == PROJECTILE) {
-      lights.addLight(vector4f(0,0,0) + entity.getPosition());
-    }
+void gx::graphicsClient::addEntity(Entity* ent) {
+  const auto& entity = *ent;
+  const auto& type = entity.getType();
 
-    if(type == POWER_UP) { //TODO: change back to type == PLAYER
-      dynamicDrawer::instanceData inst;
-      inst. pos = entity.getPosition();
-      inst.dirY = entity.getDirection();
-      inst.type = 0; //TODO: somehow set this based on type but it can't be absolute type?
-      inst.animation = 0; //TODO: select animation based on context
-      ++aniFrame;
-      aniFrame %= 240;
-      inst.timePosition = static_cast<double>(aniFrame) / 120.0;
-      this->animatedDrawer.addInstance(inst);
-    } else {
-      staticDrawer::instanceData inst;
-      inst. pos = entity.getPosition();
-      inst.dirY = entity.getDirection();
-      inst.type = entity.getType();
-      this->entities.addInstance(inst);
-    }
+  if(type == PLAYER) { //TODO: change back to type == PLAYER
+    dynamicDrawer::instanceData inst;
+    inst.scale = 1;
+    inst. pos = entity.getPosition();
+    inst.dirY = entity.getDirection();
+    inst.type = 0; //TODO: somehow set this based on type but it can't be absolute type?
+    inst.animation = 0; //TODO: select animation based on context
+    ++aniFrame;
+    aniFrame %= 240;
+    inst.timePosition = static_cast<double>(aniFrame) / 120.0;
+    this->animatedDrawer.addInstance(inst);
+  } else {
+    staticDrawer::instanceData inst;
+    inst.scale = 1;
+    inst. pos = entity.getPosition();
+    inst.dirY = entity.getDirection();
+    inst.type = entity.getType();
+    this->entities.addInstance(inst);
   }
+}
+
+void gx::graphicsClient::addEntity(Projectile* ent) {
+  const auto& entity = *ent;
+
+  lights.addLight(vector4f(0,0,0) + entity.getPosition());
+  staticDrawer::instanceData inst;
+  inst.scale = ProjInfo[entity.getMagicType()].size;
+  inst. pos = entity.getPosition();
+  inst.dirY = entity.getDirection();
+  inst.type = entity.getType();
+  this->entities.addInstance(inst);
 }
 
 void gx::graphicsClient::updateHUD(Player & player) {
@@ -270,4 +289,12 @@ void gx::graphicsClient::gameEnd()
 void gx::graphicsClient::updateScores(std::vector<int> & pwins,
                                       std::vector<int> & pkills) {
   Score.updateScores(pwins,pkills);
+}
+
+void gx::graphicsClient::updateLobby(std::vector<std::pair<int,bool>> & playerStatus ) {
+  Lobby.updateLobby(playerStatus);
+}
+
+void gx::graphicsClient::updateHUDTimer(float timer) {
+  this->Hud.updateHUDTimer(timer);
 }

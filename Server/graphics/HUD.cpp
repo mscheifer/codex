@@ -1,11 +1,12 @@
 #include "HUD.h"
 #include <string>
+#include "Projectile.h"
 
 /* TODO the constants should really be defined somewhere */
 gx::HUD::HUD(void):health(100), maxHealth(100), HLossPercentage(0), 
   mana(100), maxMana(100), MLossPercentage(0), canPickUp(false),
   weapon1(0), weapon2(0), currentSelect(0), elapsedChargeTime(0),
-  totalChargeTime(-1), chargeMagicType(0), charging(false){
+  totalChargeTime(-1), chargeMagicType(0), charging(false), timer(0){
   font.loadFromFile("arial.ttf");
   emptyBarTexture.loadFromFile("graphics/Images/Empty_bar.png");
   //heart image
@@ -51,8 +52,8 @@ gx::HUD::HUD(void):health(100), maxHealth(100), HLossPercentage(0),
   //positionText
   positionText.setFont(font);
   positionText.setCharacterSize(24);
-  positionText.setColor(sf::Color::Black);
-  positionText.setPosition(600,500);
+  positionText.setColor(sf::Color::Green);
+  positionText.setPosition(300,500);
   //aimer
   aimerTexture.loadFromFile("graphics/Images/aimer.png");
   aimer.setTexture(aimerTexture);
@@ -63,6 +64,16 @@ gx::HUD::HUD(void):health(100), maxHealth(100), HLossPercentage(0),
   energeBarFrameSprite.setTexture(energeBarFrameTexture);
   energeBarTexture.loadFromFile("graphics/Images/chargebar.png"); 
   energeBarSprite.setTexture(energeBarTexture);
+  //spells
+  currentSpell.setFont(font);
+  nextSpell.setFont(font);
+  currentSpell.setCharacterSize(18);
+  nextSpell.setCharacterSize(18);
+  currentSpell.setColor(sf::Color::Black);
+  nextSpell.setColor(sf::Color::Black);
+  clockText.setFont(font);
+  clockText.setCharacterSize(36);
+  clockText.setColor(sf::Color::Yellow);
 }
 
 gx::HUD::~HUD(void) {
@@ -122,7 +133,7 @@ void gx::HUD::draw(sf::RenderWindow & window) {
     window.draw(aimer);
   }
   int buffn = 0; 
-  for ( int i =0; i<renderBuff.size(); i++ ) {
+  for ( unsigned int i =0; i<renderBuff.size(); i++ ) {
     if (renderBuff[i]) {
       buffSprites[i]->setPosition(10+buffn*37,window.getSize().y-42);
       buffLSprites[i]->setPosition(10+buffn*37,window.getSize().y-42);
@@ -149,6 +160,19 @@ void gx::HUD::draw(sf::RenderWindow & window) {
     energeBarSprite.setPosition((window.getSize().x-400)/2,window.getSize().y*(0.8));
     window.draw(energeBarFrameSprite);
     window.draw(energeBarSprite);
+    nextSpell.setPosition( (window.getSize().x-400)/2+400-nextSpell.getGlobalBounds().width,  window.getSize().y*0.8+20 );
+    window.draw(nextSpell);
+  }
+  if (charging){ 
+    currentSpell.setPosition( (window.getSize().x-400)/2,  window.getSize().y*0.8+20 );
+    window.draw(currentSpell);
+  } 
+  if (timer > 0 ) {
+    clockText.setString(std::string("Game starts in ") +
+      std::to_string(static_cast<long long>(timer)) +
+      std::string(" seconds"));
+    clockText.setPosition((window.getSize().x -clockText.getGlobalBounds().width)/2,200);
+    window.draw(clockText);
   }
 }
 
@@ -188,6 +212,11 @@ void gx::HUD::updateHUD(const Player& player) {
   //std::cout<<"total time is " << player.totalChargeTime <<std::endl;
   //std::cout<<"magic type is " << player.chargeMagicType <<std::endl;
   charging = player.charging;
+  //spell
+  if (chargeMagicType>=0) {
+    currentSpell.setString(spellNames[chargeMagicType]);
+    nextSpell.setString(spellNames[Projectile::upgrade(static_cast<MAGIC_POWER>(chargeMagicType))]);
+  }
 }
 
 void gx::HUD::buffHelper(std::string & path) {
@@ -227,6 +256,10 @@ void gx::HUD::weaponHelper(std::string & path) {
    weaponSprites.push_back(tSprite);
 }
 
+void gx::HUD::updateHUDTimer(float timer) {
+  this->timer = timer;
+}
+
 void gx::HUD::initializeSprites() {
    //buff
    buffTextures.push_back(new sf::Texture());
@@ -244,6 +277,8 @@ void gx::HUD::initializeSprites() {
    buffHelper(std::string("graphics/Images/statT.png"));
    buffHelper(std::string("graphics/Images/statG.png"));
    buffHelper(std::string("graphics/Images/stunG.png"));
+   buffHelper(std::string("graphics/Images/stunI.png"));
+   buffHelper(std::string("graphics/Images/powerDef.png"));
    
    //buffL
    buffLTextures.push_back(new sf::Texture());
@@ -261,6 +296,9 @@ void gx::HUD::initializeSprites() {
    buffLHelper(std::string("graphics/Images/statTL.png"));
    buffLHelper(std::string("graphics/Images/statGL.png"));
    buffLHelper(std::string("graphics/Images/stunGL.png"));
+   buffLHelper(std::string("graphics/Images/stunIL.png"));
+   buffLHelper(std::string("graphics/Images/powerDefL.png"));
+
 
    //waepon
    weaponTextures.push_back(new sf::Texture());
@@ -271,3 +309,4 @@ void gx::HUD::initializeSprites() {
    weaponHelper(std::string("graphics/Images/weaponFist.png"));
    weaponHelper(std::string("graphics/Images/weaponBasic.png"));
 }
+

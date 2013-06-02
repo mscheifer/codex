@@ -210,6 +210,12 @@
     <ClCompile Include="graphics\lobby.cpp">
       <Filter>Source Files\graphics</Filter>
     </ClCompile>
+    <ClCompile Include="graphics\buffer.cpp">
+      <Filter>Source Files\graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="graphics\particleSystem.cpp">
+      <Filter>Source Files\graphics</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">
@@ -395,6 +401,9 @@
     <ClInclude Include="graphics\HUD.h">
       <Filter>Header Files\graphics</Filter>
     </ClInclude>
+    <ClInclude Include="buffer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\Makefile">
@@ -530,6 +539,24 @@
       <Filter>Resource Files\graphics\Images</Filter>
     </None>
     <None Include="graphics\Images\chargebarempty.png">
+      <Filter>Resource Files\graphics\Images</Filter>
+    </None>
+    <None Include="graphics\Images\notready.png">
+      <Filter>Resource Files\graphics\Images</Filter>
+    </None>
+    <None Include="graphics\Images\ready.png">
+      <Filter>Resource Files\graphics\Images</Filter>
+    </None>
+    <None Include="graphics\Images\powerDef.png">
+      <Filter>Resource Files\graphics\Images</Filter>
+    </None>
+    <None Include="graphics\Images\powerDefL.png">
+      <Filter>Resource Files\graphics\Images</Filter>
+    </None>
+    <None Include="graphics\Images\stunI.png">
+      <Filter>Resource Files\graphics\Images</Filter>
+    </None>
+    <None Include="graphics\Images\stunIL.png">
       <Filter>Resource Files\graphics\Images</Filter>
     </None>
   </ItemGroup>

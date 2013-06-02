@@ -7,14 +7,22 @@
 #include "Projectile.h"
 #include <array>
 
+struct proxStruct{
+  int prox;
+  bool minotaur;
+
+  proxStruct(int pro, bool mino) : prox(pro), minotaur(mino){}
+  proxStruct():prox(-1), minotaur(false){}
+};
+
 class AudioManager{
 private:
   static std::map<std::string, sf::SoundBuffer*> soundBuffers;
   static std::map<std::string, std::string> musics;
   static std::map<std::string, sf::Sound> sounds;
   static std::map<std::string, sf::Sound> playerSounds[4];
-  static std::array<sf::Music,2> music;
-  static std::array<int,2> musicProx;
+  static std::array<sf::Music,6> music;
+  static std::array<proxStruct,2> musicProx;
   static bool useSound;
   static int trackNo;
   static const int maxTracks = 2;
@@ -30,7 +38,7 @@ private:
 
   //this is for music
   static int notCurrentlyPlaying(); //return the index of the not currently playing music
-  static std::string getTrack( int track, int prox ); // get the string of music based on track and prox
+  static std::string getTrack( int track, int prox, bool minotaur ); // get the string of music based on track and prox
   static void loadTrack( int i ); //load the track
   static void playMusic(std::string music, int index); //helper which playes music onto given index
   static int getClosestProx(int prox); //return the next closest proximity to load in teh other music (this is done on init only)
@@ -51,7 +59,7 @@ public:
    static void stopPlayerSound(int id , std::string key);
   //play this music
   //numPlayers is the players in close proximity
-  static void updateMusic( int numPlayers ); //main method that updates which music to play
+  static void updateMusic( int numPlayers, bool minotaur ); //main method that updates which music to play
 
   static void processPlayerSound(Player& o);
   static void processProjectileSound(Projectile& o);

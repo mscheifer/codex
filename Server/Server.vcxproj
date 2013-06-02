@@ -86,6 +86,7 @@
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="graphics\basicUniform.cpp" />
     <ClCompile Include="graphics\bone.cpp" />
+    <ClCompile Include="graphics\buffer.cpp" />
     <ClCompile Include="graphics\CubemapTexture.cpp" />
     <ClCompile Include="graphics\displaySet.cpp" />
     <ClCompile Include="graphics\drawer.cpp" />
@@ -101,6 +102,7 @@
     <ClCompile Include="graphics\mesh.cpp" />
     <ClCompile Include="graphics\meshEntry.cpp" />
     <ClCompile Include="graphics\oglUtil.cpp" />
+    <ClCompile Include="graphics\particleSystem.cpp" />
     <ClCompile Include="graphics\shaderProgram.cpp" />
     <ClCompile Include="graphics\SkyboxDraw.cpp" />
     <ClCompile Include="graphics\staticDrawerImpl.cpp" />
@@ -137,6 +139,7 @@
     <ClInclude Include="boundingManager.h" />
     <ClInclude Include="boundingObj.h" />
     <ClInclude Include="boundingSphere.h" />
+    <ClInclude Include="buffer.h" />
     <ClInclude Include="ChatHandler.h" />
     <ClInclude Include="Client.h" />
     <ClInclude Include="ConfigManager.h" />
@@ -206,10 +209,13 @@
     <None Include="graphics\Images\Full_mana_bar.png" />
     <None Include="graphics\Images\heart_color.png" />
     <None Include="graphics\Images\magic_color.png" />
+    <None Include="graphics\Images\notready.png" />
     <None Include="graphics\Images\powerAttack.png" />
     <None Include="graphics\Images\powerAttackL.png" />
     <None Include="graphics\Images\powerCharge.png" />
     <None Include="graphics\Images\powerChargeL.png" />
+    <None Include="graphics\Images\powerDef.png" />
+    <None Include="graphics\Images\powerDefL.png" />
     <None Include="graphics\Images\powerHealth.png" />
     <None Include="graphics\Images\powerHealthL.png" />
     <None Include="graphics\Images\powerMana.png" />
@@ -218,6 +224,7 @@
     <None Include="graphics\Images\powerMoveL.png" />
     <None Include="graphics\Images\powerStr.png" />
     <None Include="graphics\Images\powerStrL.png" />
+    <None Include="graphics\Images\ready.png" />
     <None Include="graphics\Images\statF.png" />
     <None Include="graphics\Images\statFL.png" />
     <None Include="graphics\Images\statG.png" />
@@ -228,6 +235,8 @@
     <None Include="graphics\Images\statTL.png" />
     <None Include="graphics\Images\stunG.png" />
     <None Include="graphics\Images\stunGL.png" />
+    <None Include="graphics\Images\stunI.png" />
+    <None Include="graphics\Images\stunIL.png" />
     <None Include="graphics\Images\stunT.png" />
     <None Include="graphics\Images\stunTL.png" />
     <None Include="graphics\Images\weaponBasic.png" />

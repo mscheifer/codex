@@ -9,7 +9,8 @@ gx::matrix gx::staticDrawerImpl::makePositionMatrix(instanceData d) {
   d.dirY.normalize();
   const gx::vector3f up  = gx::vector3f(0,0,1);
   gx::matrix rotAndTrans = gx::translation(d.pos.x,d.pos.y,d.pos.z) *
-                           gx::toRightHandBasisFromYandUp(d.dirY,up);
+                           gx::toRightHandBasisFromYandUp(d.dirY,up) *
+                           uniformScaling(d.scale);
   return rotAndTrans;
 }
 
@@ -54,12 +55,11 @@ gx::graphicsEntity::attribsList_t processAttribs(const gx::graphicsEntity& genti
 gx::staticDrawerImpl::entityClass::entityClass(graphicsEntity drawData,
                                                varSigs_t vars)
   : vertData(std::move(drawData.indices), processAttribs(drawData),
-    std::move(vars)), mat(std::move(drawData.mat)), centerAndResize(identity) {}
+    std::move(vars)), mat(std::move(drawData.mat)) {}
 
 gx::staticDrawerImpl::entityClass::entityClass(entityClass&& other) noexcept
   : instances(std::move(other.instances)), vertData(std::move(other.vertData)),
-    mat(std::move(other.mat)),
-    centerAndResize(std::move(other.centerAndResize)) {}
+    mat(std::move(other.mat)) {}
 
 gx::staticDrawerImpl::entityClass&
 gx::staticDrawerImpl::entityClass::operator=(entityClass&&) {
@@ -76,8 +76,7 @@ gx::staticDrawerImpl::staticDrawerImpl(const shaderProgram& program)
 
 void gx::staticDrawerImpl::setUniforms(const entityClass& entC,
                                        const entityClass::instance& inst) const{
-  //see if there is a way to not write centerAndResize every frame
-  this->modelToWorldLoc.write((inst * entC.centerAndResize).oglmatrix().data());
+  this->modelToWorldLoc.write(inst.oglmatrix().data());
 }
 
 void gx::staticDrawerImpl::setUniforms(const entityClass::instance& inst) const{

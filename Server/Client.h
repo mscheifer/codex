@@ -18,6 +18,8 @@ class NetworkClient {
   bool sendPacket;
   bool running;
   bool gameRestart;
+  bool joined;
+  bool gameStart;
   EntityPool objPool;
   Entity skybox; //this is kind of stupid but we'll do it for now
 
@@ -25,7 +27,7 @@ class NetworkClient {
   void receiveMessages();
 public:
   NetworkClient(): s(&objPool), action(), netRecv(), chat(), gxClient(), id(-1),
-                   sendPacket(false), running(true) {
+                   sendPacket(false), running(true), gameRestart(false), joined(false),gameStart(false){
     skybox.setPosition(gx::vector3f(0,0,0));
     skybox.setDirection(gx::vector3f(0,1,0));
   }

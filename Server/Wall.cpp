@@ -45,6 +45,11 @@ void Wall::update()
     v3_t distanceTravelled = velocity * ConfigManager::serverTickLengthSec();
 	  position += distanceTravelled;
     distanceLeft -= distanceTravelled.magnitude();
+    if(distanceLeft <=0) {
+      distanceTravelled.normalize();
+      distanceTravelled.scale(distanceLeft);
+      position += distanceTravelled;
+    }
     this->updateBounds();
   } else if( wallMoveClock.getElapsedTime().asMilliseconds() < wallMoveTime ) {
 		  return;

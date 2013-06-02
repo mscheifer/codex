@@ -18,7 +18,7 @@ sf::Vector2i mouseDiff = sf::Vector2i(0,0);
 
 gx::input::input()
   : updated(false), jumped(false), stopped(false), fired1(false), fired2(false),
-    pickup(false),switchWeapon(false) {}
+    pickup(false),switchWeapon(false), clicked(false) {}
 
 bool gx::input::getUpdated() {
   return this->updated;
@@ -40,6 +40,9 @@ bool gx::input::pickUp() {
 }
 bool gx::input::switchW() {
   return this->switchWeapon;
+}
+bool gx::input::mouseClicked() const {
+  return this->clicked;
 }
 
 bool gx::input::drawS() {
@@ -89,9 +92,14 @@ gx::vector3f gx::input::turnPlayer() {
     this->updated = true;
     sf::Vector2i newDiff = curPosition - mouseBasePosition;
     mouseDiff += newDiff;
+	if(-mouseDiff.y * mouseSensitivity > M_PI_2) {
+      mouseDiff.y = static_cast<int>(-(M_PI_2 / mouseSensitivity));
+	}
+	if(-mouseDiff.y * mouseSensitivity < -M_PI_2) {
+      mouseDiff.y = static_cast<int>(M_PI_2 / mouseSensitivity);
+	}
     mouseDirection = rotateZ(-mouseDiff.x * mouseSensitivity) * 
                      rotateX(-mouseDiff.y * mouseSensitivity) * basePlayerDirection;
-
     sf::Mouse::setPosition(mouseBasePosition);
   }
   return mouseDirection;
@@ -130,6 +138,7 @@ void gx::input::handle(sf::Window& window) {
   this->resized = false;
   this->pickup = false;
   this->switchWeapon = false;
+  this->clicked = false;
   sf::Event event;
   while (window.pollEvent(event)) {
     this->handleEvent(event);
@@ -167,6 +176,7 @@ void gx::input::handleEvent(const sf::Event& event) {
     this->updated = true;
     if(event.mouseButton.button == sf::Mouse::Left) {
       this->fired1 = false;
+      this->clicked = true;
     } else if(event.mouseButton.button == sf::Mouse::Right) {
       this->fired2 = false;
     }

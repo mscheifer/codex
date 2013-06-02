@@ -40,8 +40,8 @@ bool gx::Texture::Load() { //TODO: just move this function to the constructor
   glBindTexture(this->m_textureTarget, this->m_textureID);
   glTexImage2D(this->m_textureTarget, 0, GL_RGBA, width, height, 0, 
     GL_RGBA, GL_UNSIGNED_BYTE, this->m_image.getPixelsPtr());
-  //TODO: change to use mipmaps
-  glTexParameterf(this->m_textureTarget, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+  glGenerateMipmap(GL_TEXTURE_2D);
+  glTexParameterf(this->m_textureTarget, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
   glTexParameterf(this->m_textureTarget, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
   return success;
 }

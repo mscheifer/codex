@@ -39,7 +39,7 @@ bool ClientServices::receiveMessage(sf::Packet & packet) {
   
 ServerServices::ServerServices(){
   listener.setBlocking(false);
-  listener.listen(PORT_NUMBER); //49152–65535 ports ok to use
+  listener.listen(PORT_NUMBER); //49152?5535 ports ok to use
   newClient = new sf::TcpSocket; 
 }
 

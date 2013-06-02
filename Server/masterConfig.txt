@@ -1,33 +1,37 @@
 // System configuration
 log=0
 sound=1
+//cannot have music without sound
+music=1
 graphicsDebug=false
 serverTicksPerSec=30
-gameRestart=0
-soundScaling=1
+gameRestart=1
+soundScaling=10
+fullscreen=false
+anti-alias=0
 
 // Physics
-gravity=-20
+gravity=-40
 
 // Player configuration
 players=2
-movescale=1
+movescale=.6
 airMovescale=.5
-maxJump=1000
-jumpSpeed=10
-playerHpRegen=.005
-playerMpRegen=.08
+maxJump=2
+jumpSpeed=20.17
+playerHpRegen=.01
+playerMpRegen=.035
 playerDef=5
-playerHp=100
+playerHp=50
 playerMaxHp=100
-playerMp=5
+playerMp=50
 playerMaxMp=100
 minotaurHpRegen=.01
-minotaurMpRegen=.001
+minotaurMpRegen=.035
 minotaurDef=5
-minotaurHp=100
+minotaurHp=50
 minotaurMaxHp=100
-minotaurMp=5
+minotaurMp=50
 minotaurMaxMp=100
 
 // Projectile

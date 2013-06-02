@@ -14,6 +14,12 @@ bool sortEntity(std::pair<Entity*,BoundingObj::vec3_t> a, std::pair<Entity*,Boun
 }
 
 bool sortRayCollision(RayCollision a, RayCollision b){
+  //if( a.e->getType() == PROJECTILE && b.e->getType() != PROJECTILE){ //set walls at the end
+  //  return false;
+  //}
+  //if( b.e->getType() == PROJECTILE && a.e->getType() != PROJECTILE){ //set walls at the end
+  //  return true;
+  //}
   return a.tfirst < b.tfirst;
 }
 

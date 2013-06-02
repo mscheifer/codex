@@ -58,7 +58,9 @@ class graphicsClient {
     ClientGameTimeAction handleInput();
     void draw();
     void updatePosition(vector4f);
-    void updateEntities(std::vector<Entity*>);
+    void clearEntities();
+    void addEntity(Entity*);
+    void addEntity(Projectile*);
     void updateHUD(Player & player);
     void drawLobby();
     void disableCursor();
@@ -66,6 +68,8 @@ class graphicsClient {
     bool gameStart() const;
     void gameEnd();
     void updateScores(std::vector<int> & pwins, std::vector<int> & pkills);
+    void updateLobby(std::vector<std::pair<int,bool>> & playerStatus );
+    void updateHUDTimer(float timer); 
 
     bool closed()        { return this->userInput.getStop(); }
 };
