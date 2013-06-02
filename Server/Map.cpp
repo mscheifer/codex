@@ -15,9 +15,11 @@ Map::Map(void): spawnPositions(), freeProjectiles(), q(0,Rectangle(BoundingObj::
 {
 	map_size = 15;
 	freeProjectiles = new std::stack<Projectile *>();
-   initWalls();
- // initWallsOne();
- // initWallsTwo();
+  // initWalls();
+
+ initWallsOne();
+  initStaticWalls();
+  initWallsTwo();
   initPowerUps();
 }
 
@@ -27,9 +29,10 @@ void Map::mapReset()
   spawnPositions.clear();
   entities.clear();
   liveProjectTile.clear();
-  initWalls();
- // initWallsOne();
- // initWallsTwo();
+//  initWalls();
+  initWallsOne();
+  initStaticWalls();
+  initWallsTwo();
   initPowerUps();
   for(unsigned int i = 0; i < players.size(); i++)
   {
@@ -75,7 +78,27 @@ void Map::initWallsTwo(void)
   float startingYNeg;
   float startingZ = depth/2.0f;
 
-
+    int row1[] = {-1};
+  int row2[] = {-1};
+  int row3[] = {-1};
+  int row4[] = {-1};
+  int row5[] = {     5,6,7,18,19,      -1};
+  int row6[] = {   1,2,                                                 22,23,    -1};
+  int row7[] = {-1};
+  int row8[] = {-1};
+  int row9[] =  {-1};
+  int row10[] = {-1};
+  int row11[] = {      4,5,6,7,8,9,10,          14,15,16,17,18,19,20,             -1};
+  int row12[] = {-1};
+  int row13[] = {      4,5,6,7,8,9,10,          14,15,16,17,18,19,20,             -1};
+  int row14[] = {-1};
+  int row15[] = {-1};
+  int row16[] = {-1};
+  int row17[] = {-1};
+  int row18[] = {-1};
+  int row19[] = {   1,2,                                                22,23,   -1};
+  int row20[] = {  5,6,7,18,19,20,    -1};
+  /*
   int row1[] = {-1};
   int row2[] = {-1};
   int row3[] = {-1};
@@ -96,7 +119,7 @@ void Map::initWallsTwo(void)
   int row18[] = {-1};
   int row19[] = {   1,2,                                                22,23,   -1};
   int row20[] = {      3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,      -1};
-  
+*/  
   int * rows[] = {row1, row2, row3, row4, row5, row6, row7, row8, row9,
                   row10, row11, row12, row13, row14, row15, row16, row17,
                   row18, row19, row20};
@@ -231,8 +254,29 @@ void Map::initWallsOne(void)
   this->entities.push_back(floor);
   floor->setRender(false);
 
-   // REMOVE THIS TO KILL GRAPHICS
-  // Creating facing north walls. DO NOT TOUCH THIS
+  
+  int row1[] = {-1};
+  int row2[] = {-1};
+  int row3[] = {-1};
+  int row4[] = {-1};
+  int row5[] = {0,1,2,23,24, -1};
+  int row6[] = {-1};
+  int row7[] = {-1};
+  int row8[] = {-1};
+  int row9[] =  {3,4,5,6,7,9,10,11,14,15,16,18,19,20,21,22,-1};//
+  int row10[] = { -1};
+  int row11[] = {-1};
+  int row12[] = {-1};
+  int row13[] = {-1};
+  int row14[] = { -1};
+  int row15[] = {-1};
+  int row16[] = {3,4,5,6,7,9,10,11,14,15,16,18,19,20,21,22,-1};//
+  int row17[] = { -1};
+  int row18[] = { -1};
+  int row19[] = {-1};
+  int row20[] = {0,1,2,23,24, -1};
+  /*
+
   int row1[] = {-1};
   int row2[] = {-1};
   int row3[] = {-1};
@@ -254,6 +298,8 @@ void Map::initWallsOne(void)
   int row19[] = {-1};
   int row20[] = {0,1,2,3,4,8,9,10,11,12,13,14,15,16,17,20,21,22,23,24, -1};
   
+  */
+
   int * rows[] = {row1, row2, row3, row4, row5, row6, row7, row8, row9,
                   row10, row11, row12, row13, row14, row15, row16, row17,
                   row18, row19, row20};
@@ -307,7 +353,60 @@ void Map::initWallsOne(void)
   }
   
 }
+void Map::initStaticWalls(void) {
+  v3_t facingEast(1,0,0);
+  v3_t facingNorth(0,1,0);
+  unsigned int width = ConfigManager::wallWidth();
+  unsigned int height = ConfigManager::wallHeight(); 
+  unsigned int depth = ConfigManager::wallDepth();
 
+  float wallX = 25;
+  float wallY = 25;
+
+  float centerX = 0;
+  float centerY = 0;
+  int i;
+  float startingX;
+  float startingXNeg;
+  float startingY;
+  float startingYNeg;
+  float startingZ = depth/2.0f;
+  
+  int row1[] = {-1};
+  int row2[] = {-1};
+  int row3[] = {-1};
+  int row4[] = {-1};
+  int row5[] = { 3,4,8,9,10,11,12,13,14,15,16,17,20,21,22,-1};
+  int row6[] = {-1};
+  int row7[] = {-1};
+  int row8[] = {-1};
+  int row9[] = {-1};
+  int row10[] = {-1};
+  int row11[] = {-1};
+  int row12[] = {-1};
+  int row13[] = {-1};
+  int row14[] = {-1};
+  int row15[] = {-1};
+  int row16[] = {-1};
+  int row17[] = {-1};
+  int row18[] = {-1};
+  int row19[] = {-1};
+  int row20[] = { 3,4,8,9,10,11,12,13,14,15,16,17,20,21,22,-1};
+  
+  int * rows[] = {row1, row2, row3, row4, row5, row6, row7, row8, row9,
+                  row10, row11, row12, row13, row14, row15, row16, row17,
+                  row18, row19, row20};
+ 
+
+  for( i = 0,
+    startingX = ((wallX*width)/-2)+(width/2)+centerX,
+    startingY = ((wallY*width)/2)-width+centerY;
+    i < 20; i++, startingY -= width)
+  {
+   
+    addWallDirection(startingX, startingY, startingZ, facingNorth, rows[i]);
+  }
+}
 void Map::initWalls(void)
 {
   //TODO move this
@@ -471,7 +570,7 @@ void Map::addWallDirection(float startingX, float startingY, float startingZ, v3
   {
     if(values[j] == x){
       Wall* wall = new Wall(width, depth, height, v3_t(startingX,startingY, startingZ), dir, this);
-      std::cout << "(" << startingX << "," << startingY << "," << startingZ << ")" << std::endl;
+    //  std::cout << "(" << startingX << "," << startingY << "," << startingZ << ")" << std::endl;
 
       this->entities.push_back(wall);
       j++;
