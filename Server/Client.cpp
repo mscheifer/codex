@@ -49,7 +49,9 @@ void NetworkClient::receiveMessages() {
         for(auto entP = s.walls.begin(); entP != s.walls.end(); entP++) {
           entities.push_back(*entP);
         }
+     //   std::cout << "new pack" << std::endl;
         for(auto entP = s.projectiles.begin(); entP != s.projectiles.end(); entP++) {
+     //     std::cout << "there's a projectile at (" << (**entP).getPosition().x << "," << (**entP).getPosition().y << "," << (**entP).getPosition().z << ")" << std::endl;
           entities.push_back(*entP);
            AudioManager::processProjectileSound(**entP);
         }

@@ -50,7 +50,7 @@ void gx::light::addLight(vector4f pos) {
     this->unif.write(uniformVars[2].first, this->data.numLights);
     this->unif.write(uniformVars[0].first, data.position);
   } else {
-    std::cout << "warning too many lights" << std::endl;
+   // std::cout << "warning too many lights" << std::endl;
   }
 }
 

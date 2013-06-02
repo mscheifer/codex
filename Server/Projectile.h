@@ -116,6 +116,7 @@ public:
   void handleCollisions();
   void clearEvents();
   void fire(v3_t velocity, float strengthMultiplier);
+  void fireMutiple(v3_t v, float strengthMultiplier, int number);
   std::string toString();
   void reset();
  

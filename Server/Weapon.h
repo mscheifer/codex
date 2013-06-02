@@ -25,7 +25,7 @@ public:
 
 	bool canUseWeapon(bool range_attack, Player* owner);
 	bool canPickUp() { return pickedUp; }
-	virtual Projectile* attackMelee(v3_t dir, v3_t pos, Player* owner); 
+	virtual Projectile* attackMelee(v3_t dir, v3_t pos, Player* owner);
   virtual Projectile* attackRange(v3_t, v3_t, Player*){return nullptr;}
   //pick up weapon, remove bounding box from map
   virtual bool pickUp();
