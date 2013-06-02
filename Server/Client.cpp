@@ -19,7 +19,7 @@ void NetworkClient::receiveMessages() {
     v3_t pos;
     bool minotaur;
     v3_t dir;
-    static float maxProx = 10.f;
+    static float maxProx = 30.f;
     IdPacket newId(0);
     StartGamePacket playerSt;
     switch (packetType) {

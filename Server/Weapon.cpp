@@ -22,7 +22,7 @@ Weapon::~Weapon()
 
 Weapon::Weapon(float damage, float ran, v3_t pos, Map* m) : pickedUp(false)
 {
-  Range_Cool_Down_Time = 0;
+  Range_Cool_Down_Time = 0; //TODO set these
   Melee_Cool_Down_Time = 0;
   Range_Cool_Down_Counter = sf::Clock();
   Melee_Cool_Down_Counter = sf::Clock();
@@ -60,7 +60,7 @@ Projectile* Weapon::attackMelee(v3_t dir , v3_t pos, Player* owner)
   pj->setPosition(pos);
   pj->setOwner(owner);
   pj->setStrength(projectileStrength*owner->getStrengthMultiplier()*meleeAttackMult);
-  std::cout << "pj str " << pj->getStrength() << std::endl;
+  std::cout << "melee str " << pj->getStrength() << std::endl;
   pj->setRange(1);
 
   pj->setCharing(false); 

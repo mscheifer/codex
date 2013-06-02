@@ -52,8 +52,8 @@ gx::HUD::HUD(void):health(100), maxHealth(100), HLossPercentage(0),
   //positionText
   positionText.setFont(font);
   positionText.setCharacterSize(24);
-  positionText.setColor(sf::Color::Black);
-  positionText.setPosition(600,500);
+  positionText.setColor(sf::Color::Green);
+  positionText.setPosition(300,500);
   //aimer
   aimerTexture.loadFromFile("graphics/Images/aimer.png");
   aimer.setTexture(aimerTexture);

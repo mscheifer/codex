@@ -1,8 +1,8 @@
 #include "Projectile.h"
 int Projectile::ID_Counter = 0;
-const float Projectile::meleeWidth = 1.0f;
-const float Projectile::meleeHeight = 1.0f;
-const float Projectile::meleeDepth = 3.0f;
+const float Projectile::meleeWidth = 3.0f; //left right width
+const float Projectile::meleeHeight = 10.0f; //how far
+const float Projectile::meleeDepth = 5.0f; //up and down width
 const float Projectile::projWidth = 1.0f;
 const float Projectile::projHeight = 1.0f;
 const float Projectile::projDepth = 1.0f;
@@ -107,6 +107,7 @@ void Projectile::updateBoundsSoft(){
 
 void Projectile::handleCollisions() {
   std::vector<std::pair<Entity*,BoundingObj::vec3_t>> entities =  detectCollision();
+  bool destroy = false;
 
   for( auto it = entities.begin(); it != entities.end(); it++ ){
     Entity * e = it->first; 
@@ -114,22 +115,27 @@ void Projectile::handleCollisions() {
     case PLAYER:
       if(e == owner)
         break;
-      else
-        map->destroyProjectile(this);
+      else{
+        ((Player*)e)->attackBy(this);
+        destroy = true;
+      }
     case WALL:
       if(!charging)
-        map->destroyProjectile(this);
+        destroy = true;
       break;
     case PROJECTILE:
       Projectile * proj = (Projectile*) e;
-      if(charging && sameTeam(proj) ){ //this one is charging
-        setMagicType(combine(proj->getMagicType(), magicType));
-        map->destroyProjectile(proj);
-        combined = true;
-      } else if ( proj->charging && sameTeam(proj) ){ //the other one is charging
+      //if(charging && sameTeam(proj) ){ //this one is charging
+      //  setMagicType(combine(proj->getMagicType(), magicType));
+      //  map->destroyProjectile(proj);
+      //  combined = true;
+      //} 
+      //else
+      if ( proj->charging && sameTeam(proj) ){ //the other one is charging
         proj->setMagicType(combine(proj->getMagicType(), magicType));
         proj->combined = true;
-        map->destroyProjectile(this);
+        destroy = true;
+        //map->destroyProjectile(this);
       }
       
       //else { //2 in the air
@@ -138,6 +144,10 @@ void Projectile::handleCollisions() {
       //}
       break;
     }
+  }
+
+  if(destroy){
+    map->destroyProjectile(this);
   }
 }
 
@@ -205,6 +215,7 @@ void Projectile::setMagicType( MAGIC_POWER m, bool melee ) {
     ((BoundingBox*) boundingObjs[0])->setHh( size/2.f );
     ((BoundingBox*) boundingObjs[0])->setHd( size/2.f );
   }
+  updateBounds();
 }
 
 void Projectile::serialize(sf::Packet & packet) const {
@@ -233,7 +244,8 @@ std::string Projectile::toString(){
   std::stringstream ss;
   ss << "mtype " << spellNames[magicType] << std::endl
   << "range " << range << std::endl
-  << "strength " << strength << std::endl;
+  << "strength " << strength << std::endl
+  << "owner "<< owner->player_id <<std::endl;
   return ss.str();
 }
 
