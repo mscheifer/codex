@@ -35,7 +35,6 @@ void AudioManager::loadSounds(){
     musicProx[i] = proxStruct(-1,false);
   }
 
-  static int i = 0;
   loadSound("sc1", "sounds/scream_1.wav");
   
   loadSound("c1", "sounds/charge1.wav");
@@ -279,7 +278,7 @@ void AudioManager::processPlayerSound(Player& o){
 
   if(o.shotProjectile) {  
     std::stringstream ss;
-
+    static int id = 0;
     ss << id << "fplayer:" << o.player_id;
     playSound(getShootSound(o.chargeMagicType), ss.str(), o.getPosition());
     id++;
