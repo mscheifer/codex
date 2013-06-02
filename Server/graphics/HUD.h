@@ -25,6 +25,7 @@ private :
   float totalChargeTime;
   int chargeMagicType;
   bool charging;
+  float timer;
   sf::Text healthText;
   sf::Text manaText;
   sf::Font font;
@@ -64,7 +65,6 @@ private :
   sf::Text currentSpell;
   sf::Text nextSpell;
   sf::Text clockText;
-  sf::Clock startClock;
   void buffHelper(std::string & path);
   void buffLHelper(std::string & path);
   void weaponHelper(std::string & path);
@@ -73,6 +73,7 @@ public:
   HUD(void);
   ~HUD(void);
   void updateHUD(const Player& player);
+  void updateHUDTimer(float timer);
   void draw(sf::RenderWindow & window);
   void initializeSprites();
 };

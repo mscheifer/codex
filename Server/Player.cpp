@@ -153,13 +153,10 @@ bool Player::damageBy(Projectile *deadly)
     charging = false;
   }
 
-  std::cout<<" i am attacked by"<< deadly->getOwner()->player_id<<std::endl;
   if(dead) {
     die();
     //This is a hack
-    map->kills[((Projectile *) deadly)->getOwner()->player_id]++;
-    std::cout<<"updating kills"<<std::endl;
-    std::cout<<map->kills[((Projectile *) deadly)->getOwner()->player_id]<<std::endl;
+    map->kills[deadly->getOwner()->player_id]++;
   }
 	return true;
 }

@@ -20,12 +20,13 @@ void NetworkClient::receiveMessages() {
     bool minotaur;
     v3_t dir;
     static float maxProx = 10.f;
+    IdPacket newId(0);
+    StartGamePacket playerSt;
     switch (packetType) {
       case SGTR:
         this->s.deserialize(packet);
-        if (s.state != PLAYING && ConfigManager::gameRestart()) 
+        if (s.state != PLAYING)
           gameRestart = true;
-      //  std::cout<<s.state<<std::endl;
         pos = s.players[this->id].getPosition();
 
         minotaur = s.players[this->id].isMinotaur();
@@ -92,6 +93,25 @@ void NetworkClient::receiveMessages() {
         AudioManager::updateMusic(proximity, minotaur);
         
         break;
+      case JOINID:
+          newId.deserialize(packet);
+          this->id = newId.id;
+          std::cout << "USERID: " << this->id << std::endl;
+          this->action.player_id = id;
+          break;
+      case STARTGAME:
+          joined = true; 
+          std::cout<<"CLIENT RECEIVED START GAME"<<std::endl;
+          playerSt.deserialize(packet);
+          gxClient.updateLobby(playerSt.playerStatus);
+          for (auto itr= playerSt.playerStatus.begin(); itr != playerSt.playerStatus.end(); itr++ ) {
+            std::cout<<"Player "<< (*itr).first<< " is "<<(*itr).second<<std::endl;
+          }
+          break;
+      case INIT:
+          //TODO initialize the player info
+          gameStart = true;
+          break;
       default:
         std::cout<<"There is an error when receiving"<<std::endl;
         break;
@@ -158,69 +178,43 @@ void NetworkClient::doClient() {
   std::cout << "width " << m.width << std::endl;
   std::cout << "height " << m.height << std::endl;
   //AudioManager::playMusic("m1");
-
-  //std::cout << "Waiting for other players to join" << std::endl;
-  //TODO refactor the menu logic 
-  while(true)
-  {
-    gameRestart = false;
-    bool joined = false;  //joined is used for receiving game start from server
-    bool clickedButton = false;
-    while(true) {
-	    sf::Packet initPacket;
-      if (joined && this->gxClient.gameStart()) {
-        //received start game and clicked
-        initPacket << static_cast<sf::Uint32>(INIT); 
-        if (!clickedButton) { 
-          initPacket << true;
-          netRecv.sendMessage(initPacket);
-//          std::cout<<"joining"<<std::endl;
-          clickedButton = true;
-        } else {
-          initPacket << false;
-          netRecv.sendMessage(initPacket);
-          clickedButton = false;
-//          std::cout<<"quiting"<<std::endl;
-        }
+  //if doClient running I already connected to the server 
+  gameStart = false;
+  joined = false;  //joined is used for receiving game start from server
+  bool clickedButton = false;
+  //lobby code
+  while(true) {
+    sf::Packet initPacket;
+    if (joined && this->gxClient.gameStart()) {
+      //received start game and clicked
+      initPacket << static_cast<sf::Uint32>(INIT); 
+      if (!clickedButton) { 
+        initPacket << true;
+        netRecv.sendMessage(initPacket);
+        clickedButton = true;
+      } else {
+        initPacket << false;
+        netRecv.sendMessage(initPacket);
+        clickedButton = false;
       }
-      initPacket.clear();
-      if (netRecv.receiveMessage(initPacket)) {
-        //std::cout << "received message" << std::endl;
-        sf::Uint32 packetType;
-        initPacket >> packetType;
-        if (packetType == JOINID) {
-          IdPacket newId(0);
-          newId.deserialize(initPacket);
-          this->id = newId.id;
-          std::cout << "USERID: " << this->id << std::endl;
-          this->action.player_id = id;
-        } else if (packetType == INIT) {
-           //TODO: init the position
-          break;
-        } else if(packetType==STARTGAME){
-          joined = true; 
-          std::cout<<"CLIENT RECEIVED START GAME"<<std::endl;
-          StartGamePacket playerSt;
-          playerSt.deserialize(initPacket);
-          gxClient.updateLobby(playerSt.playerStatus);
-          for (auto itr= playerSt.playerStatus.begin(); itr != playerSt.playerStatus.end(); itr++ ) {
-            std::cout<<"Player "<< (*itr).first<< " is "<<(*itr).second<<std::endl;
-          }
-        }
-	    }
-      this->gxClient.drawLobby();
     }
-    this->gxClient.disableCursor();
-    std::cout << "game started" << std::endl;
+    initPacket.clear();
+    this->receiveMessages();
+    if (gameStart) break;
+    this->gxClient.drawLobby();
+  }
+  this->gxClient.disableCursor();
+  //game loop
+  sf::Clock clock;
+  clock.restart();
+  gameRestart = true;
+  while(this->running) {
     /*sf::Clock profilerTime;
     float processInputTime;
     float receiveMessagesTime;
     float drawTime;
     float sendPackTime;*/
-    //  main run loop
-    while(this->running) {
-      //process input and send events
-  
+    if (!gameRestart) {
       //profilerTime.restart();
       this->processInput();
       //processInputTime = profilerTime.getElapsedTime().asMilliseconds();
@@ -228,25 +222,32 @@ void NetworkClient::doClient() {
       this->receiveMessages();
       //receiveMessagesTime = profilerTime.getElapsedTime().asMilliseconds();
 
-      if(gameRestart)
-      {
-        gxClient.enableCursor();
-        gxClient.gameEnd();
+      //profilerTime.restart();
+      //window closed
+      if (!this->running) 
+        break;
+      if (gameRestart) {
+        clock.restart();
         break;
       }
-
-      //profilerTime.restart();
       this->gxClient.draw();
       //drawTime = profilerTime.getElapsedTime().asMilliseconds();
       //profilerTime.restart();
-      if(this->sendPacket) {//if dead player still should be able to chat?
+      if(this->sendPacket) {
         //this->action.print();
         this->netRecv.sendPacket<ClientGameTimeAction>(action);
         this->sendPacket = false;
       }
       //sendPackTime = profilerTime.getElapsedTime().asMilliseconds();
       //std::cout<<"processInput: "<< processInputTime <<"ms\treceiveMessagesTime: "<<
-        //receiveMessagesTime <<"ms\tdrawTime: "<< drawTime <<"ms\tsendPackTime: "<< sendPackTime <<std::endl;
+      //receiveMessagesTime <<"ms\tdrawTime: "<< drawTime <<"ms\tsendPackTime: "<< sendPackTime <<std::endl;
+    } else {
+      float remaining = 5-clock.getElapsedTime().asSeconds();
+      if (remaining <= 0) {
+        gameRestart = false;
+      }
+      gxClient.updateHUDTimer(remaining);
+      this->gxClient.draw();
     }
   }
 }

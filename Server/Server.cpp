@@ -91,35 +91,43 @@ void NetworkServer::doServer() {
           std::cout << "Error sending init packet" << std::endl;
 	      }
     }
-    std::cout << "server start game" << std::endl;
+    std::cout << "server start game in 5 seconds" << std::endl;
+    clock.restart();
     while(true) {
-      clock.restart();
-    
-      game.clearEvents();
-      // don't fuck with this order here
+      if (gameState == PLAYING) {
+        clock.restart();
+        game.clearEvents();
+        // don't fuck with this order here
+ 
+        //1. handle incoming packet
+        for(unsigned int i = 0; i < server.size(); i++){
+          this->receiveMessages(i);
+        }
 
-      //1. handle incoming packet
-      for(unsigned int i = 0; i < server.size(); i++){
-        this->receiveMessages(i);
-        /* maybe put this in a method just like in client*/
-      }
+        //2. update all entities and resolve collision
+        game.updateAndResolveCollision();
 
-      //2. update all entities and resolve collision
-      game.updateAndResolveCollision();
+        ServerGameTimeRespond gtr = game.prepResponse();
+        gameState= gtr.state;
+        //3. prep and send response to everyone
+	      if(!this->server.sendPacketToAll<ServerGameTimeRespond>( gtr ) ) {
+          std::cout << "Error sending sgtr to everybody" << std::endl;
+        }
 
-      ServerGameTimeRespond gtr = game.prepResponse();
-      //3. prep and send response to everyone
-	    if(!this->server.sendPacketToAll<ServerGameTimeRespond>( gtr ) ) {
-        std::cout << "Error sending sgtr to everybody" << std::endl;
-      }
-
-      // Go back to the lobby to wait for the game to restart
-      if(gtr.state != Game_State::PLAYING && ConfigManager::gameRestart())
-        break;
-
-      //4. go back to sleep slave.
-      sf::sleep( sf::milliseconds( static_cast<sf::Int32>(ConfigManager::serverTickLengthMilli()) -
+        // Go back to the lobby to wait for the game to restart
+        if(gameState != Game_State::PLAYING ) {
+          clock.restart();
+          break;
+        }
+        //4. go back to sleep slave.
+        sf::sleep( sf::milliseconds( static_cast<sf::Int32>(ConfigManager::serverTickLengthMilli()) -
                                    clock.getElapsedTime().asMilliseconds()) );
+      } else {
+        std::cout<<"still waiting"<<std::endl;
+        if (clock.getElapsedTime().asSeconds() > 5) {
+          gameState = PLAYING; 
+        }
+      }
     }
   }
 } 
