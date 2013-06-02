@@ -369,7 +369,7 @@ v3_t Player::getProjectilePosition() {
     size = ProjInfo[chargedProjectile->getMagicType()].size;
   else
     size = ProjInfo[weapon[current_weapon_selection]->getBasicAttack()].size;
-  d.scale(size + 0.5f);
+  d.scale(size + 0.5f + playerHeight/2.f);
   temp += d;
   return temp;
 }
