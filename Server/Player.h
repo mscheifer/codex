@@ -53,6 +53,7 @@ public:
   bool collidePlayer(const std::pair<Entity*,BoundingObj::vec3_t>& p);
   bool moveTowardDirection(move_t degree, bool jump); //handle movement input WADS jump
   void handleAction(ClientGameTimeAction a);
+
   
   //getters and setters
   int getCurrentWeaponSelection() const { return current_weapon_selection; };
