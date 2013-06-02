@@ -123,7 +123,6 @@ void NetworkServer::doServer() {
         sf::sleep( sf::milliseconds( static_cast<sf::Int32>(ConfigManager::serverTickLengthMilli()) -
                                    clock.getElapsedTime().asMilliseconds()) );
       } else {
-        std::cout<<"still waiting"<<std::endl;
         if (clock.getElapsedTime().asSeconds() > 5) {
           gameState = PLAYING; 
         }

@@ -228,7 +228,7 @@ void NetworkClient::doClient() {
         break;
       if (gameRestart) {
         clock.restart();
-        break;
+        continue;
       }
       this->gxClient.draw();
       //drawTime = profilerTime.getElapsedTime().asMilliseconds();
