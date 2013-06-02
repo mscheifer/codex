@@ -28,8 +28,8 @@ void Map::mapReset()
   entities.clear();
   liveProjectTile.clear();
   initWalls();
- // initWallsOne();
- // initWallsTwo();
+  initWallsOne();
+  initWallsTwo();
   initPowerUps();
   for(unsigned int i = 0; i < players.size(); i++)
   {

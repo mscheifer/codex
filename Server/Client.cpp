@@ -114,6 +114,7 @@ void NetworkClient::receiveMessages() {
           break;
       default:
         std::cout<<"There is an error when receiving"<<std::endl;
+        std::cout << "of packet type " << packetType << std::endl;
         break;
     }
   }
@@ -209,6 +210,7 @@ void NetworkClient::doClient() {
   clock.restart();
   gameRestart = true;
   while(this->running) {
+    if (gameStart) {
     /*sf::Clock profilerTime;
     float processInputTime;
     float receiveMessagesTime;
@@ -228,6 +230,7 @@ void NetworkClient::doClient() {
         break;
       if (gameRestart) {
         clock.restart();
+        gameStart = false;
         continue;
       }
       this->gxClient.draw();
@@ -249,5 +252,6 @@ void NetworkClient::doClient() {
       gxClient.updateHUDTimer(remaining);
       this->gxClient.draw();
     }
+    } else { receiveMessages();}
   }
 }

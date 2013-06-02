@@ -12,6 +12,7 @@ Game::~Game(void)
 
 void Game::chooseMinotaur() 
 {
+  return;
   srand(static_cast<unsigned int>(time(nullptr)));
   int minotaur = rand() % ConfigManager::numPlayers();
   world.getPlayers()[minotaur]->setAsMinotaur(true);
@@ -63,8 +64,14 @@ void Game::updateAndResolveCollision() {
 	}
   currentProjectile = world.getLiveProjectTile();
   for( unsigned int i = 0; i < currentProjectile.size(); i++ ) {
-    if(currentProjectile[i]->live) //TODO (but not really) fix this to use live
+    //if(currentProjectile[i]->live) //TODO (but not really) fix this to use live
 		  currentProjectile[i]->handleCollisions();
+	}
+
+  //delete the projectiles marked for deletion
+  for( unsigned int i = 0; i < currentProjectile.size(); i++ ) {
+    if(!currentProjectile[i]->live)
+		  world.destroyProjectile(currentProjectile[i]);
 	}
 }
 
