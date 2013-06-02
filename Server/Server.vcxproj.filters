@@ -210,10 +210,10 @@
     <ClCompile Include="graphics\lobby.cpp">
       <Filter>Source Files\graphics</Filter>
     </ClCompile>
-    <ClCompile Include="particleSystem.cpp">
+    <ClCompile Include="graphics\buffer.cpp">
       <Filter>Source Files\graphics</Filter>
     </ClCompile>
-    <ClCompile Include="graphics\buffer.cpp">
+    <ClCompile Include="graphics\particleSystem.cpp">
       <Filter>Source Files\graphics</Filter>
     </ClCompile>
   </ItemGroup>

@@ -203,39 +203,51 @@ void gx::graphicsClient::updatePosition(vector4f pos) {
   this->playerPosition = pos;
   this->setCamera();
 }
+
 int aniFrame = 0;
-void gx::graphicsClient::updateEntities(std::vector<Entity*> data) {  
+
+void gx::graphicsClient::clearEntities() {
   lights.clear();
 
   this->entities.reset();
   this->animatedDrawer.reset();
+}
 
-  for(auto entityP = data.begin(); entityP != data.end(); ++entityP) {
-    const auto& entity = **entityP;
-    const auto& type = entity.getType();
-    //lights
-    if(type == PROJECTILE) {
-      lights.addLight(vector4f(0,0,0) + entity.getPosition());
-    }
+void gx::graphicsClient::addEntity(Entity* ent) {
+  const auto& entity = *ent;
+  const auto& type = entity.getType();
 
-    if(type == PLAYER) { //TODO: change back to type == PLAYER
-      dynamicDrawer::instanceData inst;
-      inst. pos = entity.getPosition();
-      inst.dirY = entity.getDirection();
-      inst.type = 0; //TODO: somehow set this based on type but it can't be absolute type?
-      inst.animation = 0; //TODO: select animation based on context
-      ++aniFrame;
-      aniFrame %= 240;
-      inst.timePosition = static_cast<double>(aniFrame) / 120.0;
-      this->animatedDrawer.addInstance(inst);
-    } else {
-      staticDrawer::instanceData inst;
-      inst. pos = entity.getPosition();
-      inst.dirY = entity.getDirection();
-      inst.type = entity.getType();
-      this->entities.addInstance(inst);
-    }
+  if(type == PLAYER) { //TODO: change back to type == PLAYER
+    dynamicDrawer::instanceData inst;
+    inst.scale = 1;
+    inst. pos = entity.getPosition();
+    inst.dirY = entity.getDirection();
+    inst.type = 0; //TODO: somehow set this based on type but it can't be absolute type?
+    inst.animation = 0; //TODO: select animation based on context
+    ++aniFrame;
+    aniFrame %= 240;
+    inst.timePosition = static_cast<double>(aniFrame) / 120.0;
+    this->animatedDrawer.addInstance(inst);
+  } else {
+    staticDrawer::instanceData inst;
+    inst.scale = 1;
+    inst. pos = entity.getPosition();
+    inst.dirY = entity.getDirection();
+    inst.type = entity.getType();
+    this->entities.addInstance(inst);
   }
+}
+
+void gx::graphicsClient::addEntity(Projectile* ent) {
+  const auto& entity = *ent;
+
+  lights.addLight(vector4f(0,0,0) + entity.getPosition());
+  staticDrawer::instanceData inst;
+  inst.scale = ProjInfo[entity.getMagicType()].size;
+  inst. pos = entity.getPosition();
+  inst.dirY = entity.getDirection();
+  inst.type = entity.getType();
+  this->entities.addInstance(inst);
 }
 
 void gx::graphicsClient::updateHUD(Player & player) {

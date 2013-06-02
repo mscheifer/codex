@@ -62,11 +62,11 @@ const std::vector<BUFF> NONEV(NONEarr,NONEarr+1);
 const ProjectileData ProjInfo[] = { //TODO fix all these numbers
   //             type,  rng, spd size str mp buff chrgTime
   ProjectileData(FIR1,  300, 400, 1,   10, 10, FIR1V, 15000),
-  ProjectileData(FIR2,  300, 300, 1,   12, 0, FIR2V, 5000),
-  ProjectileData(FIR3,  300, 300, 1,   20, 0, FIR3V, -1),
+  ProjectileData(FIR2,  300, 300, 1.5,   12, 0, FIR2V, 5000),
+  ProjectileData(FIR3,  300, 300, 2,   20, 0, FIR3V, -1),
   ProjectileData(ICE1,  300, 200, 1,   10, 10, ICE1V, 5000),
-  ProjectileData(ICE2,  300, 300, 1,   12, 0, ICE2V, 5000),
-  ProjectileData(ICE3,  300, 300, 1,   20, 0, ICE3V, -1),
+  ProjectileData(ICE2,  300, 300, 1.5,   12, 0, ICE2V, 5000),
+  ProjectileData(ICE3,  300, 300, 2,   20, 0, ICE3V, -1),
   ProjectileData(THU1,  300, 300, 1,   10, 10, THU1V, 5000),
   ProjectileData(THU2,  300, 300, 1,   12, 0, THU2V, 5000),
   ProjectileData(THU3,  300, 300, 1,   20, 0, THU3V, -1),
@@ -138,7 +138,7 @@ public:
   void setRange(length_t r);
   void setOwner(Player *);
   void setCharing( bool c ){ charging = c; }
-  MAGIC_POWER getMagicType(){ return magicType; }
+  MAGIC_POWER getMagicType() const { return magicType; }
   void setMagicType( MAGIC_POWER m, bool melee = false); //TODO this is not the best way
   Player* getOwner(){return owner;}
   void setChargeTime(int t) { Charge_Time = t ;};

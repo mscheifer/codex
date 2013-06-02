@@ -14,7 +14,6 @@ void NetworkClient::receiveMessages() {
     ChatObject chatObj;
     sf::Uint32 packetType;
     packet >> packetType;
-    std::vector<Entity*> entities;
     switch (packetType) {
       case CHAT:
         chatObj.deserialize(packet);
@@ -33,10 +32,12 @@ void NetworkClient::receiveMessages() {
         bool minotaur = s.players[this->id].isMinotaur();
         static float maxProx = 10.f;
         
+        this->gxClient.clearEntities();
+
         for(auto playerP = s.players.begin(); playerP != s.players.end(); playerP++) {
           if(playerP->player_id != this->id) {
             //make sure the SGTR stays in scope
-            entities.push_back(&(*playerP));
+            this->gxClient.addEntity(&(*playerP));
 
             v3_t dist = playerP->getPosition() - pos; //audio prox calculation
             if(std::abs(dist.magnitude()) >= maxProx){
@@ -49,22 +50,21 @@ void NetworkClient::receiveMessages() {
           AudioManager::processPlayerSound(*playerP);
         }
         for(auto entP = s.walls.begin(); entP != s.walls.end(); entP++) {
-          entities.push_back(*entP);
+          this->gxClient.addEntity(*entP);
         }
         for(auto entP = s.projectiles.begin(); entP != s.projectiles.end(); entP++) {
-          entities.push_back(*entP);
+          this->gxClient.addEntity(*entP);
            AudioManager::processProjectileSound(**entP);
         }
         for(auto entP = s.powerups.begin(); entP != s.powerups.end(); entP++) {
-          entities.push_back(*entP);
+          this->gxClient.addEntity(*entP);
         }
         for(auto entP = s.weapons.begin(); entP != s.weapons.end(); entP++) {
-          entities.push_back(*entP);
+          this->gxClient.addEntity(*entP);
         }
         
         gxClient.updatePosition(gx::vector4f(pos.x,pos.y,pos.z));
         //entities.push_back(&(this->skybox)); //add skybox
-        gxClient.updateEntities(entities);
         gxClient.updateHUD(s.players[id]);
         gxClient.updateScores(wins,kills);
         //std::cout << "num entities received: " << entities.size() << std::endl;
