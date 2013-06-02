@@ -148,7 +148,8 @@ void Projectile::handleCollisions() {
   }
 
   if(destroy){
-    map->destroyProjectile(this);
+    live=false;
+    //map->destroyProjectile(this);
   }
 }
 

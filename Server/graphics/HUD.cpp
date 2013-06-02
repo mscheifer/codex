@@ -133,7 +133,7 @@ void gx::HUD::draw(sf::RenderWindow & window) {
     window.draw(aimer);
   }
   int buffn = 0; 
-  for ( int i =0; i<renderBuff.size(); i++ ) {
+  for ( unsigned int i =0; i<renderBuff.size(); i++ ) {
     if (renderBuff[i]) {
       buffSprites[i]->setPosition(10+buffn*37,window.getSize().y-42);
       buffLSprites[i]->setPosition(10+buffn*37,window.getSize().y-42);

@@ -14,7 +14,6 @@ void NetworkClient::receiveMessages() {
     packet >> packetType;
     std::vector<int> kills;
     std::vector<int> wins;
-    std::vector<Entity*> entities;
     int proximity = 2;
     v3_t pos;
     bool minotaur;
@@ -28,13 +27,15 @@ void NetworkClient::receiveMessages() {
         if (s.state != PLAYING)
           gameRestart = true;
         pos = s.players[this->id].getPosition();
-
+        proximity = 2;
         minotaur = s.players[this->id].isMinotaur();
         
+        this->gxClient.clearEntities();
+
         for(auto playerP = s.players.begin(); playerP != s.players.end(); playerP++) {
           if(playerP->player_id != this->id) {
             //make sure the SGTR stays in scope
-            entities.push_back(&(*playerP));
+            this->gxClient.addEntity(&(*playerP));
 
             v3_t dist = playerP->getPosition() - pos; //audio prox calculation
             if(std::abs(dist.magnitude()) >= maxProx){
@@ -47,24 +48,21 @@ void NetworkClient::receiveMessages() {
           AudioManager::processPlayerSound(*playerP);
         }
         for(auto entP = s.walls.begin(); entP != s.walls.end(); entP++) {
-          entities.push_back(*entP);
+          this->gxClient.addEntity(*entP);
         }
-     //   std::cout << "new pack" << std::endl;
         for(auto entP = s.projectiles.begin(); entP != s.projectiles.end(); entP++) {
-     //     std::cout << "there's a projectile at (" << (**entP).getPosition().x << "," << (**entP).getPosition().y << "," << (**entP).getPosition().z << ")" << std::endl;
-          entities.push_back(*entP);
+          this->gxClient.addEntity(*entP);
            AudioManager::processProjectileSound(**entP);
         }
         for(auto entP = s.powerups.begin(); entP != s.powerups.end(); entP++) {
-          entities.push_back(*entP);
+          this->gxClient.addEntity(*entP);
         }
         for(auto entP = s.weapons.begin(); entP != s.weapons.end(); entP++) {
-          entities.push_back(*entP);
+          this->gxClient.addEntity(*entP);
         }
         
         gxClient.updatePosition(gx::vector4f(pos.x,pos.y,pos.z));
         //entities.push_back(&(this->skybox)); //add skybox
-        gxClient.updateEntities(entities);
         gxClient.updateHUD(s.players[id]);
         gxClient.updateScores(wins,kills);
         //std::cout << "num entities received: " << entities.size() << std::endl;
@@ -116,6 +114,7 @@ void NetworkClient::receiveMessages() {
           break;
       default:
         std::cout<<"There is an error when receiving"<<std::endl;
+        std::cout << "of packet type " << packetType << std::endl;
         break;
     }
   }
@@ -211,6 +210,7 @@ void NetworkClient::doClient() {
   clock.restart();
   gameRestart = true;
   while(this->running) {
+    if (gameStart) {
     /*sf::Clock profilerTime;
     float processInputTime;
     float receiveMessagesTime;
@@ -230,6 +230,7 @@ void NetworkClient::doClient() {
         break;
       if (gameRestart) {
         clock.restart();
+        gameStart = false;
         continue;
       }
       this->gxClient.draw();
@@ -251,5 +252,6 @@ void NetworkClient::doClient() {
       gxClient.updateHUDTimer(remaining);
       this->gxClient.draw();
     }
+    } else { receiveMessages();}
   }
 }

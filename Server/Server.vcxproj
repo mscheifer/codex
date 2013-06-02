@@ -86,6 +86,7 @@
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="graphics\basicUniform.cpp" />
     <ClCompile Include="graphics\bone.cpp" />
+    <ClCompile Include="graphics\buffer.cpp" />
     <ClCompile Include="graphics\CubemapTexture.cpp" />
     <ClCompile Include="graphics\displaySet.cpp" />
     <ClCompile Include="graphics\drawer.cpp" />
@@ -101,6 +102,7 @@
     <ClCompile Include="graphics\mesh.cpp" />
     <ClCompile Include="graphics\meshEntry.cpp" />
     <ClCompile Include="graphics\oglUtil.cpp" />
+    <ClCompile Include="graphics\particleSystem.cpp" />
     <ClCompile Include="graphics\shaderProgram.cpp" />
     <ClCompile Include="graphics\SkyboxDraw.cpp" />
     <ClCompile Include="graphics\staticDrawerImpl.cpp" />
@@ -137,6 +139,7 @@
     <ClInclude Include="boundingManager.h" />
     <ClInclude Include="boundingObj.h" />
     <ClInclude Include="boundingSphere.h" />
+    <ClInclude Include="buffer.h" />
     <ClInclude Include="ChatHandler.h" />
     <ClInclude Include="Client.h" />
     <ClInclude Include="ConfigManager.h" />
