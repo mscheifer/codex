@@ -71,24 +71,7 @@ void NetworkClient::receiveMessages() {
         sf::Listener::setPosition(pos.x/AudioManager::soundScaling, pos.y/AudioManager::soundScaling, pos.z/AudioManager::soundScaling);
         dir = s.players[this->id].getDirection();
         sf::Listener::setDirection(dir.x, dir.y, dir.z);
-
-        //TODO not sure where to put this @bowen add to HUD here
-        if( s.players[id].getPickupWeaponType() != UNK )
-          std::cout << "can pick up weapon type " << WeaponNames[s.players[id].getPickupWeaponType()] << std::endl;
         
-        //calculate proximity of players
-        //can do -- instead of ++ so we can have more intense if less players
-        
-        //if(s.players[this->id].getPosition().y > -5){
-        //  proximity++;
-        //}
-        //if(s.players[this->id].getPosition().y > 5){
-        //  proximity++;
-        //}
-
-        //if(s.players[this->id].getPosition().x > 0){
-        //  minotaur = false;
-        //}
         //std::cout<<"prox " << proximity << "mino " << minotaur << std::endl;
         AudioManager::updateMusic(proximity, minotaur);
         
@@ -113,8 +96,7 @@ void NetworkClient::receiveMessages() {
           gameStart = true;
           break;
       default:
-        std::cout<<"There is an error when receiving"<<std::endl;
-        std::cout << "of packet type " << packetType << std::endl;
+        std::cout<<"Error client receive bad packet " << packetType << std::endl;
         break;
     }
   }
