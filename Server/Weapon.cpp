@@ -50,6 +50,8 @@ bool Weapon::canUseWeapon(bool range_attack, Player* Owner) {
   return false;
 }
 
+
+
 Projectile* Weapon::attackMelee(v3_t dir , v3_t pos, Player* owner)
 {
   Projectile* pj = map->produceProjectile();

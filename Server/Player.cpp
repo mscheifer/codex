@@ -83,7 +83,10 @@ void Player::init(v3_t pos, int assigned_id, Map * m)
   inactiveBuffs.clear();
 
   current_weapon_selection = 1;
+
   chargedProjectile = nullptr;
+  
+
   m->addToQtree(this);
 }
 
@@ -147,8 +150,11 @@ bool Player::damageBy(Projectile *deadly)
   dead = health==0;
 
   if(charging) {
-    map->destroyProjectile(chargedProjectile);
-    chargedProjectile = nullptr;
+    for(int i = 0 ; i < MAXPROJECTILES ; i++ ) {
+      map->destroyProjectile(chargedProjectile);
+      chargedProjectile = nullptr;
+    }
+   
     charging = false;
   }
 
@@ -280,8 +286,10 @@ void Player::update(){
     elapsedChargeTime = chargedProjectile->getElapsedTime();
     totalChargeTime = ProjInfo[chargedProjectile->getMagicType()].chargeTime * getChargeCD();
     chargeMagicType = chargedProjectile->getMagicType();
+   
     chargedProjectile->setDirection(direction);
     chargedProjectile->setPosition(getProjectilePosition());
+   
   }
 
   health+= healthRegen*getHealthRegenMultiplier();
@@ -351,8 +359,14 @@ void Player::handleSelfAction(ClientGameTimeAction a) {
 void Player::fireProjectile() {
     v3_t v = direction;
     v.normalize();
-    chargedProjectile->fire(v,getStrengthMultiplier());
+    if(minotaur) {
+     chargedProjectile->fireMutiple(v,getStrengthMultiplier(),10);
+    } else {
+     chargedProjectile->fire(v,getStrengthMultiplier());
+    }
+    
     chargedProjectile = nullptr;
+    
     charging = false;
     shotProjectile = true;
 }

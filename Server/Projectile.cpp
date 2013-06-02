@@ -108,7 +108,6 @@ void Projectile::updateBoundsSoft(){
 void Projectile::handleCollisions() {
   std::vector<std::pair<Entity*,BoundingObj::vec3_t>> entities =  detectCollision();
   bool destroy = false;
-
   for( auto it = entities.begin(); it != entities.end(); it++ ){
     Entity * e = it->first; 
     switch(e->getType()){
@@ -124,6 +123,7 @@ void Projectile::handleCollisions() {
         destroy = true;
       break;
     case PROJECTILE:
+      
       Projectile * proj = (Projectile*) e;
       //if(charging && sameTeam(proj) ){ //this one is charging
       //  setMagicType(combine(proj->getMagicType(), magicType));
@@ -144,6 +144,7 @@ void Projectile::handleCollisions() {
       //}
       break;
     }
+    
   }
 
   if(destroy){
@@ -161,11 +162,49 @@ void Projectile::fire(v3_t v, float strengthMultiplier) {
   velocity = v * ProjInfo[magicType].speed;
   setRange(ProjInfo[magicType].range); //this also sets travel distance left
   strength = ProjInfo[magicType].strength * strengthMultiplier;
-
   std::cout << toString();
-
   fired = true;
   charging = false;
+}
+
+
+void Projectile::fireMutiple(v3_t v, float strengthMultiplier, int number) {
+ 
+  velocity = v * ProjInfo[magicType].speed;
+  setRange(ProjInfo[magicType].range); //this also sets travel distance left
+  strength = ProjInfo[magicType].strength * strengthMultiplier;
+  fired = true;
+  charging = false;
+
+  
+  double slice = 70.0/number;
+  double counter = slice;
+  double start = -35.0; 
+double PI = 3.14159265;
+  for( int i = 0; i < number ; i++) {
+    double adjusted = (start + counter)* PI /180.0;
+
+    double xp = velocity.x*cos(adjusted) - velocity.y*sin(adjusted);
+    double yp = velocity.x*sin(adjusted) + velocity.y*cos(adjusted);
+    counter += slice;
+    Projectile* pj = map->produceProjectile();
+    pj->setVelocity(v3_t(xp,yp,velocity.z));
+    pj->setOwner(owner);
+    pj->setMagicType(magicType);
+    pj->setRender(true);
+    pj->setPosition(getPosition());
+    pj->setRange(ProjInfo[magicType].range); //this also sets travel distance left
+    pj->strength = ProjInfo[magicType].strength * strengthMultiplier;
+    pj->fired = true;
+    pj->charging = false;
+
+  }
+     // x' = xcos@ - ysin@
+    // y' = xsin@ + ycos@ 
+   //std::cout << toString();
+
+
+    
 }
 
 MAGIC_POWER Projectile::upgrade( const MAGIC_POWER m ){
