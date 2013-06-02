@@ -125,7 +125,7 @@ void NetworkServer::doServer() {
           std::cout << "Error, sleep negative amount. server can't run at this tick speed, lower it" << std::endl;
         sf::sleep( sf::milliseconds(sleepAmount) );
       } else {
-        if (clock.getElapsedTime().asSeconds() > 1) {
+        if (clock.getElapsedTime().asSeconds() > 1) { //TODO make this 5 sec again
           gameState = PLAYING; 
         }
       }

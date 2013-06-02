@@ -245,7 +245,7 @@ void NetworkClient::doClient() {
       //std::cout<<"processInput: "<< processInputTime <<"ms\treceiveMessagesTime: "<<
       //receiveMessagesTime <<"ms\tdrawTime: "<< drawTime <<"ms\tsendPackTime: "<< sendPackTime <<std::endl;
     } else {
-      float remaining = 1-clock.getElapsedTime().asSeconds();
+      float remaining = 1-clock.getElapsedTime().asSeconds(); //TODO make this 5 sec again
       if (remaining <= 0) {
         gameRestart = false;
       }
