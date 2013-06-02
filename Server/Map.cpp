@@ -15,8 +15,9 @@ Map::Map(void): spawnPositions(), freeProjectiles(), q(0,Rectangle(BoundingObj::
 {
 	map_size = 15;
 	freeProjectiles = new std::stack<Projectile *>();
-  initWallsOne();
-  initWallsTwo();
+   initWalls();
+ // initWallsOne();
+ // initWallsTwo();
   initPowerUps();
 }
 
@@ -26,8 +27,9 @@ void Map::mapReset()
   spawnPositions.clear();
   entities.clear();
   liveProjectTile.clear();
-  initWallsOne();
-  initWallsTwo();
+  initWalls();
+ // initWallsOne();
+ // initWallsTwo();
   initPowerUps();
   for(unsigned int i = 0; i < players.size(); i++)
   {
@@ -554,8 +556,6 @@ std::vector<Entity *> Map::getEntity() {
    if(proj == nullptr || proj->getOwner() == nullptr) //has already been removed
      return;
 
-   if(proj->getOwner()->chargedProjectile == proj )
-     proj->getOwner()->chargedProjectile = nullptr;
 
    proj->setOwner(NULL);
    freeProjectiles->push(proj);

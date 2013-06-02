@@ -9,7 +9,7 @@
 
 #include "Weapon.h"
 const int MAXWEAPONS = 2;
-
+const int MAXPROJECTILES = 20;
 class Player: public Entity
 {
 public:
@@ -36,6 +36,7 @@ public:
   int player_id;
   std::string name;
   Projectile* chargedProjectile;
+  
   int kills; //TODO private?
   int wins;
   Player();
