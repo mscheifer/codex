@@ -72,7 +72,7 @@ void NetworkClient::receiveMessages() {
         dir = s.players[this->id].getDirection();
         sf::Listener::setDirection(dir.x, dir.y, dir.z);
         
-        //std::cout<<"prox " << proximity << "mino " << minotaur << std::endl;
+
         AudioManager::updateMusic(proximity, minotaur);
         
         break;
@@ -93,7 +93,7 @@ void NetworkClient::receiveMessages() {
           break;
       case INIT:
           //TODO initialize the player info
-          gameStart = true;
+          this->gameStart = true;
           break;
       default:
         std::cout<<"Error client receive bad packet " << packetType << std::endl;
