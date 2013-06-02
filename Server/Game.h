@@ -30,10 +30,8 @@ struct StartGamePacket //is this used?
   static const int packetType = STARTGAME;
   // int can be string 
   StartGamePacket() { }
-  StartGamePacket(int num) { 
-    for (int i =0; i < num; i++) {
-      playerStatus.push_back(std::pair<int,bool>(i,false));
-    }
+  void addPlayer() {
+    playerStatus.push_back(std::pair<int,bool>(playerStatus.size(),false));
   }
   void changeStatus(int i ) {
     playerStatus[i].second = !playerStatus[i].second;

@@ -39,14 +39,18 @@ void gx::lobby::updateLobby(std::vector<std::pair<int,bool>> & playerStatus ) {
   status.clear();
   for (auto itr = playerStatus.begin(); itr != playerStatus.end(); itr++ )
     status.push_back((*itr).second);
-  if (!joined) {
+  if (!joined) {  //TODO this is hacky change it when users can input ip and name
     welcome.setString("Please click join to start.");
     joined = true;
-    for (unsigned int i=0;i<playerStatus.size();i++) {
+    for (int i=0;i<playerStatus.size();i++) {
       players.push_back(sf::Sprite());
     }
   }
-  for (unsigned int i=0;i<playerStatus.size();i++) {
+
+  if (playerStatus.size() > players.size())
+    players.push_back(sf::Sprite());
+
+  for (int i=0;i<playerStatus.size();i++) {
     if (status[i]) {
       players[i].setTexture(readyTexture);
     } else {
@@ -77,7 +81,7 @@ void gx::lobby::drawLobby(sf::RenderWindow & window) {
   window.draw(buttonRect);
   window.draw(button);
   if (joined ) {
-    for (unsigned int i=0;i<players.size();i++) {
+    for (int i=0;i<players.size();i++) {
       players[i].setPosition(window.getSize().x/players.size()/2-50+i*(window.getSize().x/players.size()), 300); 
       window.draw(players[i]);
     }

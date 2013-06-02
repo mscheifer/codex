@@ -25,7 +25,7 @@ const double movementAngles[8] = {
   -M_PI_4,
 };
 
-enum Game_State {MANOTAUR_WIN, CIVILIAN_WIN, PLAYING}; 
+enum Game_State {WAIT=0, PLAYING,MANOTAUR_WIN, CIVILIAN_WIN}; 
 
 //Networking enums
 enum Opcode {INIT,JOINID,STARTGAME, CHAT, T1, T2, CGTA, SGTR, ERROR};

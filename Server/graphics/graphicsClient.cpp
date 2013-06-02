@@ -279,3 +279,7 @@ void gx::graphicsClient::updateScores(std::vector<int> & pwins,
 void gx::graphicsClient::updateLobby(std::vector<std::pair<int,bool>> & playerStatus ) {
   Lobby.updateLobby(playerStatus);
 }
+
+void gx::graphicsClient::updateHUDTimer(float timer) {
+  this->Hud.updateHUDTimer(timer);
+}
