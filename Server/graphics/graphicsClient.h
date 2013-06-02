@@ -69,6 +69,7 @@ class graphicsClient {
     void gameEnd();
     void updateScores(std::vector<int> & pwins, std::vector<int> & pkills);
     void updateLobby(std::vector<std::pair<int,bool>> & playerStatus );
+    void updateHUDTimer(float timer); 
 
     bool closed()        { return this->userInput.getStop(); }
 };

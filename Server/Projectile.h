@@ -61,13 +61,13 @@ const std::vector<BUFF> NONEV(NONEarr,NONEarr+1);
 //these need to match the MAGIC_POWER enum, the type is just for readability
 const ProjectileData ProjInfo[] = { //TODO fix all these numbers
   //             type,  rng, spd size str mp buff chrgTime
-  ProjectileData(FIR1,  300, 400, 1,   10, 10, FIR1V, 15000),
+  ProjectileData(FIR1,  300, 400, 1,   10, 0, NONEV, 15000),
   ProjectileData(FIR2,  300, 300, 1.5,   12, 0, FIR2V, 5000),
   ProjectileData(FIR3,  300, 300, 2,   20, 0, FIR3V, -1),
-  ProjectileData(ICE1,  300, 200, 1,   10, 10, ICE1V, 5000),
+  ProjectileData(ICE1,  300, 200, 1,   10, 20, NONEV, 5000),
   ProjectileData(ICE2,  300, 300, 1.5,   12, 0, ICE2V, 5000),
   ProjectileData(ICE3,  300, 300, 2,   20, 0, ICE3V, -1),
-  ProjectileData(THU1,  300, 300, 1,   10, 10, THU1V, 5000),
+  ProjectileData(THU1,  300, 300, 1,   10, 20, THU1V, 5000),
   ProjectileData(THU2,  300, 300, 1,   12, 0, THU2V, 5000),
   ProjectileData(THU3,  300, 300, 1,   20, 0, THU3V, -1),
 
@@ -102,7 +102,8 @@ public:
   static const float projHeight;
   static const float projDepth;
 
-  bool combined;
+  bool live; //if proj is in air or not
+  bool combined; //for sound event
   length_t range;
   length_t distanceLeftToTravel;
 

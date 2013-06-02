@@ -38,11 +38,11 @@ void Map::mapReset()
 }
 
 void Map::initPowerUps() {
-  PowerUp* superPower = new PowerUp(v3_t(5,5,0), this, MOVEBOOST);
+  PowerUp* superPower = new PowerUp(v3_t(5,5,0), this, MANABOOST);
   superPower->setRespownTime(5000);
   this->entities.push_back(superPower);
 
-  PowerUp* p2 = new PowerUp(v3_t(-10,-10,0), this, DEFENSEBOOST);
+  PowerUp* p2 = new PowerUp(v3_t(-10,-10,0), this, HEALTHBOOST);
   p2->setRespownTime(5000);
   this->entities.push_back(p2);
 
@@ -315,7 +315,7 @@ void Map::initWalls(void)
   //w1->dropDown(v3_t(10,10,0));
   //w1->setDirection(v3_t(0,1,0));
   //entities.push_back(w1);
-  WeaponFire* w2 = new WeaponFire(v3_t(120,120,0), this, THU1);
+  WeaponFire* w2 = new WeaponFire(v3_t(120,120,0), this, ICE1);
   w2->dropDown(v3_t(10,-10,0));
   w2->setDirection(v3_t(0,1,0));
   entities.push_back(w2);
@@ -546,6 +546,7 @@ std::vector<Entity *> Map::getEntity() {
    liveProjectTile.push_back(ret);
    ret->reset();
    addToQtree(ret);
+   ret->live = true;
    return ret;
  }
 
@@ -557,13 +558,15 @@ std::vector<Entity *> Map::getEntity() {
    if(proj->getOwner()->chargedProjectile == proj )
      proj->getOwner()->chargedProjectile = nullptr;
 
-   proj->setOwner(NULL);
-   freeProjectiles->push(proj);
+   proj->setOwner(nullptr);
+   proj->live = false;
    // should probably use a hasmap soon
-   for(unsigned int i = 0; i < liveProjectTile.size(); i++) {
-	   if(liveProjectTile.at(i) == proj) {
-			liveProjectTile.erase(liveProjectTile.begin() + i);
-	   }
+   for(auto it = liveProjectTile.begin(); it != liveProjectTile.end(); it++) {
+     if(*it == proj){
+        liveProjectTile.erase(it);
+        freeProjectiles->push(proj);
+        break;
+     }
    }
    removeFromQtree(proj);
  }

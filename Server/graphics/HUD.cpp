@@ -6,7 +6,7 @@
 gx::HUD::HUD(void):health(100), maxHealth(100), HLossPercentage(0), 
   mana(100), maxMana(100), MLossPercentage(0), canPickUp(false),
   weapon1(0), weapon2(0), currentSelect(0), elapsedChargeTime(0),
-  totalChargeTime(-1), chargeMagicType(0), charging(false){
+  totalChargeTime(-1), chargeMagicType(0), charging(false), timer(0){
   font.loadFromFile("arial.ttf");
   emptyBarTexture.loadFromFile("graphics/Images/Empty_bar.png");
   //heart image
@@ -52,8 +52,8 @@ gx::HUD::HUD(void):health(100), maxHealth(100), HLossPercentage(0),
   //positionText
   positionText.setFont(font);
   positionText.setCharacterSize(24);
-  positionText.setColor(sf::Color::Black);
-  positionText.setPosition(600,500);
+  positionText.setColor(sf::Color::Green);
+  positionText.setPosition(300,500);
   //aimer
   aimerTexture.loadFromFile("graphics/Images/aimer.png");
   aimer.setTexture(aimerTexture);
@@ -71,6 +71,9 @@ gx::HUD::HUD(void):health(100), maxHealth(100), HLossPercentage(0),
   nextSpell.setCharacterSize(18);
   currentSpell.setColor(sf::Color::Black);
   nextSpell.setColor(sf::Color::Black);
+  clockText.setFont(font);
+  clockText.setCharacterSize(36);
+  clockText.setColor(sf::Color::Yellow);
 }
 
 gx::HUD::~HUD(void) {
@@ -164,6 +167,13 @@ void gx::HUD::draw(sf::RenderWindow & window) {
     currentSpell.setPosition( (window.getSize().x-400)/2,  window.getSize().y*0.8+20 );
     window.draw(currentSpell);
   } 
+  if (timer > 0 ) {
+    clockText.setString(std::string("Game starts in ") +
+      std::to_string(static_cast<long long>(timer)) +
+      std::string(" seconds"));
+    clockText.setPosition((window.getSize().x -clockText.getGlobalBounds().width)/2,200);
+    window.draw(clockText);
+  }
 }
 
 void gx::HUD::updateHUD(const Player& player) {
@@ -246,6 +256,10 @@ void gx::HUD::weaponHelper(std::string & path) {
    weaponSprites.push_back(tSprite);
 }
 
+void gx::HUD::updateHUDTimer(float timer) {
+  this->timer = timer;
+}
+
 void gx::HUD::initializeSprites() {
    //buff
    buffTextures.push_back(new sf::Texture());
@@ -295,3 +309,4 @@ void gx::HUD::initializeSprites() {
    weaponHelper(std::string("graphics/Images/weaponFist.png"));
    weaponHelper(std::string("graphics/Images/weaponBasic.png"));
 }
+
