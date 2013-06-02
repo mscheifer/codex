@@ -18,6 +18,7 @@ gx::graphicsEntity loadModel(const std::string& ModelPath,
 std::vector<gx::graphicsEntity> staticModels() {
   auto modelBadGuy = loadModel("models/badguy.dae",PowerUp::powerUpHeight,true);
   auto modelJack   = loadModel("models/weird_orange_thing.dae",Projectile::projDepth);
+  //auto modelHaduken= loadModel("models/haduken.dae",Projectile::projDepth);
   auto modelWall   = loadModel("models/stone_wall.dae",10);
   auto modelPlayer = loadModel("models/Test_Run.dae",Player::playerDepth);
   auto cubes = gx::loadCube();

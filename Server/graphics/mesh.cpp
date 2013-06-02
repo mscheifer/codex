@@ -50,9 +50,6 @@ gx::bone makeBone(gx::Mesh::idMap_t& idMap, int& nextId,
         k.position = gx::toVec4(animation->mPositionKeys[i].mValue);
         k.rotation = animation->mRotationKeys[i].mValue;
         k.scaling  = gx::toVec3(animation->mScalingKeys [i].mValue);
-        gx::debugout << "times " << animation->mPositionKeys[i].mTime << " ";
-        gx::debugout << animation->mRotationKeys[i].mTime << " ";
-        gx::debugout << animation->mScalingKeys[i].mTime << gx::endl;
         animKeys.insert(animKeys.end(),
           std::make_pair(animation->mPositionKeys[i].mTime,std::move(k)));
       }
