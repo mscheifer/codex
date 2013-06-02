@@ -150,10 +150,11 @@ bool Player::damageBy(Projectile *deadly)
   dead = health==0;
 
   if(charging) {
-    for(int i = 0 ; i < MAXPROJECTILES ; i++ ) {
-      map->destroyProjectile(chargedProjectile);
+    //for(int i = 0 ; i < MAXPROJECTILES ; i++ ) { @alvin what is this for loop for?
+      chargedProjectile->live = false;
+      //map->destroyProjectile(chargedProjectile);
       chargedProjectile = nullptr;
-    }
+    //}
    
     charging = false;
   }

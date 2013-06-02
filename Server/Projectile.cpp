@@ -131,6 +131,8 @@ void Projectile::handleCollisions() {
       //  combined = true;
       //} 
       //else
+
+      //I am moving and proj is charging and we same team
       if ( proj->charging && sameTeam(proj) ){ //the other one is charging
         proj->setMagicType(combine(proj->getMagicType(), magicType));
         proj->combined = true;

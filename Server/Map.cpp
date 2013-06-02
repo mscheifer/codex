@@ -15,11 +15,11 @@ Map::Map(void): spawnPositions(), freeProjectiles(), q(0,Rectangle(BoundingObj::
 {
 	map_size = 15;
 	freeProjectiles = new std::stack<Projectile *>();
-  // initWalls();
+   initWalls();
 
- initWallsOne();
-  initStaticWalls();
-  initWallsTwo();
+//  initWallsOne();
+//  initStaticWalls();
+//  initWallsTwo();
   initPowerUps();
 }
 
@@ -29,10 +29,10 @@ void Map::mapReset()
   spawnPositions.clear();
   entities.clear();
   liveProjectTile.clear();
-//  initWalls();
-  initWallsOne();
-  initStaticWalls();
-  initWallsTwo();
+  initWalls();
+//  initWallsOne();
+//  initStaticWalls();
+//  initWallsTwo();
   initPowerUps();
   for(unsigned int i = 0; i < players.size(); i++)
   {
@@ -353,6 +353,7 @@ void Map::initWallsOne(void)
   }
   
 }
+
 void Map::initStaticWalls(void) {
   v3_t facingEast(1,0,0);
   v3_t facingNorth(0,1,0);
@@ -407,6 +408,7 @@ void Map::initStaticWalls(void) {
     addWallDirection(startingX, startingY, startingZ, facingNorth, rows[i]);
   }
 }
+
 void Map::initWalls(void)
 {
   //TODO move this
@@ -476,13 +478,13 @@ void Map::initWalls(void)
     this->entities.push_back(rightWall);
   }
 
-  Wall *moveableWall = new Wall(width, depth, height, v3_t(0,0,20), facingNorth, this);
-  moveableWall->setWallChangeTime(1000.f);
-  moveableWall->addNewCenter(v3_t(0,0,5));
-  moveableWall->addNewCenter(v3_t(0,0,20));
-  moveableWall->addNewCenter(v3_t(0,10,20));
-  moveableWall->addNewCenter(v3_t(0,0,20));
-  this->entities.push_back(moveableWall);
+  //Wall *moveableWall = new Wall(width, depth, height, v3_t(0,0,20), facingNorth, this);
+  //moveableWall->setWallChangeTime(1000.f);
+  //moveableWall->addNewCenter(v3_t(0,0,5));
+  //moveableWall->addNewCenter(v3_t(0,0,20));
+  //moveableWall->addNewCenter(v3_t(0,10,20));
+  //moveableWall->addNewCenter(v3_t(0,0,20));
+  //this->entities.push_back(moveableWall);
   Wall * floor = new Wall(1000, 10, 1000, v3_t(0,0,-5), facingEast, this);
   this->entities.push_back(floor);
   floor->setRender(false);
@@ -651,12 +653,6 @@ std::vector<Entity *> Map::getEntity() {
 
  void Map::destroyProjectile(Projectile * proj)
  {
-   if(proj == nullptr || proj->getOwner() == nullptr) //has already been removed
-     return;
-
-   if(proj->getOwner()->chargedProjectile == proj )
-     proj->getOwner()->chargedProjectile = nullptr;
-
    proj->setOwner(nullptr);
    proj->live = false;
    // should probably use a hasmap soon
