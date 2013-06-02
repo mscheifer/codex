@@ -167,7 +167,6 @@ void gx::HUD::draw(sf::RenderWindow & window) {
     currentSpell.setPosition( (window.getSize().x-400)/2,  window.getSize().y*0.8+20 );
     window.draw(currentSpell);
   } 
-  std::cout<<"time left is "<<timer<<std::endl;
   if (timer > 0 ) {
     clockText.setString(std::string("Game starts in ") +
       std::to_string(static_cast<long long>(timer)) +
