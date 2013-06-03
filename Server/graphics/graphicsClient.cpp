@@ -29,15 +29,16 @@ std::vector<gx::graphicsEntity> staticModels() {
   auto modelPlayer     = loadModel(configModelName("goodguy"),Player::playerDepth,true);
   auto cubes = gx::loadCube();
   auto skybox = gx::loadSkybox();
-  auto ground = gx::loadGround(-1.0f, "models/floor_mipmap/floor.jpg", 9);
+  auto ground = gx::loadGround(-1.0f, "models/floor_mipmap/floor.jpg");
   std::vector<gx::graphicsEntity> entitiesData;
 
-  entitiesData.push_back(std::move(ground));  //ground
+  entitiesData.push_back(std::move(skybox));  //ignore
   entitiesData.push_back(std::move(modelPlayer)); //player
   entitiesData.push_back(std::move(modelWall));  //wall
   entitiesData.push_back(std::move(modelProjectile)); //projectile
   entitiesData.push_back(std::move(modelWeapon)); //weapon
   entitiesData.push_back(std::move(modelPowerUp)); //powerup
+  entitiesData.push_back(std::move(ground));  //ground
   entitiesData.insert(entitiesData.end(),std::make_move_iterator(cubes.begin()),
                                          std::make_move_iterator(cubes.end())); 
   return entitiesData;
@@ -223,6 +224,13 @@ void gx::graphicsClient::clearEntities() {
 
   this->entities.reset();
   this->animatedDrawer.reset();
+  
+  // add ground instance. kinda hacky but works
+  staticDrawer::instanceData groundInst;
+  groundInst.pos  = vector3f(10, 10, 0);
+  groundInst.dirY = vector3f(0,0,1);
+  groundInst.type = GROUND;
+  this->entities.addInstance(groundInst);
 }
 
 void gx::graphicsClient::addEntity(Entity* ent) {
@@ -248,13 +256,6 @@ void gx::graphicsClient::addEntity(Entity* ent) {
     inst.type = entity.getType();
     this->entities.addInstance(inst);
   }
-
-  // add ground instance. kinda hacky but works
-  staticDrawer::instanceData groundInst;
-  groundInst.pos  = vector3f(10, 10, 0);
-  groundInst.dirY = vector3f(0,1,0);
-  groundInst.type = GROUND;
-  this->entities.addInstance(groundInst);
 }
 
 void gx::graphicsClient::addEntity(Projectile* ent) {

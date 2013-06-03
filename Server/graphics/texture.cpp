@@ -40,23 +40,18 @@ bool gx::Texture::Load(Texture_Type type) { //TODO: just move this function to t
   glGenTextures(1, &(this->m_textureID));
   glBindTexture(this->m_textureTarget, this->m_textureID);
   
-  if (type & GROUNDTEX) {
-
-	  unsigned int mmLevel = type ^ GROUNDTEX;
-	  //LoadMipmap(mmLevel);
-
-	  glTexParameterf( GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-	  glTexParameterf( GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER,
-		  GL_LINEAR_MIPMAP_LINEAR );
-	  glGenerateMipmap(GL_TEXTURE_2D);
-
-  } //else {
-	  glTexParameterf(this->m_textureTarget, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-	  glTexParameterf(this->m_textureTarget, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-  //}
-
   glTexImage2D(this->m_textureTarget, 0, GL_RGBA, width, height, 0, 
 	  GL_RGBA, GL_UNSIGNED_BYTE, this->m_image.getPixelsPtr());
+  glGenerateMipmap(this->m_textureTarget);
+  if (type & GROUNDTEX) {
+
+	glTexParameterf( this->m_textureTarget, GL_TEXTURE_WRAP_S, GL_REPEAT );
+	glTexParameterf( this->m_textureTarget, GL_TEXTURE_WRAP_T, GL_REPEAT );
+  }
+	glTexParameterf( this->m_textureTarget, GL_TEXTURE_MIN_FILTER,
+		GL_LINEAR_MIPMAP_LINEAR );
+  glTexParameterf(this->m_textureTarget, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
   return success;
 }
 

@@ -139,7 +139,6 @@
     <ClInclude Include="boundingManager.h" />
     <ClInclude Include="boundingObj.h" />
     <ClInclude Include="boundingSphere.h" />
-    <ClInclude Include="buffer.h" />
     <ClInclude Include="ChatHandler.h" />
     <ClInclude Include="Client.h" />
     <ClInclude Include="ConfigManager.h" />
@@ -151,6 +150,7 @@
     <ClInclude Include="graphics\assimpUtil.h" />
     <ClInclude Include="graphics\basicUniform.h" />
     <ClInclude Include="graphics\bone.h" />
+    <ClInclude Include="graphics\buffer.h" />
     <ClInclude Include="graphics\CubemapTexture.h" />
     <ClInclude Include="graphics\displaySet.h" />
     <ClInclude Include="graphics\drawer.h" />

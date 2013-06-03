@@ -141,8 +141,7 @@ gx::graphicsEntity gx::loadSkybox() {
     identity);
 }
 
-gx::graphicsEntity gx::loadGround(const float zLevel, std::string texPath, 
-								  unsigned int mipmapLevel) {
+gx::graphicsEntity gx::loadGround(const float zLevel, std::string texPath) {
 
 	std::array<vector4f,4> floorVtArr = {{ vector4f( 200.0f, 200.0f, zLevel, 1.0f),
 							               vector4f(-200.0f, 200.0f, zLevel, 1.0f),
@@ -181,8 +180,7 @@ gx::graphicsEntity gx::loadGround(const float zLevel, std::string texPath,
 	bone root(1,identity,true,std::vector<bone::animation>(),
 		std::vector<bone>());
 
-	material mat(Texture(GL_TEXTURE_2D, texPath, 
-				 (Texture_Type)(GROUNDTEX + mipmapLevel)),
+	material mat(Texture(GL_TEXTURE_2D, texPath, GROUNDTEX),
 				 vector4f(0.4f,0.4f,1.0f));
 
 	return graphicsEntity(std::move(floorVerts), std::move(floornormals),
