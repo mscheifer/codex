@@ -4,11 +4,13 @@
 #include <string>
 #include <SFML/Graphics.hpp>
 #include "windowsHacks.h"
+#include "StaticEnums.h"
 
 namespace gx {
 
 struct Texture {
-    Texture(GLenum TextureTarget, const std::string& FileName);
+    Texture(GLenum TextureTarget, const std::string& FileName,
+		Texture_Type = DEFAULT);
     Texture(Texture const&);
     Texture& operator=(Texture const&);
     Texture(Texture&&) noexcept;
@@ -18,7 +20,8 @@ struct Texture {
     void bind(GLenum TextureUnit) const;
 
 private:
-    bool Load();
+	bool Load(Texture_Type);
+	void LoadMipmap(unsigned int levels);
     GLenum m_textureTarget;
     std::string m_fileName;
     sf::Image m_image;

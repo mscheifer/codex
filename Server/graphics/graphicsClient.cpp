@@ -20,6 +20,7 @@ std::string configModelName(std::string s) {
 }
 
 std::vector<gx::graphicsEntity> staticModels() {
+
   auto modelBadGuy     = loadModel(configModelName("badguy"),Player::playerDepth,true);
   auto modelWeapon     = loadModel(configModelName("weapon"),5,true);
   auto modelProjectile = loadModel(configModelName("projectile"),Projectile::projDepth);
@@ -27,8 +28,10 @@ std::vector<gx::graphicsEntity> staticModels() {
   auto modelWall       = loadModel(configModelName("wall"),10);
   auto modelPlayer     = loadModel(configModelName("goodguy"),Player::playerDepth,true);
   auto cubes = gx::loadCube();
-  auto ground = gx::loadGround(0.0f, "models/concrete.jpg");
+  auto skybox = gx::loadSkybox();
+  auto ground = gx::loadGround(-1.0f, "models/floor_mipmap/floor.jpg", 10);
   std::vector<gx::graphicsEntity> entitiesData;
+
   entitiesData.push_back(std::move(ground));  //ground
   entitiesData.push_back(std::move(modelPlayer)); //player
   entitiesData.push_back(std::move(modelWall));  //wall
@@ -150,9 +153,11 @@ ClientGameTimeAction gx::graphicsClient::handleInput() {
     reshape(this->userInput.windowWidth(),this->userInput.windowHeight());
   }
   auto newdir = this->userInput.turnPlayer();
+
   this->playerDirection =
-    toBasis(playerStartRight,playerStartDirection,upDirection) * newdir;
+	  toBasis(playerStartRight,playerStartDirection,upDirection) * newdir;
   this->setCamera(); //after setting new player position and direction
+  
   if(this->userInput.getJump()) {
     action.jump = true;
   }
@@ -243,6 +248,13 @@ void gx::graphicsClient::addEntity(Entity* ent) {
     inst.type = entity.getType();
     this->entities.addInstance(inst);
   }
+
+  // add ground instance. kinda hacky but works
+  staticDrawer::instanceData groundInst;
+  groundInst.pos  = vector3f(10, 10, 0);
+  groundInst.dirY = vector3f(0,1,0);
+  groundInst.type = GROUND;
+  this->entities.addInstance(groundInst);
 }
 
 void gx::graphicsClient::addEntity(Projectile* ent) {
