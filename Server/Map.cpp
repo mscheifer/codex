@@ -62,9 +62,9 @@ void Map::initWallsTwo(void)
 {
   v3_t facingEast(1,0,0);
   v3_t facingNorth(0,1,0);
-  unsigned int width = ConfigManager::wallWidth();
-  unsigned int height = ConfigManager::wallHeight(); 
-  unsigned int depth = ConfigManager::wallDepth();
+  float width = ConfigManager::wallWidth();
+  float height = ConfigManager::wallHeight(); 
+  float depth = ConfigManager::wallDepth();
 
   float wallX = 25;
   float wallY = 25;
@@ -196,9 +196,9 @@ void Map::initWallsOne(void)
 
   v3_t facingEast(1,0,0);
   v3_t facingNorth(0,1,0);
-  unsigned int width = ConfigManager::wallWidth();
-  unsigned int height = ConfigManager::wallHeight(); 
-  unsigned int depth = ConfigManager::wallDepth();
+  float width = ConfigManager::wallWidth();
+  float height = ConfigManager::wallHeight(); 
+  float depth = ConfigManager::wallDepth();
 
   float wallX = 25;
   float wallY = 25;
@@ -357,9 +357,9 @@ void Map::initWallsOne(void)
 void Map::initStaticWalls(void) {
   v3_t facingEast(1,0,0);
   v3_t facingNorth(0,1,0);
-  unsigned int width = ConfigManager::wallWidth();
-  unsigned int height = ConfigManager::wallHeight(); 
-  unsigned int depth = ConfigManager::wallDepth();
+  float width = ConfigManager::wallWidth();
+  float height = ConfigManager::wallHeight(); 
+  float depth = ConfigManager::wallDepth();
 
   float wallX = 25;
   float wallY = 25;
@@ -432,12 +432,12 @@ void Map::initWalls(void)
 
   v3_t facingEast(1,0,0);
   v3_t facingNorth(0,1,0);
-  unsigned int width = ConfigManager::wallWidth();
-  unsigned int height = ConfigManager::wallHeight(); 
-  unsigned int depth = ConfigManager::wallDepth();
+  float width = ConfigManager::wallWidth();
+  float height = ConfigManager::wallHeight(); 
+  float depth = ConfigManager::wallDepth();
 
-  float wallX = 20;
-  float wallY = 16;
+  float wallX = 10;
+  float wallY = 8;
 
   float centerX = 0;
   float centerY = 0;
@@ -563,9 +563,9 @@ v3_t Map::getRespawnPosition(std::size_t player_id)
  */
 void Map::addWallDirection(float startingX, float startingY, float startingZ, v3_t dir, int values[])
 {
-  unsigned int width = ConfigManager::wallWidth();
-  unsigned int height = ConfigManager::wallHeight(); 
-  unsigned int depth = ConfigManager::wallDepth();
+  float width = ConfigManager::wallWidth();
+  float height = ConfigManager::wallHeight(); 
+  float depth = ConfigManager::wallDepth();
   int x = 0;
   int j = 0;
   while(values[j] != -1)
@@ -588,9 +588,9 @@ void Map::addWallDirection(float startingX, float startingY, float startingZ, v3
  */
 void Map::addWallChange(bool start, float startingX, float startingY, float startingZ, v3_t dir, int values[])
 {
-  unsigned int width = ConfigManager::wallWidth();
-  unsigned int height = ConfigManager::wallHeight(); 
-  unsigned int depth = ConfigManager::wallDepth();
+  float width = ConfigManager::wallWidth();
+  float height = ConfigManager::wallHeight(); 
+  float depth = ConfigManager::wallDepth();
   int x = 0;
   int j = 0;
   while(values[j] != -1)

@@ -54,6 +54,6 @@ minotaurMaxMp=100
 projectileRange=300
 
 // Wall
-wallWidth=36
+wallWidth=37.4
 wallHeight=5
 wallDepth=10

@@ -55,9 +55,13 @@ gx::HUD::HUD(void):health(100), maxHealth(100), HLossPercentage(0),
   positionText.setColor(sf::Color::Green);
   positionText.setPosition(300,500);
   //aimer
-  aimerTexture.loadFromFile("graphics/Images/aimer.png");
+  aimerTexture.loadFromFile("graphics/Images/aimerOuter.png");
   aimer.setTexture(aimerTexture);
   aimer.setOrigin(aimerTexture.getSize().x/2, aimerTexture.getSize().y/2);
+  //inner aimer
+  aimerTextureInner.loadFromFile("graphics/Images/aimerInner.png");
+  aimerInner.setTexture(aimerTextureInner);
+  aimerInner.setOrigin(aimerTextureInner.getSize().x/2, aimerTextureInner.getSize().y/2);
   //buffs
   initializeSprites();
   //chargig
@@ -130,9 +134,12 @@ void gx::HUD::draw(sf::RenderWindow & window) {
   if (canPickUp)
     window.draw(pickUp);
   aimer.setPosition((window.getSize().x)/2, (window.getSize().y)/2);
+  aimerInner.setPosition((window.getSize().x)/2, (window.getSize().y)/2);
   if (charging) { //TODO this is bad
-    aimer.setRotation(aimer.getRotation() + .0333f);
+    aimer.setRotation((elapsedChargeTime/totalChargeTime)*360);
+    aimerInner.setRotation((totalChargeTime - elapsedChargeTime)/totalChargeTime *360);
     window.draw(aimer);
+    window.draw(aimerInner);
   }
   int buffn = 0; 
   for ( unsigned int i =0; i<renderBuff.size(); i++ ) {
