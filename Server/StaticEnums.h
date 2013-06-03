@@ -146,10 +146,10 @@ struct BuffData{
 const BuffData BuffInfo[] = {
   //                  code lvl time  |  move       |mpRegen      | hpRegen | str           | atkCD      |  chargeCD  |defense
   BuffData(NONE,        0,  1, 100,    false, 0,    false, 0,     false, 0,    false, 0,    false, 0,    false, 0,     false, 0),
-  BuffData(MOVEBOOST,   1,  1, 60000, true, 2,     false, 0,     false, 0,    false, 0,    false, 0,    false, 0,     false, 0),
-  BuffData(MANABOOST,   2,  1, 60000, false, 0,    true, 7,      false, 0,    false, 0,    false, 0,    false, 0,     false, 0),
-  BuffData(HEALTHBOOST, 3,  1, 60000, false, 0,    false, 0,     true, 7,     false, 0,    false, 0,    false, 0,     false, 0),
-  BuffData(STRBOOST,    4,  1, 60000, false, 0,    false, 0,     false, 0,    true, 2,     false, 0,    false, 0,     false, 0),
+  BuffData(MOVEBOOST,   1,  1, 4000, true, 2,     false, 0,     false, 0,    false, 0,    false, 0,    false, 0,     false, 0),
+  BuffData(MANABOOST,   2,  1, 4000, false, 0,    true, 2,      false, 0,    false, 0,    false, 0,    false, 0,     false, 0),
+  BuffData(HEALTHBOOST, 3,  1, 4000, false, 0,    false, 0,     true, 2,     false, 0,    false, 0,    false, 0,     false, 0),
+  BuffData(STRBOOST,    4,  1, 4000, false, 0,    false, 0,     false, 0,    true, 2,     false, 0,    false, 0,     false, 0),
   BuffData(ATTACKCD,    5,  1, 60000, false, 0,    false, 0,     false, 0,    false, 0,    true, 0.25,  false, 0,     false, 0),
   BuffData(CHARGECD,    6,  1, 60000, false, 0,    false, 0,     false, 0,    false, 0,    false, 0,    true, 0.5,     false, 0),
   BuffData(DEFENSEBOOST,14, 1, 120000, false, 0,    false, 0,     false, 0,    false, 0,    false, 0,    false, 0,     true, 2),

@@ -26,6 +26,7 @@ Projectile::~Projectile(void)
 }
 
 void Projectile::reset(){
+  clearEvents();
   charge_counter.restart();
   charging = true;
 }
@@ -50,6 +51,7 @@ void Projectile::update(void) {
     int chargeTime = ProjInfo[magicType].chargeTime;
     //-1 means no upgrades
     if(chargeTime != -1 && charge_counter.getElapsedTime().asMilliseconds() > chargeTime*cdr ) {
+      getOwner()->upgraded = true;
       charge_counter.restart();
       setMagicType(upgrade(magicType));
     }

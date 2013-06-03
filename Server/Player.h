@@ -90,6 +90,7 @@ public:
   bool walking;
   bool shotProjectile;
   bool attacked;
+  bool upgraded;
 private:
   Weapon* pickup;
   WeaponType pickupWeaponType;

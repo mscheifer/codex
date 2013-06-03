@@ -43,6 +43,7 @@ void Map::mapReset()
 }
 
 void Map::initPowerUps() {
+  //TODO this can cause memory leak?
   PowerUp* superPower = new PowerUp(v3_t(0,0,PowerUp::powerUpDepth / 2), this, MANABOOST);
   superPower->setRespownTime(5000);
   this->entities.push_back(superPower);
@@ -50,7 +51,7 @@ void Map::initPowerUps() {
   PowerUp* p2 = new PowerUp(v3_t(0,0,PowerUp::powerUpDepth / 2), this, HEALTHBOOST);
   p2->setRespownTime(5000);
   this->entities.push_back(p2);
-  p2 = new PowerUp(v3_t(0,0,PowerUp::powerUpDepth / 2), this, MOVEBOOST);
+  p2 = new PowerUp(v3_t(0,0,PowerUp::powerUpDepth / 2), this, DEFENSEBOOST);
   p2->setRespownTime(5000);
   this->entities.push_back(p2);
   p2 = new PowerUp(v3_t(0,0,PowerUp::powerUpDepth / 2), this, CHARGECD);

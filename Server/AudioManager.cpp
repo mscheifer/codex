@@ -38,13 +38,14 @@ void AudioManager::loadSounds(){
   loadSound("sc1", "sounds/scream_1.wav");
   
   loadSound("c1", "sounds/charge1.wav");
+  loadSound("upgrade", "sounds/upgrade.wav");
   
   loadSound("w1", "sounds/foot_step_1.wav");
   loadSound("w2", "sounds/foot_step_2.wav");
 
   //loadSound("f1", "sounds/fire_1.wav");
   loadSound("melee", "sounds/52458__audione__sword-01_.wav");
-  loadSound("combine", "sounds/combine.wav");
+  loadSound("combine", "sounds/combine1.wav");
 
   loadSound("weapIce", "sounds/weaponIce.wav");
   loadSound("weapBasic", "sounds/weaponBasic.wav");
@@ -273,6 +274,10 @@ void AudioManager::processPlayerSound(Player& o){
     std::stringstream ss;
     ss << "playcerCollectPowerUp: " << o.player_id;
     playSound("collectPowerup", ss.str(), o.getPosition());
+  }
+
+  if(o.upgraded){
+    playPlayerSound("upgrade", o.player_id,  "upgrade", o.getPosition());
   }
 
   if(o.charging) {
