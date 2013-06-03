@@ -44,6 +44,8 @@ public:
   //graphics
   static float fullscreen(){ return StringToBool(ConfigManager::configMap["fullscreen"]); }
   static unsigned int antiAliasingLevel(){ return StringToNumber<unsigned int>(ConfigManager::configMap["anti-alias"]); }
+  static unsigned int windowWidth(){return StringToNumber<unsigned int>(ConfigManager::configMap["window-width"]); }
+  static unsigned int windowHeight(){return StringToNumber<unsigned int>(ConfigManager::configMap["window-height"]); }
 
   /// Player/Minotaur Related///
   static float playerMovescale();

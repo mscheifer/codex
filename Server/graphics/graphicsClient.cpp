@@ -100,7 +100,7 @@ std::vector<gx::uniform::block*> gx::graphicsClient::uniforms() {
 //make sure this is above al opengl objects so that the desctructor is called
 //last so we have an opengl context for destructors
 gx::graphicsClient::graphicsClient():
-    window(sf::VideoMode(defaultWindowWidth, defaultWindowHeight), "DrChao",
+    window(sf::VideoMode(ConfigManager::windowWidth(), ConfigManager::windowHeight()), "DrChao",
     (ConfigManager::fullscreen() ? sf::Style::Fullscreen : sf::Style::Default),
     sf::ContextSettings(24,0,ConfigManager::antiAliasingLevel())),
     //glew needs to be called here, after window, before anything else
@@ -144,7 +144,7 @@ gx::graphicsClient::graphicsClient():
   this->setCamera();
   this->userInput.setUpMouse();
 
-  this->reshape(defaultWindowWidth, defaultWindowHeight);
+  this->reshape(ConfigManager::windowWidth(), ConfigManager::windowHeight());
 }
 
 ClientGameTimeAction gx::graphicsClient::handleInput() {
