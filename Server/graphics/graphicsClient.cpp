@@ -29,7 +29,7 @@ std::vector<gx::graphicsEntity> staticModels() {
   auto modelPlayer     = loadModel(configModelName("goodguy"),Player::playerDepth,true);
   auto cubes = gx::loadCube();
   auto skybox = gx::loadSkybox();
-  auto ground = gx::loadGround(0.0f, "models/floor.jpg");
+  auto ground = gx::loadGround(2000.0f, 0.0f, "models/floor.jpg");
   std::vector<gx::graphicsEntity> entitiesData;
 
   entitiesData.push_back(std::move(skybox));  //ignore
