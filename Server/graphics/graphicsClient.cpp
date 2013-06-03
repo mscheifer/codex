@@ -112,7 +112,7 @@ gx::graphicsClient::graphicsClient():
     animatedDrawer(dynamicModels(),uniforms()),
     skyboxDrawer(display.storage()),
     Hud(),Lobby(), Score(ConfigManager::numPlayers()),
-    playerDirection(0.0, 1.0,0.0),//change to result of init packet
+    playerDirection(0.0, 1.0,0.0),//will be changed by init packet
     playerStartDirection(0.0, 1.0,0.0),
     playerStartRight(playerStartDirection.y,-playerStartDirection.x,
                      playerStartDirection.z),
