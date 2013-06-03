@@ -12,17 +12,29 @@ const float Player::playerDepth = 7.0f;
 
 //these have to be functions because calling configManager stuff to initialize
 //globals is undefined behavior
-length_t Player::MOVESCALE() {
-  return ConfigManager::playerMovescale();
+length_t Player::MOVESCALE(bool mino) {
+  if(mino)
+    return ConfigManager::minotaurMovescale();
+  else
+    return ConfigManager::playerMovescale();
 }
-length_t Player::AIRMOVESCALE() {
-  return ConfigManager::playerAirMovescale();
+length_t Player::AIRMOVESCALE(bool mino) {
+  if(mino)
+    return ConfigManager::minotaurAirMovescale();
+  else
+    return ConfigManager::playerAirMovescale();
 }
-length_t Player::JUMPSPEED() {
-  return ConfigManager::playerJumpSpeed();
+length_t Player::JUMPSPEED(bool mino) {
+  if(mino)
+    return ConfigManager::minotaurJumpSpeed();
+  else
+    return ConfigManager::playerJumpSpeed();
 }
-int Player::MAXJUMP() {
-  return ConfigManager::playerMaxJump();
+int Player::MAXJUMP(bool mino) {
+  if(mino)
+    return ConfigManager::minotaurMaxJump();
+  else
+    return ConfigManager::playerMaxJump();
 }
 
 Player::Player(){}// this->init(0,0,0,0,NULL);}
@@ -204,8 +216,8 @@ bool Player::moveTowardDirection(move_t inputDir, bool jump)
     //add jump velocity
     v3_t jumpDir = movementDirection;
     jumpDir.z = 0;
-    jumpDir.scale(AIRMOVESCALE());
-    jumpDir.z = JUMPSPEED();
+    jumpDir.scale(JUMPSPEED(isMinotaur())/4.f);
+    jumpDir.z = JUMPSPEED(isMinotaur());
     velocity = velocity - oldJumpVelocity;
     velocity += jumpDir;
     velocity.z = jumpDir.z; //reset z velocity (for double jumping)
@@ -214,15 +226,15 @@ bool Player::moveTowardDirection(move_t inputDir, bool jump)
     jumpDir.z = 0;
     oldJumpVelocity = jumpDir;
 
-    if(++jumpCount >= MAXJUMP())
+    if(++jumpCount >= MAXJUMP(isMinotaur()))
       canJump = false;
   }
   
   //adjust movement
   if(jumpCount > 0) //move less if you are in the air
-    movementDirection.scale(speed * AIRMOVESCALE());
+    movementDirection.scale(speed * AIRMOVESCALE(isMinotaur()));
   else
-    movementDirection.scale(speed * MOVESCALE());
+    movementDirection.scale(speed * MOVESCALE(isMinotaur()));
 
   movementDirection.scale(getMovementMultiplier());
   movementDirection = correctMovement(movementDirection, true, getFeetOrigin());

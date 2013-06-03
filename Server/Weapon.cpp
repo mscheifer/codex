@@ -22,8 +22,8 @@ Weapon::~Weapon()
 
 Weapon::Weapon(float damage, float ran, v3_t pos, Map* m) : pickedUp(false)
 {
-  Range_Cool_Down_Time = 0; //TODO set these
-  Melee_Cool_Down_Time = 0;
+  Range_Cool_Down_Time = 500; //TODO set these
+  Melee_Cool_Down_Time = 300;
   Range_Cool_Down_Counter = sf::Clock();
   Melee_Cool_Down_Counter = sf::Clock();
   strength = damage;

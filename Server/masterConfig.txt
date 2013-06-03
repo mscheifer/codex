@@ -22,20 +22,25 @@ model-weapon=badguy.dae
 gravity=-40
 
 // Player configuration
-players=2
+players=1
 movescale=.6
-airMovescale=.5
+airMovescale=.2
 maxJump=2
 jumpSpeed=20.17
 playerHpRegen=.01
 playerMpRegen=.056
 playerDef=5
-playerHp=100
+playerHp=50
 playerMaxHp=100
-playerMp=100
+playerMp=50
 playerMaxMp=100
-minotaurHpRegen=.01
-minotaurMpRegen=.035
+
+minotaurmovescale=.6
+minotaurairMovescale=.2
+minotaurmaxJump=20.19
+minotaurjumpSpeed=2
+minotaurHpRegen=.02
+minotaurMpRegen=.112
 minotaurDef=5
 minotaurHp=50
 minotaurMaxHp=100
@@ -44,6 +49,7 @@ minotaurMaxMp=100
 
 // Projectile
 projectileRange=300
+
 // Wall
 wallWidth=36
 wallHeight=5

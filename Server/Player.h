@@ -13,10 +13,10 @@ const int MAXPROJECTILES = 20;
 class Player: public Entity
 {
 public:
-  static length_t MOVESCALE();
-  static length_t AIRMOVESCALE();
-  static length_t JUMPSPEED();
-  static int MAXJUMP();
+  static length_t MOVESCALE(bool mino);
+  static length_t AIRMOVESCALE(bool mino);
+  static length_t JUMPSPEED(bool mino);
+  static int MAXJUMP(bool mino);
 
   static const float playerWidth;
   static const float playerHeight;
