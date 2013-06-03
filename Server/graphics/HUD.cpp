@@ -57,6 +57,7 @@ gx::HUD::HUD(void):health(100), maxHealth(100), HLossPercentage(0),
   //aimer
   aimerTexture.loadFromFile("graphics/Images/aimer.png");
   aimer.setTexture(aimerTexture);
+  aimer.setOrigin(aimerTexture.getSize().x/2, aimerTexture.getSize().y/2);
   //buffs
   initializeSprites();
   //chargig
@@ -128,8 +129,9 @@ void gx::HUD::draw(sf::RenderWindow & window) {
     window.draw(badGuySprite);
   if (canPickUp)
     window.draw(pickUp);
-  aimer.setPosition((window.getSize().x-200)/2, (window.getSize().y-200)/2);
+  aimer.setPosition((window.getSize().x)/2, (window.getSize().y)/2);
   if (charging) { //TODO this is bad
+    aimer.setRotation(aimer.getRotation() + .0333f);
     window.draw(aimer);
   }
   int buffn = 0; 

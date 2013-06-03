@@ -60,10 +60,10 @@ public:
   static float playerMp(){ return StringToNumber<float>(ConfigManager::configMap["playerMp"]); }
   static float playerMaxMp(){ return StringToNumber<float>(ConfigManager::configMap["playerMaxMp"]); }
   
-  static float minotaurMovescale(){ return StringToNumber<float>(ConfigManager::configMap["minotaurairMovescale"]); }
+  static float minotaurMovescale(){ return StringToNumber<float>(ConfigManager::configMap["minotaurmovescale"]); }
   static float minotaurAirMovescale(){ return StringToNumber<float>(ConfigManager::configMap["minotaurairMovescale"]); }
   static float minotaurJumpSpeed(){ return StringToNumber<float>(ConfigManager::configMap["minotaurjumpSpeed"]); }
-  static int minotaurMaxJump(){ return StringToNumber<int>(ConfigManager::configMap["minotuarmaxJump"]); }
+  static int minotaurMaxJump(){ return StringToNumber<int>(ConfigManager::configMap["minotaurmaxJump"]); }
   static float minotaurHpRegen(){ return StringToNumber<float>(ConfigManager::configMap["minotaurHpRegen"]); }
   static float minotaurMpRegen(){ return StringToNumber<float>(ConfigManager::configMap["minotaurMpRegen"]); }
   static float minotaurDef(){ return StringToNumber<float>(ConfigManager::configMap["minotaurDef"]); }

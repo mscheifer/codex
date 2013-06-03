@@ -12,7 +12,8 @@ Game::~Game(void)
 
 void Game::chooseMinotaur() 
 {
-  return;
+  if(StringToNumber<int>(ConfigManager::configMap["enableMinotaur"]) == 0)
+    return;
   srand(static_cast<unsigned int>(time(nullptr)));
   int minotaur = rand() % ConfigManager::numPlayers();
   world.getPlayers()[minotaur]->setAsMinotaur(true);
