@@ -21,7 +21,7 @@ Map::Map(void): spawnPositions(), freeProjectiles(), q(0,Rectangle(BoundingObj::
   //initStaticWalls();
   //initWallsTwo();
 
- // initPowerUps();
+  initPowerUps();
 }
 
 void Map::mapReset()
@@ -35,7 +35,7 @@ void Map::mapReset()
  // initStaticWalls();
  // initWallsTwo();
   
- // initPowerUps();
+  initPowerUps();
   for(unsigned int i = 0; i < players.size(); i++)
   {
     players[i]->reset(this->getRespawnPosition(players[i]->player_id));
@@ -43,17 +43,17 @@ void Map::mapReset()
 }
 
 void Map::initPowerUps() {
-  PowerUp* superPower = new PowerUp(v3_t(0,0,0), this, MANABOOST);
+  PowerUp* superPower = new PowerUp(v3_t(0,0,PowerUp::powerUpDepth / 2), this, MANABOOST);
   superPower->setRespownTime(5000);
   this->entities.push_back(superPower);
 
-  PowerUp* p2 = new PowerUp(v3_t(0,0,0), this, HEALTHBOOST);
+  PowerUp* p2 = new PowerUp(v3_t(0,0,PowerUp::powerUpDepth / 2), this, HEALTHBOOST);
   p2->setRespownTime(5000);
   this->entities.push_back(p2);
-  p2 = new PowerUp(v3_t(0,0,0), this, MOVEBOOST);
+  p2 = new PowerUp(v3_t(0,0,PowerUp::powerUpDepth / 2), this, MOVEBOOST);
   p2->setRespownTime(5000);
   this->entities.push_back(p2);
-  p2 = new PowerUp(v3_t(0,0,0), this, CHARGECD);
+  p2 = new PowerUp(v3_t(0,0,PowerUp::powerUpDepth / 2), this, CHARGECD);
   p2->setRespownTime(5000);
   this->entities.push_back(p2);
 }
