@@ -141,22 +141,26 @@ gx::graphicsEntity gx::loadSkybox() {
     identity);
 }
 
-gx::graphicsEntity gx::loadGround(const float zLevel, std::string texPath) {
+gx::graphicsEntity gx::loadGround(const float edgeLength,
+                                  const float zHeight, 
+                                  std::string texPath) 
+{
+  float axisLength = edgeLength / 2;
 
-	std::array<vector4f,4> floorVtArr = {{ vector4f( 1000.0f, 1000.0f, zLevel, 1.0f),
-							               vector4f(-1000.0f, 1000.0f, zLevel, 1.0f),
-										   vector4f(-1000.0f,-1000.0f, zLevel, 1.0f),
-										   vector4f( 1000.0f,-1000.0f, zLevel, 1.0f)}};
+  std::array<vector4f,4> floorVtArr = {{ vector4f( axisLength, axisLength, zHeight, 1.0f),
+							                           vector4f(-axisLength, axisLength, zHeight, 1.0f),
+                                         vector4f(-axisLength,-axisLength, zHeight, 1.0f),
+                                         vector4f( axisLength,-axisLength, zHeight, 1.0f)}};
 
 	std::array<vector3f,4> floorNormA = {{ vector3f( 0.0f, 0.0f, 1.0f),
-                                           vector3f( 0.0f, 0.0f, 1.0f), 
-										   vector3f( 0.0f, 0.0f, 1.0f), 
-										   vector3f( 0.0f, 0.0f, 1.0f)}};
+                                         vector3f( 0.0f, 0.0f, 1.0f), 
+                  										   vector3f( 0.0f, 0.0f, 1.0f), 
+									                  	   vector3f( 0.0f, 0.0f, 1.0f)}};
 
 	std::array<vector2f, 4> floorTexCoord = {{ vector2f(20.0f, 20.0f),
-											   vector2f(  0.0f, 20.0f), 
-											   vector2f(  0.0f,   0.0f),
-											   vector2f(20.0f,   0.0f)}};
+                    											   vector2f( 0.0f, 20.0f), 
+                                             vector2f( 0.0f,  0.0f),
+                                             vector2f(20.0f,  0.0f)}};
 
 
 	std::array<GLuint,6>  floorIndices = {{ 0, 1, 2, 0, 2, 3}};
