@@ -30,11 +30,12 @@ Weapon::Weapon(float damage, float ran, v3_t pos, Map* m) : pickedUp(false)
   range = ran;
   position = pos;
   direction = v3_t(0,0,1);
+  basicAttack = B1;
   projectileSpeed = 100.0; // TODO pending removal these will be the melee values
   projectileRange = 300; //pending removal
-  projectileStrength = 26; //pending removal
+  projectileStrength = ProjInfo[basicAttack].strength; //pending removal
   this->map = m;
-  basicAttack = B1;
+
 }
 
 bool Weapon::canUseWeapon(bool range_attack, Player* Owner) {
@@ -50,8 +51,6 @@ bool Weapon::canUseWeapon(bool range_attack, Player* Owner) {
   return false;
 }
 
-
-
 Projectile* Weapon::attackMelee(v3_t dir , v3_t pos, Player* owner)
 {
   Projectile* pj = map->produceProjectile();
@@ -61,7 +60,7 @@ Projectile* Weapon::attackMelee(v3_t dir , v3_t pos, Player* owner)
   pj->setVelocity(dir);
   pj->setPosition(pos);
   pj->setOwner(owner);
-  pj->setStrength(projectileStrength*owner->getStrengthMultiplier()*meleeAttackMult);
+  pj->setStrength(ProjInfo[getBasicAttack()].strength*owner->getStrengthMultiplier()*meleeAttackMult);
   std::cout << "melee str " << pj->getStrength() << std::endl;
   pj->setRange(1);
 

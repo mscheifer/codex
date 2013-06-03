@@ -20,6 +20,7 @@ class NetworkClient {
   bool gameRestart;
   bool joined;
   bool gameStart;
+  bool flag;
   EntityPool objPool;
   Entity skybox; //this is kind of stupid but we'll do it for now
 
