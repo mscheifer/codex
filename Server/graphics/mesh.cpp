@@ -158,6 +158,7 @@ const aiScene* gx::Mesh::LoadFile(Assimp::Importer& Importer,
   if (!pScene) {
     std::cout << "Error parsing '" <<  Filename.c_str() << "': '";
     std::cout << Importer.GetErrorString() << std::endl;
+    return nullptr;
   }
   //print
   debugout << "num animations: " << pScene->mNumAnimations   << endl;
