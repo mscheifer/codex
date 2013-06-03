@@ -112,11 +112,11 @@ gx::graphicsClient::graphicsClient():
     animatedDrawer(dynamicModels(),uniforms()),
     skyboxDrawer(display.storage()),
     Hud(),Lobby(), Score(ConfigManager::numPlayers()),
-    playerDirection(0.0, 1.0,0.0),//change to result of init packet
-    playerStartDirection(0.0, 1.0,0.0),//change to result of init packet
+    playerDirection(0.0, 1.0,0.0),//will be changed by init packet
+    playerStartDirection(0.0, 1.0,0.0),
     playerStartRight(playerStartDirection.y,-playerStartDirection.x,
                      playerStartDirection.z),
-    playerPosition(0.0, 0.0, 0.0),//change to the result of init packet
+    playerPosition(0.0, 0.0, 0.0),//will be changed by init packet
     fpsClock(), fpsFrames(0) {
   sf::ContextSettings settings = this->window.getSettings();
 
@@ -214,6 +214,11 @@ void gx::graphicsClient::draw() {
 
 void gx::graphicsClient::updatePosition(vector4f pos) {
   this->playerPosition = pos;
+  this->setCamera();
+}
+
+void gx::graphicsClient::updateDirection(vector3f dir) {
+  this->playerDirection = dir;
   this->setCamera();
 }
 

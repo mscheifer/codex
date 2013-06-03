@@ -58,6 +58,7 @@ class graphicsClient {
     ClientGameTimeAction handleInput();
     void draw();
     void updatePosition(vector4f);
+    void updateDirection(vector3f);
     void clearEntities();
     void addEntity(Entity*);
     void addEntity(Projectile*);

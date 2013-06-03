@@ -29,6 +29,7 @@ void NetworkClient::receiveMessages() {
     static float maxProx = 30.f;
     IdPacket newId(0);
     StartGamePacket playerSt;
+    InitPacket initPckt;
     switch (packetType) {
       case SGTR:
         this->s.deserialize(packet);
@@ -90,13 +91,16 @@ void NetworkClient::receiveMessages() {
           joined = true; 
           std::cout<<"CLIENT RECEIVED START GAME"<<std::endl;
           playerSt.deserialize(packet);
-          gxClient.updateLobby(playerSt.playerStatus);
+          this->gxClient.updateLobby(playerSt.playerStatus);
           for (auto itr= playerSt.playerStatus.begin(); itr != playerSt.playerStatus.end(); itr++ ) {
             std::cout<<"Player "<< (*itr).first<< " is "<<(*itr).second<<std::endl;
           }
           break;
       case INIT:
           //TODO initialize the player info
+          initPckt.deserialize(packet);
+          this->gxClient.updatePosition(gx::vector4f(0,0,0) + initPckt.position);
+          this->gxClient.updateDirection(initPckt.direction);
           this->gameStart = true;
           flag = true;
         //  std::cout<<" i received init" <<std::endl;
