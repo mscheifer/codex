@@ -15,12 +15,12 @@ Map::Map(void): spawnPositions(), freeProjectiles(), q(0,Rectangle(BoundingObj::
 {
 	map_size = 15;
 	freeProjectiles = new std::stack<Projectile *>();
-//  initWalls();
+  initWalls();
 
-  initWallsOne();
-  initStaticWalls();
-  initWallsTwo();
-  initPowerUps();
+  //initWallsOne();
+  //initStaticWalls();
+  //initWallsTwo();
+  //initPowerUps();
 }
 
 void Map::mapReset()
@@ -29,11 +29,11 @@ void Map::mapReset()
   spawnPositions.clear();
   entities.clear();
   liveProjectTile.clear();
-//  initWalls();
-  initWallsOne();
-  initStaticWalls();
-  initWallsTwo();
-  initPowerUps();
+  initWalls();
+  //initWallsOne();
+  //initStaticWalls();
+  //initWallsTwo();
+  //initPowerUps();
   for(unsigned int i = 0; i < players.size(); i++)
   {
     players[i]->reset(this->getRespawnPosition(players[i]->player_id));
@@ -416,11 +416,11 @@ void Map::initWalls(void)
   //w1->dropDown(v3_t(10,10,0));
   //w1->setDirection(v3_t(0,1,0));
   //entities.push_back(w1);
-  WeaponFire* w2 = new WeaponFire(v3_t(120,120,0), this, ICE1);
+  WeaponFire* w2 = new WeaponFire(v3_t(120,120,0), this, THU1);
   w2->dropDown(v3_t(10,-10,0));
   w2->setDirection(v3_t(0,1,0));
   entities.push_back(w2);
-  WeaponFire* w3 = new WeaponFire(v3_t(120,120,0), this, ICE1);
+  WeaponFire* w3 = new WeaponFire(v3_t(120,120,0), this, THU1);
   w3->dropDown(v3_t(-10,-10,0));
   w3->setDirection(v3_t(0,1,0));
   entities.push_back(w3);
@@ -653,6 +653,9 @@ std::vector<Entity *> Map::getEntity() {
 
  void Map::destroyProjectile(Projectile * proj)
  {
+   if(proj->getOwner()->chargedProjectile == proj)
+     proj->getOwner()->removeChargingProj();
+
    proj->setOwner(nullptr);
    proj->live = false;
    // should probably use a hasmap soon

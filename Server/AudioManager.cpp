@@ -183,6 +183,9 @@ void AudioManager::updateMusic(const int numPlayers,const bool minotaur ){
   for( unsigned int i = 0; i < music.size(); i++ ){
     if( i == currentlyPlayingMusic ){ //FADE IN
       volume = music[i].getVolume();
+      if(volume == 100)
+        continue;
+
       volume += 3;
       if(volume > 100)
         volume = 100;
@@ -190,6 +193,9 @@ void AudioManager::updateMusic(const int numPlayers,const bool minotaur ){
     }
     else{ //FADE OUT
       volume = music[i].getVolume();
+      if(volume == 0)
+        continue;
+
       volume -= 5;
       if(volume < 0)
         volume = 0;

@@ -9,14 +9,17 @@ void NetworkClient::receiveMessages() {
   //receive from server and process
    
   sf::Packet packet;
-  if (netRecv.receiveMessage(packet)) {
+  int proximity = 2;
+  bool minotaur = false;
+
+  while (netRecv.receiveMessage(packet)) {
+    //TODO might cause an endless cycle if server sends faster than the time
+    //it takes to process a message. 
     sf::Uint32 packetType;
     packet >> packetType;
     std::vector<int> kills;
     std::vector<int> wins;
-    int proximity = 2;
     v3_t pos;
-    bool minotaur;
     v3_t dir;
     static float maxProx = 30.f;
     IdPacket newId(0);
@@ -71,10 +74,6 @@ void NetworkClient::receiveMessages() {
         sf::Listener::setPosition(pos.x/AudioManager::soundScaling, pos.y/AudioManager::soundScaling, pos.z/AudioManager::soundScaling);
         dir = s.players[this->id].getDirection();
         sf::Listener::setDirection(dir.x, dir.y, dir.z);
-        
-
-        AudioManager::updateMusic(proximity, minotaur);
-        
         break;
       case JOINID:
           newId.deserialize(packet);
@@ -100,6 +99,7 @@ void NetworkClient::receiveMessages() {
         break;
     }
   }
+  AudioManager::updateMusic(proximity, minotaur);
 }
 
 void NetworkClient::processInput() {

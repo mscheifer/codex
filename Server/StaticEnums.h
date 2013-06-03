@@ -164,7 +164,7 @@ const BuffData BuffInfo[] = {
 
   BuffData(THUSTUN,     9,  1, 5000,   true, 0,     false, 0,     false, 0,    false, 0,    false, 0,    false, 0,     false, 0),
   BuffData(THUSTUN2,    9,  2, 10000,  true, 0,     false, 0,     false, 0,    false, 0,    false, 0,    false, 0,     false, 0),
-  BuffData(THU1DEBUFF,  10, 1, 15000,  false, 0,    true, -1.5f,  false, 0,    false, 0,    false, 0,    false, 0,     false, 0),
+  BuffData(THU1DEBUFF,  10, 1, 15000,  false, 0,    true, -1.25f, false, 0,    false, 0,    false, 0,    false, 0,     false, 0),
   BuffData(THU2DEBUFF,  10, 2, 15000,  false, 0,    true, -2,     false, 0,    false, 0,    false, 0,    false, 0,     false, 0),
   BuffData(THU3DEBUFF,  10, 3, 15000,  false, 0,    true, -4,     false, 0,    false, 0,    false, 0,    false, 0,     false, 0),
 

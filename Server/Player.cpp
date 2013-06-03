@@ -73,12 +73,15 @@ void Player::init(v3_t pos, int assigned_id, Map * m)
   elapsedChargeTime = 0;
   totalChargeTime = -1;
 	map = m;
-	weapon[0] = new WeaponFire(position, this->map, B1);
+	weapon[0] = new WeaponFire(position, this->map, ICE1);
     //new WeaponFist(position, this->map); //has no bounds so it doesnt drop
   //weapon[1] = new WeaponFist(position, this->map);
 	weapon[1] = new WeaponFire(position, this->map, FIR1); //TODO make this basic
 	m->addEntity(weapon[1]);
   weapon[1]->pickUp();
+  m->addEntity(weapon[0]);
+  weapon[0]->pickUp(); //remove this
+
   buffs.clear();
   inactiveBuffs.clear();
 
@@ -128,6 +131,11 @@ void Player::generateBounds(v3_t pos){
   boundingObjs.push_back(b);
 }
 
+void Player::removeChargingProj(){
+  chargedProjectile = nullptr;
+  charging = false;
+}
+
 bool Player::attackBy(Projectile *other)
 {
 	if(other && other->getOwner() != this)
@@ -150,13 +158,7 @@ bool Player::damageBy(Projectile *deadly)
   dead = health==0;
 
   if(charging) {
-    //for(int i = 0 ; i < MAXPROJECTILES ; i++ ) { @alvin what is this for loop for?
-      chargedProjectile->live = false;
-      //map->destroyProjectile(chargedProjectile);
-      chargedProjectile = nullptr;
-    //}
-   
-    charging = false;
+    chargedProjectile->live = false;
   }
 
   if(dead) {
