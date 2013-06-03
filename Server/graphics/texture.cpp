@@ -44,26 +44,19 @@ bool gx::Texture::Load(Texture_Type type) { //TODO: just move this function to t
 
 	  unsigned int mmLevel = type ^ GROUNDTEX;
 	  //LoadMipmap(mmLevel);
-	  glTexEnvf( GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE ); 
 
 	  glTexParameterf( GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 	  glTexParameterf( GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER,
 		  GL_LINEAR_MIPMAP_LINEAR );
 	  glGenerateMipmap(GL_TEXTURE_2D);
 
-	  glTexParameterf( GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT );
-	  glTexParameterf( GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT );
-
-	  glTexImage2D(this->m_textureTarget, 0, GL_RGBA, width, height, 0, 
-		  GL_RGBA, GL_UNSIGNED_BYTE, this->m_image.getPixelsPtr());
-  } else {
+  } //else {
 	  glTexParameterf(this->m_textureTarget, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 	  glTexParameterf(this->m_textureTarget, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-	  
-	  glTexImage2D(this->m_textureTarget, 0, GL_RGBA, width, height, 0, 
-		  GL_RGBA, GL_UNSIGNED_BYTE, this->m_image.getPixelsPtr());
-  }
+  //}
 
+  glTexImage2D(this->m_textureTarget, 0, GL_RGBA, width, height, 0, 
+	  GL_RGBA, GL_UNSIGNED_BYTE, this->m_image.getPixelsPtr());
   return success;
 }
 
@@ -79,8 +72,6 @@ void gx::Texture::LoadMipmap(unsigned int maxLevels) {
 	sf::Image loader;
 
 	//set texture environment parameters
-	glTexEnvf( GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, 
-		GL_MODULATE ); 
 
 	glTexParameterf( GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER,
 		GL_LINEAR_MIPMAP_LINEAR );
