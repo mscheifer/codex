@@ -51,14 +51,6 @@ private :
   sf::Texture badGuyTexture;
   sf::Sprite badGuySprite;
   sf::Text pickUp;
-
-  sf::Texture aimerNoneTexture;
-  //sf::Texture aimerTexture;
-  //sf::Texture aimerTextureInner;
-  sf::Sprite aimerNone;
-  //sf::Sprite aimer;
-  //sf::Sprite aimerInner; 
-
   sf::Texture energeBarTexture;
   sf::Sprite energeBarSprite;
   sf::Texture energeBarFrameTexture;

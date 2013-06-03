@@ -55,20 +55,6 @@ gx::HUD::HUD(void):health(100), maxHealth(100), HLossPercentage(0),
   positionText.setCharacterSize(24);
   positionText.setColor(sf::Color::Green);
   positionText.setPosition(300,500);
-
-  //aimer
-  //aimerNoneTexture.loadFromFile("graphics/Images/aimerNone.png");
-  //aimerNone.setTexture(aimerNoneTexture);
-  //aimerNone.setOrigin(aimerNoneTexture.getSize().x/2, aimerNoneTexture.getSize().y/2);
-
-  //aimerTexture.loadFromFile("graphics/Images/aimerOuter.png");
-  //aimer.setTexture(aimerTexture);
-  //aimer.setOrigin(aimerTexture.getSize().x/2, aimerTexture.getSize().y/2);
-  ////inner aimer
-  //aimerTextureInner.loadFromFile("graphics/Images/aimerInner.png");
-  //aimerInner.setTexture(aimerTextureInner);
-  //aimerInner.setOrigin(aimerTextureInner.getSize().x/2, aimerTextureInner.getSize().y/2);
-  
   //buffs
   initializeSprites();
   //chargig

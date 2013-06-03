@@ -163,6 +163,8 @@ bool Player::damageBy(Projectile *deadly)
 	if (health==0) return true;
 
   attacked = true;
+
+
   float damage = deadly->getStrength() - defense*getDefenseMultiplier();
 	damage = ( damage > 0? damage: 0);
 	float newHealth = (health - damage);
