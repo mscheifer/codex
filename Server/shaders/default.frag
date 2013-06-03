@@ -18,7 +18,9 @@ void main() {
   vec3 viewDirection = normalize(-vec3(interpPosition));
   vec3 normal = normalize(interpNormal);
 
-  vec4 lightVal = vec4(0,0,0,0);
+  const vec4 ambient = vec4(0.5, 0.5, 0.5, 1.0);
+
+  vec4 lightVal = ambient;
   for(uint i = 0u; i < numLights; i++) {
     float lightDist = length(lightDir[i]);
 
@@ -28,7 +30,7 @@ void main() {
 	lightVal += att * lightColor * max(dot(normal,normalize(lightDir[i])),0);
   }
 
-  vec4 color = texture(diffuseTex, interpDiffuseCoord) + lightVal;
+  vec4 color = texture(diffuseTex, interpDiffuseCoord) * lightVal;
 
   //if(dot(viewDirection, normal) < outlineThickness) {
   //  color = vec4(0.0,0.0,0.0,1.0);
