@@ -128,6 +128,7 @@ private:
   bool correctMovementHit( Entity* e );
   void fireProjectile();
   v3_t getProjectilePosition(void);
+  v3_t getProjectileChargePosition();
   void die();
   void respawn(v3_t pos);
   void applyBuff( BUFF b);

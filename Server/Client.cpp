@@ -11,8 +11,14 @@ void NetworkClient::receiveMessages() {
   sf::Packet packet;
   int proximity = 2;
   bool minotaur = false;
+  bool flag = false;
 
-  while (netRecv.receiveMessage(packet)) {
+  static int count = 0;
+  if (!flag && netRecv.receiveMessage(packet)) {
+    if(count == -1)
+      count = 0;
+    count++;
+
     //TODO might cause an endless cycle if server sends faster than the time
     //it takes to process a message. 
     sf::Uint32 packetType;
@@ -93,12 +99,16 @@ void NetworkClient::receiveMessages() {
       case INIT:
           //TODO initialize the player info
           this->gameStart = true;
+          flag = true;
           break;
       default:
         std::cout<<"Error client receive bad packet " << packetType << std::endl;
         break;
     }
   }
+  if(count != -1)
+    std::cout << "packets processed " << count << std::endl;
+  count = -1;
   AudioManager::updateMusic(proximity, minotaur);
 }
 
@@ -227,7 +237,7 @@ void NetworkClient::doClient() {
       //std::cout<<"processInput: "<< processInputTime <<"ms\treceiveMessagesTime: "<<
       //receiveMessagesTime <<"ms\tdrawTime: "<< drawTime <<"ms\tsendPackTime: "<< sendPackTime <<std::endl;
     } else {
-      float remaining = 1-clock.getElapsedTime().asSeconds(); //TODO make this 5 sec again
+      float remaining = 2-clock.getElapsedTime().asSeconds(); //TODO make this 5 sec again
       if (remaining <= 0) {
         gameRestart = false;
       }

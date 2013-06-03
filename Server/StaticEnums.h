@@ -156,14 +156,14 @@ const BuffData BuffInfo[] = {
   BuffData(FIR2DEBUFF,  7,  2, 15000,   false, 0,    false, 0,     true, -1.5f,  false, 0,  false, 0,    false, 0,     false, 0),
   BuffData(FIR3DEBUFF,  7,  3, 15000,   false, 0,    false, 0,     true, -1.75f, false, 0,  false, 0,    false, 0,     false, 0),
   
-  BuffData(ICESTUN,     13, 1, 5000,    true, 0,     false, 0,     false, 0,   false, 0,    false, 0,    false, 0,     false, 0),
-  BuffData(ICESTUN2,    13, 2, 10000,   true, 0,     false, 0,     false, 0,   false, 0,    false, 0,    false, 0,     false, 0),
+  BuffData(ICESTUN,     13, 1, 3000,    true, 0,     false, 0,     false, 0,   false, 0,    false, 0,    false, 0,     false, 0),
+  BuffData(ICESTUN2,    13, 2, 7000,   true, 0,     false, 0,     false, 0,   false, 0,    false, 0,    false, 0,     false, 0),
   BuffData(ICE1DEBUFF,  8,  1, 15000,   true, 0.55f, false, 0,     false, 0,   false, 0,    false, 0,    false, 0,     false, 0),
   BuffData(ICE2DEBUFF,  8,  2, 15000,   true, 0.45f, false, 0,     false, 0,   false, 0,    false, 0,    false, 0,     false, 0),
   BuffData(ICE3DEBUFF,  8,  3, 15000,   true, 0.35f, false, 0,     false, 0,   false, 0,    false, 0,    false, 0,     false, 0),
 
-  BuffData(THUSTUN,     9,  1, 5000,   true, 0,     false, 0,     false, 0,    false, 0,    false, 0,    false, 0,     false, 0),
-  BuffData(THUSTUN2,    9,  2, 10000,  true, 0,     false, 0,     false, 0,    false, 0,    false, 0,    false, 0,     false, 0),
+  BuffData(THUSTUN,     9,  1, 3000,   true, 0,     false, 0,     false, 0,    false, 0,    false, 0,    false, 0,     false, 0),
+  BuffData(THUSTUN2,    9,  2, 7000,  true, 0,     false, 0,     false, 0,    false, 0,    false, 0,    false, 0,     false, 0),
   BuffData(THU1DEBUFF,  10, 1, 15000,  false, 0,    true, -1.25f, false, 0,    false, 0,    false, 0,    false, 0,     false, 0),
   BuffData(THU2DEBUFF,  10, 2, 15000,  false, 0,    true, -2,     false, 0,    false, 0,    false, 0,    false, 0,     false, 0),
   BuffData(THU3DEBUFF,  10, 3, 15000,  false, 0,    true, -4,     false, 0,    false, 0,    false, 0,    false, 0,     false, 0),
@@ -171,7 +171,7 @@ const BuffData BuffInfo[] = {
   //                           time  |  move       |mpRegen      | hpRegen | str           | atkCD      |  chargeCD  
   BuffData(G1MDEBUFF,   11, 1, 1500,   false, 0,    false, 0,     false, 0,    true, .95f,  false, 0,    false, 0,     false, 0),
   BuffData(G2DEBUFF,    11, 2, 1500,   true, 0.75f, true, -2,     true, -1,    true, .90f,  false, 0,    false, 0,     false, 0),
-  BuffData(G2MDEBUFF,   11, 1, 1500,   true, 0.65f, true, -1.25f, false, 0,    true, .95f,  false, 0,    false, 0,     false, 0),
+  BuffData(G2MDEBUFF,   11, 1, 15000,  true, 0.45f, true, -1.25f, false, 0,    true, .95f,  false, 0,    false, 0,     false, 0),
   BuffData(G3DEBUFF1,   12, 1, 15000,  true, 0,     false, 0,     false, 0,    false, 0,    false, 0,    false, 0,     false, 0), 
   BuffData(G3DEBUFF2,   11, 3, 15000,  true, 0.55f, true, -5,     true, -2,    true, .85f,  false, 0,    false, 0,     false, 0)
 };

@@ -286,13 +286,15 @@ void Player::update(){
   //position += velocity * ConfigManager::serverTickLengthSec();
 
   if( chargedProjectile ) {
+    //this is for HUD
     elapsedChargeTime = chargedProjectile->getElapsedTime();
     totalChargeTime = ProjInfo[chargedProjectile->getMagicType()].chargeTime * getChargeCD();
     chargeMagicType = chargedProjectile->getMagicType();
    
     chargedProjectile->setDirection(direction);
-    chargedProjectile->setPosition(getProjectilePosition());
-   
+    chargedProjectile->setPosition(getProjectileChargePosition());
+  } else {
+    elapsedChargeTime = totalChargeTime = -1;
   }
 
   health+= healthRegen*getHealthRegenMultiplier();
@@ -360,18 +362,19 @@ void Player::handleSelfAction(ClientGameTimeAction a) {
 }
 
 void Player::fireProjectile() {
-    v3_t v = direction;
-    v.normalize();
-    if(minotaur) {
-     chargedProjectile->fireMutiple(v,getStrengthMultiplier(),10);
-    } else {
-     chargedProjectile->fire(v,getStrengthMultiplier());
-    }
+  chargedProjectile->setPosition(getProjectilePosition());
+  v3_t v = direction;
+  v.normalize();
+  if(minotaur) {
+    chargedProjectile->fireMutiple(v,getStrengthMultiplier(),10);
+  } else {
+    chargedProjectile->fire(v,getStrengthMultiplier());
+  }
     
-    chargedProjectile = nullptr;
+  chargedProjectile = nullptr;
     
-    charging = false;
-    shotProjectile = true;
+  charging = false;
+  shotProjectile = true;
 }
 void Player::handleOtherAction( ClientGameTimeAction) {
 	//since we are modeling projectiles, we are just gonna check for melee
@@ -391,6 +394,19 @@ v3_t Player::getProjectilePosition() {
   return temp;
 }
 
+v3_t Player::getProjectileChargePosition() {
+  v3_t temp = position;
+  v3_t d(0,0,1);
+  float size;
+  if(chargedProjectile)
+    size = ProjInfo[chargedProjectile->getMagicType()].size;
+  else
+    size = ProjInfo[weapon[current_weapon_selection]->getBasicAttack()].size;
+  d.scale(size + 0.5f + playerDepth/2.f);
+  temp += d;
+  return temp;
+}
+
 // this do substraction of stemina, respond to the user to render the attak animation  
 void Player::attack( ClientGameTimeAction a) {
   if(chargedProjectile)
@@ -402,7 +418,7 @@ void Player::attack( ClientGameTimeAction a) {
 		  return;
 	  }
 	  mana -= currentWeapon->getMpCost();
-	  chargedProjectile = currentWeapon->attackRange(direction, getProjectilePosition(), this);
+	  chargedProjectile = currentWeapon->attackRange(direction, getProjectileChargePosition(), this);
     charging = true;
 	}
 	else if(a.attackMelee){
