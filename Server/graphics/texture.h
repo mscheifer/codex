@@ -19,9 +19,8 @@ struct Texture {
 
     void bind(GLenum TextureUnit) const;
 
-private:
-	bool Load(Texture_Type);
-	void LoadMipmap(unsigned int levels);
+  private:
+    bool Load(Texture_Type);
     GLenum m_textureTarget;
     std::string m_fileName;
     sf::Image m_image;

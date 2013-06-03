@@ -29,7 +29,7 @@ std::vector<gx::graphicsEntity> staticModels() {
   auto modelPlayer     = loadModel(configModelName("goodguy"),Player::playerDepth,true);
   auto cubes = gx::loadCube();
   auto skybox = gx::loadSkybox();
-  auto ground = gx::loadGround(-1.0f, "models/floor_mipmap/floor.jpg");
+  auto ground = gx::loadGround(0.0f, "models/floor.jpg");
   std::vector<gx::graphicsEntity> entitiesData;
 
   entitiesData.push_back(std::move(skybox));  //ignore
@@ -227,9 +227,10 @@ void gx::graphicsClient::clearEntities() {
   
   // add ground instance. kinda hacky but works
   staticDrawer::instanceData groundInst;
-  groundInst.pos  = vector3f(10, 10, 0);
-  groundInst.dirY = vector3f(0,0,1);
+  groundInst.pos  = vector3f(0, 0, 0);
+  groundInst.dirY = vector3f(0,1,0);
   groundInst.type = GROUND;
+  groundInst.scale = 1;
   this->entities.addInstance(groundInst);
 }
 
