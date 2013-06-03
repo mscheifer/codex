@@ -153,10 +153,10 @@ gx::graphicsEntity gx::loadGround(const float zLevel, std::string texPath) {
 										   vector3f( 0.0f, 0.0f, 1.0f), 
 										   vector3f( 0.0f, 0.0f, 1.0f)}};
 
-	std::array<vector2f, 4> floorTexCoord = {{ vector2f(50.0f, 50.0f),
-											   vector2f(  0.0f, 50.0f), 
+	std::array<vector2f, 4> floorTexCoord = {{ vector2f(20.0f, 20.0f),
+											   vector2f(  0.0f, 20.0f), 
 											   vector2f(  0.0f,   0.0f),
-											   vector2f(50.0f,   0.0f)}};
+											   vector2f(20.0f,   0.0f)}};
 
 
 	std::array<GLuint,6>  floorIndices = {{ 0, 1, 2, 0, 2, 3}};
