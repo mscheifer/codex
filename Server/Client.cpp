@@ -11,8 +11,13 @@ void NetworkClient::receiveMessages() {
   sf::Packet packet;
   int proximity = 2;
   bool minotaur = false;
+  flag = false;
+  static int count = 0;
+  while (!flag && netRecv.receiveMessage(packet)) {
+    if(count == -1)
+      count = 0;
+    count++;
 
-  while (netRecv.receiveMessage(packet)) {
     //TODO might cause an endless cycle if server sends faster than the time
     //it takes to process a message. 
     sf::Uint32 packetType;
@@ -97,12 +102,17 @@ void NetworkClient::receiveMessages() {
           this->gxClient.updatePosition(gx::vector4f(0,0,0) + initPckt.position);
           this->gxClient.updateDirection(initPckt.direction);
           this->gameStart = true;
+          flag = true;
+        //  std::cout<<" i received init" <<std::endl;
           break;
       default:
         std::cout<<"Error client receive bad packet " << packetType << std::endl;
         break;
     }
   }
+  //if(count != -1)
+  //  std::cout << "packets processed " << count << std::endl;
+  count = -1;
   AudioManager::updateMusic(proximity, minotaur);
 }
 
@@ -202,42 +212,47 @@ void NetworkClient::doClient() {
     float receiveMessagesTime;
     float drawTime;
     float sendPackTime;*/
-    if (!gameRestart) {
-      //profilerTime.restart();
-      this->processInput();
-      //processInputTime = profilerTime.getElapsedTime().asMilliseconds();
-      //profilerTime.restart();
-      this->receiveMessages();
-      //receiveMessagesTime = profilerTime.getElapsedTime().asMilliseconds();
+      if (!gameRestart) {
+        //profilerTime.restart();
+        this->processInput();
+        //processInputTime = profilerTime.getElapsedTime().asMilliseconds();
+        //profilerTime.restart();
+        this->receiveMessages();
+        //receiveMessagesTime = profilerTime.getElapsedTime().asMilliseconds();
 
-      //profilerTime.restart();
-      //window closed
-      if (!this->running) 
-        break;
-      if (gameRestart) {
-        clock.restart();
-        gameStart = false;
-        continue;
+        //profilerTime.restart();
+        //window closed
+        if (!this->running) 
+          break;
+        if (gameRestart) {
+          clock.restart();
+          gameStart = false;
+          if (flag) gameStart =true;
+         //std::cout<<"restarting game now" <<std::endl;
+          continue;
+        }
+        this->gxClient.draw();
+        //drawTime = profilerTime.getElapsedTime().asMilliseconds();
+        //profilerTime.restart();
+        if(this->sendPacket) {
+          //this->action.print();
+          this->netRecv.sendPacket<ClientGameTimeAction>(action);
+          this->sendPacket = false;
+        }
+        //sendPackTime = profilerTime.getElapsedTime().asMilliseconds();
+        //std::cout<<"processInput: "<< processInputTime <<"ms\treceiveMessagesTime: "<<
+        //receiveMessagesTime <<"ms\tdrawTime: "<< drawTime <<"ms\tsendPackTime: "<< sendPackTime <<std::endl;
+      } else {
+        //std::cout<<" i am counting down"<<std::endl;
+        float remaining = 2-clock.getElapsedTime().asSeconds(); //TODO make this 5 sec again
+        //std::cout<<"remaininig tiem is " <<remaining<<std::endl;
+        if (remaining <= 0) {
+          gameRestart = false;
+        }
+        gxClient.updateHUDTimer(remaining);
+        this->gxClient.draw();
       }
-      this->gxClient.draw();
-      //drawTime = profilerTime.getElapsedTime().asMilliseconds();
-      //profilerTime.restart();
-      if(this->sendPacket) {
-        //this->action.print();
-        this->netRecv.sendPacket<ClientGameTimeAction>(action);
-        this->sendPacket = false;
-      }
-      //sendPackTime = profilerTime.getElapsedTime().asMilliseconds();
-      //std::cout<<"processInput: "<< processInputTime <<"ms\treceiveMessagesTime: "<<
-      //receiveMessagesTime <<"ms\tdrawTime: "<< drawTime <<"ms\tsendPackTime: "<< sendPackTime <<std::endl;
-    } else {
-      float remaining = 1-clock.getElapsedTime().asSeconds(); //TODO make this 5 sec again
-      if (remaining <= 0) {
-        gameRestart = false;
-      }
-      gxClient.updateHUDTimer(remaining);
-      this->gxClient.draw();
-    }
-    } else { receiveMessages();}
+    } else {// std::cout<<" trying to recv init" <<std::endl;
+    if (!flag) receiveMessages();}
   }
 }

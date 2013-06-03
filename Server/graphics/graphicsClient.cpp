@@ -166,8 +166,8 @@ ClientGameTimeAction gx::graphicsClient::handleInput() {
   auto dir = this->playerDirection;
   action.updated = this->userInput.getUpdated();
   action.facingDirection = dir;
-  action.attackMelee = this->userInput.fire1();
-  action.attackRange = this->userInput.fire2();
+  action.attackMelee = this->userInput.fire2();
+  action.attackRange = this->userInput.fire1();
   action.pickup = this->userInput.pickUp();
   action.switchWeapon = this->userInput.switchW();
   return action;

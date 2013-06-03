@@ -20,6 +20,7 @@ class NetworkClient {
   bool gameRestart;
   bool joined;
   bool gameStart;
+  bool flag;
   EntityPool objPool;
 
   void processInput();

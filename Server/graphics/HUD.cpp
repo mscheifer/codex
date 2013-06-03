@@ -129,7 +129,7 @@ void gx::HUD::draw(sf::RenderWindow & window) {
   if (canPickUp)
     window.draw(pickUp);
   aimer.setPosition((window.getSize().x-200)/2, (window.getSize().y-200)/2);
-  if (sf::Mouse::isButtonPressed(sf::Mouse::Right) && charging) { //TODO this is bad
+  if (charging) { //TODO this is bad
     window.draw(aimer);
   }
   int buffn = 0; 

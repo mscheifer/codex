@@ -20,7 +20,8 @@ Map::Map(void): spawnPositions(), freeProjectiles(), q(0,Rectangle(BoundingObj::
   //initWallsOne();
   //initStaticWalls();
   //initWallsTwo();
-  initPowerUps();
+
+ // initPowerUps();
 }
 
 void Map::mapReset()
@@ -29,11 +30,12 @@ void Map::mapReset()
   spawnPositions.clear();
   entities.clear();
   liveProjectTile.clear();
-  initWalls();
-  //initWallsOne();
-  //initStaticWalls();
-  //initWallsTwo();
-  initPowerUps();
+  initWalls(); 
+ // initWallsOne();
+ // initStaticWalls();
+ // initWallsTwo();
+  
+ // initPowerUps();
   for(unsigned int i = 0; i < players.size(); i++)
   {
     players[i]->reset(this->getRespawnPosition(players[i]->player_id));
@@ -41,21 +43,19 @@ void Map::mapReset()
 }
 
 void Map::initPowerUps() {
-  PowerUp* superPower = new PowerUp(v3_t(5,5,PowerUp::powerUpDepth / 2), this, MANABOOST);
+  PowerUp* superPower = new PowerUp(v3_t(0,0,0), this, MANABOOST);
   superPower->setRespownTime(5000);
   this->entities.push_back(superPower);
 
-  PowerUp* p2 = new PowerUp(v3_t(-10,-10,PowerUp::powerUpDepth / 2), this, HEALTHBOOST);
+  PowerUp* p2 = new PowerUp(v3_t(0,0,0), this, HEALTHBOOST);
   p2->setRespownTime(5000);
   this->entities.push_back(p2);
-
-  //PowerUp* p3 = new PowerUp(v3_t(-10,10,0), this, MANABOOST);
-  //p3->setRespownTime(5000);
-  //this->entities.push_back(p3);
-
-  //PowerUp* p4 = new PowerUp(v3_t(10,-10,0), this, STRBOOST);
-  //p4->setRespownTime(5000);
-  //this->entities.push_back(p4);
+  p2 = new PowerUp(v3_t(0,0,0), this, MOVEBOOST);
+  p2->setRespownTime(5000);
+  this->entities.push_back(p2);
+  p2 = new PowerUp(v3_t(0,0,0), this, CHARGECD);
+  p2->setRespownTime(5000);
+  this->entities.push_back(p2);
 }
 
 void Map::initWallsTwo(void)
@@ -436,8 +436,8 @@ void Map::initWalls(void)
   unsigned int height = ConfigManager::wallHeight(); 
   unsigned int depth = ConfigManager::wallDepth();
 
-  float wallX = 7;
-  float wallY = 7;
+  float wallX = 20;
+  float wallY = 16;
 
   float centerX = 0;
   float centerY = 0;

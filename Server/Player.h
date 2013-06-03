@@ -13,10 +13,10 @@ const int MAXPROJECTILES = 20;
 class Player: public Entity
 {
 public:
-  static length_t MOVESCALE();
-  static length_t AIRMOVESCALE();
-  static length_t JUMPSPEED();
-  static int MAXJUMP();
+  static length_t MOVESCALE(bool mino);
+  static length_t AIRMOVESCALE(bool mino);
+  static length_t JUMPSPEED(bool mino);
+  static int MAXJUMP(bool mino);
 
   static const float playerWidth;
   static const float playerHeight;
@@ -128,6 +128,7 @@ private:
   bool correctMovementHit( Entity* e );
   void fireProjectile();
   v3_t getProjectilePosition(void);
+  v3_t getProjectileChargePosition();
   void die();
   void respawn(v3_t pos);
   void applyBuff( BUFF b);

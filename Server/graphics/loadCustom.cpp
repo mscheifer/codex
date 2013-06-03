@@ -143,10 +143,10 @@ gx::graphicsEntity gx::loadSkybox() {
 
 gx::graphicsEntity gx::loadGround(const float zLevel, std::string texPath) {
 
-	std::array<vector4f,4> floorVtArr = {{ vector4f( 200.0f, 200.0f, zLevel, 1.0f),
-							               vector4f(-200.0f, 200.0f, zLevel, 1.0f),
-										   vector4f(-200.0f,-200.0f, zLevel, 1.0f),
-										   vector4f( 200.0f,-200.0f, zLevel, 1.0f)}};
+	std::array<vector4f,4> floorVtArr = {{ vector4f( 1000.0f, 1000.0f, zLevel, 1.0f),
+							               vector4f(-1000.0f, 1000.0f, zLevel, 1.0f),
+										   vector4f(-1000.0f,-1000.0f, zLevel, 1.0f),
+										   vector4f( 1000.0f,-1000.0f, zLevel, 1.0f)}};
 
 	std::array<vector3f,4> floorNormA = {{ vector3f( 0.0f, 0.0f, 1.0f),
                                            vector3f( 0.0f, 0.0f, 1.0f), 
