@@ -21,10 +21,10 @@ std::string configModelName(std::string s) {
 
 std::vector<gx::graphicsEntity> staticModels() {
 
-  auto modelBadGuy     = loadModel(configModelName("badguy"),Player::playerDepth,true);
-  auto modelWeapon     = loadModel(configModelName("weapon"),5,true);
+  //auto modelBadGuy     = loadModel(configModelName("badguy"),Player::playerDepth,true);
+  auto modelWeapon     = loadModel(configModelName("weapon"),Weapon::weaponDepth,true);
   auto modelProjectile = loadModel(configModelName("projectile"),Projectile::projDepth);
-  auto modelPowerUp    = loadModel(configModelName("powerup"),PowerUp::powerUpDepth);
+  auto modelPowerUp    = loadModel(configModelName("powerup"),PowerUp::powerUpDepth,true);
   auto modelWall       = loadModel(configModelName("wall"),10);
   auto modelPlayer     = loadModel(configModelName("goodguy"),Player::playerDepth,true);
   auto cubes = gx::loadCube();
@@ -46,7 +46,7 @@ std::vector<gx::graphicsEntity> staticModels() {
 
 std::vector<gx::graphicsEntity> dynamicModels() {
   // MODEL LOADING
-  auto modelPlayer = loadModel(configModelName("badguy"),Player::playerDepth,true);
+  auto modelPlayer = loadModel(configModelName("goodguy"),Player::playerDepth,true);
 
     //setup drawing data
   std::vector<gx::graphicsEntity> entitiesData;
@@ -100,7 +100,7 @@ std::vector<gx::uniform::block*> gx::graphicsClient::uniforms() {
 //make sure this is above al opengl objects so that the desctructor is called
 //last so we have an opengl context for destructors
 gx::graphicsClient::graphicsClient():
-    window(sf::VideoMode(defaultWindowWidth, defaultWindowHeight), "DrChao",
+    window(sf::VideoMode(ConfigManager::windowWidth(), ConfigManager::windowHeight()), "DrChao",
     (ConfigManager::fullscreen() ? sf::Style::Fullscreen : sf::Style::Default),
     sf::ContextSettings(24,0,ConfigManager::antiAliasingLevel())),
     //glew needs to be called here, after window, before anything else
@@ -144,7 +144,7 @@ gx::graphicsClient::graphicsClient():
   this->setCamera();
   this->userInput.setUpMouse();
 
-  this->reshape(defaultWindowWidth, defaultWindowHeight);
+  this->reshape(ConfigManager::windowWidth(), ConfigManager::windowHeight());
 }
 
 ClientGameTimeAction gx::graphicsClient::handleInput() {
@@ -247,7 +247,7 @@ void gx::graphicsClient::addEntity(Entity* ent) {
     inst.animation = 0; //TODO: select animation based on context
     ++aniFrame;
     aniFrame %= 240;
-    inst.timePosition = static_cast<double>(aniFrame) / 120.0;
+    inst.timePosition = static_cast<double>(aniFrame) / 1200.0;
     this->animatedDrawer.addInstance(inst);
   } else {
     staticDrawer::instanceData inst;

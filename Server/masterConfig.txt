@@ -9,10 +9,12 @@ gameRestart=1
 soundScaling=10
 fullscreen=false
 anti-alias=0
+window-width=800
+window-height=600
 
 //models
 model-badguy=cat.dae
-model-goodguy=goodguy.dae
+model-goodguy=cat.dae
 model-wall=stone_wall.dae
 model-projectile=weird_orange_thing.dae
 model-powerup=cat.dae
@@ -22,7 +24,7 @@ model-weapon=badguy.dae
 gravity=-40
 
 // Player configuration
-players=1
+players=2
 movescale=.6
 airMovescale=.2
 maxJump=2
