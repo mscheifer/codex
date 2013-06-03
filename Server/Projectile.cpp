@@ -131,7 +131,9 @@ void Projectile::handleCollisions() {
       //  combined = true;
       //} 
       //else
-      if ( proj->charging && sameTeam(proj) ){ //the other one is charging
+
+      //I am moving and proj is charging and we same team
+      if ( !this->charging && proj->charging && sameTeam(proj) ){ //the other one is charging
         proj->setMagicType(combine(proj->getMagicType(), magicType));
         proj->combined = true;
         destroy = true;
@@ -237,8 +239,6 @@ MAGIC_POWER Projectile::combine( MAGIC_POWER m1, MAGIC_POWER m2 ){
 }
 
 bool Projectile::sameTeam( Projectile * p ){
-  if(p == nullptr || p->getOwner() == nullptr || this == nullptr || this->getOwner() == nullptr)
-    return false;
   return p->getOwner()->isMinotaur() == getOwner()->isMinotaur();
 }
 

@@ -9,6 +9,17 @@ gameRestart=1
 soundScaling=10
 fullscreen=false
 anti-alias=0
+window-width=800
+window-height=600
+enableMinotaur=1
+
+//models
+model-badguy=cat.dae
+model-goodguy=cat.dae
+model-wall=stone_wall.dae
+model-projectile=weird_orange_thing.dae
+model-powerup=cat.dae
+model-weapon=badguy.dae
 
 // Physics
 gravity=-40
@@ -16,28 +27,33 @@ gravity=-40
 // Player configuration
 players=2
 movescale=.6
-airMovescale=.5
+airMovescale=.49
 maxJump=2
 jumpSpeed=20.17
 playerHpRegen=.01
-playerMpRegen=.035
+playerMpRegen=.056
 playerDef=5
-playerHp=50
+playerHp=100
 playerMaxHp=100
-playerMp=50
+playerMp=100
 playerMaxMp=100
-minotaurHpRegen=.01
-minotaurMpRegen=.035
+
+minotaurmovescale=.6
+minotaurairMovescale=.6
+minotaurmaxJump=2
+minotaurjumpSpeed=20.19
+minotaurHpRegen=.02
+minotaurMpRegen=.112
 minotaurDef=5
-minotaurHp=50
+minotaurHp=100
 minotaurMaxHp=100
-minotaurMp=50
+minotaurMp=100
 minotaurMaxMp=100
 
 // Projectile
 projectileRange=300
 
 // Wall
-wallWidth=36
+wallWidth=37.4
 wallHeight=5
 wallDepth=10

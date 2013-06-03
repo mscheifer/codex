@@ -155,9 +155,12 @@ const aiScene* gx::Mesh::LoadFile(Assimp::Importer& Importer,
          | aiProcess_Triangulate
          | aiProcess_GenSmoothNormals
          | (flipUVs ? aiProcess_FlipUVs : 0));
+       //| aiProcess_FixInfacingNormals, aiProcess_FindDegenerates, aiProcess_FindInvalidData
+       //| aiProcess_TransformUVCoords 	
   if (!pScene) {
     std::cout << "Error parsing '" <<  Filename.c_str() << "': '";
     std::cout << Importer.GetErrorString() << std::endl;
+    return nullptr;
   }
   //print
   debugout << "num animations: " << pScene->mNumAnimations   << endl;

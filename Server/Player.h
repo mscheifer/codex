@@ -13,10 +13,10 @@ const int MAXPROJECTILES = 20;
 class Player: public Entity
 {
 public:
-  static length_t MOVESCALE();
-  static length_t AIRMOVESCALE();
-  static length_t JUMPSPEED();
-  static int MAXJUMP();
+  static length_t MOVESCALE(bool mino);
+  static length_t AIRMOVESCALE(bool mino);
+  static length_t JUMPSPEED(bool mino);
+  static int MAXJUMP(bool mino);
 
   static const float playerWidth;
   static const float playerHeight;
@@ -53,6 +53,7 @@ public:
   bool collidePlayer(const std::pair<Entity*,BoundingObj::vec3_t>& p);
   bool moveTowardDirection(move_t degree, bool jump); //handle movement input WADS jump
   void handleAction(ClientGameTimeAction a);
+  void removeChargingProj();
   
   //getters and setters
   int getCurrentWeaponSelection() const { return current_weapon_selection; };
@@ -127,6 +128,7 @@ private:
   bool correctMovementHit( Entity* e );
   void fireProjectile();
   v3_t getProjectilePosition(void);
+  v3_t getProjectileChargePosition();
   void die();
   void respawn(v3_t pos);
   void applyBuff( BUFF b);

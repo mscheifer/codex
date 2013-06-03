@@ -9,18 +9,27 @@ void NetworkClient::receiveMessages() {
   //receive from server and process
    
   sf::Packet packet;
-  if (netRecv.receiveMessage(packet)) {
+  int proximity = 2;
+  bool minotaur = false;
+  flag = false;
+  static int count = 0;
+  while (!flag && netRecv.receiveMessage(packet)) {
+    if(count == -1)
+      count = 0;
+    count++;
+
+    //TODO might cause an endless cycle if server sends faster than the time
+    //it takes to process a message. 
     sf::Uint32 packetType;
     packet >> packetType;
     std::vector<int> kills;
     std::vector<int> wins;
-    int proximity = 2;
     v3_t pos;
-    bool minotaur;
     v3_t dir;
     static float maxProx = 30.f;
     IdPacket newId(0);
     StartGamePacket playerSt;
+    InitPacket initPckt;
     switch (packetType) {
       case SGTR:
         this->s.deserialize(packet);
@@ -71,27 +80,6 @@ void NetworkClient::receiveMessages() {
         sf::Listener::setPosition(pos.x/AudioManager::soundScaling, pos.y/AudioManager::soundScaling, pos.z/AudioManager::soundScaling);
         dir = s.players[this->id].getDirection();
         sf::Listener::setDirection(dir.x, dir.y, dir.z);
-
-        //TODO not sure where to put this @bowen add to HUD here
-        if( s.players[id].getPickupWeaponType() != UNK )
-          std::cout << "can pick up weapon type " << WeaponNames[s.players[id].getPickupWeaponType()] << std::endl;
-        
-        //calculate proximity of players
-        //can do -- instead of ++ so we can have more intense if less players
-        
-        //if(s.players[this->id].getPosition().y > -5){
-        //  proximity++;
-        //}
-        //if(s.players[this->id].getPosition().y > 5){
-        //  proximity++;
-        //}
-
-        //if(s.players[this->id].getPosition().x > 0){
-        //  minotaur = false;
-        //}
-        //std::cout<<"prox " << proximity << "mino " << minotaur << std::endl;
-        AudioManager::updateMusic(proximity, minotaur);
-        
         break;
       case JOINID:
           newId.deserialize(packet);
@@ -103,21 +91,29 @@ void NetworkClient::receiveMessages() {
           joined = true; 
           std::cout<<"CLIENT RECEIVED START GAME"<<std::endl;
           playerSt.deserialize(packet);
-          gxClient.updateLobby(playerSt.playerStatus);
+          this->gxClient.updateLobby(playerSt.playerStatus);
           for (auto itr= playerSt.playerStatus.begin(); itr != playerSt.playerStatus.end(); itr++ ) {
             std::cout<<"Player "<< (*itr).first<< " is "<<(*itr).second<<std::endl;
           }
           break;
       case INIT:
           //TODO initialize the player info
-          gameStart = true;
+          initPckt.deserialize(packet);
+          this->gxClient.updatePosition(gx::vector4f(0,0,0) + initPckt.position);
+          this->gxClient.updateDirection(initPckt.direction);
+          this->gameStart = true;
+          flag = true;
+        //  std::cout<<" i received init" <<std::endl;
           break;
       default:
-        std::cout<<"There is an error when receiving"<<std::endl;
-        std::cout << "of packet type " << packetType << std::endl;
+        std::cout<<"Error client receive bad packet " << packetType << std::endl;
         break;
     }
   }
+  //if(count != -1)
+  //  std::cout << "packets processed " << count << std::endl;
+  count = -1;
+  AudioManager::updateMusic(proximity, minotaur);
 }
 
 void NetworkClient::processInput() {
@@ -216,42 +212,47 @@ void NetworkClient::doClient() {
     float receiveMessagesTime;
     float drawTime;
     float sendPackTime;*/
-    if (!gameRestart) {
-      //profilerTime.restart();
-      this->processInput();
-      //processInputTime = profilerTime.getElapsedTime().asMilliseconds();
-      //profilerTime.restart();
-      this->receiveMessages();
-      //receiveMessagesTime = profilerTime.getElapsedTime().asMilliseconds();
+      if (!gameRestart) {
+        //profilerTime.restart();
+        this->processInput();
+        //processInputTime = profilerTime.getElapsedTime().asMilliseconds();
+        //profilerTime.restart();
+        this->receiveMessages();
+        //receiveMessagesTime = profilerTime.getElapsedTime().asMilliseconds();
 
-      //profilerTime.restart();
-      //window closed
-      if (!this->running) 
-        break;
-      if (gameRestart) {
-        clock.restart();
-        gameStart = false;
-        continue;
+        //profilerTime.restart();
+        //window closed
+        if (!this->running) 
+          break;
+        if (gameRestart) {
+          clock.restart();
+          gameStart = false;
+          if (flag) gameStart =true;
+         //std::cout<<"restarting game now" <<std::endl;
+          continue;
+        }
+        this->gxClient.draw();
+        //drawTime = profilerTime.getElapsedTime().asMilliseconds();
+        //profilerTime.restart();
+        if(this->sendPacket) {
+          //this->action.print();
+          this->netRecv.sendPacket<ClientGameTimeAction>(action);
+          this->sendPacket = false;
+        }
+        //sendPackTime = profilerTime.getElapsedTime().asMilliseconds();
+        //std::cout<<"processInput: "<< processInputTime <<"ms\treceiveMessagesTime: "<<
+        //receiveMessagesTime <<"ms\tdrawTime: "<< drawTime <<"ms\tsendPackTime: "<< sendPackTime <<std::endl;
+      } else {
+        //std::cout<<" i am counting down"<<std::endl;
+        float remaining = 2-clock.getElapsedTime().asSeconds(); //TODO make this 5 sec again
+        //std::cout<<"remaininig tiem is " <<remaining<<std::endl;
+        if (remaining <= 0) {
+          gameRestart = false;
+        }
+        gxClient.updateHUDTimer(remaining);
+        this->gxClient.draw();
       }
-      this->gxClient.draw();
-      //drawTime = profilerTime.getElapsedTime().asMilliseconds();
-      //profilerTime.restart();
-      if(this->sendPacket) {
-        //this->action.print();
-        this->netRecv.sendPacket<ClientGameTimeAction>(action);
-        this->sendPacket = false;
-      }
-      //sendPackTime = profilerTime.getElapsedTime().asMilliseconds();
-      //std::cout<<"processInput: "<< processInputTime <<"ms\treceiveMessagesTime: "<<
-      //receiveMessagesTime <<"ms\tdrawTime: "<< drawTime <<"ms\tsendPackTime: "<< sendPackTime <<std::endl;
-    } else {
-      float remaining = 5-clock.getElapsedTime().asSeconds();
-      if (remaining <= 0) {
-        gameRestart = false;
-      }
-      gxClient.updateHUDTimer(remaining);
-      this->gxClient.draw();
-    }
-    } else { receiveMessages();}
+    } else {// std::cout<<" trying to recv init" <<std::endl;
+    if (!flag) receiveMessages();}
   }
 }

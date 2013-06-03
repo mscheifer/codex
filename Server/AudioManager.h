@@ -21,7 +21,7 @@ private:
   static std::map<std::string, std::string> musics;
   static std::map<std::string, sf::Sound> sounds;
   static std::map<std::string, sf::Sound> playerSounds[4];
-  static std::array<sf::Music,6> music;
+  static std::array<sf::Music,2> music;
   static std::array<proxStruct,2> musicProx;
   static bool useSound;
   static int trackNo;
@@ -59,7 +59,7 @@ public:
    static void stopPlayerSound(int id , std::string key);
   //play this music
   //numPlayers is the players in close proximity
-  static void updateMusic( int numPlayers, bool minotaur ); //main method that updates which music to play
+  static void updateMusic(const int numPlayers,const bool minotaur ); //main method that updates which music to play
 
   static void processPlayerSound(Player& o);
   static void processProjectileSound(Projectile& o);

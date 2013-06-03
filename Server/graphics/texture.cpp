@@ -2,10 +2,11 @@
 #include "texture.h"
 #include "oglUtil.h"
 
-gx::Texture::Texture(GLenum TextureTarget, const std::string& FileName)
+gx::Texture::Texture(GLenum TextureTarget, const std::string& FileName,
+					 Texture_Type matType)
   : m_textureTarget(TextureTarget), m_fileName(FileName), m_image(),
     m_textureID(0) {
-  this->Load();
+	this->Load(matType);
 }
 
 gx::Texture::Texture(Texture&& other) noexcept
@@ -21,7 +22,7 @@ gx::Texture::~Texture() {
   debugout << ");" << endl;
 }
 
-bool gx::Texture::Load() { //TODO: just move this function to the constructor
+bool gx::Texture::Load(Texture_Type type) { //TODO: just move this function to the constructor
   bool success = this->m_image.loadFromFile(this->m_fileName);
 
   if (!success) {
@@ -38,11 +39,19 @@ bool gx::Texture::Load() { //TODO: just move this function to the constructor
 
   glGenTextures(1, &(this->m_textureID));
   glBindTexture(this->m_textureTarget, this->m_textureID);
+  
   glTexImage2D(this->m_textureTarget, 0, GL_RGBA, width, height, 0, 
-    GL_RGBA, GL_UNSIGNED_BYTE, this->m_image.getPixelsPtr());
-  glGenerateMipmap(GL_TEXTURE_2D);
-  glTexParameterf(this->m_textureTarget, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+	  GL_RGBA, GL_UNSIGNED_BYTE, this->m_image.getPixelsPtr());
+  glGenerateMipmap(this->m_textureTarget);
+  if (type & GROUNDTEX) {
+
+	glTexParameterf( this->m_textureTarget, GL_TEXTURE_WRAP_S, GL_REPEAT );
+	glTexParameterf( this->m_textureTarget, GL_TEXTURE_WRAP_T, GL_REPEAT );
+  }
+	glTexParameterf( this->m_textureTarget, GL_TEXTURE_MIN_FILTER,
+		GL_LINEAR_MIPMAP_LINEAR );
   glTexParameterf(this->m_textureTarget, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
   return success;
 }
 
@@ -50,3 +59,4 @@ void gx::Texture::bind(GLenum TextureUnit) const {
   glActiveTexture(TextureUnit);
   glBindTexture(this->m_textureTarget, this->m_textureID);
 }
+

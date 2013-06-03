@@ -8,7 +8,7 @@ public:
   static const float sphereRadius;
   static const Entity_Type type = WALL;
   Wall ();
-  Wall(unsigned int width, unsigned int depth, unsigned int height, v3_t startingCoordinate, v3_t direct, Map*);
+  Wall(float width, float depth, float height, v3_t startingCoordinate, v3_t direct, Map*);
   ~Wall(void);
   void update(void);
   void addNewCenter(v3_t);
@@ -27,9 +27,9 @@ private:
   float wallMoveTime;
   sf::Clock wallMoveClock;
   unsigned int currentCenter;
-  unsigned int width;
-  unsigned int depth;
-  unsigned int height;
+  float width;
+  float depth;
+  float height;
   length_t distanceLeft;
 };
 
