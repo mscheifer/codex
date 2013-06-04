@@ -119,6 +119,7 @@ void NetworkServer::doServer() {
         std::string before = sgtr->toString();
 	      if(!this->server.sendPacketToAll<ServerGameTimeRespond>( *sgtr ) ) {
           std::cout << "Error sending sgtr to everybody" << std::endl;
+          ConfigManager::log(std::string("Error sending sgtr to everyone"));
         }
         std::string after = sgtr->toString();
         //ConfigManager::log(before);
