@@ -96,11 +96,6 @@ struct ServerGameTimeRespond
 
   std::string toString(){
     std::stringstream ss;
-    std::vector<Player> players;
-    std::vector<Wall*> walls;
-    std::vector<Projectile*> projectiles;
-    std::vector<PowerUp*> powerups;
-    std::vector<Weapon*> weapons;
     ss << "player size " << players.size() << std::endl;
     for( unsigned int i = 0; i < players.size() ; i++){
       ss << players[i].toString();
@@ -121,6 +116,16 @@ struct ServerGameTimeRespond
     for( unsigned int i = 0 ; i < weapons.size() ; i++){
       ss << weapons[i]->toString();
     }
+    return ss.str();
+  }
+
+  std::string getAllSizes(){
+    std::stringstream ss;
+    ss << " player size " << players.size();
+    ss << " walls size " << walls.size();
+    ss << " proj size " << projectiles.size();
+    ss << " powerUps size " << powerups.size();
+    ss << " weapons size " << weapons.size();
     return ss.str();
   }
 };
