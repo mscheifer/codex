@@ -37,8 +37,9 @@ int Player::MAXJUMP(bool mino) {
     return ConfigManager::playerMaxJump();
 }
 
-Player::Player(){}// this->init(0,0,0,0,NULL);}
-Player::~Player(void){}
+Player::Player(){
+}// this->init(0,0,0,0,NULL);}
+
 Player::Player(v3_t pos, int assigned_id, Map * m): kills(0), wins(0)
 {
  generateBounds(position);
@@ -258,6 +259,7 @@ bool Player::correctMovementHit( Entity* e ){
 }
 
 void Player::clearEvents(){
+  upgraded = false;
   walking = false;
   shotProjectile = false;
   attacked = false;
@@ -301,6 +303,8 @@ void Player::update(){
     //this is for HUD
     elapsedChargeTime = chargedProjectile->getElapsedTime();
     totalChargeTime = ProjInfo[chargedProjectile->getMagicType()].chargeTime * getChargeCD();
+    if(totalChargeTime < 0)
+      totalChargeTime = -1;
     chargeMagicType = chargedProjectile->getMagicType();
    
     chargedProjectile->setDirection(direction);
@@ -768,6 +772,7 @@ void Player::serialize(sf::Packet& packet) const {
     packet << static_cast<sf::Uint32>(chargeMagicType);
 
     packet << collectPowerUp;
+    packet << upgraded;
   }
 
   void Player::deserialize(sf::Packet& packet) {
@@ -834,4 +839,5 @@ void Player::serialize(sf::Packet& packet) const {
     chargeMagicType = static_cast<MAGIC_POWER>(weaponType32);
 
     packet >> collectPowerUp;
+    packet >> upgraded;
   }

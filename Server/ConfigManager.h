@@ -60,10 +60,10 @@ public:
   static float playerMp(){ return StringToNumber<float>(ConfigManager::configMap["playerMp"]); }
   static float playerMaxMp(){ return StringToNumber<float>(ConfigManager::configMap["playerMaxMp"]); }
   
-  static float minotaurMovescale(){ return StringToNumber<float>(ConfigManager::configMap["minotaurairMovescale"]); }
+  static float minotaurMovescale(){ return StringToNumber<float>(ConfigManager::configMap["minotaurmovescale"]); }
   static float minotaurAirMovescale(){ return StringToNumber<float>(ConfigManager::configMap["minotaurairMovescale"]); }
   static float minotaurJumpSpeed(){ return StringToNumber<float>(ConfigManager::configMap["minotaurjumpSpeed"]); }
-  static int minotaurMaxJump(){ return StringToNumber<int>(ConfigManager::configMap["minotuarmaxJump"]); }
+  static int minotaurMaxJump(){ return StringToNumber<int>(ConfigManager::configMap["minotaurmaxJump"]); }
   static float minotaurHpRegen(){ return StringToNumber<float>(ConfigManager::configMap["minotaurHpRegen"]); }
   static float minotaurMpRegen(){ return StringToNumber<float>(ConfigManager::configMap["minotaurMpRegen"]); }
   static float minotaurDef(){ return StringToNumber<float>(ConfigManager::configMap["minotaurDef"]); }
@@ -77,9 +77,9 @@ public:
   static float projectileRange(){ return StringToNumber<float>(ConfigManager::configMap["projectileRange"]); }
 
   /// Wall ///
-  static unsigned int wallDepth(){ return StringToNumber<unsigned int>(ConfigManager::configMap["wallDepth"]); }
-  static unsigned int wallHeight(){ return StringToNumber<unsigned int>(ConfigManager::configMap["wallHeight"]); }
-  static unsigned int wallWidth(){ return StringToNumber<unsigned int>(ConfigManager::configMap["wallWidth"]); }
+  static float wallDepth(){ return StringToNumber<float>(ConfigManager::configMap["wallDepth"]); }
+  static float wallHeight(){ return StringToNumber<float>(ConfigManager::configMap["wallHeight"]); }
+  static float wallWidth(){ return StringToNumber<float>(ConfigManager::configMap["wallWidth"]); }
 
   /// Physics ///
   static float gravity(){  return StringToNumber<float>(ConfigManager::configMap["gravity"]); }

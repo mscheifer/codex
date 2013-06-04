@@ -75,13 +75,13 @@ const ProjectileData ProjInfo[] = { //TODO fix all these numbers
   ProjectileData(G_FT,  300, 300, 1,   16, 0, G1MV, -1),
   ProjectileData(G_FI,  300, 300, 1,   16, 0, G1MV, -1),
 
-  ProjectileData(G2,    300, 300, 1,   25, 0, G2V, -1),
+  ProjectileData(G2,    300, 300, 3,   25, 0, G2V, -1),
 
-  ProjectileData(G_IT2, 300, 300, 1,   20, 0, G2MV, -1),
-  ProjectileData(G_FT2, 300, 300, 1,   20, 0, G2MV, -1),
-  ProjectileData(G_FI2, 300, 300, 1,   20, 0, G2MV, -1),
+  ProjectileData(G_IT2, 300, 300, 2,   20, 0, G2MV, -1),
+  ProjectileData(G_FT2, 300, 300, 2,   20, 0, G2MV, -1),
+  ProjectileData(G_FI2, 300, 300, 2,   20, 0, G2MV, -1),
 
-  ProjectileData(G3,    300, 300, 1,   50, 0, G3V, -1),
+  ProjectileData(G3,    300, 300, 3,   50, 0, G3V, -1),
 
   ProjectileData(B1,    50,  300, 1,   7, 5, NONEV, -1)
 };
@@ -109,7 +109,6 @@ public:
 
   Projectile():fired(false) {/*TODO initialize */ }
   Projectile(Map* m);
-  ~Projectile(void);
   void update(void);
   void updateBounds();
   void updateBoundsSoft();

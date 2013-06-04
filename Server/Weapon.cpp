@@ -16,10 +16,6 @@ Weapon::Weapon(Map* m)
   this->map = m;
 }
 
-Weapon::~Weapon()
-{
-}
-
 Weapon::Weapon(float damage, float ran, v3_t pos, Map* m) : pickedUp(false)
 {
   Range_Cool_Down_Time = 500; //TODO set these

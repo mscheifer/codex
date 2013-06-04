@@ -26,6 +26,9 @@ private :
   int chargeMagicType;
   bool charging;
   float timer;
+  int aimerOuter;
+  int aimerInner;
+
   sf::Text healthText;
   sf::Text manaText;
   sf::Font font;
@@ -48,8 +51,6 @@ private :
   sf::Texture badGuyTexture;
   sf::Sprite badGuySprite;
   sf::Text pickUp;
-  sf::Texture aimerTexture;
-  sf::Sprite aimer;
   sf::Texture energeBarTexture;
   sf::Sprite energeBarSprite;
   sf::Texture energeBarFrameTexture;
@@ -60,6 +61,8 @@ private :
   std::vector<sf::Sprite*> buffLSprites;
   std::vector<sf::Texture*> weaponTextures;
   std::vector<sf::Sprite*> weaponSprites;
+  std::vector<sf::Texture*> aimerTextures;
+  std::vector<sf::Sprite*> aimerSprites;
   std::vector<bool> renderBuff;
   std::vector<int> remainTime;
   sf::Text currentSpell;
@@ -68,8 +71,10 @@ private :
   void buffHelper(std::string & path);
   void buffLHelper(std::string & path);
   void weaponHelper(std::string & path);
+  void aimerHelper(std::string & path);
 
 public:
+  static const int aimerIndex[18][2];
   HUD(void);
   ~HUD(void);
   void updateHUD(const Player& player);

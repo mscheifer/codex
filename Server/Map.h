@@ -56,6 +56,6 @@ private:
   void initStaticWalls(void);
   void initPowerUps(void);
   void addWallDirection(float startingX, float startingY, float startingZ, v3_t dir, int values[]);
-  
+  void destHelper();
   void addWallChange(bool start, float startingX, float startingY, float startingZ, v3_t dir, int values[]);
 };
