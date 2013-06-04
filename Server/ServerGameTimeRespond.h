@@ -57,7 +57,7 @@ struct ServerGameTimeRespond
     sf::Uint32 size;
     packet >> size;
     for (unsigned int i=0; i < size; i++) {
-      Player p = Player();
+      Player p;
       p.deserialize(packet);
       this->players.push_back(p);
     }

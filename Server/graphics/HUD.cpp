@@ -6,7 +6,8 @@
 gx::HUD::HUD(void):health(100), maxHealth(100), HLossPercentage(0), 
   mana(100), maxMana(100), MLossPercentage(0), canPickUp(false),
   weapon1(0), weapon2(0), currentSelect(0), elapsedChargeTime(0),
-  totalChargeTime(-1), chargeMagicType(0), charging(false), timer(0){
+  totalChargeTime(-1), chargeMagicType(0), charging(false), timer(0),
+  aimerOuter(0), aimerInner(0){
   font.loadFromFile("arial.ttf");
   emptyBarTexture.loadFromFile("graphics/Images/Empty_bar.png");
   //heart image
@@ -54,14 +55,6 @@ gx::HUD::HUD(void):health(100), maxHealth(100), HLossPercentage(0),
   positionText.setCharacterSize(24);
   positionText.setColor(sf::Color::Green);
   positionText.setPosition(300,500);
-  //aimer
-  aimerTexture.loadFromFile("graphics/Images/aimerOuter.png");
-  aimer.setTexture(aimerTexture);
-  aimer.setOrigin(aimerTexture.getSize().x/2, aimerTexture.getSize().y/2);
-  //inner aimer
-  aimerTextureInner.loadFromFile("graphics/Images/aimerInner.png");
-  aimerInner.setTexture(aimerTextureInner);
-  aimerInner.setOrigin(aimerTextureInner.getSize().x/2, aimerTextureInner.getSize().y/2);
   //buffs
   initializeSprites();
   //chargig
@@ -100,6 +93,12 @@ gx::HUD::~HUD(void) {
   for (auto itr=weaponTextures.begin();itr != weaponTextures.end(); itr++) {
     delete *itr;
   }
+  for (auto itr=aimerSprites.begin();itr != aimerSprites.end(); itr++) {
+    delete *itr;
+  }
+  for (auto itr=aimerTextures.begin();itr != aimerTextures.end(); itr++) {
+    delete *itr;
+  }
 }
 
 void gx::HUD::draw(sf::RenderWindow & window) {
@@ -133,14 +132,23 @@ void gx::HUD::draw(sf::RenderWindow & window) {
     window.draw(badGuySprite);
   if (canPickUp)
     window.draw(pickUp);
-  aimer.setPosition((window.getSize().x)/2, (window.getSize().y)/2);
-  aimerInner.setPosition((window.getSize().x)/2, (window.getSize().y)/2);
-  if (charging) { //TODO this is bad
-    aimer.setRotation((elapsedChargeTime/totalChargeTime)*360);
-    aimerInner.setRotation((totalChargeTime - elapsedChargeTime)/totalChargeTime *360);
-    window.draw(aimer);
-    window.draw(aimerInner);
+
+  //draw aimer
+  //vector of sprites
+  //set an int based on which ones to draw
+  //update[aimerIndex]
+  if (charging) {
+    aimerSprites[aimerOuter]->setPosition((window.getSize().x)/2, (window.getSize().y)/2);
+    aimerSprites[aimerInner]->setPosition((window.getSize().x)/2, (window.getSize().y)/2);
+    aimerSprites[aimerOuter]->setRotation((elapsedChargeTime/totalChargeTime)*360);
+    aimerSprites[aimerInner]->setRotation((totalChargeTime - elapsedChargeTime)/totalChargeTime *360);
+    window.draw(*aimerSprites[aimerInner]);
+    window.draw(*aimerSprites[aimerOuter]);
+  } else if( timer <= 0 ){
+    aimerSprites[1]->setPosition((window.getSize().x)/2, (window.getSize().y)/2);
+    window.draw(*aimerSprites[1]);
   }
+
   int buffn = 0; 
   for ( unsigned int i =0; i<renderBuff.size(); i++ ) {
     if (renderBuff[i]) {
@@ -222,7 +230,9 @@ void gx::HUD::updateHUD(const Player& player) {
   //std::cout<<"magic type is " << player.chargeMagicType <<std::endl;
   charging = player.charging;
   //spell
-  if (chargeMagicType>=0) {
+  if (chargeMagicType>=0) {//has a proj charging
+    aimerOuter = aimerIndex[chargeMagicType][0];
+    aimerInner = aimerIndex[chargeMagicType][1];
     currentSpell.setString(spellNames[chargeMagicType]);
     nextSpell.setString(spellNames[Projectile::upgrade(static_cast<MAGIC_POWER>(chargeMagicType))]);
   }
@@ -263,6 +273,18 @@ void gx::HUD::weaponHelper(std::string & path) {
    tSprite->setTexture(*tText);
    weaponTextures.push_back(tText);
    weaponSprites.push_back(tSprite);
+}
+
+void gx::HUD::aimerHelper(std::string & path) {
+   sf::Texture* tText;
+   sf::Sprite* tSprite;
+   tText = new sf::Texture();
+   tSprite = new sf::Sprite();
+   tText->loadFromFile(path);
+   tSprite->setTexture(*tText);
+   tSprite->setOrigin(tText->getSize().x/2, tText->getSize().y/2);
+   aimerTextures.push_back(tText);
+   aimerSprites.push_back(tSprite);
 }
 
 void gx::HUD::updateHUDTimer(float timer) {
@@ -317,5 +339,48 @@ void gx::HUD::initializeSprites() {
    weaponHelper(std::string("graphics/Images/weaponThu.png"));
    weaponHelper(std::string("graphics/Images/weaponFist.png"));
    weaponHelper(std::string("graphics/Images/weaponBasic.png"));
+
+   //aimer
+   aimerHelper(std::string("graphics/Images/aimerEmpty.png"));  //0
+   aimerHelper(std::string("graphics/Images/aimerNone.png"));
+   aimerHelper(std::string("graphics/Images/aimerF1O.png"));  //2
+   aimerHelper(std::string("graphics/Images/aimerF1I.png"));  
+   aimerHelper(std::string("graphics/Images/aimerF2O.png"));  
+   aimerHelper(std::string("graphics/Images/aimerF3O.png"));  //5
+   aimerHelper(std::string("graphics/Images/aimerF3I.png"));
+   aimerHelper(std::string("graphics/Images/aimerI1O.png"));  //7
+   aimerHelper(std::string("graphics/Images/aimerI1I.png"));  
+   aimerHelper(std::string("graphics/Images/aimerI2O.png"));  
+   aimerHelper(std::string("graphics/Images/aimerI3O.png"));  //5
+   aimerHelper(std::string("graphics/Images/aimerI3I.png"));
 }
 
+//outer inner
+const int gx::HUD::aimerIndex[18][2] = {
+  //FIR1=0, FIR2, FIR3, 
+  { 2, 3 },
+  { 4, 3 },
+  { 5, 6 },
+  //ICE1, ICE2, ICE3,
+  { 7, 8 },
+  { 9, 8 },
+  { 10, 11 },
+  //THU1, THU2, THU3,
+  { 2, 3 },
+  { 4, 3 },
+  { 5, 6 },
+  //G_IT, G_FT, G_FI, //gravity and what it is missing
+  { 4, 3 },
+  { 4, 3 },
+  { 4, 3 },
+  //G2,
+  { 4, 6 },
+  //G_IT2, G_FT2, G_FI2,
+  { 4, 3 },
+  { 4, 3 },
+  { 4, 3 },
+  //G3,
+  { 4, 6 },
+  //B1
+  { 2, 3 }
+};

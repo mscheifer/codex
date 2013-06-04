@@ -109,7 +109,6 @@ public:
 
   Projectile():fired(false) {/*TODO initialize */ }
   Projectile(Map* m);
-  ~Projectile(void);
   void update(void);
   void updateBounds();
   void updateBoundsSoft();

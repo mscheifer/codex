@@ -27,6 +27,7 @@ Map::Map(void): spawnPositions(), freeProjectiles(), q(0,Rectangle(BoundingObj::
 void Map::mapReset()
 {
   this->q.clear();
+  destHelper();
   spawnPositions.clear();
   entities.clear();
   liveProjectTile.clear();
@@ -43,6 +44,7 @@ void Map::mapReset()
 }
 
 void Map::initPowerUps() {
+  //TODO this can cause memory leak?
   PowerUp* superPower = new PowerUp(v3_t(0,0,PowerUp::powerUpDepth / 2), this, MANABOOST);
   superPower->setRespownTime(5000);
   this->entities.push_back(superPower);
@@ -50,7 +52,7 @@ void Map::initPowerUps() {
   PowerUp* p2 = new PowerUp(v3_t(0,0,PowerUp::powerUpDepth / 2), this, HEALTHBOOST);
   p2->setRespownTime(5000);
   this->entities.push_back(p2);
-  p2 = new PowerUp(v3_t(0,0,PowerUp::powerUpDepth / 2), this, MOVEBOOST);
+  p2 = new PowerUp(v3_t(0,0,PowerUp::powerUpDepth / 2), this, DEFENSEBOOST);
   p2->setRespownTime(5000);
   this->entities.push_back(p2);
   p2 = new PowerUp(v3_t(0,0,PowerUp::powerUpDepth / 2), this, CHARGECD);
@@ -617,9 +619,28 @@ void Map::addWallChange(bool start, float startingX, float startingY, float star
   }
 }
 
-Map::~Map(void)
-{
+Map::~Map(void){  
+  destHelper();
+  for(auto player = players.begin(); player != players.end(); player++){
+    delete *player;
+  }
+  while(!freeProjectiles->empty()){
+    Projectile* p= freeProjectiles->top();
+    delete p;
+    freeProjectiles->pop();
+  }
+  delete freeProjectiles;
 }
+
+void Map::destHelper(){
+  for(auto entity = entities.begin(); entity != entities.end(); entity++){
+    delete *entity;
+  }
+  for(auto proj = liveProjectTile.begin(); proj != liveProjectTile.end(); proj++){
+    delete *proj;
+  }
+}
+
 
 std::vector<Entity *> Map::getEntity() {
 	 return entities;
@@ -722,10 +743,12 @@ void Map::separatePlayers(Player* player){
 
 void Map::addToQtree(Entity* e){
   std::vector<BoundingObj*> vec = e->getBoundingObjs();
+  //add the boxes to the qtree
   for( auto it = vec.begin(); it != vec.end(); ++it){
     (*it)->setQuadtree(&q);
     //q.insert(*it);
   }
+  //update the positions to match the game positions on the qtree
   e->updateBounds();
 }
  
