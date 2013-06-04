@@ -222,6 +222,14 @@ void Weapon::serialize(sf::Packet & packet) const {
     //sf::Clock Melee_Cool_Down_Counter;
   }
 
+  std::string Weapon::toString(){
+    std::stringstream ss;
+    ss << position << direction << std::endl;
+    ss << mpCost;
+    ss << pickedUp;
+    return ss.str();
+  }
+
 
 //
 //void Weapon::useWeapon( bool range_attack){

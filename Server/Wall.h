@@ -18,6 +18,7 @@ public:
   void updateBoundsSoft(); 
   void serialize(sf::Packet & packet ) const;
   void deserialize(sf::Packet & packet );
+  std::string toString();
 
   Entity_Type getType() const { return type; }
 private:

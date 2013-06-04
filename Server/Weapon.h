@@ -43,6 +43,7 @@ public:
   virtual WeaponType getWeaponType() const{ return wtype; }
   virtual bool getHasRangedAttack() const { return hasRangedAttack; }
   virtual bool getHasMeleeAttack() const { return hasMeleeAttack; }
+  std::string toString();
   
   void serialize(sf::Packet & packet) const;
   void deserialize(sf::Packet & packet); 
