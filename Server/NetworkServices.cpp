@@ -6,27 +6,25 @@ const int maxSize = 9000;
 const int sizeSize = 4;
 
 ClientServices::ClientServices() {
-  //network
-  invalidIpAddress = true;
+  //code moved to connectServer
+}
+
+bool ClientServices::connectServer(std::string serverIP) {
   sf::IpAddress myIpAddress = sf::IpAddress::getLocalAddress();
-  std::cout << "Client Ip Address: " << myIpAddress.toString() << std::endl;
+  //std::cout << "Client Ip Address: " << myIpAddress.toString() << std::endl;
 
   //input is ipaddress to connect to
-  std::cout << "Enter Ip Address to connect to: ";
-  std::string input = myIpAddress.toString();
+  std::cout << "Trying to connect to "<<serverIP<<std::endl;
+  std::string input = (serverIP.compare("")) ? serverIP : myIpAddress.toString();
+  s = sf::Socket::Error;
+  s = client.connect(input, PORT_NUMBER, sf::seconds(TIMEOUT));
 
-  do {
-    std::getline(std::cin, input);
-    s = sf::Socket::Error;
-    s = client.connect(input, PORT_NUMBER, sf::seconds(TIMEOUT));
-
-    if(s == sf::Socket::Done){
-      client.setBlocking(false);
-      invalidIpAddress = false;
-    } else {
-      std::cout << "try again, " << input << " is an invalid ip address" << std::endl;
-    }
-  } while(invalidIpAddress);
+  if(s == sf::Socket::Done){
+    client.setBlocking(false);
+    return true;
+  } 
+  std::cout<<"there is an error connecting to the server\n";
+  return false;
 }
 
 bool ClientServices::sendMessage(sf::Packet &packet ) {

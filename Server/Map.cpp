@@ -821,3 +821,7 @@ void Map::addEntity(Entity* e){
   entities.push_back(e);
   addToQtree(e);
 }
+
+void Map::assignName(std::string name, int id) {
+  players[id]->name = name;
+}

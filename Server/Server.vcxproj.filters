@@ -404,8 +404,11 @@
     <ClInclude Include="Ground.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="graphics\particleSystem.h">
+      <Filter>Header Files\graphics</Filter>
+    </ClInclude>
     <ClInclude Include="graphics\buffer.h">
-      <Filter>Header Files</Filter>
+      <Filter>Header Files\graphics</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -560,6 +563,18 @@
       <Filter>Resource Files\graphics\Images</Filter>
     </None>
     <None Include="graphics\Images\stunIL.png">
+      <Filter>Resource Files\graphics\Images</Filter>
+    </None>
+    <None Include="shaders\particle.frag">
+      <Filter>Resource Files\graphics</Filter>
+    </None>
+    <None Include="shaders\particle.vert">
+      <Filter>Resource Files\graphics</Filter>
+    </None>
+    <None Include="MORPHEUS.TTF">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="graphics\Images\background.jpg">
       <Filter>Resource Files\graphics\Images</Filter>
     </None>
   </ItemGroup>

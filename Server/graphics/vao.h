@@ -26,6 +26,7 @@ private:
     void drawOnce() const;
     void drawHead() const;
     void drawInstance() const;
+    void drawInstance(GLsizei) const;
 };
 
 } //end namespace gx

@@ -3,6 +3,7 @@
 #include <vector>
 #include "shaderProgram.h"
 #include "drawerImpl.h"
+#include "particleSystem.h"
 
 namespace gx {
 
@@ -22,6 +23,7 @@ class drawer {
 
 typedef  drawer<staticDrawerImpl> staticDrawer;
 typedef drawer<dynamicDrawerImpl> dynamicDrawer;
+typedef drawer<particleDrawerImpl> particleDrawer;
 
 } //end namespace gx
 #endif //DRAWER_H

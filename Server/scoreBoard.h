@@ -19,5 +19,6 @@ public:
   ~scoreBoard(void);
   void draw(sf::RenderWindow & window);
   void updateScores(std::vector<int> & pwins, std::vector<int> & pkills);
+  void updateNames(std::vector<std::string> & names);
 };
 

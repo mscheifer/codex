@@ -52,7 +52,7 @@ gx::graphicsEntity::attribsList_t processAttribs(const gx::graphicsEntity& genti
 }
 } //end unnamed namespace
 
-gx::staticDrawerImpl::entityClass::entityClass(graphicsEntity drawData,
+gx::staticDrawerImpl::entityClass::entityClass(entity_t drawData,
                                                varSigs_t vars)
   : vertData(std::move(drawData.indices), processAttribs(drawData),
     std::move(vars)), mat(std::move(drawData.mat)) {}
@@ -69,6 +69,14 @@ gx::staticDrawerImpl::entityClass::operator=(entityClass&&) {
 
 void gx::staticDrawerImpl::entityClass::clear() {
   this->instances.clear();
+}
+
+void gx::staticDrawerImpl::entityClass::update() {
+  //do nothing
+}
+
+void gx::staticDrawerImpl::entityClass::draw() {
+  this->vertData.drawInstance();
 }
 
 gx::staticDrawerImpl::staticDrawerImpl(const shaderProgram& program)

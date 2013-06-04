@@ -20,6 +20,7 @@ class NetworkClient {
   bool gameRestart;
   bool joined;
   bool gameStart;
+  bool setName;
   bool flag;
   EntityPool objPool;
 
@@ -27,7 +28,7 @@ class NetworkClient {
   void receiveMessages();
 public:
   NetworkClient(): s(&objPool), action(), netRecv(), chat(), gxClient(), id(-1),
-                   sendPacket(false), running(true), gameRestart(false), joined(false),gameStart(false){
+                   sendPacket(false), running(true), gameRestart(false), joined(false),gameStart(false),setName(false){
   }
   NetworkClient(const NetworkClient&);// = delete;
   NetworkClient& operator=(const NetworkClient&);// = delete;

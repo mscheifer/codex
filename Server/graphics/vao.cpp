@@ -76,7 +76,11 @@ void gx::vao::drawHead() const {
 }
 
 void gx::vao::drawInstance() const {
-  glDrawElements(GL_TRIANGLES, this->numIndices, GL_UNSIGNED_INT, nullptr);
-  debugout << "glDrawElements(GL_TRIANGLES, " << this->numIndices;
+  this->drawInstance(this->numIndices);
+}
+
+void gx::vao::drawInstance(GLsizei num) const {
+  glDrawElements(GL_TRIANGLES, num, GL_UNSIGNED_INT, nullptr);
+  debugout << "glDrawElements(GL_TRIANGLES, " << num;
   debugout << ", GL_UNSIGNED_INT, nullptr);" << endl;
 }

@@ -32,6 +32,7 @@ void NetworkClient::receiveMessages() {
     InitPacket initPckt;
     switch (packetType) {
       case SGTR:
+        this->setName = true;
         this->s.deserialize(packet);
         if (s.state != PLAYING)
           gameRestart = true;
@@ -171,25 +172,42 @@ void NetworkClient::processInput(){
 void NetworkClient::doClient() {
   AudioManager::loadSounds();
 
-  sf::VideoMode m = sf::VideoMode::getDesktopMode();
-  std::cout << "width " << m.width << std::endl;
-  std::cout << "height " << m.height << std::endl;
   //AudioManager::playMusic("m1");
   //if doClient running I already connected to the server 
   gameStart = false;
   joined = false;  //joined is used for receiving game start from server
   bool clickedButton = false;
+  //connect server code
+  while (true) {
+    this->gxClient.drawLobby();
+    if (gxClient.gameStart()) {
+      if (netRecv.connectServer(this->gxClient.getInputText())) {
+        gxClient.setConnected(true);
+        break;  //successfully connected to the server
+      }
+      else { 
+        gxClient.setConnected(false);
+        //TODO prompt error text
+      }
+    }
+  }
+  bool notSet = true;
   //lobby code
   while(true) {
     sf::Packet initPacket;
-    if (joined && this->gxClient.gameStart()) {
+    if (joined && this->gxClient.gameStart()) { 
       //received start game and clicked
       initPacket << static_cast<sf::Uint32>(INIT); 
       if (!clickedButton) { 
-        initPacket << true;
-        netRecv.sendMessage(initPacket);
-        clickedButton = true;
+        //TODO make the player initpacket into a new packet struct
+        if (gxClient.getInputText().compare("")) {
+          initPacket << true;
+          initPacket << gxClient.getInputText();
+          netRecv.sendMessage(initPacket);
+          clickedButton = true;
+        }
       } else {
+        //cancel weight
         initPacket << false;
         netRecv.sendMessage(initPacket);
         clickedButton = false;
@@ -212,13 +230,21 @@ void NetworkClient::doClient() {
     float receiveMessagesTime;
     float drawTime;
     float sendPackTime;*/
-      if (!gameRestart) {
-        //profilerTime.restart();
-        this->processInput();
-        //processInputTime = profilerTime.getElapsedTime().asMilliseconds();
-        //profilerTime.restart();
-        this->receiveMessages();
-        //receiveMessagesTime = profilerTime.getElapsedTime().asMilliseconds();
+    if (!gameRestart) {
+      //profilerTime.restart();
+      this->processInput();
+      //processInputTime = profilerTime.getElapsedTime().asMilliseconds();
+      //profilerTime.restart();
+      this->receiveMessages();
+      if (setName && notSet) {
+        //really hacky here
+        std::vector<std::string> names;
+        for (auto itr= s.players.begin(); itr!=s.players.end(); itr++) 
+          names.push_back((*itr).name);
+        gxClient.updateNames(names);
+        notSet = false;
+      }
+      //receiveMessagesTime = profilerTime.getElapsedTime().asMilliseconds();
 
         //profilerTime.restart();
         //window closed

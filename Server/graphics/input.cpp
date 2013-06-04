@@ -18,7 +18,7 @@ sf::Vector2i mouseDiff = sf::Vector2i(0,0);
 
 gx::input::input()
   : updated(false), jumped(false), stopped(false), fired1(false), fired2(false),
-    pickup(false),switchWeapon(false), clicked(false) {}
+    pickup(false),switchWeapon(false), clicked(false), textMode(false),inputText("") {}
 
 bool gx::input::getUpdated() {
   return this->updated;
@@ -63,7 +63,7 @@ move_t gx::input::movePlayer() {
     } else if (sf::Keyboard::isKeyPressed(sf::Keyboard::D)) {
       movement = FORWARD_RIGHT;
     } else {
-      movement = FORWARD;
+      movement = FORWARD;//
     }
   } else if (sf::Keyboard::isKeyPressed(sf::Keyboard::A)) {
     this->updated = true;
@@ -171,7 +171,7 @@ void gx::input::handleEvent(const sf::Event& event) {
       this->fired1 = true;
     } else if(event.mouseButton.button == sf::Mouse::Right) {
       this->fired2 = true;
-    }
+    } 
   } else if(event.type == sf::Event::MouseButtonReleased) {
     this->updated = true;
     if(event.mouseButton.button == sf::Mouse::Left) {
@@ -184,4 +184,34 @@ void gx::input::handleEvent(const sf::Event& event) {
     this->mouseX = event.mouseMove.x;
     this->mouseY = event.mouseMove.y;
   }
+  if (textMode) {
+    if (event.type == sf::Event::TextEntered) {
+      if ( event.text.unicode >=32  && event.text.unicode <= 125 
+        && inputText.length() <16)
+        inputText += static_cast<char>(event.text.unicode);
+    }
+    if (event.type == sf::Event::KeyReleased) {
+      switch (event.key.code) {
+      case sf::Keyboard::Return:
+        textMode = false;
+        break;
+      }
+    }
+    if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::BackSpace) {
+        inputText = inputText.substr(0,inputText.size()-1); 
+    }
+  } else {
+    inputText = "";
+  }
+}
+void gx::input::setTextMode(bool mode ) {
+  textMode = mode;
+}
+
+std::string gx::input::getInputText()const{ 
+  return inputText;
+}
+
+bool gx::input::getTextMode() const{
+  return textMode;
 }

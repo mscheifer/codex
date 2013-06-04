@@ -165,6 +165,7 @@
     <ClInclude Include="graphics\matrix.h" />
     <ClInclude Include="graphics\mesh.h" />
     <ClInclude Include="graphics\oglUtil.h" />
+    <ClInclude Include="graphics\particleSystem.h" />
     <ClInclude Include="graphics\shaderProgram.h" />
     <ClInclude Include="graphics\SkyboxDraw.h" />
     <ClInclude Include="graphics\texture.h" />
@@ -202,6 +203,7 @@
   <ItemGroup>
     <None Include="..\Makefile" />
     <None Include="graphics\Images\aimer.png" />
+    <None Include="graphics\Images\background.jpg" />
     <None Include="graphics\Images\badguy.png" />
     <None Include="graphics\Images\chargebar.png" />
     <None Include="graphics\Images\chargebarempty.png" />
@@ -246,9 +248,12 @@
     <None Include="graphics\Images\weaponIce.png" />
     <None Include="graphics\Images\weaponThu.png" />
     <None Include="masterConfig.txt" />
+    <None Include="MORPHEUS.TTF" />
     <None Include="shaders\animated.vert" />
     <None Include="shaders\default.frag" />
     <None Include="shaders\default.vert" />
+    <None Include="shaders\particle.frag" />
+    <None Include="shaders\particle.vert" />
     <None Include="shaders\skybox.frag" />
     <None Include="shaders\skybox.vert" />
   </ItemGroup>

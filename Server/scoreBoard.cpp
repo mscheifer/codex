@@ -32,7 +32,7 @@ scoreBoard::scoreBoard(int numPlayer) {
    playerScores[i].setFont(font);
    playerScores[i].setCharacterSize(18);
    playerScores[i].setColor(sf::Color::Black);
-   playerScores[i].setString(std::string("Player ") +std::to_string((long long)i) );
+//   playerScores[i].setString(std::string("Player ") +std::to_string((long long)i) );
    playerScores[i].setPosition(25, 25*(i+3)+5);
    playerKills.push_back(sf::Text());
    playerKills[i].setFont(font);
@@ -73,4 +73,9 @@ void scoreBoard::draw(sf::RenderWindow & window) {
 void scoreBoard::updateScores(std::vector<int> & pwins, std::vector<int> & pkills){
   this->pwins = pwins;
   this->pkills = pkills;
+}
+void scoreBoard::updateNames(std::vector<std::string> & names) {
+  for (int i=0;i<playerScores.size();i++ ) {
+    playerScores[i].setString(names[i]);
+  }
 }
