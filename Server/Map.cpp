@@ -15,8 +15,7 @@ Map::Map(void): spawnPositions(), freeProjectiles(), q(0,Rectangle(BoundingObj::
 {
 	map_size = 15;
 	freeProjectiles = new std::stack<Projectile *>();
-  initWalls();
-
+  initSpawns();
   //initWallsOne();
   //initStaticWalls();
   //initWallsTwo();
@@ -31,16 +30,37 @@ void Map::mapReset()
   spawnPositions.clear();
   entities.clear();
   liveProjectTile.clear();
-  initWalls(); 
- // initWallsOne();
- // initStaticWalls();
- // initWallsTwo();
-  
+  initSpawns();
   initPowerUps();
+  //initWalls(); 
+  initWallsOne();
+  initStaticWalls();
+  initWallsTwo();
+  
   for(unsigned int i = 0; i < players.size(); i++)
   {
-    players[i]->reset(this->getRespawnPosition(players[i]->player_id));
+    players[i]->reset(this->getRespawnPosition());
   }
+}
+
+void Map::initSpawns()
+{
+  // Spawns for initwallsone/two
+  spawnPositions.push_back(v3_t(0,0,0));
+  spawnPositions.push_back(v3_t(100,100,0));
+  spawnPositions.push_back(v3_t(100,-100,0));
+  spawnPositions.push_back(v3_t(-100,100,0));
+  spawnPositions.push_back(v3_t(-100,-100,0));
+  spawnPositions.push_back(v3_t(320,310,0));
+  spawnPositions.push_back(v3_t(320,-310,0));
+  spawnPositions.push_back(v3_t(-320,310,0));
+  spawnPositions.push_back(v3_t(-320,-310,0));
+  spawnPositions.push_back(v3_t(330,25,0));
+  spawnPositions.push_back(v3_t(-330,25,0));
+  spawnPositions.push_back(v3_t(0,215,0));
+  spawnPositions.push_back(v3_t(0,215,0));
+  spawnPositions.push_back(v3_t(400,20,0));
+  spawnPositions.push_back(v3_t(-400,20,0));
 }
 
 void Map::initPowerUps() {
@@ -49,15 +69,35 @@ void Map::initPowerUps() {
   superPower->setRespownTime(5000);
   this->entities.push_back(superPower);
 
-  PowerUp* p2 = new PowerUp(v3_t(0,0,PowerUp::powerUpDepth / 2), this, HEALTHBOOST);
-  p2->setRespownTime(5000);
+  PowerUp* p2 = new PowerUp(getRespawnPosition() + v3_t(0,0,PowerUp::powerUpDepth / 2), this, HEALTHBOOST);
+  p2->setRespownTime(60000);
   this->entities.push_back(p2);
-  p2 = new PowerUp(v3_t(0,0,PowerUp::powerUpDepth / 2), this, DEFENSEBOOST);
-  p2->setRespownTime(5000);
+  p2 = new PowerUp(getRespawnPosition() + v3_t(0,0,PowerUp::powerUpDepth / 2), this, DEFENSEBOOST);
+  p2->setRespownTime(60000);
   this->entities.push_back(p2);
-  p2 = new PowerUp(v3_t(0,0,PowerUp::powerUpDepth / 2), this, CHARGECD);
-  p2->setRespownTime(5000);
+  p2 = new PowerUp(getRespawnPosition() + v3_t(0,0,PowerUp::powerUpDepth / 2), this, CHARGECD);
+  p2->setRespownTime(60000);
   this->entities.push_back(p2);
+  // strboost, moveboost
+  p2 = new PowerUp(getRespawnPosition() + v3_t(0,0,PowerUp::powerUpDepth / 2), this, STRBOOST);
+  p2->setRespownTime(60000);
+  this->entities.push_back(p2);
+  p2 = new PowerUp(getRespawnPosition() + v3_t(0,0,PowerUp::powerUpDepth / 2), this, STRBOOST);
+  p2->setRespownTime(60000);
+  this->entities.push_back(p2);
+  
+  // FIR1, ICE1, THU1, B1
+  WeaponFire * w;
+  // Spawn 5 random weapon
+  for(unsigned int i = 0; i < 5; i++)
+  {
+    w = new WeaponFire(getRespawnPosition()+v3_t(0,0,WeaponFire::weaponDepth/2),this, B1);
+    w->setRandomMagic();
+    w->setDirection(v3_t(0,1,0));
+    w->dropDown(w->getPosition());
+    w->setRespownTime(60000);
+    entities.push_back(w);
+  }
 }
 
 void Map::initWallsTwo(void)
@@ -414,18 +454,18 @@ void Map::initStaticWalls(void) {
 void Map::initWalls(void)
 {
   //TODO move this
-  //WeaponFire* w1 = new WeaponFire(v3_t(100,100,0), this, FIR1);
-  //w1->dropDown(v3_t(10,10,0));
-  //w1->setDirection(v3_t(0,1,0));
-  //entities.push_back(w1);
-  WeaponFire* w2 = new WeaponFire(v3_t(120,120,0), this, THU1);
+  WeaponFire* w1 = new WeaponFire(v3_t(100,100,0), this, FIR1);
+  w1->dropDown(v3_t(10,10,0));
+  w1->setDirection(v3_t(0,1,0));
+  entities.push_back(w1);
+  /*WeaponFire* w2 = new WeaponFire(v3_t(120,120,0), this, THU1);
   w2->dropDown(v3_t(10,-10,0));
   w2->setDirection(v3_t(0,1,0));
   entities.push_back(w2);
   WeaponFire* w3 = new WeaponFire(v3_t(120,120,0), this, THU1);
   w3->dropDown(v3_t(-10,-10,0));
   w3->setDirection(v3_t(0,1,0));
-  entities.push_back(w3);
+  entities.push_back(w3);*/
 
   spawnPositions.push_back(v3_t(4,-4,1));
   spawnPositions.push_back(v3_t(4,4,1));
@@ -553,11 +593,22 @@ void Map::initWalls(void)
   }
 }
 
-v3_t Map::getRespawnPosition(std::size_t player_id)
+void Map::addSpawnLocation(v3_t loc)
 {
-  if(player_id > spawnPositions.size())
-    return spawnPositions[0];
-  return spawnPositions[player_id];
+  spawnPositions.push_back(loc);
+}
+
+v3_t Map::getRespawnPosition()
+{
+  if(spawnPositions.size() == 0)
+  {
+    std::cout<<"TODO: need more spawn positions"<<std::endl;
+    return v3_t(0,0,0);
+  }
+  int randomNum = rand() % spawnPositions.size();
+  v3_t randomPosition = spawnPositions[randomNum];
+  spawnPositions.erase(spawnPositions.begin()+randomNum);
+  return randomPosition;
 }
 
 /*

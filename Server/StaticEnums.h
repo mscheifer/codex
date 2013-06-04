@@ -35,7 +35,7 @@ enum Entity_Type {UNDEFINED=0, PLAYER, WALL, PROJECTILE, WEAPON, POWER_UP, GROUN
 enum Texture_Type {DEFAULT=0, GROUNDTEX=64};
 
 //used to determine names 
-enum WeaponType{UNK=0, FIRE, ICE, THUNDER, FIST, BASIC};
+enum WeaponType{UNK=0, FIRE, ICE, THUNDER, FIST, BASIC, NONEWEAPON};
 
 const std::string WeaponNames[] = {
   "UNKNOWN",

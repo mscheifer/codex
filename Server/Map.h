@@ -8,6 +8,7 @@
 #include <stack>
 #include "Quadtree.h"
 #include "Physics.h" //typedef
+#include <stdlib.h> 
 
 class Entity;
 class Player;
@@ -26,7 +27,7 @@ public:
   std::vector<int> kills; //TODO make them private
   std::vector<int> wins;
   
-  v3_t getRespawnPosition(std::size_t player_id);
+  v3_t getRespawnPosition();
   std::vector<Entity *> getEntity(void);
   std::vector<Player *> getPlayers(void);
   std::vector<Projectile *> getLiveProjectTile(void);
@@ -36,6 +37,7 @@ public:
   Quadtree* getQuadtreePtr(){ return &q; }
   void separatePlayers(Player* player);
   void addEntity(Entity* e);
+  void addSpawnLocation(v3_t);
   
   //add this entity to the quadtree, should only be called in a constructor
   //of an entity
@@ -54,6 +56,7 @@ private:
   void initWallsOne(void);
   void initWallsTwo(void);
   void initStaticWalls(void);
+  void initSpawns(void);
   void initPowerUps(void);
   void addWallDirection(float startingX, float startingY, float startingZ, v3_t dir, int values[]);
   void destHelper();
