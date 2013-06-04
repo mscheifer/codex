@@ -43,9 +43,28 @@ void gx::lobby::handleInput(input & userInput) {
   if(buttonBounds.contains(userInput.mouseXpos(), userInput.mouseYpos()) == true) {
     button.setColor(sf::Color::Red);
     start = userInput.mouseClicked();
+    if (connected) {
+      if (start) {
+        if (!ready && inputText.compare("")) {
+          welcome.setString("Waiting for other players to start"); 
+          button.setString("Cancel");
+          buttonBounds = buttonRect.getGlobalBounds();
+          textBounds = button.getGlobalBounds();
+          button.setPosition(280+(buttonBounds.width-textBounds.width)/2,500);
+          ready = true;
+        } else {
+          welcome.setString("Please enter a name and start.");
+          button.setString("Start");
+          buttonBounds = buttonRect.getGlobalBounds();
+          textBounds = button.getGlobalBounds();
+          button.setPosition(280+(buttonBounds.width-textBounds.width)/2,500);
+          ready = false;
+        }
+      }
+    } 
   } else {
     button.setColor(sf::Color::Black);
-    //start = false;
+    start = false;
   }
   if (userInput.mouseClicked()){
     clickedIP = IPBox.getGlobalBounds().contains(userInput.mouseXpos(), userInput.mouseYpos());
@@ -83,25 +102,7 @@ void gx::lobby::drawLobby(sf::RenderWindow & window) {
   backGroundSprite.setScale(static_cast<float>(window.getSize().x)/backGroundTexture.getSize().x,
   static_cast<float>(window.getSize().y)/backGroundTexture.getSize().y);
   window.draw(backGroundSprite);
-  std::cout<<"connected is "<< connected<<" start is "<< start<< " ready is "<< ready <<std::endl;
-  if (connected) {
-    if (start) {
-      if (!ready && inputText.compare("")) {
-        welcome.setString("Waiting for other players to start"); 
-        button.setString("Cancel");
-        buttonBounds = buttonRect.getGlobalBounds();
-        textBounds = button.getGlobalBounds();
-        button.setPosition(280+(buttonBounds.width-textBounds.width)/2,500);
-      } else {
-        welcome.setString("Please enter a name and start.");
-        button.setString("Start");
-        buttonBounds = buttonRect.getGlobalBounds();
-        textBounds = button.getGlobalBounds();
-        button.setPosition(280+(buttonBounds.width-textBounds.width)/2,500);
-      }
-      ready = !ready;
-    }
-  } 
+ // std::cout<<"connected is "<< connected<<" start is "<< start<< " ready is "<< ready <<std::endl;
   window.draw(welcome);
   window.draw(buttonRect);
   window.draw(button);
