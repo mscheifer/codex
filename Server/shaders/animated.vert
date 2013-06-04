@@ -38,7 +38,7 @@ void main() {
   }
 
   //the correct way
-  //mat3 normalMatrix = inverse(transpose(mat3(viewMatrix * modelToWorld)));
+  //mat3 normalMatrix = inverse(transpose(mat3(viewMatrix * modelToWorld * boneTransform)));
   //this works as long as we don't scale models non-uniformly
   mat3 normalMatrix = mat3(viewMatrix * modelToWorld * boneTransform);
 

@@ -165,6 +165,7 @@
     <ClInclude Include="graphics\matrix.h" />
     <ClInclude Include="graphics\mesh.h" />
     <ClInclude Include="graphics\oglUtil.h" />
+    <ClInclude Include="graphics\particleSystem.h" />
     <ClInclude Include="graphics\shaderProgram.h" />
     <ClInclude Include="graphics\SkyboxDraw.h" />
     <ClInclude Include="graphics\texture.h" />
@@ -249,6 +250,8 @@
     <None Include="shaders\animated.vert" />
     <None Include="shaders\default.frag" />
     <None Include="shaders\default.vert" />
+    <None Include="shaders\particle.frag" />
+    <None Include="shaders\particle.vert" />
     <None Include="shaders\skybox.frag" />
     <None Include="shaders\skybox.vert" />
   </ItemGroup>

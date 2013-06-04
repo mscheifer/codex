@@ -171,9 +171,6 @@ void NetworkClient::processInput(){
 void NetworkClient::doClient() {
   AudioManager::loadSounds();
 
-  sf::VideoMode m = sf::VideoMode::getDesktopMode();
-  std::cout << "width " << m.width << std::endl;
-  std::cout << "height " << m.height << std::endl;
   //AudioManager::playMusic("m1");
   //if doClient running I already connected to the server 
   gameStart = false;
