@@ -15,7 +15,7 @@ void NetworkClient::receiveMessages() {
   static int count = 0;
 
   while (!flag && netRecv.receiveMessage(packet)) {
-	//std::cout << "packet size " << packet.getDataSize() << std::endl;
+	 // std::cout << "packet size " << packet.getDataSize() << std::endl;
     if(count == -1)
       count = 0;
     count++;

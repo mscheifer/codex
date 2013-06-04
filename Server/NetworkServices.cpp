@@ -1,4 +1,7 @@
 #include "NetworkServices.h"
+#include "ConfigManager.h"
+#include <string>
+#include <bitset>
 
 const unsigned short PORT_NUMBER = 55001;
 const int TIMEOUT = 3;
@@ -31,7 +34,17 @@ bool ClientServices::sendMessage(sf::Packet &packet ) {
   return (client.send(packet)==sf::Socket::Done);
 }
 bool ClientServices::receiveMessage(sf::Packet & packet) {
-  return (client.receive(packet)==sf::Socket::Done);
+  bool rtr = (client.receive(packet)==sf::Socket::Done);
+
+  if (rtr) {
+    std::string ss = "";
+    for (int i = 0; i < packet.getDataSize();i++)  {
+      ss += (std::bitset<8>(*((char*)packet.getData()+i))).to_string();     
+    }
+    ConfigManager::log(std::string("---------------------------"));
+    ConfigManager::log(ss);
+  }
+    return rtr;
 }
 
   
@@ -63,8 +76,18 @@ bool ServerServices::receiveMessage(sf::Packet &packet, unsigned int i ) {
 
 bool ServerServices::sendMessage(sf::Packet & packet, unsigned int i) {
   if (i < clients.size()) {//error checking for i?
-    return (clients[i]->send(packet) == sf::Socket::Done);
+    bool rtr =(clients[i]->send(packet) == sf::Socket::Done);
+    if (rtr) {
+      std::string ss = "";
+      for (int i = 0; i < packet.getDataSize();i++)  {
+        ss += (std::bitset<8>(*((char*)packet.getData()+i))).to_string();
+      }
+      ConfigManager::log(std::string("---------------------------"));
+      ConfigManager::log(ss);
+    }
+    return rtr;
   }
+  std::cout<<"fuck this is an error"<<std::endl;
   return false;      
 }
    

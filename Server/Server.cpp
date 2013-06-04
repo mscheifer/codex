@@ -121,6 +121,8 @@ void NetworkServer::doServer() {
           std::cout << "Error sending sgtr to everybody" << std::endl;
         }
         std::string after = sgtr->toString();
+        //ConfigManager::log(before);
+        //std::cout << sgtr->getAllSizes() << std::endl;
         if( before != after ){
           std::cout << "ERROR memory corruption wtf" << std::endl;
         }
@@ -142,5 +144,7 @@ void NetworkServer::doServer() {
       }
     }
   }
+
+  delete sgtr;
 } 
 

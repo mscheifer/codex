@@ -1,5 +1,5 @@
 // System configuration
-log=0
+log=1
 sound=1
 //cannot have music without sound
 music=1

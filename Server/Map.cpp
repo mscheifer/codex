@@ -30,9 +30,9 @@ void Map::mapReset()
   initSpawns();
   initPowerUps();
   //initWalls(); 
-  //initWallsOne();
-  //initStaticWalls();
-  //initWallsTwo();
+  initWallsOne();
+  initStaticWalls();
+  initWallsTwo();
 
     v3_t facingEast(1,0,0);
 
