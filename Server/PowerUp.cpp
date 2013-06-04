@@ -52,6 +52,8 @@ void PowerUp::handleCollisions() {
 void PowerUp::update() {
 	if ((Respown_Counter.getElapsedTime().asMilliseconds() >= Respown_Time) && active == false) {
 		active = true;
+    map->addSpawnLocation(position);
+    position = map->getRespawnPosition();
     map->addToQtree(this);
     render = true;
 	}

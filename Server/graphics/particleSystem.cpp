@@ -92,7 +92,7 @@ gx::particleDrawerImpl::entityClass::operator=(entityClass&&) {
 }
 
 void gx::particleDrawerImpl::entityClass::clear() {
-  //do nothing
+  this->instances.clear();
 }
 
 namespace {
@@ -100,6 +100,14 @@ namespace {
 } //end unnamed namespace
 
 void gx::particleDrawerImpl::entityClass::update() {
+  for(auto itr = this->instances.begin(); itr != this->instances.end(); itr++) {
+    for(unsigned int i = 0; i < particlesPerFrame; i++) {
+	    particle p(*itr);
+	    this->particles.push_back(std::move(p));
+    }
+    this->numIndices += 6 * particlesPerFrame;
+  }
+
   positions.clear();
   positions.reserve(particles.size() * 4 * 4); //could move this call to only run for maxParticles at beginning
   for(auto itr = this->particles.begin(); itr != this->particles.end();) {
@@ -145,9 +153,5 @@ void gx::particleDrawerImpl::setUniforms(const entityClass& entC,
 void gx::particleDrawerImpl::addInstance(instanceData data,
                          std::vector<entityClass>& entityClasses) {
   auto type = data.type;
-  for(unsigned int i = 0; i < particlesPerFrame; i++) {
-	  particle p(data.position);
-	  entityClasses[type].particles.push_back(std::move(p));
-  }
-  entityClasses[type].numIndices += 6 * particlesPerFrame;
+  entityClasses[type].instances.push_back(data.position);
 }

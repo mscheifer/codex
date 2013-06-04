@@ -49,6 +49,7 @@ Player::Player(v3_t pos, int assigned_id, Map * m): kills(0), wins(0)
 void Player::reset(v3_t pos)
 {
   map->removeFromQtree(this);
+
   this->init(pos, player_id, map);
 }
 
@@ -92,8 +93,10 @@ void Player::init(v3_t pos, int assigned_id, Map * m)
 	weapon[1] = new WeaponFire(position, this->map, FIR1); //TODO make this basic
 	m->addEntity(weapon[1]);
   weapon[1]->pickUp();
+  weapon[1]->setRespownTime(60000);
   m->addEntity(weapon[0]);
   weapon[0]->pickUp(); //remove this
+  weapon[0]->setRespownTime(60000);
 
   buffs.clear();
   inactiveBuffs.clear();
@@ -291,7 +294,7 @@ void Player::update(){
 
   //pick up weapon stuff
   pickup = nullptr;
-  pickupWeaponType = UNK;
+  pickupWeaponType = NONEWEAPON;
 
   //update movement
   acceleration = getGravity();

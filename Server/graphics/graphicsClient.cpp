@@ -22,7 +22,7 @@ std::string configModelName(std::string s) {
 std::vector<gx::graphicsEntity> staticModels() {
 
   //auto modelBadGuy     = loadModel(configModelName("badguy"),Player::playerDepth,true);
-  auto modelWeapon     = loadModel(configModelName("weapon"),Weapon::weaponDepth,true);
+  auto modelWeapon     = loadModel(configModelName("weapon"),10,true);
   auto modelProjectile = loadModel(configModelName("projectile"),Projectile::projDepth);
   auto modelPowerUp    = loadModel(configModelName("powerup"),PowerUp::powerUpDepth,true);
   auto modelWall       = loadModel(configModelName("wall"),10);
@@ -242,6 +242,7 @@ void gx::graphicsClient::clearEntities() {
 
   this->entities.reset();
   this->animatedDrawer.reset();
+  this->particles.reset();
   
   // add ground instance. kinda hacky but works
   staticDrawer::instanceData groundInst;
