@@ -46,7 +46,7 @@ class dynamicVertexAttrib : public vertexAttrib {
     dynamicVertexAttrib& operator=(dynamicVertexAttrib&&);// = delete; //define later
     template<typename T>
     void write(const std::vector<T>& d) {
-      assert(this->type() == typeVal(d[0]));
+      assert(d.size() == 0 || this->type() == typeVal(d[0]));
       this->buff.write(d);
     }
 };
