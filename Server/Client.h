@@ -9,7 +9,7 @@
 #include <iostream>
 
 class NetworkClient {
-  ServerGameTimeRespond s;
+  ServerGameTimeRespond* s;
   ClientGameTimeAction action;
   ClientServices netRecv;
   ChatHandler chat;
@@ -27,7 +27,7 @@ class NetworkClient {
   void processInput();
   void receiveMessages();
 public:
-  NetworkClient(): s(&objPool), action(), netRecv(), chat(), gxClient(), id(-1),
+  NetworkClient(): s(new ServerGameTimeRespond(&objPool)), action(), netRecv(), chat(), gxClient(), id(-1),
                    sendPacket(false), running(true), gameRestart(false), joined(false),gameStart(false),setName(false){
   }
   NetworkClient(const NetworkClient&);// = delete;

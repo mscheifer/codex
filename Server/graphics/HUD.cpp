@@ -200,7 +200,7 @@ void gx::HUD::updateHUD(const Player& player) {
   mana = player.getMana();
   minotaur = player.isMinotaur();
   canPickUp = (player.getPickupWeaponType() != NONEWEAPON); 
-  pickUp.setString("Hold F to pick up " + WeaponNames[player.getPickupWeaponType()]);
+  if(canPickUp) pickUp.setString("Hold F to pick up " + WeaponNames[player.getPickupWeaponType()]);
   hBarSprite.setTextureRect(sf::IntRect(0,0, static_cast<int>(health/maxHealth*200), 40));
   mBarSprite.setTextureRect(sf::IntRect(0,0, static_cast<int>(mana/maxMana*200), 40));
   if (totalChargeTime)
