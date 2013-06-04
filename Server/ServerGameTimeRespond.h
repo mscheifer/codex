@@ -93,4 +93,34 @@ struct ServerGameTimeRespond
     packet >> temp;
     state = static_cast<Game_State>(temp);
   }
+
+  std::string toString(){
+    std::stringstream ss;
+    std::vector<Player> players;
+    std::vector<Wall*> walls;
+    std::vector<Projectile*> projectiles;
+    std::vector<PowerUp*> powerups;
+    std::vector<Weapon*> weapons;
+    ss << "player size " << players.size() << std::endl;
+    for( unsigned int i = 0; i < players.size() ; i++){
+      ss << players[i].toString();
+    }
+    ss << "walls size " << walls.size() << std::endl;
+    for( unsigned int i = 0; i < walls.size() ; i++){
+      ss << walls[i]->toString();
+    }
+    ss << "proj size " << projectiles.size() << std::endl;
+    for( unsigned int i = 0; i < projectiles.size() ; i++){
+      ss << projectiles[i]->toString2();
+    }
+    ss << "powerUps size " << powerups.size() << std::endl;
+    for( unsigned int i = 0; i < powerups.size() ; i++){
+      ss << powerups[i]->toString();
+    }
+    ss << "weapons size " << weapons.size() << std::endl;
+    for( unsigned int i = 0 ; i < weapons.size() ; i++){
+      ss << weapons[i]->toString();
+    }
+    return ss.str();
+  }
 };

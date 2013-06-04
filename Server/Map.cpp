@@ -67,7 +67,6 @@ void Map::initSpawns()
 }
 
 void Map::initPowerUps() {
-  //TODO this can cause memory leak?
   PowerUp* superPower = new PowerUp(v3_t(0,0,PowerUp::powerUpDepth / 2), this, MANABOOST);
   superPower->setRespownTime(5000);
   this->entities.push_back(superPower);

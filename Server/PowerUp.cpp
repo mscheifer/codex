@@ -86,3 +86,9 @@ void PowerUp::deserialize(sf::Packet& packet)
 { 
   Entity::deserialize(packet);
 }
+
+std::string PowerUp::toString(){
+  std::stringstream ss;
+  ss << position << direction << std::endl;
+  return ss.str();
+}

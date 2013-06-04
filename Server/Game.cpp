@@ -76,14 +76,13 @@ void Game::updateAndResolveCollision() {
 	}
 }
 
-ServerGameTimeRespond Game::prepResponse() {
-	ServerGameTimeRespond s;
-  s.state = Game_State::PLAYING;
-	s.weapons.clear();
-	s.projectiles.clear();
-	s.walls.clear();
-	s.powerups.clear();
-  s.players.clear();
+void Game::prepResponse(ServerGameTimeRespond* sgtr) {
+  sgtr->state = Game_State::PLAYING;
+	sgtr->weapons.clear();
+	sgtr->projectiles.clear();
+	sgtr->walls.clear();
+	sgtr->powerups.clear();
+  sgtr->players.clear();
 	std::vector<Player*>  currentPlayers =  world.getPlayers();
 	std::vector<Entity*> currentEntities = world.getEntity();
   std::vector<Projectile*> currentProjectiles = world.getLiveProjectTile();
@@ -104,10 +103,10 @@ ServerGameTimeRespond Game::prepResponse() {
   }
   if (currentPlayers.size() > 1) {
     if (minotaurLose) {
-      s.state = CIVILIAN_WIN; 
+      sgtr->state = CIVILIAN_WIN; 
     }
     if (deadPlayers == currentPlayers.size()-1 ) {
-      s.state = MANOTAUR_WIN;
+      sgtr->state = MANOTAUR_WIN;
     }
   }
 	for( unsigned int i = 0; i < currentPlayers.size(); i++ ) {
@@ -116,30 +115,30 @@ ServerGameTimeRespond Game::prepResponse() {
        (currentPlayers[i])->setHealth(currentPlayers[i]->getHealth()-1);
      } else  (currentPlayers[i])->setHealth(100);
      */
-		 s.players.push_back(*currentPlayers[i]); //add the player to the return struct
+		 sgtr->players.push_back(*currentPlayers[i]); //add the player to the return struct
      //were not sending boxes over network, if you dont ahve this it will try to destroy the actual bb
-     s.players[i].setBoundingObjs(std::vector<BoundingObj*>()); 
+     sgtr->players[i].setBoundingObjs(std::vector<BoundingObj*>()); 
   }
 
   for( unsigned int i = 0; i < currentProjectiles.size(); i++ ) {
     if(currentProjectiles[i]->canRender())
-      s.projectiles.push_back(currentProjectiles[i]);
+      sgtr->projectiles.push_back(currentProjectiles[i]);
   }
 
 	for( unsigned int i = 0; i < currentEntities.size(); i++ ) {
     if( currentEntities[i]->canRender() ) {
       switch (currentEntities[i]->getType()) { // I am casting pointers but I don't care
       case WALL:
-		    s.walls.push_back((Wall*) currentEntities[i]); 
+		    sgtr->walls.push_back((Wall*) currentEntities[i]); 
         break;
       case PROJECTILE:
-		    s.projectiles.push_back((Projectile*) currentEntities[i]); 
+		    sgtr->projectiles.push_back((Projectile*) currentEntities[i]); 
         break;
       case POWER_UP:
-		    s.powerups.push_back((PowerUp*) currentEntities[i]); 
+		    sgtr->powerups.push_back((PowerUp*) currentEntities[i]); 
         break;
       case WEAPON:
-		    s.weapons.push_back((Weapon*) currentEntities[i]); 
+		    sgtr->weapons.push_back((Weapon*) currentEntities[i]); 
         break;        
       default:
         std::cout<<"Error for Entity type!!!!!!"<<std::endl;
@@ -147,8 +146,6 @@ ServerGameTimeRespond Game::prepResponse() {
       }
     }
   }
-	  
-  return s;
 }
 
 InitPacket Game::getInitPacket(int playerId) {

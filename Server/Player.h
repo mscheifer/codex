@@ -82,6 +82,7 @@ public:
   float getDefenseMultiplier() const;
   int getKills() const { return kills; }
   int getWins() const { return wins; }
+  std::string toString();
   
   void serialize(sf::Packet& packet) const;
   void deserialize(sf::Packet& packet);
