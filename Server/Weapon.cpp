@@ -85,6 +85,7 @@ bool Weapon::dropDown(v3_t dropPosition){
   render = true;
   position = dropPosition;
   pickedUp = false;
+  Respown_Counter.restart();
   map->addToQtree(this);
   return true;
 } 
@@ -107,6 +108,7 @@ bool Weapon::tossAway(v3_t dropPosition, v3_t dir){
   velocity.scale(25);
 
   pickedUp = false;
+  Respown_Counter.restart();
   map->addToQtree(this);
   return true;
 } 
@@ -120,7 +122,36 @@ void Weapon::update()
   velocity += acceleration * ConfigManager::serverTickLengthSec();
   v3_t attemptMove = velocity * ConfigManager::serverTickLengthSec();
   position += correctMovement( attemptMove, false, position );
+  
+  if(Respown_Counter.getElapsedTime().asMilliseconds() >= Respown_Time)
+  {
+    Respown_Counter.restart();
+    setRandomMagic();
+    // Been idle too long on map
+    map->addSpawnLocation(position);
+    position = map->getRespawnPosition();
+    dropDown(position);
+  }
   updateBounds();
+}
+
+void Weapon::setRandomMagic()
+{
+  switch (rand() % 4)
+  {
+    case 0:
+      this->basicAttack = FIR1;
+      break;
+    case 1:
+      this->basicAttack = ICE1;
+      break;
+    case 2:
+      this->basicAttack = THU1;
+      break;
+    default:
+      this->basicAttack = static_cast<MAGIC_POWER>(rand() % B1);
+      break;
+  }
 }
 
 void Weapon::updateBounds(){
