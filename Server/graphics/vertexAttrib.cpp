@@ -5,7 +5,6 @@ gx::vertexAttrib::vertexAttrib(vertexAttrib&& other) noexcept
     glType(std::move(other.glType)), byteOffset(std::move(other.byteOffset)),
     buff(std::move(other.buff)) {}
 
-
 void gx::vertexAttrib::bindBuffer() const {
   this->buff.bind();
 }
@@ -25,3 +24,6 @@ GLenum gx::vertexAttrib::type() const {
 GLsizei gx::vertexAttrib::stride() const {
   return this->byteOffset;
 }
+
+gx::dynamicVertexAttrib::dynamicVertexAttrib(dynamicVertexAttrib&& other) noexcept
+  : vertexAttrib(std::move(other)) {}

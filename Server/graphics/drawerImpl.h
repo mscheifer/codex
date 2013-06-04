@@ -29,6 +29,8 @@ class staticDrawerImpl {
       entityClass(entityClass&&) noexcept;
       entityClass& operator=(entityClass&&);// = delete;
       void clear();
+      void update();
+      void draw();
     };
     staticDrawerImpl(const shaderProgram&);
     void setUniforms(const entityClass&,const entityClass::instance&) const;
@@ -68,6 +70,8 @@ class dynamicDrawerImpl {
       entityClass(entityClass&&) noexcept;
       entityClass& operator=(entityClass&&);// = delete;
       void clear();
+      void update();
+      void draw();
     };
     dynamicDrawerImpl(const shaderProgram&);
     void setUniforms(const entityClass&,const entityClass::instance&) const;

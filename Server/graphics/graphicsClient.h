@@ -27,6 +27,7 @@ class graphicsClient {
     staticDrawer entities;
     dynamicDrawer animatedDrawer;
     SkyboxDraw skyboxDrawer;
+    particleDrawer particles;
 
     HUD Hud;
     lobby Lobby;
