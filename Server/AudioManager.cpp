@@ -2,7 +2,7 @@
 #include "ConfigManager.h"
 #include "util.h"
 
-std::array<sf::Music,6> AudioManager::music;
+std::array<sf::Music,2> AudioManager::music;
 std::array<proxStruct,2> AudioManager::musicProx;
 std::map<std::string, sf::SoundBuffer*> AudioManager::soundBuffers;
 std::map<std::string, std::string> AudioManager::musics;
@@ -38,13 +38,14 @@ void AudioManager::loadSounds(){
   loadSound("sc1", "sounds/scream_1.wav");
   
   loadSound("c1", "sounds/charge1.wav");
+  loadSound("upgrade", "sounds/upgrade.wav");
   
   loadSound("w1", "sounds/foot_step_1.wav");
   loadSound("w2", "sounds/foot_step_2.wav");
 
   //loadSound("f1", "sounds/fire_1.wav");
   loadSound("melee", "sounds/52458__audione__sword-01_.wav");
-  loadSound("combine", "sounds/combine.wav");
+  loadSound("combine", "sounds/combine1.wav");
 
   loadSound("weapIce", "sounds/weaponIce.wav");
   loadSound("weapBasic", "sounds/weaponBasic.wav");
@@ -115,7 +116,7 @@ void AudioManager::playSoundHelper( sf::Sound* s, v3_t pos, sf::SoundBuffer* sbu
 
 }
 
-void AudioManager::updateMusic( int numPlayers, bool minotaur ){
+void AudioManager::updateMusic(const int numPlayers,const bool minotaur ){
   if(!useSound)
     return;
 
@@ -157,7 +158,7 @@ void AudioManager::updateMusic( int numPlayers, bool minotaur ){
     music[currentlyPlayingMusic].setVolume(100);
     music[notCurrentlyPlaying()].setVolume(0);
     musicProx[currentlyPlayingMusic] = proxStruct(numPlayers,minotaur);
-    musicProx[currentlyPlayingMusic] = proxStruct(getClosestProx(numPlayers),minotaur);
+    musicProx[notCurrentlyPlaying()] = proxStruct(getClosestProx(numPlayers),minotaur);
   }
 
   //get the one taht is playing the right prox song
@@ -183,6 +184,9 @@ void AudioManager::updateMusic( int numPlayers, bool minotaur ){
   for( unsigned int i = 0; i < music.size(); i++ ){
     if( i == currentlyPlayingMusic ){ //FADE IN
       volume = music[i].getVolume();
+      if(volume == 100)
+        continue;
+
       volume += 3;
       if(volume > 100)
         volume = 100;
@@ -190,6 +194,9 @@ void AudioManager::updateMusic( int numPlayers, bool minotaur ){
     }
     else{ //FADE OUT
       volume = music[i].getVolume();
+      if(volume == 0)
+        continue;
+
       volume -= 5;
       if(volume < 0)
         volume = 0;
@@ -267,6 +274,10 @@ void AudioManager::processPlayerSound(Player& o){
     std::stringstream ss;
     ss << "playcerCollectPowerUp: " << o.player_id;
     playSound("collectPowerup", ss.str(), o.getPosition());
+  }
+
+  if(o.upgraded){
+    playPlayerSound("upgrade", o.player_id,  "upgrade", o.getPosition());
   }
 
   if(o.charging) {

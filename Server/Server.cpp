@@ -40,7 +40,7 @@ void NetworkServer::receiveMessages(int i) {
         this->server.sendPacketToAll<StartGamePacket>(startTheGame);
         break;
       default:
-        std::cout << "Error: received bad packet: " << packetType<< std::endl;
+        std::cout << "Error server: received bad packet: " << packetType << std::endl;
         break;
     }
   }
@@ -125,10 +125,12 @@ void NetworkServer::doServer() {
           break;
         }
         //4. go back to sleep slave.
-        sf::sleep( sf::milliseconds( static_cast<sf::Int32>(ConfigManager::serverTickLengthMilli()) -
-                                   clock.getElapsedTime().asMilliseconds()) );
+        sf::Int32 sleepAmount = static_cast<sf::Int32>(ConfigManager::serverTickLengthMilli()) - clock.getElapsedTime().asMilliseconds();
+        if(sleepAmount < 0 )
+          std::cout << "Error, sleep negative amount. server can't run at this tick speed, lower it" << std::endl;
+        sf::sleep( sf::milliseconds(sleepAmount) );
       } else {
-        if (clock.getElapsedTime().asSeconds() > 5) {
+        if (clock.getElapsedTime().asSeconds() > 2) { //TODO make this 5 sec again
           gameState = PLAYING; 
         }
       }

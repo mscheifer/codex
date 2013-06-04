@@ -21,11 +21,8 @@ Projectile::Projectile(Map* m):fired(false)
   reset();
 }
 
-Projectile::~Projectile(void)
-{
-}
-
 void Projectile::reset(){
+  clearEvents();
   charge_counter.restart();
   charging = true;
 }
@@ -50,6 +47,7 @@ void Projectile::update(void) {
     int chargeTime = ProjInfo[magicType].chargeTime;
     //-1 means no upgrades
     if(chargeTime != -1 && charge_counter.getElapsedTime().asMilliseconds() > chargeTime*cdr ) {
+      getOwner()->upgraded = true;
       charge_counter.restart();
       setMagicType(upgrade(magicType));
     }
@@ -131,7 +129,9 @@ void Projectile::handleCollisions() {
       //  combined = true;
       //} 
       //else
-      if ( proj->charging && sameTeam(proj) ){ //the other one is charging
+
+      //I am moving and proj is charging and we same team
+      if ( !this->charging && proj->charging && sameTeam(proj) ){ //the other one is charging
         proj->setMagicType(combine(proj->getMagicType(), magicType));
         proj->combined = true;
         destroy = true;
@@ -175,12 +175,11 @@ void Projectile::fireMutiple(v3_t v, float strengthMultiplier, int number) {
   strength = ProjInfo[magicType].strength * strengthMultiplier;
   fired = true;
   charging = false;
-
   
   double slice = 70.0/number;
   double counter = slice;
   double start = -35.0; 
-double PI = 3.14159265;
+  double PI = 3.14159265;
   for( int i = 0; i < number ; i++) {
     double adjusted = (start + counter)* PI /180.0;
 
@@ -197,14 +196,10 @@ double PI = 3.14159265;
     pj->strength = ProjInfo[magicType].strength * strengthMultiplier;
     pj->fired = true;
     pj->charging = false;
-
   }
      // x' = xcos@ - ysin@
     // y' = xsin@ + ycos@ 
    //std::cout << toString();
-
-
-    
 }
 
 MAGIC_POWER Projectile::upgrade( const MAGIC_POWER m ){
@@ -237,8 +232,6 @@ MAGIC_POWER Projectile::combine( MAGIC_POWER m1, MAGIC_POWER m2 ){
 }
 
 bool Projectile::sameTeam( Projectile * p ){
-  if(p == nullptr || p->getOwner() == nullptr || this == nullptr || this->getOwner() == nullptr)
-    return false;
   return p->getOwner()->isMinotaur() == getOwner()->isMinotaur();
 }
 

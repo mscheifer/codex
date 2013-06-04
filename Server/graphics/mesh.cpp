@@ -17,9 +17,6 @@ void printNodes(aiNode* node, int level) {
   }
   gx::debugout << node->mName.C_Str() << " meshes ";
   gx::debugout << node->mNumMeshes << gx::endl;
-  for(int i = 0; i < level; i++) {
-    gx::debugout << "  ";
-  }
   gx::debugout << gx::toMat(node->mTransformation) << gx::endl;
   for(unsigned int i = 0; i < node->mNumChildren; i++) {
     printNodes(node->mChildren[i],level+1);
@@ -50,9 +47,6 @@ gx::bone makeBone(gx::Mesh::idMap_t& idMap, int& nextId,
         k.position = gx::toVec4(animation->mPositionKeys[i].mValue);
         k.rotation = animation->mRotationKeys[i].mValue;
         k.scaling  = gx::toVec3(animation->mScalingKeys [i].mValue);
-        gx::debugout << "times " << animation->mPositionKeys[i].mTime << " ";
-        gx::debugout << animation->mRotationKeys[i].mTime << " ";
-        gx::debugout << animation->mScalingKeys[i].mTime << gx::endl;
         animKeys.insert(animKeys.end(),
           std::make_pair(animation->mPositionKeys[i].mTime,std::move(k)));
       }
@@ -140,8 +134,8 @@ gx::bone initBones(std::map<std::string,unsigned int>& idMap,
 }
 } //end unnamed namespace
 
-gx::Mesh::Mesh(const std::string& Filename, length_t height)
-  : mImporter(), mScene(LoadFile(mImporter, Filename)),
+gx::Mesh::Mesh(const std::string& Filename, length_t height, bool flipUVs)
+  : mImporter(), mScene(LoadFile(mImporter, Filename, flipUVs)),
     m_boundary(CalcBoundBox(mScene, height)), idMap(),
     bones(initBones(idMap,mScene)),
     m_Entries(InitFromScene(idMap,mScene)),
@@ -156,13 +150,17 @@ gx::Mesh::Mesh(const std::string& Filename, length_t height)
       std::move(m_boundary.centerAndResize)) {}
 
 const aiScene* gx::Mesh::LoadFile(Assimp::Importer& Importer,
-                                 const std::string& Filename) {
+                                 const std::string& Filename, bool flipUVs) {
   const aiScene* pScene = Importer.ReadFile(Filename.c_str(), 0
          | aiProcess_Triangulate
-         | aiProcess_GenSmoothNormals);
+         | aiProcess_GenSmoothNormals
+         | (flipUVs ? aiProcess_FlipUVs : 0));
+       //| aiProcess_FixInfacingNormals, aiProcess_FindDegenerates, aiProcess_FindInvalidData
+       //| aiProcess_TransformUVCoords 	
   if (!pScene) {
     std::cout << "Error parsing '" <<  Filename.c_str() << "': '";
     std::cout << Importer.GetErrorString() << std::endl;
+    return nullptr;
   }
   //print
   debugout << "num animations: " << pScene->mNumAnimations   << endl;

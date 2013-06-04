@@ -61,7 +61,7 @@
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
       <MinimalRebuild>true</MinimalRebuild>
       <EnableEnhancedInstructionSet>StreamingSIMDExtensions2</EnableEnhancedInstructionSet>
-      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;_USE_MATH_DEFINES;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>NDEBUG;_CRT_SECURE_NO_WARNINGS;_USE_MATH_DEFINES;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -86,6 +86,7 @@
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="graphics\basicUniform.cpp" />
     <ClCompile Include="graphics\bone.cpp" />
+    <ClCompile Include="graphics\buffer.cpp" />
     <ClCompile Include="graphics\CubemapTexture.cpp" />
     <ClCompile Include="graphics\displaySet.cpp" />
     <ClCompile Include="graphics\drawer.cpp" />
@@ -101,6 +102,7 @@
     <ClCompile Include="graphics\mesh.cpp" />
     <ClCompile Include="graphics\meshEntry.cpp" />
     <ClCompile Include="graphics\oglUtil.cpp" />
+    <ClCompile Include="graphics\particleSystem.cpp" />
     <ClCompile Include="graphics\shaderProgram.cpp" />
     <ClCompile Include="graphics\SkyboxDraw.cpp" />
     <ClCompile Include="graphics\staticDrawerImpl.cpp" />
@@ -148,6 +150,7 @@
     <ClInclude Include="graphics\assimpUtil.h" />
     <ClInclude Include="graphics\basicUniform.h" />
     <ClInclude Include="graphics\bone.h" />
+    <ClInclude Include="graphics\buffer.h" />
     <ClInclude Include="graphics\CubemapTexture.h" />
     <ClInclude Include="graphics\displaySet.h" />
     <ClInclude Include="graphics\drawer.h" />
@@ -176,6 +179,7 @@
     <ClInclude Include="graphics\vertexAttrib.h" />
     <ClInclude Include="graphics\vertexAttribSignature.h" />
     <ClInclude Include="graphics\windowsHacks.h" />
+    <ClInclude Include="Ground.h" />
     <ClInclude Include="Map.h" />
     <ClInclude Include="NetworkServices.h" />
     <ClInclude Include="Physics.h" />

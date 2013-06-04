@@ -9,7 +9,9 @@ public:
   static const bool hasMeleeAttack = true;
 
   WeaponFist(v3_t, Map*);
-  ~WeaponFist(void);
+  //this needs to be here, or it will use the inherited one, 
+  //we want fist to have no bounding box, so you can't pick it up
+  void updateBounds(){}
   //bool pickUp();
   //bool dropDown(v3_t dropPosition);
 

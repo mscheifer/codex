@@ -20,7 +20,6 @@ public:
 
   Weapon() {/*TODO initialzie*/}
 	Weapon(Map*);
-	~Weapon(void);
 	Weapon(float damage, float range, v3_t pos, Map*);
 
 	bool canUseWeapon(bool range_attack, Player* owner);

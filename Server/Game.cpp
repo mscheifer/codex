@@ -12,7 +12,8 @@ Game::~Game(void)
 
 void Game::chooseMinotaur() 
 {
-  return;
+  if(StringToNumber<int>(ConfigManager::configMap["enableMinotaur"]) == 0)
+    return;
   srand(static_cast<unsigned int>(time(nullptr)));
   int minotaur = rand() % ConfigManager::numPlayers();
   world.getPlayers()[minotaur]->setAsMinotaur(true);
@@ -116,11 +117,13 @@ ServerGameTimeRespond Game::prepResponse() {
      } else  (currentPlayers[i])->setHealth(100);
      */
 		 s.players.push_back(*currentPlayers[i]); //add the player to the return struct
-	}
+     //were not sending boxes over network, if you dont ahve this it will try to destroy the actual bb
+     s.players[i].setBoundingObjs(std::vector<BoundingObj*>()); 
+  }
 
   for( unsigned int i = 0; i < currentProjectiles.size(); i++ ) {
     if(currentProjectiles[i]->canRender())
-      s.projectiles.push_back(currentProjectiles[i]); 
+      s.projectiles.push_back(currentProjectiles[i]);
   }
 
 	for( unsigned int i = 0; i < currentEntities.size(); i++ ) {

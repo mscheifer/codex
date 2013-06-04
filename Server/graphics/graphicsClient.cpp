@@ -4,37 +4,49 @@
 #include "loadCustom.h"
 #include "Entity.h"
 #include "PowerUp.h"
+#include "Projectile.h"
 
 namespace {
 const unsigned int defaultWindowWidth  = 800;
 const unsigned int defaultWindowHeight = 600;
 
-gx::graphicsEntity loadModel(const std::string& ModelPath,gx::Mesh::length_t height) {
-  return gx::Mesh(ModelPath,height).entityData;
+gx::graphicsEntity loadModel(const std::string& ModelPath,
+    gx::Mesh::length_t height, bool flipUVs = false) {
+  return gx::Mesh(ModelPath,height,flipUVs).entityData;
+}
+
+std::string configModelName(std::string s) {
+  return "models/" + ConfigManager::configMap["model-" + s];
 }
 
 std::vector<gx::graphicsEntity> staticModels() {
-  auto modelBadGuy = loadModel("models/badguy.dae",PowerUp::powerUpHeight);
-  auto modelJack   = loadModel("models/weird_orange_thing.dae",1);
-  auto modelWall   = loadModel("models/stone_wall.dae",10);
-  auto modelPlayer = loadModel("models/Test_Run.dae",Player::playerDepth);
+
+  //auto modelBadGuy     = loadModel(configModelName("badguy"),Player::playerDepth,true);
+  auto modelWeapon     = loadModel(configModelName("weapon"),Weapon::weaponDepth,true);
+  auto modelProjectile = loadModel(configModelName("projectile"),Projectile::projDepth);
+  auto modelPowerUp    = loadModel(configModelName("powerup"),PowerUp::powerUpDepth,true);
+  auto modelWall       = loadModel(configModelName("wall"),10);
+  auto modelPlayer     = loadModel(configModelName("goodguy"),Player::playerDepth,true);
   auto cubes = gx::loadCube();
-  auto ground = gx::loadGround(0.0f, "models/concrete.jpg");
+  auto skybox = gx::loadSkybox();
+  auto ground = gx::loadGround(2000.0f, 0.0f, "models/floor.jpg");
   std::vector<gx::graphicsEntity> entitiesData;
-  entitiesData.push_back(std::move(ground));  //ground
+
+  entitiesData.push_back(std::move(skybox));  //ignore
   entitiesData.push_back(std::move(modelPlayer)); //player
   entitiesData.push_back(std::move(modelWall));  //wall
-  entitiesData.push_back(std::move(modelJack)); //projectile
-  entitiesData.push_back(std::move(modelBadGuy)); //weapon
-  entitiesData.insert(entitiesData.end(),std::make_move_iterator(cubes.begin()), //powerup
+  entitiesData.push_back(std::move(modelProjectile)); //projectile
+  entitiesData.push_back(std::move(modelWeapon)); //weapon
+  entitiesData.push_back(std::move(modelPowerUp)); //powerup
+  entitiesData.push_back(std::move(ground));  //ground
+  entitiesData.insert(entitiesData.end(),std::make_move_iterator(cubes.begin()),
                                          std::make_move_iterator(cubes.end())); 
   return entitiesData;
 }
 
 std::vector<gx::graphicsEntity> dynamicModels() {
   // MODEL LOADING
-  //auto modelTest   = loadModel("models/boblampclean.md5anim");
-  auto modelPlayer = loadModel("models/cat.dae",10);
+  auto modelPlayer = loadModel(configModelName("goodguy"),Player::playerDepth,true);
 
     //setup drawing data
   std::vector<gx::graphicsEntity> entitiesData;
@@ -88,8 +100,9 @@ std::vector<gx::uniform::block*> gx::graphicsClient::uniforms() {
 //make sure this is above al opengl objects so that the desctructor is called
 //last so we have an opengl context for destructors
 gx::graphicsClient::graphicsClient():
-    window(sf::VideoMode(defaultWindowWidth, defaultWindowHeight),
-      "DrChao", sf::Style::Default, sf::ContextSettings(24,0,4)),
+    window(sf::VideoMode(ConfigManager::windowWidth(), ConfigManager::windowHeight()), "DrChao",
+    (ConfigManager::fullscreen() ? sf::Style::Fullscreen : sf::Style::Default),
+    sf::ContextSettings(24,0,ConfigManager::antiAliasingLevel())),
     //glew needs to be called here, after window, before anything else
     glewStatus(initGlew()),
     userInput(),
@@ -99,11 +112,11 @@ gx::graphicsClient::graphicsClient():
     animatedDrawer(dynamicModels(),uniforms()),
     skyboxDrawer(display.storage()),
     Hud(),Lobby(), Score(ConfigManager::numPlayers()),
-    playerDirection(0.0, 1.0,0.0),//change to result of init packet
-    playerStartDirection(0.0, 1.0,0.0),//change to result of init packet
+    playerDirection(0.0, 1.0,0.0),//will be changed by init packet
+    playerStartDirection(0.0, 1.0,0.0),
     playerStartRight(playerStartDirection.y,-playerStartDirection.x,
                      playerStartDirection.z),
-    playerPosition(0.0, 0.0, 0.0),//change to the result of init packet
+    playerPosition(0.0, 0.0, 0.0),//will be changed by init packet
     fpsClock(), fpsFrames(0) {
   sf::ContextSettings settings = this->window.getSettings();
 
@@ -131,7 +144,7 @@ gx::graphicsClient::graphicsClient():
   this->setCamera();
   this->userInput.setUpMouse();
 
-  this->reshape(defaultWindowWidth, defaultWindowHeight);
+  this->reshape(ConfigManager::windowWidth(), ConfigManager::windowHeight());
 }
 
 ClientGameTimeAction gx::graphicsClient::handleInput() {
@@ -141,9 +154,11 @@ ClientGameTimeAction gx::graphicsClient::handleInput() {
     reshape(this->userInput.windowWidth(),this->userInput.windowHeight());
   }
   auto newdir = this->userInput.turnPlayer();
+
   this->playerDirection =
-    toBasis(playerStartRight,playerStartDirection,upDirection) * newdir;
+	  toBasis(playerStartRight,playerStartDirection,upDirection) * newdir;
   this->setCamera(); //after setting new player position and direction
+  
   if(this->userInput.getJump()) {
     action.jump = true;
   }
@@ -151,8 +166,8 @@ ClientGameTimeAction gx::graphicsClient::handleInput() {
   auto dir = this->playerDirection;
   action.updated = this->userInput.getUpdated();
   action.facingDirection = dir;
-  action.attackMelee = this->userInput.fire1();
-  action.attackRange = this->userInput.fire2();
+  action.attackMelee = this->userInput.fire2();
+  action.attackRange = this->userInput.fire1();
   action.pickup = this->userInput.pickUp();
   action.switchWeapon = this->userInput.switchW();
   return action;
@@ -201,39 +216,64 @@ void gx::graphicsClient::updatePosition(vector4f pos) {
   this->playerPosition = pos;
   this->setCamera();
 }
+
+void gx::graphicsClient::updateDirection(vector3f dir) {
+  this->playerDirection = dir;
+  this->setCamera();
+}
+
 int aniFrame = 0;
-void gx::graphicsClient::updateEntities(std::vector<Entity*> data) {  
+
+void gx::graphicsClient::clearEntities() {
   lights.clear();
 
   this->entities.reset();
   this->animatedDrawer.reset();
+  
+  // add ground instance. kinda hacky but works
+  staticDrawer::instanceData groundInst;
+  groundInst.pos  = vector3f(0, 0, 0);
+  groundInst.dirY = vector3f(0,1,0);
+  groundInst.type = GROUND;
+  groundInst.scale = 1;
+  this->entities.addInstance(groundInst);
+}
 
-  for(auto entityP = data.begin(); entityP != data.end(); ++entityP) {
-    const auto& entity = **entityP;
-    const auto& type = entity.getType();
-    //lights
-    if(type == PROJECTILE) {
-      lights.addLight(vector4f(0,0,0) + entity.getPosition());
-    }
+void gx::graphicsClient::addEntity(Entity* ent) {
+  const auto& entity = *ent;
+  const auto& type = entity.getType();
 
-    if(type == POWER_UP) { //TODO: change back to type == PLAYER
-      dynamicDrawer::instanceData inst;
-      inst. pos = entity.getPosition();
-      inst.dirY = entity.getDirection();
-      inst.type = 0; //TODO: somehow set this based on type but it can't be absolute type?
-      inst.animation = 0; //TODO: select animation based on context
-      ++aniFrame;
-      aniFrame %= 240;
-      inst.timePosition = static_cast<double>(aniFrame) / 120.0;
-      this->animatedDrawer.addInstance(inst);
-    } else {
-      staticDrawer::instanceData inst;
-      inst. pos = entity.getPosition();
-      inst.dirY = entity.getDirection();
-      inst.type = entity.getType();
-      this->entities.addInstance(inst);
-    }
+  if(type == PLAYER) { //TODO: change back to type == PLAYER
+    dynamicDrawer::instanceData inst;
+    inst.scale = 1;
+    inst. pos = entity.getPosition();
+    inst.dirY = entity.getDirection();
+    inst.type = 0; //TODO: somehow set this based on type but it can't be absolute type?
+    inst.animation = 0; //TODO: select animation based on context
+    ++aniFrame;
+    aniFrame %= 240;
+    inst.timePosition = static_cast<double>(aniFrame) / 1200.0;
+    this->animatedDrawer.addInstance(inst);
+  } else {
+    staticDrawer::instanceData inst;
+    inst.scale = 1;
+    inst. pos = entity.getPosition();
+    inst.dirY = entity.getDirection();
+    inst.type = entity.getType();
+    this->entities.addInstance(inst);
   }
+}
+
+void gx::graphicsClient::addEntity(Projectile* ent) {
+  const auto& entity = *ent;
+
+  lights.addLight(vector4f(0,0,0) + entity.getPosition());
+  staticDrawer::instanceData inst;
+  inst.scale = ProjInfo[entity.getMagicType()].size;
+  inst. pos = entity.getPosition();
+  inst.dirY = entity.getDirection();
+  inst.type = entity.getType();
+  this->entities.addInstance(inst);
 }
 
 void gx::graphicsClient::updateHUD(Player & player) {

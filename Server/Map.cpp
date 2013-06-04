@@ -15,21 +15,27 @@ Map::Map(void): spawnPositions(), freeProjectiles(), q(0,Rectangle(BoundingObj::
 {
 	map_size = 15;
 	freeProjectiles = new std::stack<Projectile *>();
-   initWalls();
- // initWallsOne();
- // initWallsTwo();
+  initWalls();
+
+  //initWallsOne();
+  //initStaticWalls();
+  //initWallsTwo();
+
   initPowerUps();
 }
 
 void Map::mapReset()
 {
   this->q.clear();
+  destHelper();
   spawnPositions.clear();
   entities.clear();
   liveProjectTile.clear();
-  initWalls();
-  initWallsOne();
-  initWallsTwo();
+  initWalls(); 
+ // initWallsOne();
+ // initStaticWalls();
+ // initWallsTwo();
+  
   initPowerUps();
   for(unsigned int i = 0; i < players.size(); i++)
   {
@@ -38,30 +44,29 @@ void Map::mapReset()
 }
 
 void Map::initPowerUps() {
-  PowerUp* superPower = new PowerUp(v3_t(5,5,0), this, MANABOOST);
+  //TODO this can cause memory leak?
+  PowerUp* superPower = new PowerUp(v3_t(0,0,PowerUp::powerUpDepth / 2), this, MANABOOST);
   superPower->setRespownTime(5000);
   this->entities.push_back(superPower);
 
-  PowerUp* p2 = new PowerUp(v3_t(-10,-10,0), this, HEALTHBOOST);
+  PowerUp* p2 = new PowerUp(v3_t(0,0,PowerUp::powerUpDepth / 2), this, HEALTHBOOST);
   p2->setRespownTime(5000);
   this->entities.push_back(p2);
-
-  //PowerUp* p3 = new PowerUp(v3_t(-10,10,0), this, MANABOOST);
-  //p3->setRespownTime(5000);
-  //this->entities.push_back(p3);
-
-  //PowerUp* p4 = new PowerUp(v3_t(10,-10,0), this, STRBOOST);
-  //p4->setRespownTime(5000);
-  //this->entities.push_back(p4);
+  p2 = new PowerUp(v3_t(0,0,PowerUp::powerUpDepth / 2), this, DEFENSEBOOST);
+  p2->setRespownTime(5000);
+  this->entities.push_back(p2);
+  p2 = new PowerUp(v3_t(0,0,PowerUp::powerUpDepth / 2), this, CHARGECD);
+  p2->setRespownTime(5000);
+  this->entities.push_back(p2);
 }
 
 void Map::initWallsTwo(void)
 {
   v3_t facingEast(1,0,0);
   v3_t facingNorth(0,1,0);
-  unsigned int width = ConfigManager::wallWidth();
-  unsigned int height = ConfigManager::wallHeight(); 
-  unsigned int depth = ConfigManager::wallDepth();
+  float width = ConfigManager::wallWidth();
+  float height = ConfigManager::wallHeight(); 
+  float depth = ConfigManager::wallDepth();
 
   float wallX = 25;
   float wallY = 25;
@@ -75,7 +80,27 @@ void Map::initWallsTwo(void)
   float startingYNeg;
   float startingZ = depth/2.0f;
 
-
+    int row1[] = {-1};
+  int row2[] = {-1};
+  int row3[] = {-1};
+  int row4[] = {-1};
+  int row5[] = {     5,6,7,18,19,      -1};
+  int row6[] = {   1,2,                                                 22,23,    -1};
+  int row7[] = {-1};
+  int row8[] = {-1};
+  int row9[] =  {-1};
+  int row10[] = {-1};
+  int row11[] = {      4,5,6,7,8,9,10,          14,15,16,17,18,19,20,             -1};
+  int row12[] = {-1};
+  int row13[] = {      4,5,6,7,8,9,10,          14,15,16,17,18,19,20,             -1};
+  int row14[] = {-1};
+  int row15[] = {-1};
+  int row16[] = {-1};
+  int row17[] = {-1};
+  int row18[] = {-1};
+  int row19[] = {   1,2,                                                22,23,   -1};
+  int row20[] = {  5,6,7,18,19,20,    -1};
+  /*
   int row1[] = {-1};
   int row2[] = {-1};
   int row3[] = {-1};
@@ -96,7 +121,7 @@ void Map::initWallsTwo(void)
   int row18[] = {-1};
   int row19[] = {   1,2,                                                22,23,   -1};
   int row20[] = {      3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,      -1};
-  
+*/  
   int * rows[] = {row1, row2, row3, row4, row5, row6, row7, row8, row9,
                   row10, row11, row12, row13, row14, row15, row16, row17,
                   row18, row19, row20};
@@ -173,9 +198,9 @@ void Map::initWallsOne(void)
 
   v3_t facingEast(1,0,0);
   v3_t facingNorth(0,1,0);
-  unsigned int width = ConfigManager::wallWidth();
-  unsigned int height = ConfigManager::wallHeight(); 
-  unsigned int depth = ConfigManager::wallDepth();
+  float width = ConfigManager::wallWidth();
+  float height = ConfigManager::wallHeight(); 
+  float depth = ConfigManager::wallDepth();
 
   float wallX = 25;
   float wallY = 25;
@@ -231,8 +256,29 @@ void Map::initWallsOne(void)
   this->entities.push_back(floor);
   floor->setRender(false);
 
-   // REMOVE THIS TO KILL GRAPHICS
-  // Creating facing north walls. DO NOT TOUCH THIS
+  
+  int row1[] = {-1};
+  int row2[] = {-1};
+  int row3[] = {-1};
+  int row4[] = {-1};
+  int row5[] = {0,1,2,23,24, -1};
+  int row6[] = {-1};
+  int row7[] = {-1};
+  int row8[] = {-1};
+  int row9[] =  {3,4,5,6,7,9,10,11,14,15,16,18,19,20,21,22,-1};//
+  int row10[] = { -1};
+  int row11[] = {-1};
+  int row12[] = {-1};
+  int row13[] = {-1};
+  int row14[] = { -1};
+  int row15[] = {-1};
+  int row16[] = {3,4,5,6,7,9,10,11,14,15,16,18,19,20,21,22,-1};//
+  int row17[] = { -1};
+  int row18[] = { -1};
+  int row19[] = {-1};
+  int row20[] = {0,1,2,23,24, -1};
+  /*
+
   int row1[] = {-1};
   int row2[] = {-1};
   int row3[] = {-1};
@@ -254,6 +300,8 @@ void Map::initWallsOne(void)
   int row19[] = {-1};
   int row20[] = {0,1,2,3,4,8,9,10,11,12,13,14,15,16,17,20,21,22,23,24, -1};
   
+  */
+
   int * rows[] = {row1, row2, row3, row4, row5, row6, row7, row8, row9,
                   row10, row11, row12, row13, row14, row15, row16, row17,
                   row18, row19, row20};
@@ -308,6 +356,61 @@ void Map::initWallsOne(void)
   
 }
 
+void Map::initStaticWalls(void) {
+  v3_t facingEast(1,0,0);
+  v3_t facingNorth(0,1,0);
+  float width = ConfigManager::wallWidth();
+  float height = ConfigManager::wallHeight(); 
+  float depth = ConfigManager::wallDepth();
+
+  float wallX = 25;
+  float wallY = 25;
+
+  float centerX = 0;
+  float centerY = 0;
+  int i;
+  float startingX;
+  float startingXNeg;
+  float startingY;
+  float startingYNeg;
+  float startingZ = depth/2.0f;
+  
+  int row1[] = {-1};
+  int row2[] = {-1};
+  int row3[] = {-1};
+  int row4[] = {-1};
+  int row5[] = { 3,4,8,9,10,11,12,13,14,15,16,17,20,21,22,-1};
+  int row6[] = {-1};
+  int row7[] = {-1};
+  int row8[] = {-1};
+  int row9[] = {-1};
+  int row10[] = {-1};
+  int row11[] = {-1};
+  int row12[] = {-1};
+  int row13[] = {-1};
+  int row14[] = {-1};
+  int row15[] = {-1};
+  int row16[] = {-1};
+  int row17[] = {-1};
+  int row18[] = {-1};
+  int row19[] = {-1};
+  int row20[] = { 3,4,8,9,10,11,12,13,14,15,16,17,20,21,22,-1};
+  
+  int * rows[] = {row1, row2, row3, row4, row5, row6, row7, row8, row9,
+                  row10, row11, row12, row13, row14, row15, row16, row17,
+                  row18, row19, row20};
+ 
+
+  for( i = 0,
+    startingX = ((wallX*width)/-2)+(width/2)+centerX,
+    startingY = ((wallY*width)/2)-width+centerY;
+    i < 20; i++, startingY -= width)
+  {
+   
+    addWallDirection(startingX, startingY, startingZ, facingNorth, rows[i]);
+  }
+}
+
 void Map::initWalls(void)
 {
   //TODO move this
@@ -315,11 +418,11 @@ void Map::initWalls(void)
   //w1->dropDown(v3_t(10,10,0));
   //w1->setDirection(v3_t(0,1,0));
   //entities.push_back(w1);
-  WeaponFire* w2 = new WeaponFire(v3_t(120,120,0), this, ICE1);
+  WeaponFire* w2 = new WeaponFire(v3_t(120,120,0), this, THU1);
   w2->dropDown(v3_t(10,-10,0));
   w2->setDirection(v3_t(0,1,0));
   entities.push_back(w2);
-  WeaponFire* w3 = new WeaponFire(v3_t(120,120,0), this, ICE1);
+  WeaponFire* w3 = new WeaponFire(v3_t(120,120,0), this, THU1);
   w3->dropDown(v3_t(-10,-10,0));
   w3->setDirection(v3_t(0,1,0));
   entities.push_back(w3);
@@ -331,12 +434,12 @@ void Map::initWalls(void)
 
   v3_t facingEast(1,0,0);
   v3_t facingNorth(0,1,0);
-  unsigned int width = ConfigManager::wallWidth();
-  unsigned int height = ConfigManager::wallHeight(); 
-  unsigned int depth = ConfigManager::wallDepth();
+  float width = ConfigManager::wallWidth();
+  float height = ConfigManager::wallHeight(); 
+  float depth = ConfigManager::wallDepth();
 
-  float wallX = 7;
-  float wallY = 7;
+  float wallX = 10;
+  float wallY = 8;
 
   float centerX = 0;
   float centerY = 0;
@@ -377,13 +480,13 @@ void Map::initWalls(void)
     this->entities.push_back(rightWall);
   }
 
-  Wall *moveableWall = new Wall(width, depth, height, v3_t(0,0,20), facingNorth, this);
-  moveableWall->setWallChangeTime(1000.f);
-  moveableWall->addNewCenter(v3_t(0,0,5));
-  moveableWall->addNewCenter(v3_t(0,0,20));
-  moveableWall->addNewCenter(v3_t(0,10,20));
-  moveableWall->addNewCenter(v3_t(0,0,20));
-  this->entities.push_back(moveableWall);
+  //Wall *moveableWall = new Wall(width, depth, height, v3_t(0,0,20), facingNorth, this);
+  //moveableWall->setWallChangeTime(1000.f);
+  //moveableWall->addNewCenter(v3_t(0,0,5));
+  //moveableWall->addNewCenter(v3_t(0,0,20));
+  //moveableWall->addNewCenter(v3_t(0,10,20));
+  //moveableWall->addNewCenter(v3_t(0,0,20));
+  //this->entities.push_back(moveableWall);
   Wall * floor = new Wall(1000, 10, 1000, v3_t(0,0,-5), facingEast, this);
   this->entities.push_back(floor);
   floor->setRender(false);
@@ -462,16 +565,16 @@ v3_t Map::getRespawnPosition(std::size_t player_id)
  */
 void Map::addWallDirection(float startingX, float startingY, float startingZ, v3_t dir, int values[])
 {
-  unsigned int width = ConfigManager::wallWidth();
-  unsigned int height = ConfigManager::wallHeight(); 
-  unsigned int depth = ConfigManager::wallDepth();
+  float width = ConfigManager::wallWidth();
+  float height = ConfigManager::wallHeight(); 
+  float depth = ConfigManager::wallDepth();
   int x = 0;
   int j = 0;
   while(values[j] != -1)
   {
     if(values[j] == x){
       Wall* wall = new Wall(width, depth, height, v3_t(startingX,startingY, startingZ), dir, this);
-      std::cout << "(" << startingX << "," << startingY << "," << startingZ << ")" << std::endl;
+    //  std::cout << "(" << startingX << "," << startingY << "," << startingZ << ")" << std::endl;
 
       this->entities.push_back(wall);
       j++;
@@ -487,9 +590,9 @@ void Map::addWallDirection(float startingX, float startingY, float startingZ, v3
  */
 void Map::addWallChange(bool start, float startingX, float startingY, float startingZ, v3_t dir, int values[])
 {
-  unsigned int width = ConfigManager::wallWidth();
-  unsigned int height = ConfigManager::wallHeight(); 
-  unsigned int depth = ConfigManager::wallDepth();
+  float width = ConfigManager::wallWidth();
+  float height = ConfigManager::wallHeight(); 
+  float depth = ConfigManager::wallDepth();
   int x = 0;
   int j = 0;
   while(values[j] != -1)
@@ -516,9 +619,28 @@ void Map::addWallChange(bool start, float startingX, float startingY, float star
   }
 }
 
-Map::~Map(void)
-{
+Map::~Map(void){  
+  destHelper();
+  for(auto player = players.begin(); player != players.end(); player++){
+    delete *player;
+  }
+  while(!freeProjectiles->empty()){
+    Projectile* p= freeProjectiles->top();
+    delete p;
+    freeProjectiles->pop();
+  }
+  delete freeProjectiles;
 }
+
+void Map::destHelper(){
+  for(auto entity = entities.begin(); entity != entities.end(); entity++){
+    delete *entity;
+  }
+  for(auto proj = liveProjectTile.begin(); proj != liveProjectTile.end(); proj++){
+    delete *proj;
+  }
+}
+
 
 std::vector<Entity *> Map::getEntity() {
 	 return entities;
@@ -552,11 +674,8 @@ std::vector<Entity *> Map::getEntity() {
 
  void Map::destroyProjectile(Projectile * proj)
  {
-   if(proj == nullptr || proj->getOwner() == nullptr) //has already been removed
-     return;
-
-   if(proj->getOwner()->chargedProjectile == proj )
-     proj->getOwner()->chargedProjectile = nullptr;
+   if(proj->getOwner()->chargedProjectile == proj)
+     proj->getOwner()->removeChargingProj();
 
    proj->setOwner(nullptr);
    proj->live = false;
@@ -624,10 +743,12 @@ void Map::separatePlayers(Player* player){
 
 void Map::addToQtree(Entity* e){
   std::vector<BoundingObj*> vec = e->getBoundingObjs();
+  //add the boxes to the qtree
   for( auto it = vec.begin(); it != vec.end(); ++it){
     (*it)->setQuadtree(&q);
     //q.insert(*it);
   }
+  //update the positions to match the game positions on the qtree
   e->updateBounds();
 }
  

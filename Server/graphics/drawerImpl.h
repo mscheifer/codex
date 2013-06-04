@@ -23,7 +23,6 @@ class staticDrawerImpl {
       std::vector<instance> instances;
       vao                   vertData;
       material              mat;
-      matrix                centerAndResize; //TODO: to be removed
       entityClass(entity_t,varSigs_t);
       entityClass(const entityClass&);// = delete;
       entityClass& operator=(const entityClass&);// = delete;
@@ -37,6 +36,7 @@ class staticDrawerImpl {
     struct instanceData {
       vector3f pos;
       vector3f dirY;
+      GLfloat  scale;
       unsigned int type;
     };
     static matrix makePositionMatrix(instanceData d);

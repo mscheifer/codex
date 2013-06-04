@@ -58,7 +58,10 @@ class graphicsClient {
     ClientGameTimeAction handleInput();
     void draw();
     void updatePosition(vector4f);
-    void updateEntities(std::vector<Entity*>);
+    void updateDirection(vector3f);
+    void clearEntities();
+    void addEntity(Entity*);
+    void addEntity(Projectile*);
     void updateHUD(Player & player);
     void drawLobby();
     void disableCursor();

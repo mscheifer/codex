@@ -12,21 +12,34 @@ const float Player::playerDepth = 7.0f;
 
 //these have to be functions because calling configManager stuff to initialize
 //globals is undefined behavior
-length_t Player::MOVESCALE() {
-  return ConfigManager::playerMovescale();
+length_t Player::MOVESCALE(bool mino) {
+  if(mino)
+    return ConfigManager::minotaurMovescale();
+  else
+    return ConfigManager::playerMovescale();
 }
-length_t Player::AIRMOVESCALE() {
-  return ConfigManager::playerAirMovescale();
+length_t Player::AIRMOVESCALE(bool mino) {
+  if(mino)
+    return ConfigManager::minotaurAirMovescale();
+  else
+    return ConfigManager::playerAirMovescale();
 }
-length_t Player::JUMPSPEED() {
-  return ConfigManager::playerJumpSpeed();
+length_t Player::JUMPSPEED(bool mino) {
+  if(mino)
+    return ConfigManager::minotaurJumpSpeed();
+  else
+    return ConfigManager::playerJumpSpeed();
 }
-int Player::MAXJUMP() {
-  return ConfigManager::playerMaxJump();
+int Player::MAXJUMP(bool mino) {
+  if(mino)
+    return ConfigManager::minotaurMaxJump();
+  else
+    return ConfigManager::playerMaxJump();
 }
 
-Player::Player(){}// this->init(0,0,0,0,NULL);}
-Player::~Player(void){}
+Player::Player(){
+}// this->init(0,0,0,0,NULL);}
+
 Player::Player(v3_t pos, int assigned_id, Map * m): kills(0), wins(0)
 {
  generateBounds(position);
@@ -73,12 +86,15 @@ void Player::init(v3_t pos, int assigned_id, Map * m)
   elapsedChargeTime = 0;
   totalChargeTime = -1;
 	map = m;
-	weapon[0] = new WeaponFire(position, this->map, B1);
+	weapon[0] = new WeaponFire(position, this->map, ICE1);
     //new WeaponFist(position, this->map); //has no bounds so it doesnt drop
   //weapon[1] = new WeaponFist(position, this->map);
 	weapon[1] = new WeaponFire(position, this->map, FIR1); //TODO make this basic
 	m->addEntity(weapon[1]);
   weapon[1]->pickUp();
+  m->addEntity(weapon[0]);
+  weapon[0]->pickUp(); //remove this
+
   buffs.clear();
   inactiveBuffs.clear();
 
@@ -128,6 +144,11 @@ void Player::generateBounds(v3_t pos){
   boundingObjs.push_back(b);
 }
 
+void Player::removeChargingProj(){
+  chargedProjectile = nullptr;
+  charging = false;
+}
+
 bool Player::attackBy(Projectile *other)
 {
 	if(other && other->getOwner() != this)
@@ -150,12 +171,7 @@ bool Player::damageBy(Projectile *deadly)
   dead = health==0;
 
   if(charging) {
-    for(int i = 0 ; i < MAXPROJECTILES ; i++ ) {
-      map->destroyProjectile(chargedProjectile);
-      chargedProjectile = nullptr;
-    }
-   
-    charging = false;
+    chargedProjectile->live = false;
   }
 
   if(dead) {
@@ -201,8 +217,8 @@ bool Player::moveTowardDirection(move_t inputDir, bool jump)
     //add jump velocity
     v3_t jumpDir = movementDirection;
     jumpDir.z = 0;
-    jumpDir.scale(AIRMOVESCALE());
-    jumpDir.z = JUMPSPEED();
+    jumpDir.scale(JUMPSPEED(isMinotaur())/4.f);
+    jumpDir.z = JUMPSPEED(isMinotaur());
     velocity = velocity - oldJumpVelocity;
     velocity += jumpDir;
     velocity.z = jumpDir.z; //reset z velocity (for double jumping)
@@ -211,15 +227,15 @@ bool Player::moveTowardDirection(move_t inputDir, bool jump)
     jumpDir.z = 0;
     oldJumpVelocity = jumpDir;
 
-    if(++jumpCount >= MAXJUMP())
+    if(++jumpCount >= MAXJUMP(isMinotaur()))
       canJump = false;
   }
   
   //adjust movement
   if(jumpCount > 0) //move less if you are in the air
-    movementDirection.scale(speed * AIRMOVESCALE());
+    movementDirection.scale(speed * AIRMOVESCALE(isMinotaur()));
   else
-    movementDirection.scale(speed * MOVESCALE());
+    movementDirection.scale(speed * MOVESCALE(isMinotaur()));
 
   movementDirection.scale(getMovementMultiplier());
   movementDirection = correctMovement(movementDirection, true, getFeetOrigin());
@@ -243,6 +259,7 @@ bool Player::correctMovementHit( Entity* e ){
 }
 
 void Player::clearEvents(){
+  upgraded = false;
   walking = false;
   shotProjectile = false;
   attacked = false;
@@ -283,13 +300,17 @@ void Player::update(){
   //position += velocity * ConfigManager::serverTickLengthSec();
 
   if( chargedProjectile ) {
+    //this is for HUD
     elapsedChargeTime = chargedProjectile->getElapsedTime();
     totalChargeTime = ProjInfo[chargedProjectile->getMagicType()].chargeTime * getChargeCD();
+    if(totalChargeTime < 0)
+      totalChargeTime = -1;
     chargeMagicType = chargedProjectile->getMagicType();
    
     chargedProjectile->setDirection(direction);
-    chargedProjectile->setPosition(getProjectilePosition());
-   
+    chargedProjectile->setPosition(getProjectileChargePosition());
+  } else {
+    elapsedChargeTime = totalChargeTime = -1;
   }
 
   health+= healthRegen*getHealthRegenMultiplier();
@@ -357,18 +378,19 @@ void Player::handleSelfAction(ClientGameTimeAction a) {
 }
 
 void Player::fireProjectile() {
-    v3_t v = direction;
-    v.normalize();
-    if(minotaur) {
-     chargedProjectile->fireMutiple(v,getStrengthMultiplier(),10);
-    } else {
-     chargedProjectile->fire(v,getStrengthMultiplier());
-    }
+  chargedProjectile->setPosition(getProjectilePosition());
+  v3_t v = direction;
+  v.normalize();
+  if(minotaur) {
+    chargedProjectile->fireMutiple(v,getStrengthMultiplier(),10);
+  } else {
+    chargedProjectile->fire(v,getStrengthMultiplier());
+  }
     
-    chargedProjectile = nullptr;
+  chargedProjectile = nullptr;
     
-    charging = false;
-    shotProjectile = true;
+  charging = false;
+  shotProjectile = true;
 }
 void Player::handleOtherAction( ClientGameTimeAction) {
 	//since we are modeling projectiles, we are just gonna check for melee
@@ -388,6 +410,19 @@ v3_t Player::getProjectilePosition() {
   return temp;
 }
 
+v3_t Player::getProjectileChargePosition() {
+  v3_t temp = position;
+  v3_t d(0,0,1);
+  float size;
+  if(chargedProjectile)
+    size = ProjInfo[chargedProjectile->getMagicType()].size;
+  else
+    size = ProjInfo[weapon[current_weapon_selection]->getBasicAttack()].size;
+  d.scale(size + 0.5f + playerDepth/2.f);
+  temp += d;
+  return temp;
+}
+
 // this do substraction of stemina, respond to the user to render the attak animation  
 void Player::attack( ClientGameTimeAction a) {
   if(chargedProjectile)
@@ -399,7 +434,7 @@ void Player::attack( ClientGameTimeAction a) {
 		  return;
 	  }
 	  mana -= currentWeapon->getMpCost();
-	  chargedProjectile = currentWeapon->attackRange(direction, getProjectilePosition(), this);
+	  chargedProjectile = currentWeapon->attackRange(direction, getProjectileChargePosition(), this);
     charging = true;
 	}
 	else if(a.attackMelee){
@@ -737,6 +772,7 @@ void Player::serialize(sf::Packet& packet) const {
     packet << static_cast<sf::Uint32>(chargeMagicType);
 
     packet << collectPowerUp;
+    packet << upgraded;
   }
 
   void Player::deserialize(sf::Packet& packet) {
@@ -803,4 +839,5 @@ void Player::serialize(sf::Packet& packet) const {
     chargeMagicType = static_cast<MAGIC_POWER>(weaponType32);
 
     packet >> collectPowerUp;
+    packet >> upgraded;
   }

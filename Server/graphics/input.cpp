@@ -92,9 +92,14 @@ gx::vector3f gx::input::turnPlayer() {
     this->updated = true;
     sf::Vector2i newDiff = curPosition - mouseBasePosition;
     mouseDiff += newDiff;
+	if(-mouseDiff.y * mouseSensitivity > M_PI_2) {
+      mouseDiff.y = static_cast<int>(-(M_PI_2 / mouseSensitivity));
+	}
+	if(-mouseDiff.y * mouseSensitivity < -M_PI_2) {
+      mouseDiff.y = static_cast<int>(M_PI_2 / mouseSensitivity);
+	}
     mouseDirection = rotateZ(-mouseDiff.x * mouseSensitivity) * 
                      rotateX(-mouseDiff.y * mouseSensitivity) * basePlayerDirection;
-
     sf::Mouse::setPosition(mouseBasePosition);
   }
   return mouseDirection;

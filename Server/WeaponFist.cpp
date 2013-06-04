@@ -4,10 +4,6 @@ WeaponFist::WeaponFist(v3_t pos, Map * m):Weapon(10, 1, pos, m)
 {
 }
 
-WeaponFist::~WeaponFist(void)
-{
-}
-
 /*
 bool WeaponFist::pickUp()
 {
