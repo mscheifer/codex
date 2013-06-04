@@ -174,3 +174,9 @@ void Entity::removeFromMap(){
   map->removeFromQtree(this);
   //render = false;
 }
+
+Entity::~Entity(){
+  for(auto boxes = boundingObjs.begin(); boxes != boundingObjs.end(); boxes++){
+    delete *boxes;
+  }
+}

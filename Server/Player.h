@@ -32,6 +32,7 @@ public:
   float elapsedChargeTime;
   float totalChargeTime;
   MAGIC_POWER chargeMagicType;
+  MAGIC_POWER attackedMagicType;
   
   int player_id;
   std::string name;
@@ -42,7 +43,6 @@ public:
   Player();
   void reset(v3_t pos);
   Player(v3_t pos, int assigned_id, Map *);
-  ~Player(void);
   std::string getString();
   virtual bool attackBy(Projectile*);
   void update();

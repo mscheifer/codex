@@ -37,8 +37,9 @@ int Player::MAXJUMP(bool mino) {
     return ConfigManager::playerMaxJump();
 }
 
-Player::Player(){}// this->init(0,0,0,0,NULL);}
-Player::~Player(void){}
+Player::Player(){
+}// this->init(0,0,0,0,NULL);}
+
 Player::Player(v3_t pos, int assigned_id, Map * m): kills(0), wins(0)
 {
  generateBounds(position);
@@ -163,8 +164,6 @@ bool Player::damageBy(Projectile *deadly)
 	if (health==0) return true;
 
   attacked = true;
-
-
   float damage = deadly->getStrength() - defense*getDefenseMultiplier();
 	damage = ( damage > 0? damage: 0);
 	float newHealth = (health - damage);

@@ -25,7 +25,7 @@ protected:
 
 public:
   Entity() { render = true; }
-  virtual ~Entity() {}
+  virtual ~Entity();
   
   virtual void update(){}
   virtual void handleCollisions(){}

@@ -348,6 +348,11 @@ void gx::HUD::initializeSprites() {
    aimerHelper(std::string("graphics/Images/aimerF2O.png"));  
    aimerHelper(std::string("graphics/Images/aimerF3O.png"));  //5
    aimerHelper(std::string("graphics/Images/aimerF3I.png"));
+   aimerHelper(std::string("graphics/Images/aimerI1O.png"));  //7
+   aimerHelper(std::string("graphics/Images/aimerI1I.png"));  
+   aimerHelper(std::string("graphics/Images/aimerI2O.png"));  
+   aimerHelper(std::string("graphics/Images/aimerI3O.png"));  //5
+   aimerHelper(std::string("graphics/Images/aimerI3I.png"));
 }
 
 //outer inner
@@ -357,25 +362,25 @@ const int gx::HUD::aimerIndex[18][2] = {
   { 4, 3 },
   { 5, 6 },
   //ICE1, ICE2, ICE3,
-  { 2, 3 },
-  { 4, 3 },
-  { 4, 5 },
+  { 7, 8 },
+  { 9, 8 },
+  { 10, 11 },
   //THU1, THU2, THU3,
   { 2, 3 },
   { 4, 3 },
-  { 4, 5 },
+  { 5, 6 },
   //G_IT, G_FT, G_FI, //gravity and what it is missing
   { 4, 3 },
   { 4, 3 },
   { 4, 3 },
   //G2,
-  { 4, 5 },
+  { 4, 6 },
   //G_IT2, G_FT2, G_FI2,
   { 4, 3 },
   { 4, 3 },
   { 4, 3 },
   //G3,
-  { 4, 5 },
+  { 4, 6 },
   //B1
   { 2, 3 }
 };

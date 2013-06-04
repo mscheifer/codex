@@ -21,10 +21,6 @@ Projectile::Projectile(Map* m):fired(false)
   reset();
 }
 
-Projectile::~Projectile(void)
-{
-}
-
 void Projectile::reset(){
   clearEvents();
   charge_counter.restart();
@@ -179,7 +175,6 @@ void Projectile::fireMutiple(v3_t v, float strengthMultiplier, int number) {
   strength = ProjInfo[magicType].strength * strengthMultiplier;
   fired = true;
   charging = false;
-
   
   double slice = 70.0/number;
   double counter = slice;
@@ -201,14 +196,10 @@ void Projectile::fireMutiple(v3_t v, float strengthMultiplier, int number) {
     pj->strength = ProjInfo[magicType].strength * strengthMultiplier;
     pj->fired = true;
     pj->charging = false;
-
   }
      // x' = xcos@ - ysin@
     // y' = xsin@ + ycos@ 
    //std::cout << toString();
-
-
-    
 }
 
 MAGIC_POWER Projectile::upgrade( const MAGIC_POWER m ){

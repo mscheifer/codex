@@ -9,7 +9,6 @@ public:
   static const bool hasMeleeAttack = true;
 
 	WeaponFire(v3_t c, Map *, MAGIC_POWER basicAttack1);
-	~WeaponFire(void);
   void updateBounds();
   Projectile* attackRange(v3_t dir , v3_t pos, Player* owner);
 

@@ -1,10 +1,6 @@
 #include "WeaponFire.h"
 #include "Projectile.h"
 
-WeaponFire::~WeaponFire(void)
-{
-}
-
 WeaponFire::WeaponFire(v3_t c, Map* m, MAGIC_POWER basicAttack1)
   : Weapon(2.0, 300, c, m) {
 

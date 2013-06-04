@@ -6,7 +6,6 @@ class PowerUp : public Entity{
 public:
   PowerUp(){};
   PowerUp(v3_t p, Map* m, BUFF ptype);
-  ~PowerUp() {};
   
   static const float powerUpWidth;
   static const float powerUpHeight;
