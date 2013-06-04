@@ -38,7 +38,7 @@ enum Texture_Type {DEFAULT=0, GROUNDTEX=64};
 enum WeaponType{UNK=0, FIRE, ICE, THUNDER, FIST, BASIC, NONEWEAPON};
 
 const std::string WeaponNames[] = {
-  "UNKNOWN",
+  "Forbidden Art",
   "STAFF OF FIRE",
   "ICE",
   "MJORLNIR",
