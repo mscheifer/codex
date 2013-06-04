@@ -9,7 +9,7 @@ namespace {
 									   GL_TEXTURE_CUBE_MAP_NEGATIVE_Z};
 
 	const std::string fileExt = ".jpg";
-	const std::string dir = "./models/skybox_prerotated/";
+	const std::string dir = "./models/skybox_sunset/";
 	const std::string right = "right" + fileExt;
 	const std::string left = "left" + fileExt;
 	const std::string front = "front" + fileExt;

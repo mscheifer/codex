@@ -12,6 +12,7 @@ const std::string gx::particleDrawerImpl::fragShader =
 namespace {
   const std::string positionVarName = "position";
   const std::string texCoordsVarName = "texCoord";
+  const std::string colVarName = "color";
 
   std::vector<GLuint> initIndices() {
     std::vector<GLuint> ret;
@@ -31,9 +32,19 @@ namespace {
       (positionVarName,4,0,std::move(dummyData));
     return std::move(ret);
   }
+  
+  gx::particleEntity::dynamicPtr_t initColAttrib() {
+    std::vector<GLfloat> dummyData;
+    dummyData.resize(4 * 4 * gx::maxParticles); //4 vec4s
+    auto ret = std::make_shared<gx::dynamicVertexAttrib>
+      (colVarName,4,0,std::move(dummyData));
+    return std::move(ret);
+  }
 
   gx::particleEntity::attribsList_t
-  baseList(gx::particleEntity::dynamicPtr_t a) {
+  baseList(gx::particleEntity::dynamicPtr_t a, 
+           gx::particleEntity::dynamicPtr_t b) 
+  {
     std::vector<GLfloat> texCoordsData;
 	//fix the texcoords if the texture is fixed
 	std::array<GLfloat,4*2> texCoordsPattern = {{ 0.9, 0.9, 0.9, 0.1,
@@ -47,6 +58,7 @@ namespace {
 
     gx::particleEntity::attribsList_t ret;
     ret.push_back(std::dynamic_pointer_cast<const gx::vertexAttrib>(a));
+    ret.push_back(std::dynamic_pointer_cast<const gx::vertexAttrib>(b));
     ret.push_back(std::move(texCoords));
     return std::move(ret);
   }
@@ -55,12 +67,14 @@ namespace {
 gx::particleEntity::particleEntity(material pmat)
   : indices(initIndices()),
     positionAttrib(initPosAttrib()),
-    attribs(baseList(positionAttrib)),
+    colorAttrib(initColAttrib()),
+    attribs(baseList(positionAttrib, colorAttrib)),
     mat(std::move(pmat)) {}
 
 gx::particleEntity::particleEntity(particleEntity&& other) noexcept
   : indices(std::move(other.indices)),
     positionAttrib(std::move(other.positionAttrib)),
+    colorAttrib(std::move(other.colorAttrib)),
     attribs(std::move(other.attribs)),
     mat(std::move(other.mat)) {}
 
@@ -70,18 +84,20 @@ gx::particleEntity::operator=(particleEntity&&) {
   return *this;
 }
 
-gx::particleDrawerImpl::particle::particle(vector4f pos)
-  : position(pos), lifetime(0) {}
+gx::particleDrawerImpl::particle::particle(vector4f pos, vector3f vel)
+  : position(pos), velocity(vel), lifetime(0) {}
 
 gx::particleDrawerImpl::entityClass::entityClass(entity_t drawData,
                                                  varSigs_t vars)
-  : positionAttrib(std::move(drawData.positionAttrib)), numIndices(0),
+  : positionAttrib(std::move(drawData.positionAttrib)),
+    colorAttrib(std::move(drawData.colorAttrib)), numIndices(0),
     vertData(std::move(drawData.indices), std::move(drawData.attribs),
     std::move(vars)), mat(std::move(drawData.mat)) {}
 
 gx::particleDrawerImpl::entityClass::entityClass(entityClass&& other) noexcept
   : instances(std::move(other.instances)), particles(std::move(other.particles)),
     positionAttrib(std::move(other.positionAttrib)),
+    colorAttrib(std::move(other.colorAttrib)), 
     numIndices(other.numIndices), vertData(std::move(other.vertData)),
     mat(std::move(other.mat)) {}
 
@@ -97,12 +113,24 @@ void gx::particleDrawerImpl::entityClass::clear() {
 
 namespace {
   std::vector<GLfloat> positions;
+  std::vector<GLfloat> colors;
+
+  float randGenf(float min, float max) {
+    const unsigned int randomPrecision = 1000;
+    auto random = (rand() % randomPrecision) / static_cast<float>(randomPrecision);
+    float diff = max - min;
+    float r = random * diff;
+    return min + r;
+  }
+
 } //end unnamed namespace
 
 void gx::particleDrawerImpl::entityClass::update() {
   for(auto itr = this->instances.begin(); itr != this->instances.end(); itr++) {
     for(unsigned int i = 0; i < particlesPerFrame; i++) {
-	    particle p(*itr);
+      auto randX = randGenf(-10,10) * randGenf(0.00005, 0.0001);
+      auto randY = randGenf(-10,10) * randGenf(0.00005, 0.0001);
+      particle p(*itr, vector3f(randX, randY, 0.0f));
 	    this->particles.push_back(std::move(p));
     }
     this->numIndices += 6 * particlesPerFrame;
@@ -110,11 +138,14 @@ void gx::particleDrawerImpl::entityClass::update() {
 
   positions.clear();
   positions.reserve(particles.size() * 4 * 4); //could move this call to only run for maxParticles at beginning
+  colors.clear();
+  colors.reserve(particles.size() * 4 * 4); //could move this call to only run for maxParticles at beginning
   for(auto itr = this->particles.begin(); itr != this->particles.end();) {
-    const float movespeed = 0.03f;
-    auto randX = (rand() % 20 - 10) * movespeed;
-    auto randY = (rand() % 20 - 10) * movespeed;
-    itr->position += vector3f(randX,randY,movespeed); //TODO: particle update, random
+    vector3f acceleration(0,0,randGenf(0.000001, 0.00001));
+    acceleration += vector3f(-itr->velocity.x * randGenf(0.00001,0.0001),
+                             -itr->velocity.y * randGenf(0.00001,0.0001),0);
+    itr->velocity += acceleration;
+    itr->position += itr->velocity;
     itr->lifetime++;
     if(itr->lifetime > particlesLifeTime) {
       //remove particle
@@ -133,10 +164,21 @@ void gx::particleDrawerImpl::entityClass::update() {
       positions.insert(positions.end(), pos2.begin(), pos2.end());
       positions.insert(positions.end(), pos3.begin(), pos3.end());
       positions.insert(positions.end(), pos4.begin(), pos4.end());
+
+      float factor = static_cast<float>(itr->lifetime) / particlesLifeTime;
+
+      vector4f startColor(1, 0.2, 0);
+      vector3f endColor(0, 0, 0);
+      vector4f currColor = startColor * (1-factor) + endColor * factor;
+      colors.insert(colors.end(), currColor.begin(), currColor.end());
+      colors.insert(colors.end(), currColor.begin(), currColor.end());
+      colors.insert(colors.end(), currColor.begin(), currColor.end());
+      colors.insert(colors.end(), currColor.begin(), currColor.end());
       itr++;
     }
   }
   this->positionAttrib->write(positions);
+  this->colorAttrib->write(colors);
 }
 
 void gx::particleDrawerImpl::entityClass::draw() {

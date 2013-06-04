@@ -3,11 +3,12 @@
 #include "vao.h"
 #include "vertexAttrib.h"
 #include "material.h"
+#include "vector3.h"
 
 namespace gx {
 const unsigned int maxParticleSources = 10;
-const unsigned int particlesPerFrame = 5;
-const unsigned int particlesLifeTime = 100;
+const unsigned int particlesPerFrame = 1;
+const unsigned int particlesLifeTime = 750;
 const unsigned int maxParticles = maxParticleSources * particlesPerFrame * particlesLifeTime;
 
 struct particleEntity {
@@ -15,6 +16,7 @@ struct particleEntity {
   typedef std::shared_ptr<dynamicVertexAttrib> dynamicPtr_t;
   std::vector<GLuint> indices;
   dynamicPtr_t positionAttrib;
+  dynamicPtr_t colorAttrib;
   attribsList_t attribs; //includes the above
   material mat;
   particleEntity(material);
@@ -27,8 +29,9 @@ struct particleEntity {
 class particleDrawerImpl {
     struct particle {
       vector4f     position;
+      vector3f     velocity;
       unsigned int lifetime;
-      particle(vector4f);
+      particle(vector4f, vector3f);
     };
   public:
     static const std::string shaderID;
@@ -41,6 +44,7 @@ class particleDrawerImpl {
       std::vector<vector4f> instances;
       std::vector<particle> particles;
       std::shared_ptr<dynamicVertexAttrib> positionAttrib;
+      std::shared_ptr<dynamicVertexAttrib> colorAttrib;
       unsigned int          numIndices;
       vao                   vertData;
       material     mat;
