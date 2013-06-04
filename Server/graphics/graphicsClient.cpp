@@ -242,6 +242,7 @@ void gx::graphicsClient::clearEntities() {
 
   this->entities.reset();
   this->animatedDrawer.reset();
+  this->particles.reset();
   
   // add ground instance. kinda hacky but works
   staticDrawer::instanceData groundInst;

@@ -43,11 +43,12 @@ void gx::matrix::print(std::ostream& o) const {
   for(auto rowp = elems.begin(); rowp != elems.end(); ++rowp) {
     const auto& row = *rowp;
   //cant use range based for here because of visual c++
+    if(rowp != elems.begin()) o << ", ";
     for(auto ep = row.begin(); ep != row.end(); ++ep) {
       const auto& e = *ep;
-      o << e << " ";
+      if(ep != row.begin()) o << " ";
+      o << e;
     }
-    o << std::endl;
   }
 }
 

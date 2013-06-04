@@ -5,7 +5,7 @@
 #include "material.h"
 
 namespace gx {
-const unsigned int maxParticleSources = 5;
+const unsigned int maxParticleSources = 10;
 const unsigned int particlesPerFrame = 5;
 const unsigned int particlesLifeTime = 100;
 const unsigned int maxParticles = maxParticleSources * particlesPerFrame * particlesLifeTime;
@@ -36,9 +36,9 @@ class particleDrawerImpl {
     static const std::string vertShader;
     static const std::string fragShader;
     struct entityClass {
-      typedef int instance;
+      typedef vector4f instance;
       //just draw once for all of this kind of particle effect
-      std::array<int,1>     instances;
+      std::vector<vector4f> instances;
       std::vector<particle> particles;
       std::shared_ptr<dynamicVertexAttrib> positionAttrib;
       unsigned int          numIndices;
