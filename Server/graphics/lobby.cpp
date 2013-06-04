@@ -45,7 +45,7 @@ void gx::lobby::handleInput(input & userInput) {
     start = userInput.mouseClicked();
   } else {
     button.setColor(sf::Color::Black);
-    start = false;
+    //start = false;
   }
   if (userInput.mouseClicked()){
     clickedIP = IPBox.getGlobalBounds().contains(userInput.mouseXpos(), userInput.mouseYpos());
@@ -63,8 +63,11 @@ void gx::lobby::updateLobby(std::vector<std::pair<int,bool>> & playerStatus ) {
   for (auto itr = playerStatus.begin(); itr != playerStatus.end(); itr++ )
     status.push_back((*itr).second);
 
-  if (playerStatus.size() > players.size())
+  //players.clear();
+  int size = players.size();
+  for (int i=0; i<playerStatus.size()-size;i++ ) {
     players.push_back(sf::Sprite());
+  }
 
   for (int i=0;i<playerStatus.size();i++) {
     if (status[i]) {
@@ -78,24 +81,26 @@ void gx::lobby::updateLobby(std::vector<std::pair<int,bool>> & playerStatus ) {
 
 void gx::lobby::drawLobby(sf::RenderWindow & window) {
   backGroundSprite.setScale(static_cast<float>(window.getSize().x)/backGroundTexture.getSize().x,
-    static_cast<float>(window.getSize().y)/backGroundTexture.getSize().y);
+  static_cast<float>(window.getSize().y)/backGroundTexture.getSize().y);
   window.draw(backGroundSprite);
-//  std::cout<<"connected is "<< connected<<"start is "<< start<<std::endl;
+  std::cout<<"connected is "<< connected<<" start is "<< start<< " ready is "<< ready <<std::endl;
   if (connected) {
-    if (!ready && start) {
+    if (start) {
+      if (!ready && inputText.compare("")) {
         welcome.setString("Waiting for other players to start"); 
         button.setString("Cancel");
         buttonBounds = buttonRect.getGlobalBounds();
         textBounds = button.getGlobalBounds();
         button.setPosition(280+(buttonBounds.width-textBounds.width)/2,500);
-    } else {
-      welcome.setString("Please enter a name and start.");
-      button.setString("Start");
-      buttonBounds = buttonRect.getGlobalBounds();
-      textBounds = button.getGlobalBounds();
-      button.setPosition(280+(buttonBounds.width-textBounds.width)/2,500);
+      } else {
+        welcome.setString("Please enter a name and start.");
+        button.setString("Start");
+        buttonBounds = buttonRect.getGlobalBounds();
+        textBounds = button.getGlobalBounds();
+        button.setPosition(280+(buttonBounds.width-textBounds.width)/2,500);
+      }
+      ready = !ready;
     }
-    ready = !ready;
   } 
   window.draw(welcome);
   window.draw(buttonRect);
@@ -119,5 +124,6 @@ void gx::lobby::setConnected(bool connected) {
     welcome.setString("Wrong IP address");
   } else { 
     inputText = ""; 
+    welcome.setString("Please enter a name and start.");
   }
 }
