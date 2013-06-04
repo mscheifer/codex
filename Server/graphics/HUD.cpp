@@ -331,9 +331,8 @@ void gx::HUD::initializeSprites() {
    buffLHelper(std::string("graphics/Images/powerDefL.png"));
 
 
-   //waepon
-   weaponTextures.push_back(new sf::Texture());
-   weaponSprites.push_back(new sf::Sprite());
+   //waepon   
+   weaponHelper(std::string("graphics/Images/weaponUnk.png"));
    weaponHelper(std::string("graphics/Images/weaponFire.png"));
    weaponHelper(std::string("graphics/Images/weaponIce.png"));
    weaponHelper(std::string("graphics/Images/weaponThu.png"));
