@@ -18,6 +18,7 @@ Weapon::Weapon(Map* m)
 
 Weapon::Weapon(float damage, float ran, v3_t pos, Map* m) : pickedUp(false)
 {
+  Respawn_Time = 60000;
   Range_Cool_Down_Time = 500; //TODO set these
   Melee_Cool_Down_Time = 300;
   Range_Cool_Down_Counter = sf::Clock();
@@ -85,7 +86,7 @@ bool Weapon::dropDown(v3_t dropPosition){
   render = true;
   position = dropPosition;
   pickedUp = false;
-  Respown_Counter.restart();
+  Respawn_Counter.restart();
   map->addToQtree(this);
   return true;
 } 
@@ -108,11 +109,13 @@ bool Weapon::tossAway(v3_t dropPosition, v3_t dir){
   velocity.scale(25);
 
   pickedUp = false;
-  Respown_Counter.restart();
+  Respawn_Counter.restart();
   map->addToQtree(this);
   return true;
 } 
-
+void Weapon::setRespawnTime(int r){ 
+  Respawn_Time = r;
+}
 void Weapon::update()
 {
   if(pickedUp)
@@ -123,9 +126,9 @@ void Weapon::update()
   v3_t attemptMove = velocity * ConfigManager::serverTickLengthSec();
   position += correctMovement( attemptMove, false, position );
   
-  if(Respown_Counter.getElapsedTime().asMilliseconds() >= Respown_Time)
+  if(Respawn_Counter.getElapsedTime().asMilliseconds() >= Respawn_Time)
   {
-    Respown_Counter.restart();
+    Respawn_Counter.restart();
     setRandomMagic();
     // Been idle too long on map
     map->addSpawnLocation(position);

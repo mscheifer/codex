@@ -11,7 +11,7 @@ WeaponFire::WeaponFire(v3_t c, Map* m, MAGIC_POWER basicAttack1)
   BoundingBox* b = new BoundingBox(BoundingObj::vec4_t(c.x,c.y,c.z),
   BoundingObj::vec3_t(1,0,0),BoundingObj::vec3_t(0,1,0),BoundingObj::vec3_t(0,0,1),
   weaponWidth/2.f,weaponHeight/2.f,weaponDepth/2.f);
-  Respown_Counter = sf::Clock();
+  Respawn_Counter = sf::Clock();
   b->setEntity(this);
   //BoundingSphere* b = new BoundingSphere(gx::vector4(x,y,z),sphereRadius);
   boundingObjs.push_back(b);

@@ -93,10 +93,10 @@ void Player::init(v3_t pos, int assigned_id, Map * m)
 	weapon[1] = new WeaponFire(position, this->map, FIR1); //TODO make this basic
 	m->addEntity(weapon[1]);
   weapon[1]->pickUp();
-  weapon[1]->setRespownTime(60000);
+  weapon[1]->setRespawnTime(60000);
   m->addEntity(weapon[0]);
   weapon[0]->pickUp(); //remove this
-  weapon[0]->setRespownTime(60000);
+  weapon[0]->setRespawnTime(60000);
 
   buffs.clear();
   inactiveBuffs.clear();

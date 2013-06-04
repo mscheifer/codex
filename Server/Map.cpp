@@ -29,10 +29,10 @@ void Map::mapReset()
   liveProjectTile.clear();
   initSpawns();
   initPowerUps();
-  //initWalls(); 
-  initWallsOne();
-  initStaticWalls();
-  initWallsTwo();
+  initWalls(); 
+  //initWallsOne();
+  //initStaticWalls();
+  //initWallsTwo();
 
     v3_t facingEast(1,0,0);
 
@@ -97,7 +97,7 @@ void Map::initPowerUps() {
     w->setRandomMagic();
     w->setDirection(v3_t(0,1,0));
     w->dropDown(w->getPosition());
-    w->setRespownTime(60000);
+    w->setRespawnTime(6000);
     entities.push_back(w);
   }
 }
@@ -454,10 +454,10 @@ void Map::initStaticWalls(void) {
 void Map::initWalls(void)
 {
   //TODO move this
-  WeaponFire* w1 = new WeaponFire(v3_t(100,100,0), this, FIR1);
+  /*WeaponFire* w1 = new WeaponFire(v3_t(100,100,0), this, FIR1);
   w1->dropDown(v3_t(10,10,0));
   w1->setDirection(v3_t(0,1,0));
-  entities.push_back(w1);
+  entities.push_back(w1);*/
   /*WeaponFire* w2 = new WeaponFire(v3_t(120,120,0), this, THU1);
   w2->dropDown(v3_t(10,-10,0));
   w2->setDirection(v3_t(0,1,0));
@@ -479,7 +479,7 @@ void Map::initWalls(void)
   float depth = ConfigManager::wallDepth();
 
   float wallX = 10;
-  float wallY = 8;
+  float wallY = 10;
 
   float centerX = 0;
   float centerY = 0;
@@ -531,10 +531,10 @@ void Map::initWalls(void)
   this->entities.push_back(floor);
   floor->setRender(false);
 
-  return; // REMOVE THIS TO KILL GRAPHICS
+ // return; // REMOVE THIS TO KILL GRAPHICS
   // Creating facing north walls. DO NOT TOUCH THIS
 
-  int row1[] = {0,2,3,4,5,6,7,8,9,11,12,13, -1};
+  /*int row1[] = {0,2,3,4,5,6,7,8,9,11,12,13, -1};
   int row2[] = {1,2,5,6,7,8,9,10,11,12,13,14,15, -1};
   int row3[] = {2,3,6,9,11,12,14,-1};
   int row4[] = {10,12,13, -1};
@@ -542,28 +542,28 @@ void Map::initWalls(void)
   int row6[] = {1,-1};
   int row7[] = {0,2,3,4,7,14, -1};
   int row8[] = {0,1,2,3,4,8,10,11,12,13, -1};
-  int row9[] = {0,2,3,4,5,6,7,10,11,13, -1};
-  int row10[] = {1,3,4,5,9,14, -1};
-  int row11[] = {1,2,4,5,8,9,10,11,13,14, -1};
-  int row12[] = {1,2,3,5,6,7,11,12,13, -1};
+  int row9[] = {0,2,3,4,5,6,7,10,11,13, -1};*/
+  //int row10[] = {1,3,4,5,9/*,14*/, -1};
+  int row11[] = {1,2,4,5,8,9/*,10,11,13,14*/, -1};
+  int row12[] = {1,2,3,5,6,7/*,11,12,13*/, -1};
   int row13[] = {0,2,3,-1};
-  int row14[] = {15, -1};
-  int row15[] = {9,10,11,12, -1};
-  int row16[] = {5,9,10, -1};
-  int row17[] = {5,6,12,13, -1};
-  int row18[] = {0,1,2,5,6,8,11,12,13, -1};
-  int row19[] = {3,4,5,6,7,9,10,12,13,14, -1};
-  int * rows[] = {row1, row2, row3, row4, row5, row6, row7, row8, row9,
-                  row10, row11, row12, row13, row14, row15, row16, row17,
+  int row14[] = {/*15,*/ -1};
+  int row15[] = {9/*,10,11,12*/, -1};
+  int row16[] = {5,9,/*10,*/ -1};
+  int row17[] = {5,6/*,12,13*/, -1};
+  int row18[] = {0,1,2,5,6,8,/*11,12,13,*/ -1};
+  int row19[] = {3,4,6,7,9,/*10,12,13,14,*/ -1};
+  int * rows[] = {/*row1, row2, row3, row4, row5, row6, row7, row8, row9,
+                  row10,*/ row11, row12, row13, row14, row15, row16, row17,
                   row18, row19};
   for( i = 0,
     startingX = ((wallX*width)/-2)+(width/2)+centerX,
     startingY = ((wallY*width)/2)-width+centerY;
-    i < 19; i++, startingY -= width)
+    i < 9; i++, startingY -= width)
   {
     addWallDirection(startingX, startingY, startingZ, facingNorth, rows[i]);
   }
-  int column1[] = {8,10, -1};
+  /*int column1[] = {8,10, -1};
   int column2[] = {0,3,4,7, -1};
   int column3[] = {0,1,4,5,6,7,8,10,13,14, -1};
   int column4[] = {0,1,4,5,6,7,8,9,14, -1};
@@ -571,23 +571,23 @@ void Map::initWalls(void)
   int column6[] = {0,4,5,7,8,9,13, -1};
   int column7[] = {5,6,9,14, -1};
   int column8[] = {5,7,8,10,14, -1};
-  int column9[] = {1,6,7,8,9,11,12,14, -1};
-  int column10[] = {0,2,6,7,10,12,13, -1};
-  int column11[] = {1,3,5,8,13,14, -1};
-  int column12[] = {0,4,7,8,9,10,13,14, -1};
-  int column13[] = {0,1,3,4,8,9,13,14, -1};
-  int column14[] = {2,3,4,7,8,9,10,13,14, -1};
-  int column15[] = {2,3,4,7,12,13,14, -1};
-  int column16[] = {2,3,6,7,8,10,11,13,14, -1};
-  int column17[] = {2,3,4,7,8,9,10,14, -1};
-  int column18[] = {3,6,7,9,11,14, -1};
-  int * columns[] = {column1, column2, column3, column4, column5, column6,
-                     column7, column8, column9, column10, column11, column12,
+  int column9[] = {1,6,7,8,9,11,12,14, -1};*/
+  //int column10[] = {0,2,6,7,10/*,12,13*/, -1};
+  int column11[] = {1,3,5,8,/*13,14,*/ -1};
+  int column12[] = {0,4,7,8,9,/*10,13,14,*/ -1};
+  int column13[] = {0,1,3,4,8,9,/*13,14,*/ -1};
+  int column14[] = {2,3,4,7,8,9,/*10,13,14,*/ -1};
+  int column15[] = {2,3,4,7,/*12,13,14,*/ -1};
+  int column16[] = {2,3,6,7,8,/*10,11,13,14,*/ -1};
+  int column17[] = {2,3,4,7,8,9,/*10,14,*/ -1};
+  int column18[] = {3,6,7,9,/*11,14,*/ -1};
+  int * columns[] = {/*column1, column2, column3, column4, column5, column6,
+                     column7, column8, column9, column10,*/ column11, column12,
                      column13, column14, column15, column16, column17, column18};
   for( i = 0,
     startingX = ((wallX*width)/-2)+width+centerX,
     startingY = ((wallY*width)/2)-(width*1.5f)+centerY;
-    i < 18; i++, startingY -= width)
+    i < 8; i++, startingY -= width)
   {
     addWallDirection(startingX, startingY, startingZ, facingEast, columns[i]);
   }

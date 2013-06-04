@@ -49,7 +49,7 @@ public:
   void deserialize(sf::Packet & packet); 
  
   Entity_Type getType() const { return type; }
-  void setRespownTime(int r){ Respown_Time = r;}
+  void setRespawnTime(int r);
   void setRandomMagic();
 protected:
 	int Range_Cool_Down_Time; //cool down time between uses in milliseconds
@@ -61,7 +61,7 @@ protected:
 	bool pickedUp;
 	sf::Clock Range_Cool_Down_Counter;
 	sf::Clock Melee_Cool_Down_Counter;
-  int Respown_Time;
-  sf::Clock Respown_Counter;
+  int Respawn_Time;
+  sf::Clock Respawn_Counter;
 };
 
