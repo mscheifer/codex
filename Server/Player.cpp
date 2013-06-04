@@ -84,6 +84,7 @@ void Player::init(v3_t pos, int assigned_id, Map * m)
   charging = false;
   walking = false;
   collectPowerUp = false;
+  ptype = NONE;
   elapsedChargeTime = 0;
   totalChargeTime = -1;
 	map = m;
@@ -547,6 +548,7 @@ bool Player::collidePlayer(const std::pair<Entity*,BoundingObj::vec3_t>& p){
 
 bool Player::collidePowerUp(const std::pair<Entity*,BoundingObj::vec3_t>& p){
   BUFF ptype = ((PowerUp*)p.first)->getBuffType();
+  this->ptype = ptype;
   applyBuff(ptype);
   ((PowerUp*)p.first)->pickUp();
   collectPowerUp = true;
@@ -777,6 +779,7 @@ void Player::serialize(sf::Packet& packet) const {
     packet << static_cast<sf::Uint32>(attackedMagicType);
 
     packet << collectPowerUp;
+    packet << static_cast<sf::Uint32>(ptype);
     packet << upgraded;
   }
 
@@ -847,5 +850,7 @@ void Player::serialize(sf::Packet& packet) const {
     attackedMagicType = static_cast<MAGIC_POWER>(weaponType32);
 
     packet >> collectPowerUp;
+    packet >> weaponType32;
+    ptype = static_cast<BUFF>(weaponType32);
     packet >> upgraded;
   }

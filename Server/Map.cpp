@@ -32,10 +32,10 @@ void Map::mapReset()
   liveProjectTile.clear();
   initSpawns();
   initPowerUps();
-  //initWalls(); 
-  initWallsOne();
-  initStaticWalls();
-  initWallsTwo();
+  initWalls(); 
+  //initWallsOne();
+  //initStaticWalls();
+  //initWallsTwo();
   
   for(unsigned int i = 0; i < players.size(); i++)
   {
@@ -454,7 +454,7 @@ void Map::initStaticWalls(void) {
 void Map::initWalls(void)
 {
   //TODO move this
-  WeaponFire* w1 = new WeaponFire(v3_t(100,100,0), this, FIR1);
+  WeaponFire* w1 = new WeaponFire(v3_t(100,100,0), this, THU1);
   w1->dropDown(v3_t(10,10,0));
   w1->setDirection(v3_t(0,1,0));
   entities.push_back(w1);

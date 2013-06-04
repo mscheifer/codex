@@ -33,6 +33,7 @@ public:
   float totalChargeTime;
   MAGIC_POWER chargeMagicType;
   MAGIC_POWER attackedMagicType;
+  BUFF ptype;
   
   int player_id;
   std::string name;

@@ -29,6 +29,7 @@ private :
   int aimerOuter;
   int aimerInner;
   int hit;
+  BUFF ptype;
 
   sf::Text healthText;
   sf::Text manaText;
@@ -73,6 +74,7 @@ private :
   sf::Text clockText;
   sf::Clock buffClock;
   sf::Clock hitClock;
+  sf::Text collectedPU;
   void buffHelper(std::string & path);
   void buffLHelper(std::string & path);
   void weaponHelper(std::string & path);

@@ -72,6 +72,10 @@ gx::HUD::HUD(void):health(100), maxHealth(100), HLossPercentage(0),
   clockText.setFont(font);
   clockText.setCharacterSize(36);
   clockText.setColor(sf::Color::Yellow);
+  collectedPU.setFont(font);
+  collectedPU.setCharacterSize(24);
+  collectedPU.setColor(sf::Color::Yellow);
+  collectedPU.setPosition(60,110);
 }
 
 gx::HUD::~HUD(void) {
@@ -108,11 +112,18 @@ gx::HUD::~HUD(void) {
 }
 
 void gx::HUD::draw(sf::RenderWindow & window) {
-  if (hitClock.getElapsedTime().asSeconds() < 1.5) {
+  float passed = hitClock.getElapsedTime().asSeconds();
+  if (passed< 1.5) {
+    std::cout<<"i should draw "<<hit<<std::endl;
     hitSprites[hit]->setScale(static_cast<float>(window.getSize().x)/hitTextures[hit]->getSize().x,
     static_cast<float>(window.getSize().y)/hitTextures[hit]->getSize().y);
+    sf::Color old = hitSprites[hit]->getColor();
+    hitSprites[hit]->setColor(sf::Color(old.r,old.g,old.b, (1-passed/1.5)*255 ));
     window.draw(*(hitSprites[hit]));
-    std::cout<<"i should draw"<<std::endl;
+  }
+  if (buffClock.getElapsedTime().asSeconds() <1.5) {
+    collectedPU.setString(std::string("Blessed with ") + powerUpNames[ptype]);
+    window.draw(collectedPU);
   }
   std::string healthS(std::to_string(static_cast<long long>(health)) + 
     std::string("/") +std::to_string(static_cast<long long>(maxHealth)));
@@ -137,7 +148,7 @@ void gx::HUD::draw(sf::RenderWindow & window) {
   window.draw(positionText);
   if (minotaur) 
     window.draw(badGuySprite);
-  if (canPickUp)
+  if (canPickUp) 
     window.draw(pickUp);
 
   //draw aimer
@@ -208,7 +219,7 @@ void gx::HUD::updateHUD(const Player& player) {
   mana = player.getMana();
   minotaur = player.isMinotaur();
   canPickUp = (player.getPickupWeaponType() != NONEWEAPON); 
-  pickUp.setString("Hold F to pick up " + WeaponNames[player.getPickupWeaponType()]);
+  if (canPickUp) pickUp.setString("Hold F to pick up " + WeaponNames[player.getPickupWeaponType()]);
   hBarSprite.setTextureRect(sf::IntRect(0,0, static_cast<int>(health/maxHealth*200), 40));
   mBarSprite.setTextureRect(sf::IntRect(0,0, static_cast<int>(mana/maxMana*200), 40));
   if (totalChargeTime)
@@ -246,7 +257,12 @@ void gx::HUD::updateHUD(const Player& player) {
   }
   if (player.attacked) {
     hitClock.restart(); 
-    hit = player.attackedMagicType;
+    hit = hitIndex[player.attackedMagicType];
+    std::cout<<"I am attacked by " <<hit<<std::endl;
+  }
+  if (player.collectPowerUp) {
+    buffClock.restart();
+    this->ptype = player.ptype;
   }
 }
 

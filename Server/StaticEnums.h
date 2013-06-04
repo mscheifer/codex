@@ -68,6 +68,11 @@ const std::string spellNames[] = {
   "Basic"
 };
 
+const std::string powerUpNames[] = {
+  "Nothing", "Move boost", "Mana boost", "Health boost",
+  "Strength boost", "Attacked", "Charged", "Defense boost"
+};
+
 enum BUFF{ 
   NONE=0, MOVEBOOST, MANABOOST, HEALTHBOOST, STRBOOST, ATTACKCD, CHARGECD, DEFENSEBOOST,
   FIR1DEBUFF, FIR2DEBUFF, FIR3DEBUFF,
