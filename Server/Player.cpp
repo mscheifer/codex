@@ -67,7 +67,7 @@ void Player::init(v3_t pos, int assigned_id, Map * m)
   jumpCount = 0;
 	player_id = assigned_id;
 	position = pos;
-  direction = v3_t(0,0,0);
+  direction = v3_t(0,1,0);
   defense = ConfigManager::playerDef();
   health = ConfigManager::playerHp();
   healthRegen = ConfigManager::playerHpRegen();

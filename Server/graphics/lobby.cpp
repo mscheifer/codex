@@ -126,5 +126,6 @@ void gx::lobby::setConnected(bool connected) {
   } else { 
     inputText = ""; 
     welcome.setString("Please enter a name and start.");
+    button.setString("Start");
   }
 }
