@@ -29,9 +29,9 @@ void ConfigManager::log(std::string str, ConfigManager::LogLevels lev){
   struct tm * currTime = localtime(&timer);
   
   if( ConfigManager::level <= lev){
-    ConfigManager::logfile << "[" << ConfigManager::levelToString(lev) << ":" <<
+    ConfigManager::logfile /*<< "[" << ConfigManager::levelToString(lev) << ":" <<
       currTime->tm_hour << ":" << currTime->tm_min << ":" << currTime->tm_sec <<
-      "]" << str << std::endl;
+      "]"  */<< str << std::endl;
   }
 }
 
