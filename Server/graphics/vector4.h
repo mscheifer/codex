@@ -44,7 +44,9 @@ class vector4 {
     elem_t& operator[](index_type i); 
     const elem_t& operator[](index_type i) const;
     vector4<T> operator+(const vector3<T>&) const;
+    vector4<T> operator+(const vector4<T>&) const;
     vector3<T> operator-(vector4<T>) const;      
+    vector4<T> operator*(T) const;      
     vector4<T>& operator+=(const vector3<T>&);
     bool operator==(const vector4<T>&) const;
     bool operator!=(const vector4<T>&) const;

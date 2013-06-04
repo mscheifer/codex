@@ -19,6 +19,7 @@ public:
   void updateBounds(); //TODO this maybe should be in inherited (if differen sizes)
   //pick up weapon, remove bounding box from map
   void pickUp();
+  std::string toString();
 
   Entity_Type getType() const { return type; }
   BUFF getBuffType() const { return buffType; }

@@ -88,7 +88,7 @@ public:
 	Game(void);
 	Game(Map m);
 	void evaluate(ClientGameTimeAction a);
-	ServerGameTimeRespond prepResponse(void);
+	void prepResponse(ServerGameTimeRespond* sgtr);
   void updateAndResolveCollision(void);
 	~Game(void);
   int join();

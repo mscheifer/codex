@@ -123,3 +123,9 @@ void Wall::setWallChangeTime(float t)
     packet >> height;
     */
   }
+
+  std::string Wall::toString(){
+    std::stringstream ss;
+    ss << position << direction << std::endl;
+    return ss.str();
+  }

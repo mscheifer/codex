@@ -273,6 +273,15 @@ void Projectile::deserialize( sf::Packet & packet ) {
   //(*owner).deserialize(packet);
  }
 
+std::string Projectile::toString2(){
+  std::stringstream packet;
+  packet << fired;
+  packet << id;
+  packet << combined;
+  packet << static_cast<sf::Uint32>(magicType);
+  return packet.str();
+}
+
 std::string Projectile::toString(){
   std::stringstream ss;
   ss << "mtype " << spellNames[magicType] << std::endl

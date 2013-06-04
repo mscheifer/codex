@@ -126,6 +126,16 @@ template<typename T>
 gx::vector4<T> gx::vector4<T>::operator+(const vector3<T>& a) const {
   vector4 r;
   r.add(*this,a);
+  r.w = this->w;
+  return r;
+}
+template<typename T>
+gx::vector4<T> gx::vector4<T>::operator+(const vector4<T>& a) const {
+  vector4 r;
+  r.x = this->x + a.x;
+  r.y = this->y + a.y;
+  r.z = this->z + a.z;
+  r.w = this->w + a.w;
   return r;
 }
 template<typename T>
@@ -135,6 +145,15 @@ gx::vector3<T> gx::vector4<T>::operator-(vector4<T> a) const {
   r.dehomogenize();
   r.subtract(vector3<T>(a.x,a.y,a.z));
   return vector3<T>(r.x,r.y,r.z);
+}
+template<typename T>
+gx::vector4<T> gx::vector4<T>::operator*(T a) const {
+  vector4 r;
+  r.x = this->x * a;
+  r.y = this->y * a;
+  r.z = this->z * a;
+  r.w = this->w * a;
+  return r;
 }
 template<typename T>
 gx::vector4<T>& gx::vector4<T>::operator+=(const vector3<T>& a) {
