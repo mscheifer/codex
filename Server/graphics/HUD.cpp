@@ -7,7 +7,7 @@ gx::HUD::HUD(void):health(100), maxHealth(100), HLossPercentage(0),
   mana(100), maxMana(100), MLossPercentage(0), canPickUp(false),
   weapon1(0), weapon2(0), currentSelect(0), elapsedChargeTime(0),
   totalChargeTime(-1), chargeMagicType(0), charging(false), timer(0),
-  aimerOuter(0), aimerInner(0){
+  aimerOuter(0), aimerInner(0), hit(0){
   font.loadFromFile("arial.ttf");
   emptyBarTexture.loadFromFile("graphics/Images/Empty_bar.png");
   //heart image
@@ -99,19 +99,26 @@ gx::HUD::~HUD(void) {
   for (auto itr=aimerTextures.begin();itr != aimerTextures.end(); itr++) {
     delete *itr;
   }
+  for (auto itr=hitSprites.begin();itr != hitSprites.end(); itr++) {
+    delete *itr;
+  }
+  for (auto itr=hitTextures.begin();itr != hitTextures.end(); itr++) {
+    delete *itr;
+  }
 }
 
 void gx::HUD::draw(sf::RenderWindow & window) {
-  //health loss
-//  healthLoss.setSize(sf::Vector2f(200*HLossPercentage , 25));
- // healthLoss.setPosition(255-200*HLossPercentage , 550);
-  //health display
+  if (hitClock.getElapsedTime().asSeconds() < 1.5) {
+    hitSprites[hit]->setScale(static_cast<float>(window.getSize().x)/hitTextures[hit]->getSize().x,
+    static_cast<float>(window.getSize().y)/hitTextures[hit]->getSize().y);
+    window.draw(*(hitSprites[hit]));
+    std::cout<<"i should draw"<<std::endl;
+  }
   std::string healthS(std::to_string(static_cast<long long>(health)) + 
     std::string("/") +std::to_string(static_cast<long long>(maxHealth)));
   healthText.setString(healthS);
   healthRect = manaText.getGlobalBounds();
   healthText.setPosition( 55+ (200 -healthRect.width)/2 , 10+7.5);
-  //mana display
   //TODO: use stringstrem here
   std::string manaS(std::to_string(static_cast<long long>(mana)) + 
     std::string("/") +std::to_string(static_cast<long long>(maxMana)));
@@ -145,6 +152,7 @@ void gx::HUD::draw(sf::RenderWindow & window) {
     window.draw(*aimerSprites[aimerInner]);
     window.draw(*aimerSprites[aimerOuter]);
   } else if( timer <= 0 ){
+    //only display this when in the actual game not during countdown
     aimerSprites[1]->setPosition((window.getSize().x)/2, (window.getSize().y)/2);
     window.draw(*aimerSprites[1]);
   }
@@ -236,6 +244,10 @@ void gx::HUD::updateHUD(const Player& player) {
     currentSpell.setString(spellNames[chargeMagicType]);
     nextSpell.setString(spellNames[Projectile::upgrade(static_cast<MAGIC_POWER>(chargeMagicType))]);
   }
+  if (player.attacked) {
+    hitClock.restart(); 
+    hit = player.attackedMagicType;
+  }
 }
 
 void gx::HUD::buffHelper(std::string & path) {
@@ -285,6 +297,17 @@ void gx::HUD::aimerHelper(std::string & path) {
    tSprite->setOrigin(tText->getSize().x/2, tText->getSize().y/2);
    aimerTextures.push_back(tText);
    aimerSprites.push_back(tSprite);
+}
+
+void gx::HUD::hitHelper(std::string & path) {
+   sf::Texture* tText;
+   sf::Sprite* tSprite;
+   tText = new sf::Texture();
+   tSprite = new sf::Sprite();
+   tText->loadFromFile(path);
+   tSprite->setTexture(*tText);
+   hitTextures.push_back(tText);
+   hitSprites.push_back(tSprite);
 }
 
 void gx::HUD::updateHUDTimer(float timer) {
@@ -353,7 +376,33 @@ void gx::HUD::initializeSprites() {
    aimerHelper(std::string("graphics/Images/aimerI2O.png"));  
    aimerHelper(std::string("graphics/Images/aimerI3O.png"));  //5
    aimerHelper(std::string("graphics/Images/aimerI3I.png"));
+   
+   hitTextures.push_back(new sf::Texture());
+   hitSprites.push_back(new sf::Sprite());
+   hitHelper(std::string("graphics/Images/hitRed.png"));
+   hitHelper(std::string("graphics/Images/hitBlue.png"));
 }
+
+const int gx::HUD::hitIndex[18] = {
+  1,
+  1,
+  1,
+  1,
+  1,
+  1,
+  1,
+  1,
+  1,
+  2,
+  2,
+  2,
+  2,
+  2,
+  2,
+  2,
+  2,
+  2
+};
 
 //outer inner
 const int gx::HUD::aimerIndex[18][2] = {

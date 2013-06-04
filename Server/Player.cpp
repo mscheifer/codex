@@ -165,6 +165,7 @@ bool Player::damageBy(Projectile *deadly)
 
   attacked = true;
   float damage = deadly->getStrength() - defense*getDefenseMultiplier();
+  attackedMagicType = deadly->getMagicType();
 	damage = ( damage > 0? damage: 0);
 	float newHealth = (health - damage);
 	health = (newHealth > 0 ? newHealth : 0);
@@ -770,6 +771,7 @@ void Player::serialize(sf::Packet& packet) const {
     packet << elapsedChargeTime;
     packet << totalChargeTime;
     packet << static_cast<sf::Uint32>(chargeMagicType);
+    packet << static_cast<sf::Uint32>(attackedMagicType);
 
     packet << collectPowerUp;
     packet << upgraded;
@@ -837,6 +839,9 @@ void Player::serialize(sf::Packet& packet) const {
     packet >> totalChargeTime;
     packet >> weaponType32;
     chargeMagicType = static_cast<MAGIC_POWER>(weaponType32);
+    
+    packet >> weaponType32;
+    attackedMagicType = static_cast<MAGIC_POWER>(weaponType32);
 
     packet >> collectPowerUp;
     packet >> upgraded;
