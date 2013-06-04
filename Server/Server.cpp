@@ -19,6 +19,7 @@ void NetworkServer::receiveMessages(int i) {
   while(this->server.receiveMessage(packet,i)) {
     ClientGameTimeAction cgta;
     bool status;
+    std::string name;
     sf::Uint32 packetType;
     packet >> packetType;
     switch (packetType) {
@@ -32,6 +33,10 @@ void NetworkServer::receiveMessages(int i) {
         packet >> status;
         connectionCount = (status) ? (connectionCount+1):(connectionCount-1);
         startTheGame.changeStatus(i);
+        if (status) {
+          packet >> name;
+          game.assignName(name,i);
+        }
         this->server.sendPacketToAll<StartGamePacket>(startTheGame);
         break;
       default:

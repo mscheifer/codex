@@ -68,7 +68,9 @@ class graphicsClient {
     void updateScores(std::vector<int> & pwins, std::vector<int> & pkills);
     void updateLobby(std::vector<std::pair<int,bool>> & playerStatus );
     void updateHUDTimer(float timer); 
-
+    std::string getInputText() const;
+    void setConnected(bool connected);
+    void updateNames(std::vector<std::string> & names);
     bool closed()        { return this->userInput.getStop(); }
 };
 

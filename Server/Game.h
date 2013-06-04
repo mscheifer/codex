@@ -97,6 +97,7 @@ public:
   void clearEvents();
   void restartGame();
   void initScores();
+  void assignName(std::string name, int id);
 private:
 	Map world;
 };

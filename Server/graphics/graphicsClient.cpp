@@ -283,3 +283,14 @@ void gx::graphicsClient::updateLobby(std::vector<std::pair<int,bool>> & playerSt
 void gx::graphicsClient::updateHUDTimer(float timer) {
   this->Hud.updateHUDTimer(timer);
 }
+
+std::string gx::graphicsClient::getInputText() const {
+  return this->Lobby.getInputText();
+}
+
+void gx::graphicsClient::setConnected(bool connected) {
+  this->Lobby.setConnected(connected);
+}
+void gx::graphicsClient::updateNames(std::vector<std::string> & names) {
+  this->Score.updateNames(names);
+}

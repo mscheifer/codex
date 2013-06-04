@@ -180,3 +180,7 @@ void Game::restartGame()
 void Game::initScores() {
   world.initScores();
 }
+
+void Game::assignName(std::string name , int id){
+  world.assignName(name,id);
+}

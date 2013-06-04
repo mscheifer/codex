@@ -43,6 +43,7 @@ public:
   void removeFromQtree(Entity* e);
   void mapReset();
   void initScores();
+  void assignName(std::string name, int id);
 private:
   std::vector<v3_t> spawnPositions;
 	std::vector<Player *> players;

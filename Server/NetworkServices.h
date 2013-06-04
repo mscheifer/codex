@@ -12,6 +12,7 @@ class ClientServices{
     bool invalidIpAddress;
 
     ClientServices();
+    bool connectServer(std::string serverIP);
     bool sendMessage(sf::Packet &packet );
     bool receiveMessage(sf::Packet & packet);
 
