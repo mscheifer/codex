@@ -54,6 +54,8 @@ private:
 	std::vector<Projectile *> liveProjectTile;
   Quadtree q;
   void initWalls(void);
+  void initWallsRed(void);
+  void initWallsBlue(void); 
   void initWallsOne(void);
   void initWallsTwo(void);
   void initStaticWalls(void);
