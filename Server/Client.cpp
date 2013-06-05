@@ -11,8 +11,12 @@ void NetworkClient::receiveMessages() {
   sf::Packet packet;
   int proximity = 2;
   bool minotaur = false;
+  static float maxProx = ConfigManager::musicProx();
+  bool updateMusic = false;
   flag = false;
   static int count = 0;
+
+
   while (!flag && netRecv.receiveMessage(packet)) {
     if(count == -1)
       count = 0;
@@ -26,12 +30,12 @@ void NetworkClient::receiveMessages() {
     std::vector<int> wins;
     v3_t pos;
     v3_t dir;
-    static float maxProx = 30.f;
     IdPacket newId(0);
     StartGamePacket playerSt;
     InitPacket initPckt;
     switch (packetType) {
       case SGTR:
+        updateMusic = true;
         this->s.deserialize(packet);
         if (s.state != PLAYING)
           gameRestart = true;
@@ -49,7 +53,7 @@ void NetworkClient::receiveMessages() {
             v3_t dist = playerP->getPosition() - pos; //audio prox calculation
             if(std::abs(dist.magnitude()) >= maxProx){
               proximity--;
-            } else if (playerP->isMinotaur())
+            } else if (playerP->isMinotaur()) //not far, but minotaur
               minotaur = true;
           }
           kills.push_back((*playerP).kills);
@@ -97,6 +101,7 @@ void NetworkClient::receiveMessages() {
           }
           break;
       case INIT:
+
           //TODO initialize the player info
           initPckt.deserialize(packet);
           this->gxClient.updatePosition(gx::vector4f(0,0,0) + initPckt.position);
@@ -113,7 +118,11 @@ void NetworkClient::receiveMessages() {
   //if(count != -1)
   //  std::cout << "packets processed " << count << std::endl;
   count = -1;
-  AudioManager::updateMusic(proximity, minotaur);
+
+  if(updateMusic){
+    //std::cout << "prox " << proximity << "mino " << minotaur << std::endl;
+    AudioManager::updateMusic(proximity, minotaur);
+  }
 }
 
 void NetworkClient::processInput() {
@@ -207,20 +216,20 @@ void NetworkClient::doClient() {
   gameRestart = true;
   while(this->running) {
     if (gameStart) {
-    /*sf::Clock profilerTime;
+    sf::Clock profilerTime;
     float processInputTime;
     float receiveMessagesTime;
     float drawTime;
-    float sendPackTime;*/
+    float sendPackTime;
       if (!gameRestart) {
-        //profilerTime.restart();
+        profilerTime.restart();
         this->processInput();
-        //processInputTime = profilerTime.getElapsedTime().asMilliseconds();
-        //profilerTime.restart();
+        processInputTime = profilerTime.getElapsedTime().asMilliseconds();
+        profilerTime.restart();
         this->receiveMessages();
-        //receiveMessagesTime = profilerTime.getElapsedTime().asMilliseconds();
+        receiveMessagesTime = profilerTime.getElapsedTime().asMilliseconds();
 
-        //profilerTime.restart();
+        profilerTime.restart();
         //window closed
         if (!this->running) 
           break;
@@ -232,16 +241,16 @@ void NetworkClient::doClient() {
           continue;
         }
         this->gxClient.draw();
-        //drawTime = profilerTime.getElapsedTime().asMilliseconds();
-        //profilerTime.restart();
+        drawTime = profilerTime.getElapsedTime().asMilliseconds();
+        profilerTime.restart();
         if(this->sendPacket) {
           //this->action.print();
           this->netRecv.sendPacket<ClientGameTimeAction>(action);
           this->sendPacket = false;
         }
-        //sendPackTime = profilerTime.getElapsedTime().asMilliseconds();
-        //std::cout<<"processInput: "<< processInputTime <<"ms\treceiveMessagesTime: "<<
-        //receiveMessagesTime <<"ms\tdrawTime: "<< drawTime <<"ms\tsendPackTime: "<< sendPackTime <<std::endl;
+        sendPackTime = profilerTime.getElapsedTime().asMilliseconds();
+        std::cout<<"processInput: "<< processInputTime <<"ms\treceiveMessagesTime: "<<
+        receiveMessagesTime <<"ms\tdrawTime: "<< drawTime <<"ms\tsendPackTime: "<< sendPackTime <<std::endl;
       } else {
         //std::cout<<" i am counting down"<<std::endl;
         float remaining = 2-clock.getElapsedTime().asSeconds(); //TODO make this 5 sec again
