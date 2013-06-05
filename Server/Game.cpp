@@ -109,8 +109,8 @@ void Game::prepResponse(ServerGameTimeRespond* sgtr) {
       sgtr->state = MANOTAUR_WIN;
     }
     for (unsigned int i = 0; i < currentPlayers.size() ; i++ ) {
-      if((!currentPlayers[i]->isMinotaur() && s.state == CIVILIAN_WIN)
-      || (currentPlayers[i]->isMinotaur() && s.state ==MANOTAUR_WIN)) {
+      if((!currentPlayers[i]->isMinotaur() && sgtr->state == CIVILIAN_WIN)
+      || (currentPlayers[i]->isMinotaur() && sgtr->state ==MANOTAUR_WIN)) {
         world.wins[i]++;
         currentPlayers[i]->wins++;
       }
