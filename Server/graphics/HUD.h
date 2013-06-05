@@ -28,6 +28,8 @@ private :
   float timer;
   int aimerOuter;
   int aimerInner;
+  int hit;
+  BUFF ptype;
 
   sf::Text healthText;
   sf::Text manaText;
@@ -63,18 +65,25 @@ private :
   std::vector<sf::Sprite*> weaponSprites;
   std::vector<sf::Texture*> aimerTextures;
   std::vector<sf::Sprite*> aimerSprites;
+  std::vector<sf::Texture*> hitTextures;
+  std::vector<sf::Sprite*> hitSprites;
   std::vector<bool> renderBuff;
   std::vector<int> remainTime;
   sf::Text currentSpell;
   sf::Text nextSpell;
   sf::Text clockText;
+  sf::Clock buffClock;
+  sf::Clock hitClock;
+  sf::Text collectedPU;
   void buffHelper(std::string & path);
   void buffLHelper(std::string & path);
   void weaponHelper(std::string & path);
   void aimerHelper(std::string & path);
+  void hitHelper(std::string & path);
 
 public:
   static const int aimerIndex[18][2];
+  static const int hitIndex[18];
   HUD(void);
   ~HUD(void);
   void updateHUD(const Player& player);

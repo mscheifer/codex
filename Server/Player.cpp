@@ -68,7 +68,7 @@ void Player::init(v3_t pos, int assigned_id, Map * m)
   jumpCount = 0;
 	player_id = assigned_id;
 	position = pos;
-  direction = v3_t(0,0,0);
+  direction = v3_t(0,1,0);
   defense = ConfigManager::playerDef();
   health = ConfigManager::playerHp();
   healthRegen = ConfigManager::playerHpRegen();
@@ -84,6 +84,7 @@ void Player::init(v3_t pos, int assigned_id, Map * m)
   charging = false;
   walking = false;
   collectPowerUp = false;
+  ptype = NONE;
   elapsedChargeTime = 0;
   totalChargeTime = -1;
 	map = m;
@@ -168,6 +169,7 @@ bool Player::damageBy(Projectile *deadly)
 
   attacked = true;
   float damage = deadly->getStrength() - defense*getDefenseMultiplier();
+  attackedMagicType = deadly->getMagicType();
 	damage = ( damage > 0? damage: 0);
 	float newHealth = (health - damage);
 	health = (newHealth > 0 ? newHealth : 0);
@@ -546,6 +548,7 @@ bool Player::collidePlayer(const std::pair<Entity*,BoundingObj::vec3_t>& p){
 
 bool Player::collidePowerUp(const std::pair<Entity*,BoundingObj::vec3_t>& p){
   BUFF ptype = ((PowerUp*)p.first)->getBuffType();
+  this->ptype = ptype;
   applyBuff(ptype);
   ((PowerUp*)p.first)->pickUp();
   collectPowerUp = true;
@@ -773,8 +776,10 @@ void Player::serialize(sf::Packet& packet) const {
     packet << elapsedChargeTime;
     packet << totalChargeTime;
     packet << static_cast<sf::Uint32>(chargeMagicType);
+    packet << static_cast<sf::Uint32>(attackedMagicType);
 
     packet << collectPowerUp;
+    packet << static_cast<sf::Uint32>(ptype);
     packet << upgraded;
   }
 
@@ -840,8 +845,13 @@ void Player::serialize(sf::Packet& packet) const {
     packet >> totalChargeTime;
     packet >> weaponType32;
     chargeMagicType = static_cast<MAGIC_POWER>(weaponType32);
+    
+    packet >> weaponType32;
+    attackedMagicType = static_cast<MAGIC_POWER>(weaponType32);
 
     packet >> collectPowerUp;
+    packet >> weaponType32;
+    ptype = static_cast<BUFF>(weaponType32);
     packet >> upgraded;
   }
 
