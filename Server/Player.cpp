@@ -97,11 +97,8 @@ void Player::init(v3_t pos, int assigned_id, Map * m)
 
   buffs.clear();
   inactiveBuffs.clear();
-
   current_weapon_selection = 1;
-
   chargedProjectile = nullptr;
-  
 
   m->addToQtree(this);
 }

@@ -152,7 +152,7 @@ const BuffData BuffInfo[] = {
   BuffData(STRBOOST,    4,  1, 4000, false, 0,    false, 0,     false, 0,    true, 2,     false, 0,    false, 0,     false, 0),
   BuffData(ATTACKCD,    5,  1, 60000, false, 0,    false, 0,     false, 0,    false, 0,    true, 0.25,  false, 0,     false, 0),
   BuffData(CHARGECD,    6,  1, 60000, false, 0,    false, 0,     false, 0,    false, 0,    false, 0,    true, 0.5,     false, 0),
-  BuffData(DEFENSEBOOST,14, 1, 120000, false, 0,    false, 0,     false, 0,    false, 0,    false, 0,    false, 0,     true, 2),
+  BuffData(DEFENSEBOOST,14, 1, 120000, false, 0,    false, 0,     false, 0,    false, 0,    false, 0,    false, 0,     true, 1.15f),
 
   BuffData(FIR1DEBUFF,  7,  1, 10000,   false, 0,    false, 0,     true, -1.25f, false, 0,  false, 0,    false, 0,     false, 0),
   BuffData(FIR2DEBUFF,  7,  2, 10000,   false, 0,    false, 0,     true, -3.f, false, 0,  false, 0,    false, 0,     false, 0),

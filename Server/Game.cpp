@@ -42,7 +42,6 @@ void Game::updateAndResolveCollision() {
   std::vector<Player *> currentPlayers =  world.getPlayers();
 	std::vector<Entity *> currentEntities = world.getEntity();
   std::vector<Projectile*> currentProjectile = world.getLiveProjectTile();
-
   for( unsigned int i = 0; i < currentPlayers.size(); i++ ) {
 		currentPlayers[i]->update();
 	}
@@ -74,6 +73,9 @@ void Game::updateAndResolveCollision() {
     if(!currentProjectile[i]->live)
 		  world.destroyProjectile(currentProjectile[i]);
 	}
+
+  if(!world.getQuadtreePtr()->checkNullEntities(reinterpret_cast<void*>(this))) //TODO this is for testing only remove on release
+    std::cout << "ERROR things on quadtree with no entity associated" << std::endl;
 }
 
 ServerGameTimeRespond Game::prepResponse() {

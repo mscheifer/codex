@@ -27,7 +27,7 @@ public:
   //BoundingObj():rect(nullptr),qtree(nullptr){
   //  rect = new Rectangle();
   //}
-  BoundingObj(vec4_t cen):qtree(nullptr),center(cen){
+  BoundingObj(vec4_t cen):qtree(nullptr),entity(nullptr),center(cen){
     rect = new Rectangle();
   }
   ~BoundingObj();

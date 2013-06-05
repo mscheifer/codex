@@ -3,6 +3,8 @@ log=0
 sound=1
 //cannot have music without sound
 music=1
+musicProx=80
+maxMusicVol=50
 graphicsDebug=false
 serverTicksPerSec=30
 gameRestart=1

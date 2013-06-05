@@ -6,7 +6,7 @@
 #include <vector>
 #include <stdlib.h>
 #include <stack>
-#include "Quadtree.h"
+#include "Quadtree.h" //TODO remove comment
 #include "Physics.h" //typedef
 
 class Entity;

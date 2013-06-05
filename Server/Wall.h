@@ -7,6 +7,7 @@ class Wall : public Entity {
 public:
   static const float sphereRadius;
   static const Entity_Type type = WALL;
+
   Wall ();
   Wall(float width, float depth, float height, v3_t startingCoordinate, v3_t direct, Map*);
   ~Wall(void);
