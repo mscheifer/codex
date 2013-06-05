@@ -41,6 +41,7 @@ class ServerServices {
      packet.clear();
      packet << Data::packetType;
      data.serialize(packet);
+     //std::cout << "packet size of " << packet.getDataSize() << "bytes " << std::endl;
      return sendToAll(packet); 
    }
    

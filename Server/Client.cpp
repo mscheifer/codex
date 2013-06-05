@@ -13,13 +13,16 @@ void NetworkClient::receiveMessages() {
   bool minotaur = false;
   flag = false;
   static int count = 0;
+
   while (!flag && netRecv.receiveMessage(packet)) {
+	 // std::cout << "packet size " << packet.getDataSize() << std::endl;
     if(count == -1)
       count = 0;
     count++;
 
     //TODO might cause an endless cycle if server sends faster than the time
-    //it takes to process a message. 
+    //it takes to process a message.
+	lol:
     sf::Uint32 packetType;
     packet >> packetType;
     std::vector<int> kills;
@@ -33,16 +36,21 @@ void NetworkClient::receiveMessages() {
     switch (packetType) {
       case SGTR:
         this->setName = true;
-        this->s.deserialize(packet);
-        if (s.state != PLAYING)
+        this->s->deserialize(packet);
+
+		//std::cout << "walls: " << s->walls.size() << "projectiles " << s->projectiles.size();
+		//std::cout << "powerups: " << s->powerups.size() << "weapons: " << s->weapons.size() << std::endl;
+
+		if(!packet.endOfPacket()) std::cout << "WTF NO END OF PACKET" << std::endl;
+        if (s->state != PLAYING)
           gameRestart = true;
-        pos = s.players[this->id].getPosition();
+        pos = s->players[this->id].getPosition();
         proximity = 2;
-        minotaur = s.players[this->id].isMinotaur();
+        minotaur = s->players[this->id].isMinotaur();
         
         this->gxClient.clearEntities();
 
-        for(auto playerP = s.players.begin(); playerP != s.players.end(); playerP++) {
+        for(auto playerP = s->players.begin(); playerP != s->players.end(); playerP++) {
           if(playerP->player_id != this->id) {
             //make sure the SGTR stays in scope
             this->gxClient.addEntity(&(*playerP));
@@ -57,29 +65,29 @@ void NetworkClient::receiveMessages() {
           wins.push_back((*playerP).wins);
           AudioManager::processPlayerSound(*playerP);
         }
-        for(auto entP = s.walls.begin(); entP != s.walls.end(); entP++) {
+        for(auto entP = s->walls.begin(); entP != s->walls.end(); entP++) {
           this->gxClient.addEntity(*entP);
         }
-        for(auto entP = s.projectiles.begin(); entP != s.projectiles.end(); entP++) {
+        for(auto entP = s->projectiles.begin(); entP != s->projectiles.end(); entP++) {
           this->gxClient.addEntity(*entP);
            AudioManager::processProjectileSound(**entP);
         }
-        for(auto entP = s.powerups.begin(); entP != s.powerups.end(); entP++) {
+        for(auto entP = s->powerups.begin(); entP != s->powerups.end(); entP++) {
           this->gxClient.addEntity(*entP);
         }
-        for(auto entP = s.weapons.begin(); entP != s.weapons.end(); entP++) {
+        for(auto entP = s->weapons.begin(); entP != s->weapons.end(); entP++) {
           this->gxClient.addEntity(*entP);
         }
         
         gxClient.updatePosition(gx::vector4f(pos.x,pos.y,pos.z));
         //entities.push_back(&(this->skybox)); //add skybox
-        gxClient.updateHUD(s.players[id]);
+        gxClient.updateHUD(s->players[id]);
         gxClient.updateScores(wins,kills);
         //std::cout << "num entities received: " << entities.size() << std::endl;
-        if (s.players[id].dead) { /*render death everytime ? */}
+        if (s->players[id].dead) { /*render death everytime ? */}
         //render WIN OR LOSE based on s.state
         sf::Listener::setPosition(pos.x/AudioManager::soundScaling, pos.y/AudioManager::soundScaling, pos.z/AudioManager::soundScaling);
-        dir = s.players[this->id].getDirection();
+        dir = s->players[this->id].getDirection();
         sf::Listener::setDirection(dir.x, dir.y, dir.z);
         break;
       case JOINID:
@@ -108,8 +116,10 @@ void NetworkClient::receiveMessages() {
           break;
       default:
         std::cout<<"Error client receive bad packet " << packetType << std::endl;
+		goto lol;
         break;
     }
+	packet.clear();
   }
   //if(count != -1)
   //  std::cout << "packets processed " << count << std::endl;
@@ -239,7 +249,7 @@ void NetworkClient::doClient() {
       if (setName && notSet) {
         //really hacky here
         std::vector<std::string> names;
-        for (auto itr= s.players.begin(); itr!=s.players.end(); itr++) 
+        for (auto itr= s->players.begin(); itr!=s->players.end(); itr++) 
           names.push_back((*itr).name);
         gxClient.updateNames(names);
         notSet = false;
@@ -270,7 +280,7 @@ void NetworkClient::doClient() {
         //receiveMessagesTime <<"ms\tdrawTime: "<< drawTime <<"ms\tsendPackTime: "<< sendPackTime <<std::endl;
       } else {
         //std::cout<<" i am counting down"<<std::endl;
-        float remaining = 2-clock.getElapsedTime().asSeconds(); //TODO make this 5 sec again
+        float remaining = 0-clock.getElapsedTime().asSeconds(); //TODO make this 5 sec again
         //std::cout<<"remaininig tiem is " <<remaining<<std::endl;
         if (remaining <= 0) {
           gameRestart = false;

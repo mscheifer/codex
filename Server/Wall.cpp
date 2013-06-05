@@ -50,8 +50,10 @@ void Wall::update()
       distanceTravelled.scale(distanceLeft);
       position += distanceTravelled;
     }
+    // Render only if the position is above ground
+    render = (position.z > (-depth/2));
     this->updateBounds();
-  } else if( wallMoveClock.getElapsedTime().asMilliseconds() < wallMoveTime ) {
+  } else if( wallMoveClock.getElapsedTime().asMilliseconds() < wallMoveTime ) { 
 		  return;
   } else {
     wallMoveClock.restart();
@@ -122,4 +124,10 @@ void Wall::setWallChangeTime(float t)
     packet >> depth;
     packet >> height;
     */
+  }
+
+  std::string Wall::toString(){
+    std::stringstream ss;
+    ss << position << direction << std::endl;
+    return ss.str();
   }

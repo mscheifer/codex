@@ -56,7 +56,8 @@ void NetworkServer::doServer() {
   sf::IpAddress myIpAddress = sf::IpAddress::getLocalAddress();
   std::cout << "Server Ip Address: " << myIpAddress.toString() << std::endl;
   sf::Clock clock;
-  
+  ServerGameTimeRespond * sgtr = new ServerGameTimeRespond();
+
   //scores should not change
   game.initScores();
  
@@ -112,11 +113,19 @@ void NetworkServer::doServer() {
         //2. update all entities and resolve collision
         game.updateAndResolveCollision();
 
-        ServerGameTimeRespond gtr = game.prepResponse();
-        gameState= gtr.state;
+        game.prepResponse(sgtr);
+        gameState= sgtr->state;
         //3. prep and send response to everyone
-	      if(!this->server.sendPacketToAll<ServerGameTimeRespond>( gtr ) ) {
+        std::string before = sgtr->toString();
+	      if(!this->server.sendPacketToAll<ServerGameTimeRespond>( *sgtr ) ) {
           std::cout << "Error sending sgtr to everybody" << std::endl;
+          ConfigManager::log(std::string("Error sending sgtr to everyone"));
+        }
+        std::string after = sgtr->toString();
+        //ConfigManager::log(before);
+        //std::cout << sgtr->getAllSizes() << std::endl;
+        if( before != after ){
+          std::cout << "ERROR memory corruption wtf" << std::endl;
         }
 
         // Go back to the lobby to wait for the game to restart
@@ -136,5 +145,7 @@ void NetworkServer::doServer() {
       }
     }
   }
+
+  delete sgtr;
 } 
 

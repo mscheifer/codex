@@ -1,7 +1,11 @@
 #include "NetworkServices.h"
+#include "ConfigManager.h"
+#include <string>
+#include <bitset>
+#include <sstream>
 
 const unsigned short PORT_NUMBER = 55001;
-const int TIMEOUT = 1;
+const int TIMEOUT = 3;
 const int maxSize = 9000;
 const int sizeSize = 4;
 
@@ -30,8 +34,27 @@ bool ClientServices::connectServer(std::string serverIP) {
 bool ClientServices::sendMessage(sf::Packet &packet ) {
   return (client.send(packet)==sf::Socket::Done);
 }
+
+std::string toHex(unsigned char oneChar) {
+  char mapping[16] =  {'0','1','2','3','4','5','6','7','8','9','A','B','C','D','E','F'};
+  unsigned char one = (oneChar & 0xF0) >>4;
+  unsigned char two = oneChar & 0x0F;
+  return std::string(&mapping[one],1) +std::string(&mapping[two],1);
+}
+
 bool ClientServices::receiveMessage(sf::Packet & packet) {
-  return (client.receive(packet)==sf::Socket::Done);
+  bool rtr = (client.receive(packet)==sf::Socket::Done);
+    if (rtr) {
+      std::string ss = "";
+      for (int i = 0; i < packet.getDataSize();i++)  {
+
+       ss += toHex(*((char*)packet.getData()+i));// (std::bitset<8>(*((char*)packet.getData()+i))).to_string();
+
+      }
+      ConfigManager::log(std::string("---------------------------"));
+      ConfigManager::log(ss);
+    }
+    return rtr;
 }
 
   
@@ -63,8 +86,23 @@ bool ServerServices::receiveMessage(sf::Packet &packet, unsigned int i ) {
 
 bool ServerServices::sendMessage(sf::Packet & packet, unsigned int i) {
   if (i < clients.size()) {//error checking for i?
-    return (clients[i]->send(packet) == sf::Socket::Done);
+    bool rtr =(clients[i]->send(packet) == sf::Socket::Done);
+    if (rtr) {
+      std::string ss = "";
+
+      for (int i = 0; i < packet.getDataSize();i++)  {
+
+        ss += toHex(*((char*)packet.getData()+i));// (std::bitset<8>(*((char*)packet.getData()+i))).to_string();
+
+        //ss += (std::bitset<8>(*((char*)packet.getData()+i))).to_string();
+
+      }
+      ConfigManager::log(std::string("---------------------------"));
+      ConfigManager::log(ss);
+    }
+    return rtr;
   }
+  std::cout<<"fuck this is an error"<<std::endl;
   return false;      
 }
    

@@ -1,5 +1,5 @@
 // System configuration
-log=0
+log=1
 sound=1
 //cannot have music without sound
 music=1
@@ -25,7 +25,7 @@ model-weapon=badguy.dae
 gravity=-40
 
 // Player configuration
-players=2
+players=1
 movescale=.6
 airMovescale=.49
 maxJump=2

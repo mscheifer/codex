@@ -22,8 +22,8 @@ std::string configModelName(std::string s) {
 std::vector<gx::graphicsEntity> staticModels() {
 
   //auto modelBadGuy     = loadModel(configModelName("badguy"),Player::playerDepth,true);
-  auto modelWeapon     = loadModel(configModelName("weapon"),10,true);
-  auto modelProjectile = loadModel(configModelName("projectile"),Projectile::projDepth);
+  auto modelWeapon     = loadModel(configModelName("weapon"),Weapon::weaponDepth,true);
+  auto modelProjectile = loadModel(configModelName("projectile"),Projectile::projDepth,true);
   auto modelPowerUp    = loadModel(configModelName("powerup"),PowerUp::powerUpDepth,true);
   auto modelWall       = loadModel(configModelName("wall"),10);
   auto modelPlayer     = loadModel(configModelName("goodguy"),Player::playerDepth,true);
@@ -55,7 +55,7 @@ std::vector<gx::graphicsEntity> dynamicModels() {
 }
 
 std::vector<gx::particleEntity> particlesData() {
-  gx::material mat(gx::Texture(GL_TEXTURE_2D,"models/smoke.png"),gx::vector4f(1,1,1));
+  gx::material mat(gx::Texture(GL_TEXTURE_2D,"models/Flame_1.jpg"),gx::vector4f(0.75,0,0));
   std::vector<gx::particleEntity> ret;
   ret.push_back(gx::particleEntity(std::move(mat)));
   return ret;
@@ -151,6 +151,7 @@ gx::graphicsClient::graphicsClient():
 
   glEnable(GL_BLEND);
   glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
+  //glBlendFunc(GL_DST_COLOR, GL_ONE);
 
   this->setCamera();
   this->userInput.setUpMouse();
@@ -194,8 +195,13 @@ void gx::graphicsClient::draw() {
   this->entities.draw();
   this->animatedDrawer.draw();
   this->skyboxDrawer.draw();
+
+  //glEnable(GL_BLEND);
+  glDepthMask(GL_FALSE);
   this->particles.draw();
-  
+ 	glDepthMask(GL_TRUE);
+  //glDisable(GL_BLEND);
+ 
   //render sfml please don't comment or uncomment anything from the following
   //block
   glBindVertexArray(0);
@@ -287,7 +293,10 @@ void gx::graphicsClient::addEntity(Entity* ent) {
 void gx::graphicsClient::addEntity(Projectile* ent) {
   const auto& entity = *ent;
   {
-
+	  particleDrawer::instanceData inst;
+    inst.position = vector4f(0,0,0) + entity.getPosition();
+    inst.type = 0;
+    this->particles.addInstance(inst);
   }
   lights.addLight(vector4f(0,0,0) + entity.getPosition());
   staticDrawer::instanceData inst;

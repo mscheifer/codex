@@ -16,9 +16,6 @@ Map::Map(void): spawnPositions(), freeProjectiles(), q(0,Rectangle(BoundingObj::
 	map_size = 15;
 	freeProjectiles = new std::stack<Projectile *>();
   initSpawns();
-  //initWallsOne();
-  //initStaticWalls();
-  //initWallsTwo();
 
   initPowerUps();
 }
@@ -36,6 +33,12 @@ void Map::mapReset()
   //initWallsOne();
   //initStaticWalls();
   //initWallsTwo();
+
+    v3_t facingEast(1,0,0);
+
+    Wall * floor = new Wall(1000, 10, 1000, v3_t(0,0,-5), facingEast, this);
+  this->entities.push_back(floor);
+  floor->setRender(false);
   
   for(unsigned int i = 0; i < players.size(); i++)
   {
@@ -64,7 +67,6 @@ void Map::initSpawns()
 }
 
 void Map::initPowerUps() {
-  //TODO this can cause memory leak?
   PowerUp* superPower = new PowerUp(v3_t(0,0,PowerUp::powerUpDepth / 2), this, MANABOOST);
   superPower->setRespownTime(5000);
   this->entities.push_back(superPower);
@@ -292,9 +294,7 @@ void Map::initWallsOne(void)
   moveableWall->addNewCenter(v3_t(0,0,20));
   this->entities.push_back(moveableWall);
   */
-  Wall * floor = new Wall(1000, 10, 1000, v3_t(0,0,-5), facingEast, this);
-  this->entities.push_back(floor);
-  floor->setRender(false);
+
 
   
   int row1[] = {-1};

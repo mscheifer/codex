@@ -127,7 +127,7 @@ int gx::input::mouseYpos() const {
 
 void gx::input::setUpMouse() {
   //somehow change this to set it to the center of the screen
-  mouseBasePosition = sf::Vector2i(450,400);
+  mouseBasePosition = sf::Vector2i(600,600);
   sf::Mouse::setPosition(mouseBasePosition);
 }
 

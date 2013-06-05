@@ -854,3 +854,59 @@ void Player::serialize(sf::Packet& packet) const {
     ptype = static_cast<BUFF>(weaponType32);
     packet >> upgraded;
   }
+
+  std::string Player::toString(){
+    std::stringstream ss;
+    ss << "pos " << position << std::endl;
+    ss << "dir " << direction << std::endl;
+    ss << this->player_id;
+    //acceleration.serialize(packet);
+    //velocity.serialize(packet);
+    //oldJumpVelocity.serialize(packet);
+    ss << dead; 
+    ss << minotaur; //might be private
+    ss << name;
+    ss << health;
+    ss << maxHealth;
+    ss << mana;
+    ss << maxMana;
+    ss << defense;
+    ss << speed;
+    ss << castDownTime; //not needed on client ?
+    //sf::Clock castDownCounter;
+    ss << jumpCount; // not needed on client ?
+    ss << canJump; //not needed on client ?
+    ss << attacking;  //not neede on client ?
+    //Weapon* weapon[MAXWEAPONS]; 
+    // change the array to vector ?
+    ss << static_cast<sf::Uint32>(pickupWeaponType);
+    ss << current_weapon_selection; 
+    ss << charging;
+    ss << walking;
+    ss << shotProjectile;
+    ss << attacked;
+    ss << player_id;
+    ss << kills;
+    ss << wins;
+    ss << static_cast<sf::Uint32>(buffs.size());
+    for (auto itr = buffs.begin(); itr!=buffs.end(); itr++) {
+      ss << static_cast<sf::Uint32>((*itr).first);
+      ss << (*itr).second;
+    }
+    ss << meleeAttack;
+    ss << weaponCall;
+    ss << static_cast<sf::Uint32>(weaponCallType);
+
+    //held weapons
+    ss << static_cast<sf::Uint32>(weapon[0]->getWeaponType());
+    ss << static_cast<sf::Uint32>(weapon[1]->getWeaponType());
+
+    //this is for charing HUD
+    ss << elapsedChargeTime;
+    ss << totalChargeTime;
+    ss << static_cast<sf::Uint32>(chargeMagicType);
+
+    ss << collectPowerUp;
+    ss << upgraded << std::endl;
+    return ss.str();
+  }

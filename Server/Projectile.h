@@ -147,5 +147,6 @@ public:
   int getElapsedTime() const { return charge_counter.getElapsedTime().asMilliseconds(); }
   void serialize(sf::Packet & packet) const;
   void deserialize(sf::Packet & packet);
+  std::string toString2();
 };
 
