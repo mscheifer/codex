@@ -6,6 +6,7 @@
 #include <time.h>
 #include <stdlib.h> /* srand rand */
 #include <time.h>   /* time */
+#include "StaticEntity.h"
 
 struct IdPacket{
 public:
@@ -65,20 +66,34 @@ public:
   int id;
   v3_t position;
   v3_t direction;
+  std::vector<StaticEntity*> staticEntities;
+
 
   InitPacket() {}
-  InitPacket(int idc, v3_t coord, v3_t dir) : id(idc), position(coord), direction(dir){}
+  InitPacket(int idc, v3_t coord, v3_t dir, std::vector<StaticEntity*> e ) : id(idc), position(coord), direction(dir), staticEntities(e) {}
 
   void serialize(sf::Packet& packet) const{
     packet << id;
     position.serialize(packet);
     direction.serialize(packet);
+    sf::Uint32 size = static_cast<sf::Uint32>(staticEntities.size());
+    packet << size;
+    for (unsigned int i = 0; i < staticEntities.size();i++) { 
+      staticEntities[i]->serialize(packet);
+    }
   }
 
   void deserialize(sf::Packet& packet){
     packet >> id;
     position.deserialize(packet);
     direction.deserialize(packet);
+    sf::Uint32 size;
+    packet >> size;
+    for (unsigned int i = 0; i < size; i++) { 
+      StaticEntity* staticEntity = new StaticEntity(); 
+      staticEntity->deserialize(packet);
+      this->staticEntities.push_back(staticEntity);
+    }
   }
 };
 

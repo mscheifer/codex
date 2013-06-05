@@ -20,6 +20,7 @@ model-wall=stone_wall.dae
 model-projectile=weird_orange_thing.dae
 model-powerup=cat.dae
 model-weapon=badguy.dae
+model-triton=triton.DAE
 
 // Physics
 gravity=-40

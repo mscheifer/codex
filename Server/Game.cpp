@@ -159,11 +159,11 @@ InitPacket Game::getInitPacket(int playerId) {
   std::vector<Player*> players = world.getPlayers();
   for(auto playerIt = players.begin(); playerIt != players.end(); playerIt++) {
     if( (*playerIt)->player_id == playerId ) //if id match
-      return InitPacket((*playerIt)->player_id, (*playerIt)->getPosition(), (*playerIt)->getDirection());
+      return InitPacket((*playerIt)->player_id, (*playerIt)->getPosition(), (*playerIt)->getDirection(), world.getStaticEntities());
   }
 
   std::cout << "ERROR init packet, player id not found" << std::endl;
-  return InitPacket(0, v3_t(0,0,0), v3_t(0,0,0));
+  return InitPacket(0, v3_t(0,0,0), v3_t(0,0,0), world.getStaticEntities());
 }
 
 void Game::clearEvents(){

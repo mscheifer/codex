@@ -82,6 +82,7 @@ void NetworkServer::doServer() {
       this->receiveMessages(i);
     }
   }
+
   //game loop
   while(true)
   {
