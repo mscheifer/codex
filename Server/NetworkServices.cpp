@@ -1,8 +1,6 @@
 #include "NetworkServices.h"
 #include "ConfigManager.h"
 #include <string>
-#include <bitset>
-#include <sstream>
 
 const unsigned short PORT_NUMBER = 55001;
 const int TIMEOUT = 3;
@@ -44,17 +42,7 @@ std::string toHex(unsigned char oneChar) {
 
 bool ClientServices::receiveMessage(sf::Packet & packet) {
   bool rtr = (client.receive(packet)==sf::Socket::Done);
-    if (rtr) {
-      std::string ss = "";
-      for (int i = 0; i < packet.getDataSize();i++)  {
-
-       ss += toHex(*((char*)packet.getData()+i));// (std::bitset<8>(*((char*)packet.getData()+i))).to_string();
-
-      }
-      ConfigManager::log(std::string("---------------------------"));
-      ConfigManager::log(ss);
-    }
-    return rtr;
+  return rtr;
 }
 
   
@@ -87,22 +75,8 @@ bool ServerServices::receiveMessage(sf::Packet &packet, unsigned int i ) {
 bool ServerServices::sendMessage(sf::Packet & packet, unsigned int i) {
   if (i < clients.size()) {//error checking for i?
     bool rtr =(clients[i]->send(packet) == sf::Socket::Done);
-    if (rtr) {
-      std::string ss = "";
-
-      for (int i = 0; i < packet.getDataSize();i++)  {
-
-        ss += toHex(*((char*)packet.getData()+i));// (std::bitset<8>(*((char*)packet.getData()+i))).to_string();
-
-        //ss += (std::bitset<8>(*((char*)packet.getData()+i))).to_string();
-
-      }
-      ConfigManager::log(std::string("---------------------------"));
-      ConfigManager::log(ss);
-    }
     return rtr;
   }
-  std::cout<<"fuck this is an error"<<std::endl;
   return false;      
 }
    

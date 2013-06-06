@@ -76,13 +76,13 @@ void Game::updateAndResolveCollision() {
 	}
 }
 
-void Game::prepResponse(ServerGameTimeRespond* sgtr) {
-  sgtr->state = Game_State::PLAYING;
-	sgtr->weapons.clear();
-	sgtr->projectiles.clear();
-	sgtr->walls.clear();
-	sgtr->powerups.clear();
-  sgtr->players.clear();
+void Game::prepResponse(ServerGameTimeRespond& sgtr) {
+  sgtr.state = Game_State::PLAYING;
+  sgtr.weapons.clear();
+	sgtr.projectiles.clear();
+	sgtr.walls.clear();
+	sgtr.powerups.clear();
+  sgtr.players.clear();
 	std::vector<Player*>  currentPlayers =  world.getPlayers();
 	std::vector<Entity*> currentEntities = world.getEntity();
   std::vector<Projectile*> currentProjectiles = world.getLiveProjectTile();
@@ -103,49 +103,45 @@ void Game::prepResponse(ServerGameTimeRespond* sgtr) {
   }
   if (currentPlayers.size() > 1) {
     if (minotaurLose) {
-      sgtr->state = CIVILIAN_WIN; 
+      sgtr.state = CIVILIAN_WIN; 
     }
     if (deadPlayers == currentPlayers.size()-1 ) {
-      sgtr->state = MANOTAUR_WIN;
+      sgtr.state = MANOTAUR_WIN;
     }
     for (unsigned int i = 0; i < currentPlayers.size() ; i++ ) {
-      if((!currentPlayers[i]->isMinotaur() && sgtr->state == CIVILIAN_WIN)
-      || (currentPlayers[i]->isMinotaur() && sgtr->state ==MANOTAUR_WIN)) {
+      if((!currentPlayers[i]->isMinotaur() && sgtr.state == CIVILIAN_WIN)
+      || (currentPlayers[i]->isMinotaur() && sgtr.state ==MANOTAUR_WIN)) {
         world.wins[i]++;
         currentPlayers[i]->wins++;
       }
     }
   }
 	for( unsigned int i = 0; i < currentPlayers.size(); i++ ) {
-     /*for testing
-     if (currentPlayers[i]->getHealth() > 0) {
-       (currentPlayers[i])->setHealth(currentPlayers[i]->getHealth()-1);
-     } else  (currentPlayers[i])->setHealth(100);
-     */
-		 sgtr->players.push_back(*currentPlayers[i]); //add the player to the return struct
+		 sgtr.players.push_back(*currentPlayers[i]); //add the player to the return struct
      //were not sending boxes over network, if you dont ahve this it will try to destroy the actual bb
-     sgtr->players[i].setBoundingObjs(std::vector<BoundingObj*>()); 
+     sgtr.players[i].setBoundingObjs(std::vector<BoundingObj*>()); 
   }
 
   for( unsigned int i = 0; i < currentProjectiles.size(); i++ ) {
-    if(currentProjectiles[i]->canRender())
-      sgtr->projectiles.push_back(currentProjectiles[i]);
+    if(currentProjectiles[i]->canRender()) {
+      sgtr.projectiles.push_back(currentProjectiles[i]);
+    }
   }
 
 	for( unsigned int i = 0; i < currentEntities.size(); i++ ) {
     if( currentEntities[i]->canRender() ) {
       switch (currentEntities[i]->getType()) { // I am casting pointers but I don't care
       case WALL:
-		    sgtr->walls.push_back((Wall*) currentEntities[i]); 
+		    sgtr.walls.push_back(static_cast<Wall*>(currentEntities[i])); 
         break;
       case PROJECTILE:
-		    sgtr->projectiles.push_back((Projectile*) currentEntities[i]); 
+		    sgtr.projectiles.push_back(static_cast<Projectile*>(currentEntities[i])); 
         break;
       case POWER_UP:
-		    sgtr->powerups.push_back((PowerUp*) currentEntities[i]); 
+		    sgtr.powerups.push_back(static_cast<PowerUp*>(currentEntities[i])); 
         break;
       case WEAPON:
-		    sgtr->weapons.push_back((Weapon*) currentEntities[i]); 
+		    sgtr.weapons.push_back(static_cast<Weapon*>(currentEntities[i])); 
         break;        
       default:
         std::cout<<"Error for Entity type!!!!!!"<<std::endl;

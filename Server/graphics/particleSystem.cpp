@@ -135,6 +135,7 @@ void gx::particleDrawerImpl::entityClass::update() {
     }
     this->numIndices += 6 * particlesPerFrame;
   }
+  this->instances.resize(1); //only draw once
 
   positions.clear();
   positions.reserve(particles.size() * 4 * 4); //could move this call to only run for maxParticles at beginning
@@ -187,8 +188,8 @@ void gx::particleDrawerImpl::entityClass::draw() {
 
 gx::particleDrawerImpl::particleDrawerImpl(const shaderProgram& program) {}
 
-void gx::particleDrawerImpl::setUniforms(const entityClass& entC,
-                                       const entityClass::instance& inst) const{
+void gx::particleDrawerImpl::setUniforms(const entityClass&,
+                                         const entityClass::instance&) const{
   //do nothing
 }
 

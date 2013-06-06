@@ -53,6 +53,7 @@ private:
 	std::stack<Projectile *>* freeProjectiles;
 	std::vector<Projectile *> liveProjectTile;
   Quadtree q;
+  void initFloor(void);
   void initWalls(void);
   void initWallsRed(void);
   void initWallsBlue(void); 

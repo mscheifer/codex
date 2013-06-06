@@ -29,16 +29,12 @@ void Map::mapReset()
   liveProjectTile.clear();
   initSpawns();
   initPowerUps();
+  initFloor();
   initWalls(); 
   //initWallsOne();
   //initStaticWalls();
   //initWallsTwo();
 
-    v3_t facingEast(1,0,0);
-
-    Wall * floor = new Wall(1000, 10, 1000, v3_t(0,0,-5), facingEast, this);
-  this->entities.push_back(floor);
-  floor->setRender(false);
   
   for(unsigned int i = 0; i < players.size(); i++)
   {
@@ -100,6 +96,14 @@ void Map::initPowerUps() {
     w->setRespawnTime(6000);
     entities.push_back(w);
   }
+}
+
+void Map::initFloor(void) {
+  v3_t facingEast(1,0,0);
+
+  Wall * floor = new Wall(1000, 10, 1000, v3_t(0,0,-5), facingEast, this);
+  this->entities.push_back(floor);
+  floor->setRender(false);
 }
 
 void Map::initWallsTwo(void)
