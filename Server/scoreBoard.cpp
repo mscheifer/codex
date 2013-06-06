@@ -3,7 +3,7 @@
 #include <iostream>
 
 scoreBoard::scoreBoard(int numPlayer) {
- minotaurId = 9999;
+ minotaurId = 0;
  font.loadFromFile("MORPHEUS.TTF");
  boardText.setFont(font);
  boardText.setCharacterSize(24);
@@ -31,8 +31,8 @@ scoreBoard::scoreBoard(int numPlayer) {
  killText.setString("Kills");
  killText.setPosition(110, 55);
 
- badGuyTexture.loadFromFile("graphics/Images/badguy.png");
- goodGuyTexture.loadFromFile("graphics/Images/badguy.png");
+ badGuyTexture.loadFromFile("graphics/Images/BG_Icon.png");
+ goodGuyTexture.loadFromFile("graphics/Images/GG_Icon.png");
 
  for (int i = 0; i<numPlayer; i++ ) {
    playerSprite.push_back(sf::Sprite());
@@ -60,7 +60,7 @@ scoreBoard::scoreBoard(int numPlayer) {
    pwins.push_back(0);
    pdead.push_back(false);
  }
-
+ playerSprite[0].setTexture(badGuyTexture);
 }
 
 
@@ -115,9 +115,9 @@ void scoreBoard::setPlayerId(unsigned int x)
 
 void scoreBoard::setMinotaurId(unsigned int id)
 {
-  //if(id == minotaurId)
-  //  return;
-  //playerSprite[minotaurId].setTexture(goodGuyTexture);
-  //minotaurId = id;
-  //playerSprite[minotaurId].setTexture(badGuyTexture);
+  if(id == minotaurId)
+    return;
+  playerSprite[minotaurId].setTexture(goodGuyTexture);
+  minotaurId = id;
+  playerSprite[minotaurId].setTexture(badGuyTexture);
 }
