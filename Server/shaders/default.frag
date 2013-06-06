@@ -31,7 +31,6 @@ void main() {
   }
 
   vec4 color = texture(diffuseTex, interpDiffuseCoord) * lightVal;
-  color = vec4(color.xyz * color.w,1.0); //HDR lighting lol
 
   //if(dot(viewDirection, normal) < outlineThickness) {
   //  color = vec4(0.0,0.0,0.0,1.0);

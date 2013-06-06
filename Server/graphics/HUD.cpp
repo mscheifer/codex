@@ -389,13 +389,23 @@ void gx::HUD::initializeSprites() {
    aimerHelper(std::string("graphics/Images/aimerI1O.png"));  //7
    aimerHelper(std::string("graphics/Images/aimerI1I.png"));  
    aimerHelper(std::string("graphics/Images/aimerI2O.png"));  
-   aimerHelper(std::string("graphics/Images/aimerI3O.png"));  //5
+   aimerHelper(std::string("graphics/Images/aimerI3O.png"));  //10
    aimerHelper(std::string("graphics/Images/aimerI3I.png"));
-   
+   aimerHelper(std::string("graphics/Images/aimerT1O.png"));  //12
+   aimerHelper(std::string("graphics/Images/aimerT1I.png"));  
+   aimerHelper(std::string("graphics/Images/aimerT2O.png"));  
+   aimerHelper(std::string("graphics/Images/aimerT3O.png"));  //15
+   aimerHelper(std::string("graphics/Images/aimerT3I.png"));  //16
+   aimerHelper(std::string("graphics/Images/aimerG1.png"));
+   aimerHelper(std::string("graphics/Images/aimerG2.png"));
+   aimerHelper(std::string("graphics/Images/aimerG3.png"));
+   aimerHelper(std::string("graphics/Images/aimerBasic.png")); //20
+
    hitTextures.push_back(new sf::Texture());
    hitSprites.push_back(new sf::Sprite());
    hitHelper(std::string("graphics/Images/hitRed.png"));
    hitHelper(std::string("graphics/Images/hitBlue.png"));
+
 }
 
 const int gx::HUD::hitIndex[18] = {
@@ -430,21 +440,21 @@ const int gx::HUD::aimerIndex[18][2] = {
   { 9, 8 },
   { 10, 11 },
   //THU1, THU2, THU3,
-  { 2, 3 },
-  { 4, 3 },
-  { 5, 6 },
+  { 12, 13 },
+  { 14, 13 },
+  { 15, 16 },
   //G_IT, G_FT, G_FI, //gravity and what it is missing
-  { 4, 3 },
-  { 4, 3 },
-  { 4, 3 },
+  { 17, 0 },
+  { 17, 0 },
+  { 17, 0 },
   //G2,
-  { 4, 6 },
+  { 18, 0 },
   //G_IT2, G_FT2, G_FI2,
-  { 4, 3 },
-  { 4, 3 },
-  { 4, 3 },
+  { 17, 0 },
+  { 17, 0 },
+  { 17, 0 },
   //G3,
-  { 4, 6 },
+  { 19, 0 },
   //B1
-  { 2, 3 }
+  { 20, 0 }
 };

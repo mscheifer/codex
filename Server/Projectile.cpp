@@ -25,6 +25,7 @@ void Projectile::reset(){
   clearEvents();
   charge_counter.restart();
   charging = true;
+  combined = false;
 }
 
 bool Projectile::correctMovementHit( Entity* e ){
@@ -37,7 +38,6 @@ bool Projectile::correctMovementHit( Entity* e ){
   } else if ( etype == PLAYER ){
     return e != owner;
   }
-
   return false;
 }
 

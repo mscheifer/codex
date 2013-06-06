@@ -15,9 +15,7 @@ Map::Map(void): spawnPositions(), freeProjectiles(), q(0,Rectangle(BoundingObj::
 {
 	map_size = 15;
 	freeProjectiles = new std::stack<Projectile *>();
-  initSpawns();
-
-  initPowerUps();
+  initSpawns(); //needed before reset because
 }
 
 void Map::mapReset()
@@ -121,9 +119,7 @@ void Map::initWallsTwo(void)
   float centerY = 0;
   int i;
   float startingX;
-  float startingXNeg;
   float startingY;
-  float startingYNeg;
   float startingZ = depth/2.0f;
 
     int row1[] = {-1};
@@ -300,7 +296,6 @@ void Map::initWallsOne(void)
   */
 
 
-  
   int row1[] = {-1};
   int row2[] = {-1};
   int row3[] = {-1};
@@ -414,9 +409,7 @@ void Map::initStaticWalls(void) {
   float centerY = 0;
   int i;
   float startingX;
-  float startingXNeg;
   float startingY;
-  float startingYNeg;
   float startingZ = depth/2.0f;
   
   int row1[] = {-1};
@@ -497,8 +490,8 @@ void Map::initWalls(void)
   // Create the top and bottom perimeter from left to right.
   for( i = 0,
     startingX = ((wallX*width)/-2)+(width/2)+centerX,
-    startingY = ((wallY*width)/-2)+centerY,
-    startingYNeg = ((wallY*width)/2)+centerY;
+    startingY = ((wallY*width)/-2)+(height/2)+centerY,
+    startingYNeg = ((wallY*width)/2)-(height/2)+centerY;
     i < wallX; i++, startingX += width )
   {
     Wall* topWall = new Wall(width, depth, height, 
@@ -511,8 +504,8 @@ void Map::initWalls(void)
 
   // Create the left and right perimeter from bottom up
   for( i = 0,
-    startingX = ((wallX*width)/-2)+centerX,
-    startingXNeg = ((wallX*width)/2)+centerX,
+    startingX = ((wallX*width)/-2)+(height/2)+centerX,
+    startingXNeg = ((wallX*width)/2)-(height/2)+centerX,
     startingY = ((wallY*width)/-2)+(width/2)+centerY;
     i < wallY; i++, startingY += width )
   {
@@ -806,7 +799,6 @@ void Map::destHelper(){
   }
 }
 
-
 std::vector<Entity *> Map::getEntity() {
 	 return entities;
 }
@@ -907,7 +899,11 @@ void Map::separatePlayers(Player* player){
  }
 
 void Map::addToQtree(Entity* e){
-  std::vector<BoundingObj*> vec = e->getBoundingObjs();
+  //TODO visual studip debugger sucks, remove this
+  if( e == nullptr)
+    std::cout << "ERROR entity is nullptr, why add that to qtree?" << std::endl;
+
+  std::vector<BoundingObj*> vec = e->getBoundingObjs ();
   //add the boxes to the qtree
   for( auto it = vec.begin(); it != vec.end(); ++it){
     (*it)->setQuadtree(&q);

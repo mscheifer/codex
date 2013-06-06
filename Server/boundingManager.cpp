@@ -1,5 +1,6 @@
 #include "boundingManager.h"
 #include "Entity.h"
+#include <math.h>
 
 //////////////////////helper functions/////////////////
 //return true if b goes before a
@@ -375,22 +376,71 @@ RayCollision rayCollide(const Ray * r,const  BoundingObj * b){
 
 void boxTest(){
   /*
-  //r1 and b1 bad norm
-    Ray r1(BoundingObj::vec4_t(-0.283931f, 9, 2.91043f), 
-      BoundingObj::vec3_t(0.339934f, 0.999422f, 0));
-    
-    BoundingBox b1(BoundingObj::vec4_t(-5,10,2), 
-      BoundingObj::vec3_t(1,0,0), BoundingObj::vec3_t(0,1,0), BoundingObj::vec3_t(0,0 ,1),
-      5,1,2);
+  //test angle hurt complely unrelated
+  BoundingObj::vec3_t y(0,1,0);
+  BoundingObj::vec3_t x(1,0,0);
+  BoundingObj::vec3_t xneg(-1,0,0);
 
+  float magYX = (y.magnitude()*x.magnitude());
+  float cos = y.dot(x);
+  float a2 = acos(x.dot(y)/(x.magnitude()*y.magnitude()));
+  float b = acos(y.dot(xneg)/(y.magnitude()*xneg.magnitude()));
+
+  BoundingObj::vec3_t crossv;
+  crossv.cross(y, x);
+  float sine = crossv.magnitude();
+
+  BoundingObj::vec3_t crossProd;
+  crossProd.cross(y,xneg);
+  float cos2 = y.dot(xneg);
+  float sin2 = crossProd.magnitude();
+
+  float a1 = fmod(atan2(y.y-x.y,y.x-x.x), static_cast<float>(2*M_PI));
+  std::cout << a1 << std::endl;
+  std::cout << atan2(y.y-xneg.y,y.x-xneg.x) << std::endl;
+  //end of test angle hurt
+
+  //std::cout << "angle between " << x << " " << y << " : " << a << " " << a2 << std::endl;
+  //std::cout << "angle between " << xneg << " " << y << " : " << b << std::endl;
+  //std::cout << y.dot(x) << " " << x.dot(y) << " " << y.dot(xneg) << std::endl;
+  */
+
+  /*gap of rohan test
+      BoundingBox player(BoundingObj::vec4_t(184.97519f,-120.26628f,3.5000005f), 
+      BoundingObj::vec3_t(-0.94841665f, 0.31702650f, 0.00000000f), 
+      BoundingObj::vec3_t(-0.31702650f, -0.94841665f, 0.00000000f), 
+      BoundingObj::vec3_t(0.00000000f, 0.00000000f, 0.99999994f),
+      1.5,1.5,3.5);
+
+    BoundingBox wall(BoundingObj::vec4_t(184.50000f, -130.90001f, 5.0000000f), 
+      BoundingObj::vec3_t(0,-1,0),
+      BoundingObj::vec3_t(1,0,0),
+      BoundingObj::vec3_t(0,0 ,1),
+      18.700001f, 2.5000000f, 5.0000000f);
+
+    BoundingBox proj(BoundingObj::vec4_t(182.00000f, -122.86998f, 4.3204880f), 
+      BoundingObj::vec3_t(0.28767309f, -0.95772862f, 0.00000000f),
+      BoundingObj::vec3_t(0.95696259f, 0.28744298f, 0.039989334f),
+      BoundingObj::vec3_t(-0.038298935f, -0.011503856f, 0.99920017f),
+      0.5f,0.5f,0.5f);
+
+    std::cout << "1=" << collide(&player,&wall).first << collide(&proj,&wall).first << std::endl;
+
+    Rectangle* playerRect = player.getRect();
+    Rectangle* projRect = proj.getRect();
+    Rectangle* wallRect = wall.getRect();
+
+    std::cout << "player rect " << playerRect->toString() << std::endl;
+    std::cout << "proj rect " << projRect->toString() << std::endl;
+    std::cout << "wall rect " << wallRect->toString() << std::endl;
+    end rohan test*/
+
+    //r1 and b1 bad norm
+    //Ray r1(BoundingObj::vec4_t(-0.283931f, 9, 2.91043f), 
+    //  BoundingObj::vec3_t(0.339934f, 0.999422f, 0));
     //r1 and b3 bad norm
-    Ray r2(BoundingObj::vec4_t(-11, -3.88816, 2.89663f), 
-      BoundingObj::vec3_t(0.999986f, -0.00520365f, 0));
-
-    BoundingBox b3(BoundingObj::vec4_t(-10,-5,2), 
-      BoundingObj::vec3_t(0,-1,0), BoundingObj::vec3_t(1,0,0), BoundingObj::vec3_t(0,0 ,1),
-      5,1,2);
-    */
+    //Ray r2(BoundingObj::vec4_t(-11, -3.88816, 2.89663f), 
+    //  BoundingObj::vec3_t(0.999986f, -0.00520365f, 0));
 
   /*
     //floor

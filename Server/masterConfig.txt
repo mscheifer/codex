@@ -3,6 +3,8 @@ log=0
 sound=1
 //cannot have music without sound
 music=1
+musicProx=80
+maxMusicVol=50
 graphicsDebug=false
 serverTicksPerSec=30
 gameRestart=1
@@ -12,6 +14,7 @@ anti-alias=0
 window-width=800
 window-height=600
 enableMinotaur=1
+countdown=2
 
 //models
 model-badguy=cat.dae

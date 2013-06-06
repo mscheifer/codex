@@ -47,6 +47,8 @@ public:
   static unsigned int windowWidth(){return StringToNumber<unsigned int>(ConfigManager::configMap["window-width"]); }
   static unsigned int windowHeight(){return StringToNumber<unsigned int>(ConfigManager::configMap["window-height"]); }
 
+  static float musicProx(){ return StringToNumber<float>(ConfigManager::configMap["musicProx"]); }
+
   /// Player/Minotaur Related///
   static float playerMovescale();
   static float playerAirMovescale(){ return StringToNumber<float>(ConfigManager::configMap["airMovescale"]); }

@@ -3,7 +3,7 @@
 #include <string>
 
 const unsigned short PORT_NUMBER = 55001;
-const int TIMEOUT = 3;
+const int TIMEOUT = 2;
 const int maxSize = 9000;
 const int sizeSize = 4;
 

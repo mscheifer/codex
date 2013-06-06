@@ -124,6 +124,8 @@ void AudioManager::updateMusic(const int numPlayers,const bool minotaur ){
   if(!useMusic)
     return;
 
+  static float maxVol = StringToNumber<float>(ConfigManager::configMap["maxMusicVol"]);
+
   //less intensive way
   //static int index = -1;
 
@@ -155,7 +157,7 @@ void AudioManager::updateMusic(const int numPlayers,const bool minotaur ){
     playMusic( getTrack(trackNo, getClosestProx(numPlayers), minotaur), notCurrentlyPlaying() );
 
     //set the track to currently play
-    music[currentlyPlayingMusic].setVolume(100);
+    music[currentlyPlayingMusic].setVolume(maxVol);
     music[notCurrentlyPlaying()].setVolume(0);
     musicProx[currentlyPlayingMusic] = proxStruct(numPlayers,minotaur);
     musicProx[notCurrentlyPlaying()] = proxStruct(getClosestProx(numPlayers),minotaur);
@@ -184,12 +186,12 @@ void AudioManager::updateMusic(const int numPlayers,const bool minotaur ){
   for( unsigned int i = 0; i < music.size(); i++ ){
     if( i == currentlyPlayingMusic ){ //FADE IN
       volume = music[i].getVolume();
-      if(volume == 100)
+      if(volume == maxVol)
         continue;
 
       volume += 3;
-      if(volume > 100)
-        volume = 100;
+      if(volume > maxVol)
+        volume = maxVol;
       music[i].setVolume(volume);
     }
     else{ //FADE OUT
