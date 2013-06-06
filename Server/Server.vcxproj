@@ -246,6 +246,9 @@
     <None Include="graphics\Images\powerStr.png" />
     <None Include="graphics\Images\powerStrL.png" />
     <None Include="graphics\Images\ready.png" />
+    <None Include="graphics\Images\splashBG.png" />
+    <None Include="graphics\Images\splashCircles.png" />
+    <None Include="graphics\Images\splashText.png" />
     <None Include="graphics\Images\statF.png" />
     <None Include="graphics\Images\statFL.png" />
     <None Include="graphics\Images\statG.png" />
