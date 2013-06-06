@@ -27,7 +27,7 @@ std::vector<gx::graphicsEntity> staticModels() {
   auto modelPowerUp    = loadModel(configModelName("powerup"),PowerUp::powerUpDepth,true);
   auto modelWall       = loadModel(configModelName("wall"),10);
   auto modelPlayer     = loadModel(configModelName("goodguy"),Player::playerDepth,true);
-  auto modelTriton     = loadModel(configModelName("triton"),Player::playerDepth,true);
+  //auto modelTriton     = loadModel(configModelName("triton"),Player::playerDepth,true);
 
   auto cubes = gx::loadCube();
   auto skybox = gx::loadSkybox();
@@ -42,7 +42,7 @@ std::vector<gx::graphicsEntity> staticModels() {
   entitiesData.push_back(std::move(modelPowerUp)); //powerup
  // entitiesData.push_back(std::move(modelTriton));
   entitiesData.push_back(std::move(ground));  //ground
-  entitiesData.push_back(std::move(modelTriton));
+  //entitiesData.push_back(std::move(modelTriton));
 
   entitiesData.insert(entitiesData.end(),std::make_move_iterator(cubes.begin()),
                                          std::make_move_iterator(cubes.end())); 
@@ -352,9 +352,15 @@ void gx::graphicsClient::gameEnd()
   Lobby.endGame();
 }
 
+void gx::graphicsClient::setMinotaur(unsigned int playerid)
+{
+  Score.setMinotaurId(playerid);
+}
+
 void gx::graphicsClient::updateScores(std::vector<int> & pwins,
-                                      std::vector<int> & pkills) {
-  Score.updateScores(pwins,pkills);
+                                      std::vector<int> & pkills,
+                                      std::vector<bool> & pdead) {
+  Score.updateScores(pwins,pkills, pdead);
 }
 
 void gx::graphicsClient::updateLobby(std::vector<std::pair<int,bool>> & playerStatus ) {

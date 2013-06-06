@@ -188,6 +188,7 @@ void Projectile::fireMutiple(v3_t v, float strengthMultiplier, int number) {
     counter += slice;
     Projectile* pj = map->produceProjectile();
     pj->setVelocity(v3_t(xp,yp,velocity.z));
+    pj->setDirection(pj->velocity);
     pj->setOwner(owner);
     pj->setMagicType(magicType);
     pj->setRender(true);
