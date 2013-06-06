@@ -26,6 +26,8 @@ class input {
     bool resized;
     int  mouseX;
     int  mouseY;
+    bool textMode;
+    std::string inputText;
   public:
     input();
     bool    getUpdated();
@@ -50,5 +52,8 @@ class input {
     void setUpMouse();
     void handle(sf::Window&);
     void handleEvent(const sf::Event&);
+    void setTextMode(bool mode);
+    std::string getInputText() const; 
+    bool getTextMode() const;
 };
 } //end namespace gx

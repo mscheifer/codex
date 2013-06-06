@@ -31,7 +31,7 @@ void ConfigManager::log(std::string str, ConfigManager::LogLevels lev){
   if( ConfigManager::level <= lev){
     ConfigManager::logfile << "[" << ConfigManager::levelToString(lev) << ":" <<
       currTime->tm_hour << ":" << currTime->tm_min << ":" << currTime->tm_sec <<
-      "]" << str << std::endl;
+      "]"  << str << std::endl;
   }
 }
 
@@ -75,13 +75,10 @@ void ConfigManager::readConfig() {
     if( ind == std::string::npos ) {
       continue;
     }
-    //std::cout << line << std::endl;
-      
-    //std::cout << "insert: " << line.substr(0,ind) << " = " << line.substr(ind+1) << std::endl;
+
     std::pair<std::string,std::string> s = std::make_pair(line.substr(0,ind),line.substr(ind+1));
     if(!ConfigManager::configMap.insert(s).second) {
       std::cout << "Error reading config file" << std::endl;
-    //std::cout << "key " << line.substr(0,ind) << " = " << ConfigManager::configMap[line.substr(0,ind)] << std::endl;
     }
   }
 }

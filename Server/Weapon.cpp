@@ -18,6 +18,7 @@ Weapon::Weapon(Map* m)
 
 Weapon::Weapon(float damage, float ran, v3_t pos, Map* m) : pickedUp(false)
 {
+  Respawn_Time = 60000;
   Range_Cool_Down_Time = 500; //TODO set these
   Melee_Cool_Down_Time = 300;
   Range_Cool_Down_Counter = sf::Clock();
@@ -85,6 +86,7 @@ bool Weapon::dropDown(v3_t dropPosition){
   render = true;
   position = dropPosition;
   pickedUp = false;
+  Respawn_Counter.restart();
   map->addToQtree(this);
   return true;
 } 
@@ -107,10 +109,13 @@ bool Weapon::tossAway(v3_t dropPosition, v3_t dir){
   velocity.scale(25);
 
   pickedUp = false;
+  Respawn_Counter.restart();
   map->addToQtree(this);
   return true;
 } 
-
+void Weapon::setRespawnTime(int r){ 
+  Respawn_Time = r;
+}
 void Weapon::update()
 {
   if(pickedUp)
@@ -120,7 +125,36 @@ void Weapon::update()
   velocity += acceleration * ConfigManager::serverTickLengthSec();
   v3_t attemptMove = velocity * ConfigManager::serverTickLengthSec();
   position += correctMovement( attemptMove, false, position );
+  
+  if(Respawn_Counter.getElapsedTime().asMilliseconds() >= Respawn_Time)
+  {
+    Respawn_Counter.restart();
+    setRandomMagic();
+    // Been idle too long on map
+    map->addSpawnLocation(position);
+    position = map->getRespawnPosition();
+    dropDown(position);
+  }
   updateBounds();
+}
+
+void Weapon::setRandomMagic()
+{
+  switch (rand() % 4)
+  {
+    case 0:
+      this->basicAttack = FIR1;
+      break;
+    case 1:
+      this->basicAttack = ICE1;
+      break;
+    case 2:
+      this->basicAttack = THU1;
+      break;
+    default:
+      this->basicAttack = static_cast<MAGIC_POWER>(rand() % B1);
+      break;
+  }
 }
 
 void Weapon::updateBounds(){
@@ -189,6 +223,14 @@ void Weapon::serialize(sf::Packet & packet) const {
     packet >> pickedUp;
     //sf::Clock Range_Cool_Down_Counter;
     //sf::Clock Melee_Cool_Down_Counter;
+  }
+
+  std::string Weapon::toString(){
+    std::stringstream ss;
+    ss << position << direction << std::endl;
+    ss << mpCost;
+    ss << pickedUp;
+    return ss.str();
   }
 
 

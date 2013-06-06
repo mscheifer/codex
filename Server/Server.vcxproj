@@ -165,6 +165,7 @@
     <ClInclude Include="graphics\matrix.h" />
     <ClInclude Include="graphics\mesh.h" />
     <ClInclude Include="graphics\oglUtil.h" />
+    <ClInclude Include="graphics\particleSystem.h" />
     <ClInclude Include="graphics\shaderProgram.h" />
     <ClInclude Include="graphics\SkyboxDraw.h" />
     <ClInclude Include="graphics\texture.h" />
@@ -202,6 +203,21 @@
   <ItemGroup>
     <None Include="..\Makefile" />
     <None Include="graphics\Images\aimer.png" />
+    <None Include="graphics\Images\aimerEmpty.png" />
+    <None Include="graphics\Images\aimerF1I.png" />
+    <None Include="graphics\Images\aimerF1O.png" />
+    <None Include="graphics\Images\aimerF2O.png" />
+    <None Include="graphics\Images\aimerF3I.png" />
+    <None Include="graphics\Images\aimerF3O.png" />
+    <None Include="graphics\Images\aimerI1I.png" />
+    <None Include="graphics\Images\aimerI1O.png" />
+    <None Include="graphics\Images\aimerI2O.png" />
+    <None Include="graphics\Images\aimerI3I.png" />
+    <None Include="graphics\Images\aimerI3O.png" />
+    <None Include="graphics\Images\aimerInner.png" />
+    <None Include="graphics\Images\aimerNone.png" />
+    <None Include="graphics\Images\aimerOuter.png" />
+    <None Include="graphics\Images\background.jpg" />
     <None Include="graphics\Images\badguy.png" />
     <None Include="graphics\Images\chargebar.png" />
     <None Include="graphics\Images\chargebarempty.png" />
@@ -209,6 +225,8 @@
     <None Include="graphics\Images\Full_life_bar.png" />
     <None Include="graphics\Images\Full_mana_bar.png" />
     <None Include="graphics\Images\heart_color.png" />
+    <None Include="graphics\Images\hitBlue.png" />
+    <None Include="graphics\Images\hitRed.png" />
     <None Include="graphics\Images\magic_color.png" />
     <None Include="graphics\Images\notready.png" />
     <None Include="graphics\Images\powerAttack.png" />
@@ -246,9 +264,12 @@
     <None Include="graphics\Images\weaponIce.png" />
     <None Include="graphics\Images\weaponThu.png" />
     <None Include="masterConfig.txt" />
+    <None Include="MORPHEUS.TTF" />
     <None Include="shaders\animated.vert" />
     <None Include="shaders\default.frag" />
     <None Include="shaders\default.vert" />
+    <None Include="shaders\particle.frag" />
+    <None Include="shaders\particle.vert" />
     <None Include="shaders\skybox.frag" />
     <None Include="shaders\skybox.vert" />
   </ItemGroup>

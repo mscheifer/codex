@@ -34,19 +34,25 @@ class debugStream {
     template<typename T>
     debugStream& operator<<(const T& a) {
       bool userDebugOn= StringToBool(ConfigManager::configMap["graphicsDebug"]);
-      if(debugOn && userDebugOn) {
+      if(debugOn) {
         logString << a;
         if(logString.str().back() == '\n') {
-          std::string toPrint;
-          getline(logString, toPrint);
-          std::cout << toPrint << std::endl;
-          ConfigManager::log(toPrint);
+          if(userDebugOn) {
+            std::string toPrint;
+            std::string check;
+            getline(logString, toPrint);
+            getline(logString, check);
+            logString.clear();
+            std::cout << toPrint << std::endl;
+            assert(check.length() == 0);
+            //ConfigManager::log(toPrint);
+          }
           GLenum err;
           while((err = glGetError())) {
             std::stringstream sserror;
             sserror << "OpenGL error: " << err;
             std::cout << sserror.str() << std::endl;
-            ConfigManager::log(sserror.str());
+            //ConfigManager::log(sserror.str());
             assert(false);
           }
         }

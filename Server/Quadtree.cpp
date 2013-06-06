@@ -1,6 +1,5 @@
 #include "Quadtree.h"
 
-
 Quadtree::Quadtree(int pLevel, Rectangle pBounds):
 level(pLevel),objects(),bounds(pBounds){
   for( unsigned int i = 0; i < nodes.size(); i++){

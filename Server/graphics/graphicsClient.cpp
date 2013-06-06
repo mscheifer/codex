@@ -23,7 +23,7 @@ std::vector<gx::graphicsEntity> staticModels() {
 
   //auto modelBadGuy     = loadModel(configModelName("badguy"),Player::playerDepth,true);
   auto modelWeapon     = loadModel(configModelName("weapon"),Weapon::weaponDepth,true);
-  auto modelProjectile = loadModel(configModelName("projectile"),Projectile::projDepth);
+  auto modelProjectile = loadModel(configModelName("projectile"),Projectile::projDepth,true);
   auto modelPowerUp    = loadModel(configModelName("powerup"),PowerUp::powerUpDepth,true);
   auto modelWall       = loadModel(configModelName("wall"),10);
   auto modelPlayer     = loadModel(configModelName("goodguy"),Player::playerDepth,true);
@@ -52,6 +52,13 @@ std::vector<gx::graphicsEntity> dynamicModels() {
   std::vector<gx::graphicsEntity> entitiesData;
   entitiesData.push_back(std::move(modelPlayer));
   return entitiesData;
+}
+
+std::vector<gx::particleEntity> particlesData() {
+  gx::material mat(gx::Texture(GL_TEXTURE_2D,"models/Flame_1.jpg"),gx::vector4f(0.75,0,0));
+  std::vector<gx::particleEntity> ret;
+  ret.push_back(gx::particleEntity(std::move(mat)));
+  return ret;
 }
 //must call after window is initialized
 GLenum initGlew() {
@@ -111,6 +118,7 @@ gx::graphicsClient::graphicsClient():
     entities(staticModels(),uniforms()),
     animatedDrawer(dynamicModels(),uniforms()),
     skyboxDrawer(display.storage()),
+    particles(particlesData(),std::vector<uniform::block*>(1,&(display.storage()))),
     Hud(),Lobby(), Score(ConfigManager::numPlayers()),
     playerDirection(0.0, 1.0,0.0),//will be changed by init packet
     playerStartDirection(0.0, 1.0,0.0),
@@ -140,6 +148,10 @@ gx::graphicsClient::graphicsClient():
   glEnable(GL_CULL_FACE);
   glCullFace(GL_BACK);
   glFrontFace(GL_CCW);
+
+  glEnable(GL_BLEND);
+  glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
+  //glBlendFunc(GL_DST_COLOR, GL_ONE);
 
   this->setCamera();
   this->userInput.setUpMouse();
@@ -180,35 +192,40 @@ void gx::graphicsClient::draw() {
   gx::debugout << "| GL_STENCIL_BUFFER_BIT);" << gx::endl;
 
   // draw...
-  entities.draw();
-  animatedDrawer.draw();
-  skyboxDrawer.draw();
-  
+  this->entities.draw();
+  this->animatedDrawer.draw();
+  this->skyboxDrawer.draw();
+
+  glDepthMask(GL_FALSE);
+  this->particles.draw();
+ 	glDepthMask(GL_TRUE);
+ 
   //render sfml please don't comment or uncomment anything from the following
   //block
   glBindVertexArray(0);
   debugout << "Bound 0 draw loop" << endl;
-  window.pushGLStates();
+  this->window.pushGLStates();
   //glUseProgram(0);
   glBindBuffer(GL_ARRAY_BUFFER, 0);
   //SFML graphics
-  Hud.draw(window); 
-  if (this->userInput.drawS())
-    Score.draw(window);
+  this->Hud.draw(window); 
+  if (this->userInput.drawS()) {
+    this->Score.draw(window);
+  }
   //end of SFML graphics
-  window.popGLStates();
+  this->window.popGLStates();
   //glDisableClientState(GL_VERTEX_ARRAY);
   //glDisableClientState(GL_COLOR_ARRAY);
   //glDisableClientState(GL_TEXTURE_COORD_ARRAY);
 
   // end the current frame (internally swaps the front and back buffers)
-  window.display();
+  this->window.display();
   //fps calc
-  fpsFrames++;
-  if(fpsClock.getElapsedTime().asSeconds() >= 1) {
-    std::cout << "fps: " << fpsFrames << std::endl;
-    fpsFrames = 0;
-    fpsClock.restart();
+  this->fpsFrames++;
+  if(this->fpsClock.getElapsedTime().asSeconds() >= 1) {
+    std::cout << "fps: " << this->fpsFrames << std::endl;
+    this->fpsFrames = 0;
+    this->fpsClock.restart();
   }
 }
 
@@ -229,10 +246,11 @@ void gx::graphicsClient::clearEntities() {
 
   this->entities.reset();
   this->animatedDrawer.reset();
+  this->particles.reset();
   
   // add ground instance. kinda hacky but works
   staticDrawer::instanceData groundInst;
-  groundInst.pos  = vector3f(0, 0, 0);
+  groundInst.pos  = vector4f(0,0,0) + vector3f(0, 0, 0);
   groundInst.dirY = vector3f(0,1,0);
   groundInst.type = GROUND;
   groundInst.scale = 1;
@@ -242,11 +260,17 @@ void gx::graphicsClient::clearEntities() {
 void gx::graphicsClient::addEntity(Entity* ent) {
   const auto& entity = *ent;
   const auto& type = entity.getType();
+  if(type == WEAPON) {
+	particleDrawer::instanceData inst;
+    inst.position = vector4f(0,0,0) + entity.getPosition();
+    inst.type = 0;
+    this->particles.addInstance(inst);
+  }
 
-  if(type == PLAYER) { //TODO: change back to type == PLAYER
+  if(false) { //TODO: change back to type == PLAYER
     dynamicDrawer::instanceData inst;
     inst.scale = 1;
-    inst. pos = entity.getPosition();
+    inst. pos = vector4f(0,0,0) + entity.getPosition();
     inst.dirY = entity.getDirection();
     inst.type = 0; //TODO: somehow set this based on type but it can't be absolute type?
     inst.animation = 0; //TODO: select animation based on context
@@ -257,7 +281,7 @@ void gx::graphicsClient::addEntity(Entity* ent) {
   } else {
     staticDrawer::instanceData inst;
     inst.scale = 1;
-    inst. pos = entity.getPosition();
+    inst. pos = vector4f(0,0,0) + entity.getPosition();
     inst.dirY = entity.getDirection();
     inst.type = entity.getType();
     this->entities.addInstance(inst);
@@ -266,13 +290,18 @@ void gx::graphicsClient::addEntity(Entity* ent) {
 
 void gx::graphicsClient::addEntity(Projectile* ent) {
   const auto& entity = *ent;
-
+  {
+	  particleDrawer::instanceData inst;
+    inst.position = vector4f(0,0,0) + entity.getPosition();
+    inst.type = 0;
+    this->particles.addInstance(inst);
+  }
   lights.addLight(vector4f(0,0,0) + entity.getPosition());
   staticDrawer::instanceData inst;
   inst.scale = ProjInfo[entity.getMagicType()].size;
-  inst. pos = entity.getPosition();
-  inst.dirY = entity.getDirection();
-  inst.type = entity.getType();
+  inst.pos   = vector4f(0,0,0) + entity.getPosition();
+  inst.dirY  = entity.getDirection();
+  inst.type  = entity.getType();
   this->entities.addInstance(inst);
 }
 
@@ -323,4 +352,15 @@ void gx::graphicsClient::updateLobby(std::vector<std::pair<int,bool>> & playerSt
 
 void gx::graphicsClient::updateHUDTimer(float timer) {
   this->Hud.updateHUDTimer(timer);
+}
+
+std::string gx::graphicsClient::getInputText() const {
+  return this->Lobby.getInputText();
+}
+
+void gx::graphicsClient::setConnected(bool connected) {
+  this->Lobby.setConnected(connected);
+}
+void gx::graphicsClient::updateNames(std::vector<std::string> & names) {
+  this->Score.updateNames(names);
 }

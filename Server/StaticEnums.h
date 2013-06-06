@@ -35,10 +35,10 @@ enum Entity_Type {UNDEFINED=0, PLAYER, WALL, PROJECTILE, WEAPON, POWER_UP, GROUN
 enum Texture_Type {DEFAULT=0, GROUNDTEX=64};
 
 //used to determine names 
-enum WeaponType{UNK=0, FIRE, ICE, THUNDER, FIST, BASIC};
+enum WeaponType{UNK=0, FIRE, ICE, THUNDER, FIST, BASIC, NONEWEAPON};
 
 const std::string WeaponNames[] = {
-  "UNKNOWN",
+  "Forbidden Art",
   "STAFF OF FIRE",
   "ICE",
   "MJORLNIR",
@@ -66,6 +66,11 @@ const std::string spellNames[] = {
   "Gravity2", "Gravity2", "Gravity2",
   "Gravity3",
   "Basic"
+};
+
+const std::string powerUpNames[] = {
+  "Nothing", "Move boost", "Mana boost", "Health boost",
+  "Strength boost", "Attacked", "Charged", "Defense boost"
 };
 
 enum BUFF{ 

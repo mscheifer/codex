@@ -154,8 +154,9 @@ const aiScene* gx::Mesh::LoadFile(Assimp::Importer& Importer,
   const aiScene* pScene = Importer.ReadFile(Filename.c_str(), 0
          | aiProcess_Triangulate
          | aiProcess_GenSmoothNormals
+         | aiProcess_FixInfacingNormals
          | (flipUVs ? aiProcess_FlipUVs : 0));
-       //| aiProcess_FixInfacingNormals, aiProcess_FindDegenerates, aiProcess_FindInvalidData
+       //| aiProcess_FindDegenerates, aiProcess_FindInvalidData
        //| aiProcess_TransformUVCoords 	
   if (!pScene) {
     std::cout << "Error parsing '" <<  Filename.c_str() << "': '";

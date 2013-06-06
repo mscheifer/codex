@@ -43,12 +43,14 @@ public:
   virtual WeaponType getWeaponType() const{ return wtype; }
   virtual bool getHasRangedAttack() const { return hasRangedAttack; }
   virtual bool getHasMeleeAttack() const { return hasMeleeAttack; }
+  std::string toString();
   
   void serialize(sf::Packet & packet) const;
   void deserialize(sf::Packet & packet); 
  
   Entity_Type getType() const { return type; }
-
+  void setRespawnTime(int r);
+  void setRandomMagic();
 protected:
 	int Range_Cool_Down_Time; //cool down time between uses in milliseconds
 	int Melee_Cool_Down_Time; 
@@ -59,5 +61,7 @@ protected:
 	bool pickedUp;
 	sf::Clock Range_Cool_Down_Counter;
 	sf::Clock Melee_Cool_Down_Counter;
+  int Respawn_Time;
+  sf::Clock Respawn_Counter;
 };
 

@@ -19,6 +19,7 @@ void NetworkServer::receiveMessages(int i) {
   while(this->server.receiveMessage(packet,i)) {
     ClientGameTimeAction cgta;
     bool status;
+    std::string name;
     sf::Uint32 packetType;
     packet >> packetType;
     switch (packetType) {
@@ -32,6 +33,10 @@ void NetworkServer::receiveMessages(int i) {
         packet >> status;
         connectionCount = (status) ? (connectionCount+1):(connectionCount-1);
         startTheGame.changeStatus(i);
+        if (status) {
+          packet >> name;
+          game.assignName(name,i);
+        }
         this->server.sendPacketToAll<StartGamePacket>(startTheGame);
         break;
       default:
@@ -57,6 +62,7 @@ void NetworkServer::doServer() {
   //float receiveMessagesTime;
   //float updateAndResolveTime;
   //float sendTime;
+  ServerGameTimeRespond sgtr;
 
   //scores should not change
   game.initScores();
@@ -120,11 +126,12 @@ void NetworkServer::doServer() {
         //updateAndResolveTime = profilerTime.getElapsedTime().asMilliseconds();
         //profilerTime.restart();
 
-        ServerGameTimeRespond gtr = game.prepResponse();
-        gameState= gtr.state;
+        game.prepResponse(sgtr);
+        gameState = sgtr.state;
         //3. prep and send response to everyone
-	      if(!this->server.sendPacketToAll<ServerGameTimeRespond>( gtr ) ) {
+	      if(!this->server.sendPacketToAll<ServerGameTimeRespond>( sgtr ) ) {
           std::cout << "Error sending sgtr to everybody" << std::endl;
+          ConfigManager::log(std::string("Error sending sgtr to everyone"));
         }
         //sendTime = profilerTime.getElapsedTime().asMilliseconds();
         //std::cout << "clearEvents: " << clearEventsTime << " ms "
@@ -152,7 +159,7 @@ void NetworkServer::doServer() {
         }
         sf::sleep( sf::milliseconds(sleepAmount) );
       } else {
-        if (clock.getElapsedTime().asSeconds() > 2) { //TODO make this 5 sec again
+        if (clock.getElapsedTime().asSeconds() > StringToNumber<unsigned int>(ConfigManager::configMap["countdown"])) { //TODO make this 5 sec again
           gameState = PLAYING; 
         }
       }

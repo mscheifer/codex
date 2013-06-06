@@ -52,6 +52,8 @@ void PowerUp::handleCollisions() {
 void PowerUp::update() {
 	if ((Respown_Counter.getElapsedTime().asMilliseconds() >= Respown_Time) && active == false) {
 		active = true;
+    map->addSpawnLocation(position);
+    position = map->getRespawnPosition();
     map->addToQtree(this);
     render = true;
 	}
@@ -83,4 +85,10 @@ void PowerUp::serialize(sf::Packet& packet) const
 void PowerUp::deserialize(sf::Packet& packet)
 { 
   Entity::deserialize(packet);
+}
+
+std::string PowerUp::toString(){
+  std::stringstream ss;
+  ss << position << direction << std::endl;
+  return ss.str();
 }

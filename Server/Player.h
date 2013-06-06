@@ -33,6 +33,7 @@ public:
   float totalChargeTime;
   MAGIC_POWER chargeMagicType;
   MAGIC_POWER attackedMagicType;
+  BUFF ptype;
   
   int player_id;
   std::string name;
@@ -82,6 +83,7 @@ public:
   float getDefenseMultiplier() const;
   int getKills() const { return kills; }
   int getWins() const { return wins; }
+  std::string toString();
   
   void serialize(sf::Packet& packet) const;
   void deserialize(sf::Packet& packet);

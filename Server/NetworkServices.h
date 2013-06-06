@@ -12,6 +12,7 @@ class ClientServices{
     bool invalidIpAddress;
 
     ClientServices();
+    bool connectServer(std::string serverIP);
     bool sendMessage(sf::Packet &packet );
     bool receiveMessage(sf::Packet & packet);
 
@@ -40,6 +41,7 @@ class ServerServices {
      packet.clear();
      packet << Data::packetType;
      data.serialize(packet);
+     //std::cout << "packet size of " << packet.getDataSize() << "bytes " << std::endl;
      return sendToAll(packet); 
    }
    

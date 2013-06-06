@@ -14,6 +14,7 @@ anti-alias=0
 window-width=800
 window-height=600
 enableMinotaur=1
+countdown=2
 
 //models
 model-badguy=cat.dae
@@ -27,7 +28,7 @@ model-weapon=badguy.dae
 gravity=-40
 
 // Player configuration
-players=2
+players=1
 movescale=.6
 airMovescale=.49
 maxJump=2

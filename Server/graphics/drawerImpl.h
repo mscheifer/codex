@@ -29,12 +29,14 @@ class staticDrawerImpl {
       entityClass(entityClass&&) noexcept;
       entityClass& operator=(entityClass&&);// = delete;
       void clear();
+      void update();
+      void draw();
     };
     staticDrawerImpl(const shaderProgram&);
     void setUniforms(const entityClass&,const entityClass::instance&) const;
     void setUniforms(const entityClass::instance&) const;
     struct instanceData {
-      vector3f pos;
+      vector4f pos;
       vector3f dirY;
       GLfloat  scale;
       unsigned int type;
@@ -68,6 +70,8 @@ class dynamicDrawerImpl {
       entityClass(entityClass&&) noexcept;
       entityClass& operator=(entityClass&&);// = delete;
       void clear();
+      void update();
+      void draw();
     };
     dynamicDrawerImpl(const shaderProgram&);
     void setUniforms(const entityClass&,const entityClass::instance&) const;

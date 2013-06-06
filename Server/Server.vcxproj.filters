@@ -404,8 +404,11 @@
     <ClInclude Include="Ground.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="graphics\particleSystem.h">
+      <Filter>Header Files\graphics</Filter>
+    </ClInclude>
     <ClInclude Include="graphics\buffer.h">
-      <Filter>Header Files</Filter>
+      <Filter>Header Files\graphics</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -560,6 +563,66 @@
       <Filter>Resource Files\graphics\Images</Filter>
     </None>
     <None Include="graphics\Images\stunIL.png">
+      <Filter>Resource Files\graphics\Images</Filter>
+    </None>
+    <None Include="shaders\particle.frag">
+      <Filter>Resource Files\graphics</Filter>
+    </None>
+    <None Include="shaders\particle.vert">
+      <Filter>Resource Files\graphics</Filter>
+    </None>
+    <None Include="MORPHEUS.TTF">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="graphics\Images\background.jpg">
+      <Filter>Resource Files\graphics\Images</Filter>
+    </None>
+    <None Include="graphics\Images\aimerEmpty.png">
+      <Filter>Resource Files\graphics\Images</Filter>
+    </None>
+    <None Include="graphics\Images\aimerF1I.png">
+      <Filter>Resource Files\graphics\Images</Filter>
+    </None>
+    <None Include="graphics\Images\aimerF1O.png">
+      <Filter>Resource Files\graphics\Images</Filter>
+    </None>
+    <None Include="graphics\Images\aimerF2O.png">
+      <Filter>Resource Files\graphics\Images</Filter>
+    </None>
+    <None Include="graphics\Images\aimerF3I.png">
+      <Filter>Resource Files\graphics\Images</Filter>
+    </None>
+    <None Include="graphics\Images\aimerF3O.png">
+      <Filter>Resource Files\graphics\Images</Filter>
+    </None>
+    <None Include="graphics\Images\aimerI1I.png">
+      <Filter>Resource Files\graphics\Images</Filter>
+    </None>
+    <None Include="graphics\Images\aimerI1O.png">
+      <Filter>Resource Files\graphics\Images</Filter>
+    </None>
+    <None Include="graphics\Images\aimerI2O.png">
+      <Filter>Resource Files\graphics\Images</Filter>
+    </None>
+    <None Include="graphics\Images\aimerI3I.png">
+      <Filter>Resource Files\graphics\Images</Filter>
+    </None>
+    <None Include="graphics\Images\aimerI3O.png">
+      <Filter>Resource Files\graphics\Images</Filter>
+    </None>
+    <None Include="graphics\Images\aimerInner.png">
+      <Filter>Resource Files\graphics\Images</Filter>
+    </None>
+    <None Include="graphics\Images\aimerNone.png">
+      <Filter>Resource Files\graphics\Images</Filter>
+    </None>
+    <None Include="graphics\Images\aimerOuter.png">
+      <Filter>Resource Files\graphics\Images</Filter>
+    </None>
+    <None Include="graphics\Images\hitBlue.png">
+      <Filter>Resource Files\graphics\Images</Filter>
+    </None>
+    <None Include="graphics\Images\hitRed.png">
       <Filter>Resource Files\graphics\Images</Filter>
     </None>
   </ItemGroup>

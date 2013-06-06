@@ -11,8 +11,8 @@ class vertexAttrib {
     GLint       vectorSize;
     GLenum      glType;
     GLsizei     byteOffset;
-    buffer      buff;
   protected:
+    buffer      buff;
     template<typename T>
     vertexAttrib(std::string n, GLint vs, GLsizei st,const std::vector<T>& d, GLenum hint)
           : varName(n), vectorSize(vs), glType(typeVal(d[0])), byteOffset(st),
@@ -27,6 +27,7 @@ class vertexAttrib {
     vertexAttrib& operator=(const vertexAttrib&);// = delete; //don't assign
     vertexAttrib(vertexAttrib&&) noexcept;
     vertexAttrib& operator=(vertexAttrib&&);// = delete; //define later
+    virtual ~vertexAttrib() {};
     void bindBuffer()     const;
     std::string name()    const;
     GLint       vecSize() const;
@@ -39,9 +40,13 @@ class dynamicVertexAttrib : public vertexAttrib {
     template<typename T>
     dynamicVertexAttrib(std::string n, GLint vs, GLsizei st,const std::vector<T>& d)
          : vertexAttrib(std::move(n), vs, st, d, GL_STREAM_DRAW) {}
+    dynamicVertexAttrib(const dynamicVertexAttrib&);// = delete; //don't copy
+    dynamicVertexAttrib& operator=(const dynamicVertexAttrib&);// = delete; //don't assign
+    dynamicVertexAttrib(dynamicVertexAttrib&&) noexcept;
+    dynamicVertexAttrib& operator=(dynamicVertexAttrib&&);// = delete; //define later
     template<typename T>
     void write(const std::vector<T>& d) {
-      assert(this->type() == typeVal(d[0]));
+      assert(d.size() == 0 || this->type() == typeVal(d[0]));
       this->buff.write(d);
     }
 };

@@ -34,14 +34,15 @@ void gx::drawer<T>::draw() {
   }
   for(auto entityCp = entityClasses.begin(); entityCp != entityClasses.end();
                                                                  ++entityCp) {
-    const auto& entityC = *entityCp;
+    auto& entityC = *entityCp;
+    entityC.update();
     entityC.mat.bind();
     entityC.vertData.drawHead();
     for(auto instp = entityC.instances.begin();instp != entityC.instances.end();
                                                                       ++instp) {
       const auto& inst = *instp;
       this->impl.setUniforms(entityC,inst);
-      entityC.vertData.drawInstance();
+      entityC.draw();
     }
   }
 }
@@ -62,3 +63,4 @@ void gx::drawer<T>::addInstance(instanceData a) {
 
 template class gx::drawer<gx::staticDrawerImpl>;
 template class gx::drawer<gx::dynamicDrawerImpl>;
+template class gx::drawer<gx::particleDrawerImpl>;

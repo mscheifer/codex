@@ -188,6 +188,7 @@ void Projectile::fireMutiple(v3_t v, float strengthMultiplier, int number) {
     counter += slice;
     Projectile* pj = map->produceProjectile();
     pj->setVelocity(v3_t(xp,yp,velocity.z));
+    pj->setDirection(pj->velocity);
     pj->setOwner(owner);
     pj->setMagicType(magicType);
     pj->setRender(true);
@@ -272,6 +273,15 @@ void Projectile::deserialize( sf::Packet & packet ) {
   //Player* owner = new Player();
   //(*owner).deserialize(packet);
  }
+
+std::string Projectile::toString2(){
+  std::stringstream packet;
+  packet << fired;
+  packet << id;
+  packet << combined;
+  packet << static_cast<sf::Uint32>(magicType);
+  return packet.str();
+}
 
 std::string Projectile::toString(){
   std::stringstream ss;

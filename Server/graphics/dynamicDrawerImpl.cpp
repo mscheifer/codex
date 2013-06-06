@@ -34,6 +34,10 @@ gx::graphicsEntity::attribsList_t processAttribs(const gx::graphicsEntity& genti
         }
       }
       //this works because we're not doing non-uniform scaling
+      gx::matrix mat(0,0,1,0, //HACK TO USE LATER
+                     0,1,0,0,
+                     1,0,0,0,
+                     0,0,0,1);
       rawData[i] = offset * rawData[i];
     }
     gentity.normals->putProcessedData(shaderID,rawData);
@@ -58,7 +62,7 @@ const std::string gx::dynamicDrawerImpl::vertShader =
 const std::string gx::dynamicDrawerImpl::fragShader =
   readFile("shaders/default.frag");
 
-gx::dynamicDrawerImpl::entityClass::entityClass(graphicsEntity drawData,
+gx::dynamicDrawerImpl::entityClass::entityClass(entity_t drawData,
                                                 varSigs_t vars)
   : vertData(std::move(drawData.indices),processAttribs(drawData),
              std::move(vars)), mat(std::move(drawData.mat)),
@@ -79,6 +83,14 @@ gx::dynamicDrawerImpl::entityClass::operator=(entityClass&&) {
 
 void gx::dynamicDrawerImpl::entityClass::clear() {
   this->instances.clear();
+}
+
+void gx::dynamicDrawerImpl::entityClass::update() {
+  //do nothing
+}
+
+void gx::dynamicDrawerImpl::entityClass::draw() {
+  this->vertData.drawInstance();
 }
 
 gx::dynamicDrawerImpl::dynamicDrawerImpl(const shaderProgram& program)

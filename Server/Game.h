@@ -88,7 +88,7 @@ public:
 	Game(void);
 	Game(Map m);
 	void evaluate(ClientGameTimeAction a);
-	ServerGameTimeRespond prepResponse(void);
+	void prepResponse(ServerGameTimeRespond& sgtr);
   void updateAndResolveCollision(void);
 	~Game(void);
   int join();
@@ -97,6 +97,7 @@ public:
   void clearEvents();
   void restartGame();
   void initScores();
+  void assignName(std::string name, int id);
 private:
 	Map world;
 };
