@@ -33,6 +33,7 @@ private :
   BUFF ptype;
   vector3f attackedDir;
   float attackedAngle;
+  bool switched;
 
   sf::Text healthText;
   sf::Text manaText;

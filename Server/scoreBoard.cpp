@@ -115,9 +115,9 @@ void scoreBoard::setPlayerId(unsigned int x)
 
 void scoreBoard::setMinotaurId(unsigned int id)
 {
-  if(id == minotaurId)
-    return;
-  playerSprite[minotaurId].setTexture(goodGuyTexture);
-  minotaurId = id;
-  playerSprite[minotaurId].setTexture(badGuyTexture);
+  //if(id == minotaurId)
+  //  return;
+  //playerSprite[minotaurId].setTexture(goodGuyTexture);
+  //minotaurId = id;
+  //playerSprite[minotaurId].setTexture(badGuyTexture);
 }

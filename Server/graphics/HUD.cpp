@@ -8,7 +8,8 @@ gx::HUD::HUD(void):health(100), maxHealth(100), HLossPercentage(0),
   mana(100), maxMana(100), MLossPercentage(0), canPickUp(false),
   weapon1(0), weapon2(0), currentSelect(0), elapsedChargeTime(0),
   totalChargeTime(-1), chargeMagicType(0), charging(false), timer(0),
-  aimerOuter(0), aimerInner(0), playerDirection(0,0,0), hit(0), attackedAngle(0){
+  aimerOuter(0), aimerInner(0), playerDirection(0,0,0), hit(0), attackedAngle(0),
+  switched(false){
   font.loadFromFile("arial.ttf");
   emptyBarTexture.loadFromFile("graphics/Images/Empty_bar.png");
   //heart image
@@ -120,6 +121,9 @@ gx::HUD::~HUD(void) {
 
 void gx::HUD::draw(sf::RenderWindow & window) {
   float passed = hitClock.getElapsedTime().asSeconds();
+  float winX = window.getSize().x;
+  float winY = window.getSize().y;
+
   if (passed< 1.5) {
     hitSprites[hit]->setScale(static_cast<float>(window.getSize().x)/hitTextures[hit]->getSize().x,
     static_cast<float>(window.getSize().y)/hitTextures[hit]->getSize().y);
@@ -173,9 +177,39 @@ void gx::HUD::draw(sf::RenderWindow & window) {
     aimerSprites[aimerInner]->setRotation((totalChargeTime - elapsedChargeTime)/totalChargeTime *360);
     window.draw(*aimerSprites[aimerInner]);
     window.draw(*aimerSprites[aimerOuter]);
-  } else if( timer <= 0 ){
-    //only display this when in the actual game not during countdown
-    aimerSprites[1]->setPosition((window.getSize().x)/2, (window.getSize().y)/2);
+  } else if( timer <= 0 ){//only display this when in the actual game not during countdown
+
+    //AIMER switch pivot calculation
+    float pivotX = winX/2;
+    static float pivotY = 0;
+    static float theta = M_PI/90;
+    static float currAngle = M_PI/2;
+    float radius = winY/2;
+    float startX = aimerSprites[1]->getPosition().x;
+    float startY = aimerSprites[1]->getPosition().y;
+
+    //start switching
+    if(switched){
+      currAngle = 0;
+      startX = pivotX + radius;
+      startY = 0;
+    }
+    
+    if ( M_PI/2 - currAngle > 1.0E-8){
+      float tmpX = cos(static_cast<float>(theta)) * (startX-pivotX) - 
+        sin(static_cast<float>(theta)) * (startY-pivotY) + pivotX;
+      float tmpY = sin(static_cast<float>(theta)) * (startX-pivotX) +
+        cos(static_cast<float>(theta)) * (startY-pivotY) + pivotY;
+      aimerSprites[1]->setPosition(tmpX, tmpY);
+      startX = tmpX;
+      startY = tmpY;
+      currAngle += theta;
+    } else {
+      startX = winX/2;
+      startY = winY/2;
+      //aimerSprites[1]->setPosition(winX/2, winY/2);
+    }
+    aimerSprites[1]->setPosition(startX, startY);
     window.draw(*aimerSprites[1]);
   }
 
@@ -251,6 +285,10 @@ void gx::HUD::updateHUD(const Player& player) {
  //update weapons
   weapon1 = player.weapon1;
   weapon2 = player.weapon2;
+  switched = false;
+  if(currentSelect != player.getCurrentWeaponSelection()){
+    switched = true;
+  }
   currentSelect = player.getCurrentWeaponSelection();
   this->elapsedChargeTime = player.elapsedChargeTime;
   this->totalChargeTime = player.totalChargeTime;
