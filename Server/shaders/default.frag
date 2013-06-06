@@ -18,7 +18,7 @@ void main() {
   vec3 viewDirection = normalize(-vec3(interpPosition));
   vec3 normal = normalize(interpNormal);
 
-  const vec4 ambient = vec4(0.3, 0.3, 0.3, 1.0);
+  const vec4 ambient = vec4(0.5, 0.5, 0.5, 1.0);
 
   vec4 lightVal = ambient;
   for(uint i = 0u; i < numLights; i++) {
@@ -31,7 +31,6 @@ void main() {
   }
 
   vec4 color = texture(diffuseTex, interpDiffuseCoord) * lightVal;
-  color = vec4(color.xyz * color.w,1.0); //HDR lighting lol
 
   //if(dot(viewDirection, normal) < outlineThickness) {
   //  color = vec4(0.0,0.0,0.0,1.0);

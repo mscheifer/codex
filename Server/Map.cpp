@@ -12,16 +12,13 @@
 const float Map::Item_Pick_Up_Ranges = 1.0f;
 
 //TODO the rectangle should be the actual world bounds 
-Map::Map(void): spawnPositions(), freeProjectiles(), q(0,Rectangle(BoundingObj::vec4_t(0,0,0),1000,1000))
+Map::Map(void): spawnPositions(), freeProjectiles(), q(0,Rectangle(BoundingObj::vec4_t(0,0,0),500,500))
 {
-	map_size = 15;
-	freeProjectiles = new std::stack<Projectile *>();
-  initSpawns();
-
-  initPowerUps();
-  initTestWalls();
- // initStaticEntities();
+  map_size = 15;
+  freeProjectiles = new std::stack<Projectile *>();
+  initSpawns(); //needed before reset because
 }
+
 
 void Map::mapReset()
 {
@@ -31,20 +28,12 @@ void Map::mapReset()
   entities.clear();
   liveProjectTile.clear();
   initSpawns();
+
   initPowerUps();
-  initTestWalls(); 
+  initFloor();
+  initWalls(); 
   initStaticEntities();
-  
-  //initWallsOne();
-  //initStaticWalls();
-  //initWallsTwo();
 
-    v3_t facingEast(1,0,0);
-
-    Wall * floor = new Wall(1000, 10, 1000, v3_t(0,0,-5), facingEast, this);
-  this->entities.push_back(floor);
-  floor->setRender(false);
-  
   for(unsigned int i = 0; i < players.size(); i++)
   {
     players[i]->reset(this->getRespawnPosition());
@@ -62,32 +51,30 @@ void Map::initStaticEntities() {
     this->entities.push_back(staticEntity);
   */
 
-  staticEntity = new StaticEntity(TRITON);
+  /*staticEntity = new StaticEntity(TRITON);
   staticEntity->setPosition(v3_t(300,300,100));
   staticEntity->setDirection(v3_t(0,1,0));
   staticEntity->scale = 40;
 
-  this->staticEntities.push_back(staticEntity);
+  this->staticEntities.push_back(staticEntity);*/
 
 }
 void Map::initSpawns()
 {
-  // Spawns for initwallsone/two
-  spawnPositions.push_back(v3_t(0,0,0));
-  spawnPositions.push_back(v3_t(100,100,0));
-  spawnPositions.push_back(v3_t(100,-100,0));
-  spawnPositions.push_back(v3_t(-100,100,0));
-  spawnPositions.push_back(v3_t(-100,-100,0));
-  spawnPositions.push_back(v3_t(320,310,0));
-  spawnPositions.push_back(v3_t(320,-310,0));
-  spawnPositions.push_back(v3_t(-320,310,0));
-  spawnPositions.push_back(v3_t(-320,-310,0));
-  spawnPositions.push_back(v3_t(330,25,0));
-  spawnPositions.push_back(v3_t(-330,25,0));
-  spawnPositions.push_back(v3_t(0,215,0));
-  spawnPositions.push_back(v3_t(0,215,0));
-  spawnPositions.push_back(v3_t(400,20,0));
-  spawnPositions.push_back(v3_t(-400,20,0));
+  spawnPositions.push_back(v3_t(170,-45,0));
+  spawnPositions.push_back(v3_t(-125,-20,0));
+  spawnPositions.push_back(v3_t(170,45,0));
+  spawnPositions.push_back(v3_t(-170,100,0));
+  spawnPositions.push_back(v3_t(-170,60,0));
+  spawnPositions.push_back(v3_t(-135,130,0));
+  spawnPositions.push_back(v3_t(-95,130,0));
+  spawnPositions.push_back(v3_t(15,130,0));
+  spawnPositions.push_back(v3_t(60,60,0));
+  spawnPositions.push_back(v3_t(165,-80,0));
+  spawnPositions.push_back(v3_t(165,-20,0));
+  spawnPositions.push_back(v3_t(165,125,0));
+  spawnPositions.push_back(v3_t(170,-170,0));
+  spawnPositions.push_back(v3_t(60,-130,0));
 }
 
 void Map::initPowerUps() {
@@ -121,9 +108,17 @@ void Map::initPowerUps() {
     w->setRandomMagic();
     w->setDirection(v3_t(0,1,0));
     w->dropDown(w->getPosition());
-    w->setRespawnTime(6000);
+    w->setRespawnTime(60000);
     entities.push_back(w);
   }
+}
+
+void Map::initFloor(void) {
+  v3_t facingEast(1,0,0);
+
+  Wall * floor = new Wall(1000, 10, 1000, v3_t(0,0,-5), facingEast, this);
+  this->entities.push_back(floor);
+  floor->setRender(false);
 }
 
 void Map::initWallsTwo(void)
@@ -141,9 +136,7 @@ void Map::initWallsTwo(void)
   float centerY = 0;
   int i;
   float startingX;
-  float startingXNeg;
   float startingY;
-  float startingYNeg;
   float startingZ = depth/2.0f;
 
     int row1[] = {-1};
@@ -320,7 +313,6 @@ void Map::initWallsOne(void)
   */
 
 
-  
   int row1[] = {-1};
   int row2[] = {-1};
   int row3[] = {-1};
@@ -434,9 +426,7 @@ void Map::initStaticWalls(void) {
   float centerY = 0;
   int i;
   float startingX;
-  float startingXNeg;
   float startingY;
-  float startingYNeg;
   float startingZ = depth/2.0f;
   
   int row1[] = {-1};
@@ -516,8 +506,8 @@ void Map::initTestWalls(void)
   // Create the top and bottom perimeter from left to right.
   for( i = 0,
     startingX = ((wallX*width)/-2)+(width/2)+centerX,
-    startingY = ((wallY*width)/-2)+centerY,
-    startingYNeg = ((wallY*width)/2)+centerY;
+    startingY = ((wallY*width)/-2)+(height/2)+centerY,
+    startingYNeg = ((wallY*width)/2)-(height/2)+centerY;
     i < wallX; i++, startingX += width )
   {
     Wall* topWall = new Wall(width, depth, height, 
@@ -530,8 +520,8 @@ void Map::initTestWalls(void)
 
   // Create the left and right perimeter from bottom up
   for( i = 0,
-    startingX = ((wallX*width)/-2)+centerX,
-    startingXNeg = ((wallX*width)/2)+centerX,
+    startingX = ((wallX*width)/-2)+(height/2)+centerX,
+    startingXNeg = ((wallX*width)/2)-(height/2)+centerX,
     startingY = ((wallY*width)/-2)+(width/2)+centerY;
     i < wallY; i++, startingY += width )
   {
@@ -546,25 +536,6 @@ void Map::initTestWalls(void)
 }
 void Map::initWalls(void)
 {
-  //TODO move this
-  /*WeaponFire* w1 = new WeaponFire(v3_t(100,100,0), this, FIR1);
-  w1->dropDown(v3_t(10,10,0));
-  w1->setDirection(v3_t(0,1,0));
-  entities.push_back(w1);*/
-  /*WeaponFire* w2 = new WeaponFire(v3_t(120,120,0), this, THU1);
-  w2->dropDown(v3_t(10,-10,0));
-  w2->setDirection(v3_t(0,1,0));
-  entities.push_back(w2);
-  WeaponFire* w3 = new WeaponFire(v3_t(120,120,0), this, THU1);
-  w3->dropDown(v3_t(-10,-10,0));
-  w3->setDirection(v3_t(0,1,0));
-  entities.push_back(w3);*/
-
-  spawnPositions.push_back(v3_t(4,-4,1));
-  spawnPositions.push_back(v3_t(4,4,1));
-  spawnPositions.push_back(v3_t(-4,-4,1));
-  spawnPositions.push_back(v3_t(-4,4,1));
-
   v3_t facingEast(1,0,0);
   v3_t facingNorth(0,1,0);
   float width = ConfigManager::wallWidth();
@@ -620,9 +591,7 @@ void Map::initWalls(void)
   //moveableWall->addNewCenter(v3_t(0,10,20));
   //moveableWall->addNewCenter(v3_t(0,0,20));
   //this->entities.push_back(moveableWall);
-  Wall * floor = new Wall(1000, 10, 1000, v3_t(0,0,-5), facingEast, this);
-  this->entities.push_back(floor);
-  floor->setRender(false);
+
   initWallsBlue();
   initWallsRed();
  // return; // REMOVE THIS TO KILL GRAPHICS
@@ -638,7 +607,7 @@ void Map::initWalls(void)
   int row8[] = {0,1,2,3,4,8,10,11,12,13, -1};
   int row9[] = {0,2,3,4,5,6,7,10,11,13, -1};*/
   //int row10[] = {1,3,4,5,9/*,14*/, -1};
-  int row11[] = {1,2,4,5,8,9/*,10,11,13,14*/, -1};
+  int row11[] = {1,2,4,5,8/*,10,11,13,14*/, -1};
   int row12[] = {1,3,5,6,7/*,11,12,13*/, -1};
   int row13[] = {0,2,3,-1};
   int row14[] = {/*15,*/ -1};
@@ -803,7 +772,6 @@ void Map::addSpawnLocation(v3_t loc)
 
 v3_t Map::getRespawnPosition()
 {
-  return  v3_t(0,0,0);
   if(spawnPositions.size() == 0)
   {
     std::cout<<"TODO: need more spawn positions"<<std::endl;
@@ -896,17 +864,18 @@ void Map::destHelper(){
   }
 }
 
+
+const std::vector<Entity *>& Map::getEntity() {
+  return entities;
+}
+
 std::vector<StaticEntity *> Map::getStaticEntities() {
   return staticEntities;
 }
-
-std::vector<Entity *> Map::getEntity() {
-	 return entities;
-}
   
- std::vector<Player *> Map::getPlayers(){
-	 return players;
- }
+const std::vector<Player *>& Map::getPlayers(){
+  return players;
+}
 
  std::vector<Projectile *> Map::getLiveProjectTile(){
    return liveProjectTile;
@@ -1000,7 +969,11 @@ void Map::separatePlayers(Player* player){
  }
 
 void Map::addToQtree(Entity* e){
-  std::vector<BoundingObj*> vec = e->getBoundingObjs();
+  //TODO visual studip debugger sucks, remove this
+  if( e == nullptr)
+    std::cout << "ERROR entity is nullptr, why add that to qtree?" << std::endl;
+
+  std::vector<BoundingObj*> vec = e->getBoundingObjs ();
   //add the boxes to the qtree
   for( auto it = vec.begin(); it != vec.end(); ++it){
     (*it)->setQuadtree(&q);

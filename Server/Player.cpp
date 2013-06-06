@@ -59,6 +59,7 @@ void Player::init(v3_t pos, int assigned_id, Map * m)
   velocity = v3_t(0,0,0);
   acceleration = v3_t(0,0,0);
   oldJumpVelocity = v3_t(0,0,0);
+  attackedDir = v3_t(0,0,0);
   minotaur = false;
 	dead = false;
   canJump = true;
@@ -101,11 +102,8 @@ void Player::init(v3_t pos, int assigned_id, Map * m)
 
   buffs.clear();
   inactiveBuffs.clear();
-
   current_weapon_selection = 1;
-
   chargedProjectile = nullptr;
-  
 
   m->addToQtree(this);
 }
@@ -168,6 +166,7 @@ bool Player::damageBy(Projectile *deadly)
 	if (health==0) return true;
 
   attacked = true;
+  attackedDir = deadly->getDirection();
   float damage = deadly->getStrength() - defense*getDefenseMultiplier();
   attackedMagicType = deadly->getMagicType();
 	damage = ( damage > 0? damage: 0);
@@ -271,6 +270,7 @@ void Player::clearEvents(){
   meleeAttack = false;
   weaponCall = false;
   collectPowerUp = false;
+  attackedDir = v3_t(0,0,0);
 }
 
 void Player::die()
@@ -781,6 +781,7 @@ void Player::serialize(sf::Packet& packet) const {
     packet << collectPowerUp;
     packet << static_cast<sf::Uint32>(ptype);
     packet << upgraded;
+    attackedDir.serialize(packet);
   }
 
   void Player::deserialize(sf::Packet& packet) {
@@ -853,6 +854,7 @@ void Player::serialize(sf::Packet& packet) const {
     packet >> weaponType32;
     ptype = static_cast<BUFF>(weaponType32);
     packet >> upgraded;
+    attackedDir.deserialize(packet);
   }
 
   std::string Player::toString(){

@@ -1,12 +1,9 @@
 #pragma once
-//#include "Entity.h"
-//#include "Player.h"
-//#include "Projectile.h"
 #include <array>
 #include <vector>
 #include <stdlib.h>
 #include <stack>
-#include "Quadtree.h"
+#include "Quadtree.h" //TODO remove comment
 #include "Physics.h" //typedef
 #include <stdlib.h> 
 
@@ -27,10 +24,10 @@ public:
   int map_size;
   std::vector<int> kills; //TODO make them private
   std::vector<int> wins;
-  
+
   v3_t getRespawnPosition();
-  std::vector<Entity *> getEntity(void);
-  std::vector<Player *> getPlayers(void);
+  const std::vector<Entity *>& getEntity(void);
+  const std::vector<Player *>& getPlayers(void);
   std::vector<Projectile *> getLiveProjectTile(void);
   Projectile* produceProjectile(void);
   void destroyProjectile(Projectile *);
@@ -56,6 +53,8 @@ private:
 	std::vector<Projectile *> liveProjectTile;
   std::vector<StaticEntity*> staticEntities;
   Quadtree q;
+  void initSpawns(void);
+  void initFloor(void);
   void initTestWalls(void);
   void initWalls(void);
   void initWallsRed(void);
@@ -63,7 +62,6 @@ private:
   void initWallsOne(void);
   void initWallsTwo(void);
   void initStaticWalls(void);
-  void initSpawns(void);
   void initPowerUps(void);
   void initStaticEntities(void);
   void addWallDirection(float startingX, float startingY, float startingZ, v3_t dir, int values[]);

@@ -1,11 +1,13 @@
 #include "NetworkServices.h"
 #include "ConfigManager.h"
-#include <string>
-#include <bitset>
-#include <sstream>
+#ifdef _WIN32
+#include <winsock2.h>
+//#elif defined(LINUX)
+//#include <arpa/inet.h>
+#endif
 
 const unsigned short PORT_NUMBER = 55001;
-const int TIMEOUT = 3;
+const int TIMEOUT = 2;
 const int maxSize = 9000;
 const int sizeSize = 4;
 
@@ -32,7 +34,19 @@ bool ClientServices::connectServer(std::string serverIP) {
 }
 
 bool ClientServices::sendMessage(sf::Packet &packet ) {
-  return (client.send(packet)==sf::Socket::Done);
+  sf::Uint32 packetSize = packet.getDataSize();
+  sf::Uint32 sendSize = htonl(packetSize);
+  std::vector<char> toSend(packetSize+sizeof(sf::Uint32),0);
+  //error checking
+  if (packet.getData() && packetSize >0 ){
+    std::memcpy(&toSend[0],(char*) &sendSize, sizeof(sf::Uint32));
+    std::memcpy(&toSend[sizeof(sf::Uint32)], (char*) packet.getData(), packetSize);
+ 
+    auto result = client.send(&toSend[0],toSend.size());
+    return result == sf::Socket::Done;
+  }
+  return false; 
+  //return (client.send(packet) == sf::Socket::Done);
 }
 
 std::string toHex(unsigned char oneChar) {
@@ -43,18 +57,8 @@ std::string toHex(unsigned char oneChar) {
 }
 
 bool ClientServices::receiveMessage(sf::Packet & packet) {
-  bool rtr = (client.receive(packet)==sf::Socket::Done);
-    if (rtr) {
-      std::string ss = "";
-      for (int i = 0; i < packet.getDataSize();i++)  {
-
-       ss += toHex(*((char*)packet.getData()+i));// (std::bitset<8>(*((char*)packet.getData()+i))).to_string();
-
-      }
-      ConfigManager::log(std::string("---------------------------"));
-      ConfigManager::log(ss);
-    }
-    return rtr;
+  auto result = client.receive(packet);
+  return result == sf::Socket::Done;
 }
 
   
@@ -86,23 +90,18 @@ bool ServerServices::receiveMessage(sf::Packet &packet, unsigned int i ) {
 
 bool ServerServices::sendMessage(sf::Packet & packet, unsigned int i) {
   if (i < clients.size()) {//error checking for i?
-    bool rtr =(clients[i]->send(packet) == sf::Socket::Done);
-    if (rtr) {
-      std::string ss = "";
-
-      for (int i = 0; i < packet.getDataSize();i++)  {
-
-        ss += toHex(*((char*)packet.getData()+i));// (std::bitset<8>(*((char*)packet.getData()+i))).to_string();
-
-        //ss += (std::bitset<8>(*((char*)packet.getData()+i))).to_string();
-
-      }
-      ConfigManager::log(std::string("---------------------------"));
-      ConfigManager::log(ss);
+    sf::Uint32 packetSize = packet.getDataSize();
+    sf::Uint32 sendSize = htonl(packetSize);
+    std::vector<char> toSend(packetSize+sizeof(sf::Uint32),0);
+    //error checking
+    if (packet.getData() && packetSize >0 ){
+      std::memcpy(&toSend[0],(char*) &sendSize, sizeof(sf::Uint32));
+      std::memcpy(&toSend[sizeof(sf::Uint32)], (char*) packet.getData(), packetSize);
+   
+      auto result = clients[i]->send(&toSend[0],toSend.size());
+      return result == sf::Socket::Done;
     }
-    return rtr;
   }
-  std::cout<<"fuck this is an error"<<std::endl;
   return false;      
 }
    

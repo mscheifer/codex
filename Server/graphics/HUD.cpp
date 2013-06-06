@@ -1,14 +1,16 @@
 #include "HUD.h"
 #include <string>
 #include "Projectile.h"
+#include <math.h>
 
 /* TODO the constants should really be defined somewhere */
 gx::HUD::HUD(void):health(100), maxHealth(100), HLossPercentage(0), 
   mana(100), maxMana(100), MLossPercentage(0), canPickUp(false),
   weapon1(0), weapon2(0), currentSelect(0), elapsedChargeTime(0),
   totalChargeTime(-1), chargeMagicType(0), charging(false), timer(0),
-  aimerOuter(0), aimerInner(0), hit(0){
-  font.loadFromFile("arial.ttf");
+  aimerOuter(0), aimerInner(0), playerDirection(0,0,0), hit(0), attackedAngle(0),
+  switched(false){
+  font.loadFromFile("MORPHEUS.TTF");
   emptyBarTexture.loadFromFile("graphics/Images/Empty_bar.png");
   //heart image
   heartTexture.loadFromFile("graphics/Images/heart_color.png");
@@ -28,7 +30,7 @@ gx::HUD::HUD(void):health(100), maxHealth(100), HLossPercentage(0),
   //heath text
   healthText.setFont(font);
   healthText.setCharacterSize(18);
-  healthText.setColor(sf::Color::Black);
+  healthText.setColor(sf::Color::White);
   //mana bar empty 
   mEmptyBarSprite.setTexture(emptyBarTexture);
   mEmptyBarSprite.setPosition(55,60);
@@ -39,17 +41,23 @@ gx::HUD::HUD(void):health(100), maxHealth(100), HLossPercentage(0),
   //mana text
   manaText.setFont(font);
   manaText.setCharacterSize(18);
-  manaText.setColor(sf::Color::Black);
+  manaText.setColor(sf::Color::White);
   //weapin pick up text
   pickUp.setFont(font);
   pickUp.setCharacterSize(24);
-  pickUp.setColor(sf::Color::Yellow);
+  pickUp.setColor(sf::Color::White);
   pickUp.setPosition(100,100);
   //bad guy icon
-  badGuyTexture.loadFromFile("graphics/Images/badguy.png");
+  badGuyTexture.loadFromFile("graphics/Images/BG_Icon.png");
   badGuySprite.setTexture(badGuyTexture);
   badGuySprite.setPosition(10,110);
   badGuySprite.setScale(0.1f,0.1f);
+  //good guy icon
+  goodGuyTexture.loadFromFile("graphics/Images/GG_Icon.png");
+  goodGuySprite.setTexture(goodGuyTexture);
+  goodGuySprite.setPosition(10,110);
+  goodGuySprite.setScale(0.1f,0.1f);
+
   //positionText
   positionText.setFont(font);
   positionText.setCharacterSize(24);
@@ -67,14 +75,14 @@ gx::HUD::HUD(void):health(100), maxHealth(100), HLossPercentage(0),
   nextSpell.setFont(font);
   currentSpell.setCharacterSize(18);
   nextSpell.setCharacterSize(18);
-  currentSpell.setColor(sf::Color::Black);
-  nextSpell.setColor(sf::Color::Black);
+  currentSpell.setColor(sf::Color::White);
+  nextSpell.setColor(sf::Color::White);
   clockText.setFont(font);
   clockText.setCharacterSize(36);
-  clockText.setColor(sf::Color::Yellow);
+  clockText.setColor(sf::Color::White);
   collectedPU.setFont(font);
   collectedPU.setCharacterSize(24);
-  collectedPU.setColor(sf::Color::Yellow);
+  collectedPU.setColor(sf::Color::White);
   collectedPU.setPosition(60,110);
 }
 
@@ -109,17 +117,30 @@ gx::HUD::~HUD(void) {
   for (auto itr=hitTextures.begin();itr != hitTextures.end(); itr++) {
     delete *itr;
   }
+  for (auto itr=hitDirSprites.begin();itr != hitDirSprites.end(); itr++) {
+    delete *itr;
+  }
+  for (auto itr=hitDirTextures.begin();itr != hitDirTextures.end(); itr++) {
+    delete *itr;
+  }
 }
 
 void gx::HUD::draw(sf::RenderWindow & window) {
   float passed = hitClock.getElapsedTime().asSeconds();
+  float winX = window.getSize().x;
+  float winY = window.getSize().y;
+
   if (passed< 1.5) {
-    std::cout<<"i should draw "<<hit<<std::endl;
     hitSprites[hit]->setScale(static_cast<float>(window.getSize().x)/hitTextures[hit]->getSize().x,
     static_cast<float>(window.getSize().y)/hitTextures[hit]->getSize().y);
     sf::Color old = hitSprites[hit]->getColor();
     hitSprites[hit]->setColor(sf::Color(old.r,old.g,old.b, (1-passed/1.5)*255 ));
     window.draw(*(hitSprites[hit]));
+
+    hitDirSprites[hit]->setColor(sf::Color(old.r,old.g,old.b, (1-passed/1.5)*255 ));
+    hitDirSprites[hit]->setPosition((window.getSize().x)/2, (window.getSize().y)/2);
+    hitDirSprites[hit]->setRotation(attackedAngle);
+    window.draw(*(hitDirSprites[hit]));
   }
   if (buffClock.getElapsedTime().asSeconds() <1.5) {
     collectedPU.setString(std::string("Blessed with ") + powerUpNames[ptype]);
@@ -148,6 +169,8 @@ void gx::HUD::draw(sf::RenderWindow & window) {
   window.draw(positionText);
   if (minotaur) 
     window.draw(badGuySprite);
+  else 
+    window.draw(goodGuySprite);
   if (canPickUp) 
     window.draw(pickUp);
 
@@ -162,17 +185,47 @@ void gx::HUD::draw(sf::RenderWindow & window) {
     aimerSprites[aimerInner]->setRotation((totalChargeTime - elapsedChargeTime)/totalChargeTime *360);
     window.draw(*aimerSprites[aimerInner]);
     window.draw(*aimerSprites[aimerOuter]);
-  } else if( timer <= 0 ){
-    //only display this when in the actual game not during countdown
-    aimerSprites[1]->setPosition((window.getSize().x)/2, (window.getSize().y)/2);
+  } else if( timer <= 0 ){//only display this when in the actual game not during countdown
+
+    //AIMER switch pivot calculation
+    float pivotX = winX/2;
+    static float pivotY = 0;
+    static float theta = M_PI/90;
+    static float currAngle = M_PI/2;
+    float radius = winY/2;
+    float startX = aimerSprites[1]->getPosition().x;
+    float startY = aimerSprites[1]->getPosition().y;
+
+    //start switching
+    if(switched){
+      currAngle = 0;
+      startX = pivotX + radius;
+      startY = 0;
+    }
+    
+    if ( M_PI/2 - currAngle > 1.0E-8){
+      float tmpX = cos(static_cast<float>(theta)) * (startX-pivotX) - 
+        sin(static_cast<float>(theta)) * (startY-pivotY) + pivotX;
+      float tmpY = sin(static_cast<float>(theta)) * (startX-pivotX) +
+        cos(static_cast<float>(theta)) * (startY-pivotY) + pivotY;
+      aimerSprites[1]->setPosition(tmpX, tmpY);
+      startX = tmpX;
+      startY = tmpY;
+      currAngle += theta;
+    } else {
+      startX = winX/2;
+      startY = winY/2;
+      //aimerSprites[1]->setPosition(winX/2, winY/2);
+    }
+    aimerSprites[1]->setPosition(startX, startY);
     window.draw(*aimerSprites[1]);
   }
 
   int buffn = 0; 
   for ( unsigned int i =0; i<renderBuff.size(); i++ ) {
     if (renderBuff[i]) {
-      buffSprites[i]->setPosition(10+buffn*37,window.getSize().y-42);
-      buffLSprites[i]->setPosition(10+buffn*37,window.getSize().y-42);
+      buffSprites[i]->setPosition(70+buffn*37,window.getSize().y-134);
+      buffLSprites[i]->setPosition(70+buffn*37,window.getSize().y-134);
       if (remainTime[i]<1000 && (remainTime[i]/100 % 2))
         window.draw(*buffLSprites[i]);
       else 
@@ -240,6 +293,10 @@ void gx::HUD::updateHUD(const Player& player) {
  //update weapons
   weapon1 = player.weapon1;
   weapon2 = player.weapon2;
+  switched = false;
+  if(currentSelect != player.getCurrentWeaponSelection()){
+    switched = true;
+  }
   currentSelect = player.getCurrentWeaponSelection();
   this->elapsedChargeTime = player.elapsedChargeTime;
   this->totalChargeTime = player.totalChargeTime;
@@ -258,8 +315,12 @@ void gx::HUD::updateHUD(const Player& player) {
   if (player.attacked) {
     hitClock.restart(); 
     hit = hitIndex[player.attackedMagicType];
-    std::cout<<"I am attacked by " <<hit<<std::endl;
+    attackedDir = player.attackedDir;
+    std::cout << attackedDir << " " << playerDirection << std::endl;
   }
+
+  attackedAngle = 180 - rotateAngle(playerDirection, attackedDir);
+
   if (player.collectPowerUp) {
     buffClock.restart();
     this->ptype = player.ptype;
@@ -273,7 +334,7 @@ void gx::HUD::buffHelper(std::string & path) {
    tSprite = new sf::Sprite();
    tText->loadFromFile(path);
    tSprite->setTexture(*tText);
-   tSprite->setScale(0.5,0.5);
+//   tSprite->setScale(0.5,0.5);
    buffTextures.push_back(tText);
    buffSprites.push_back(tSprite);
    renderBuff.push_back(false);
@@ -286,7 +347,7 @@ void gx::HUD::buffLHelper(std::string & path) {
    tSprite = new sf::Sprite();
    tText->loadFromFile(path);
    tSprite->setTexture(*tText);
-   tSprite->setScale(0.5,0.5);
+ //  tSprite->setScale(0.5,0.5);
    buffLTextures.push_back(tText);
    buffLSprites.push_back(tSprite);
    remainTime.push_back(0);
@@ -324,6 +385,18 @@ void gx::HUD::hitHelper(std::string & path) {
    tSprite->setTexture(*tText);
    hitTextures.push_back(tText);
    hitSprites.push_back(tSprite);
+}
+
+void gx::HUD::hitDirHelper(std::string & path) {
+   sf::Texture* tText;
+   sf::Sprite* tSprite;
+   tText = new sf::Texture();
+   tSprite = new sf::Sprite();
+   tText->loadFromFile(path);
+   tSprite->setTexture(*tText);
+   tSprite->setOrigin(tText->getSize().x/2, tText->getSize().y);
+   hitDirTextures.push_back(tText);
+   hitDirSprites.push_back(tSprite);
 }
 
 void gx::HUD::updateHUDTimer(float timer) {
@@ -389,13 +462,35 @@ void gx::HUD::initializeSprites() {
    aimerHelper(std::string("graphics/Images/aimerI1O.png"));  //7
    aimerHelper(std::string("graphics/Images/aimerI1I.png"));  
    aimerHelper(std::string("graphics/Images/aimerI2O.png"));  
-   aimerHelper(std::string("graphics/Images/aimerI3O.png"));  //5
+   aimerHelper(std::string("graphics/Images/aimerI3O.png"));  //10
    aimerHelper(std::string("graphics/Images/aimerI3I.png"));
-   
+   aimerHelper(std::string("graphics/Images/aimerT1O.png"));  //12
+   aimerHelper(std::string("graphics/Images/aimerT1I.png"));  
+   aimerHelper(std::string("graphics/Images/aimerT2O.png"));  
+   aimerHelper(std::string("graphics/Images/aimerT3O.png"));  //15
+   aimerHelper(std::string("graphics/Images/aimerT3I.png"));  //16
+   aimerHelper(std::string("graphics/Images/aimerG1.png"));
+   aimerHelper(std::string("graphics/Images/aimerG2.png"));
+   aimerHelper(std::string("graphics/Images/aimerG3.png"));
+   aimerHelper(std::string("graphics/Images/aimerBasic.png")); //20
+
    hitTextures.push_back(new sf::Texture());
    hitSprites.push_back(new sf::Sprite());
    hitHelper(std::string("graphics/Images/hitRed.png"));
    hitHelper(std::string("graphics/Images/hitBlue.png"));
+
+   hitDirTextures.push_back(new sf::Texture());
+   hitDirSprites.push_back(new sf::Sprite());
+   hitDirHelper(std::string("graphics/Images/hitDirRed.png"));
+   hitDirHelper(std::string("graphics/Images/hitDirBlue.png"));
+}
+
+void gx::HUD::updateDir(vector3f & dir){
+  playerDirection = dir;
+}
+
+float gx::HUD::rotateAngle( vector3f v1, vector3f v2 ){
+  return static_cast<float>(atan2(v1.x*v2.y-v2.x*v1.y,v1.x*v2.x+v1.y*v2.y)) * 180/M_PI ;
 }
 
 const int gx::HUD::hitIndex[18] = {
@@ -419,6 +514,7 @@ const int gx::HUD::hitIndex[18] = {
   2
 };
 
+
 //outer inner
 const int gx::HUD::aimerIndex[18][2] = {
   //FIR1=0, FIR2, FIR3, 
@@ -430,21 +526,21 @@ const int gx::HUD::aimerIndex[18][2] = {
   { 9, 8 },
   { 10, 11 },
   //THU1, THU2, THU3,
-  { 2, 3 },
-  { 4, 3 },
-  { 5, 6 },
+  { 12, 13 },
+  { 14, 13 },
+  { 15, 16 },
   //G_IT, G_FT, G_FI, //gravity and what it is missing
-  { 4, 3 },
-  { 4, 3 },
-  { 4, 3 },
+  { 17, 0 },
+  { 17, 0 },
+  { 17, 0 },
   //G2,
-  { 4, 6 },
+  { 18, 0 },
   //G_IT2, G_FT2, G_FI2,
-  { 4, 3 },
-  { 4, 3 },
-  { 4, 3 },
+  { 17, 0 },
+  { 17, 0 },
+  { 17, 0 },
   //G3,
-  { 4, 6 },
+  { 19, 0 },
   //B1
-  { 2, 3 }
+  { 20, 0 }
 };

@@ -30,4 +30,4 @@ class buffer {
       debugout << d.size() * sizeof(T) << ", " << d.data() << ");" << endl;
     }
 };
-} //end namespace gxz
+} //end namespace gx

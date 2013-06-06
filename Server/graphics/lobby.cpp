@@ -5,7 +5,7 @@
 gx::lobby::lobby(void):start(false),ready(false),connected(false),clickedIP(false){
   font.loadFromFile("MORPHEUS.TTF");
   welcome.setFont(font);
-  welcome.setColor(sf::Color::Yellow);
+  welcome.setColor(sf::Color::White);
   welcome.setCharacterSize(36);
   welcome.setString("Please connect to the server");
   welcome.setPosition(200,200);
@@ -31,9 +31,16 @@ gx::lobby::lobby(void):start(false),ready(false),connected(false),clickedIP(fals
   IPBox.setOutlineColor(sf::Color::Black);
   IPBox.setOutlineThickness(2);
   IPBox.setPosition(280,400);
-  backGroundTexture.loadFromFile("graphics/Images/background.jpg");
+  backGroundTexture.loadFromFile("graphics/Images/splashBG.png");
   backGroundSprite.setTexture(backGroundTexture);
   backGroundSprite.setPosition(0,0);
+  codexTexture.loadFromFile("graphics/Images/splashText.png");
+  codexSprite.setTexture(codexTexture);
+  codexSprite.setPosition(0,0);
+  circleTexture.loadFromFile("graphics/Images/splashCircles.png");
+  circleSprite.setTexture(circleTexture);
+  circleSprite.setOrigin(circleTexture.getSize().x/2,circleTexture.getSize().y/2);
+  timer.restart();
 }
 
 gx::lobby::~lobby(void) {}
@@ -101,7 +108,10 @@ void gx::lobby::updateLobby(std::vector<std::pair<int,bool>> & playerStatus ) {
 void gx::lobby::drawLobby(sf::RenderWindow & window) {
   backGroundSprite.setScale(static_cast<float>(window.getSize().x)/backGroundTexture.getSize().x,
   static_cast<float>(window.getSize().y)/backGroundTexture.getSize().y);
+  circleSprite.setRotation((static_cast<int>(this->timer.getElapsedTime().asMilliseconds())% 25000000 ) *72/5000); 
   window.draw(backGroundSprite);
+  window.draw(circleSprite);
+  window.draw(codexSprite);
  // std::cout<<"connected is "<< connected<<" start is "<< start<< " ready is "<< ready <<std::endl;
   window.draw(welcome);
   window.draw(buttonRect);

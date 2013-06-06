@@ -103,7 +103,7 @@ public:
 	Game(void);
 	Game(Map m);
 	void evaluate(ClientGameTimeAction a);
-	void prepResponse(ServerGameTimeRespond* sgtr);
+	void prepResponse(ServerGameTimeRespond& sgtr);
   void updateAndResolveCollision(void);
 	~Game(void);
   int join();

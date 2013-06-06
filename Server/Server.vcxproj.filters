@@ -631,5 +631,20 @@
     <None Include="graphics\Images\hitRed.png">
       <Filter>Resource Files\graphics\Images</Filter>
     </None>
+    <None Include="graphics\Images\splashBG.png">
+      <Filter>Resource Files\graphics\Images</Filter>
+    </None>
+    <None Include="graphics\Images\splashCircles.png">
+      <Filter>Resource Files\graphics\Images</Filter>
+    </None>
+    <None Include="graphics\Images\splashText.png">
+      <Filter>Resource Files\graphics\Images</Filter>
+    </None>
+    <None Include="graphics\Images\BG_Icon.png">
+      <Filter>Resource Files\graphics\Images</Filter>
+    </None>
+    <None Include="graphics\Images\GG_Icon.png">
+      <Filter>Resource Files\graphics\Images</Filter>
+    </None>
   </ItemGroup>
 </Project>

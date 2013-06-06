@@ -19,12 +19,59 @@ std::string configModelName(std::string s) {
   return "models/" + ConfigManager::configMap["model-" + s];
 }
 
-std::vector<gx::graphicsEntity> staticModels() {
+unsigned int projectileOffset[NUM_MAGIC];
 
-  //auto modelBadGuy     = loadModel(configModelName("badguy"),Player::playerDepth,true);
+unsigned int projectileBase;
+
+std::vector<gx::graphicsEntity> initProjectileModels(unsigned int base) {
+  projectileBase = base;
+
+  auto modelIce  = loadModel(configModelName("ice"),Projectile::projDepth,true);
+  auto modelFire = loadModel(configModelName("thunder"),Projectile::projDepth,true);
+  auto modelDark = loadModel(configModelName("dark"),Projectile::projDepth,true);
+
+  std::vector<gx::graphicsEntity> ret;
+  ret.push_back(std::move(modelIce));
+  projectileOffset[ICE1] = 0;
+  projectileOffset[ICE2] = 0;
+  projectileOffset[ICE3] = 0;
+  ret.push_back(std::move(modelFire));
+  projectileOffset[THU1] = 1;
+  projectileOffset[THU2] = 1;
+  projectileOffset[THU3] = 1;
+  ret.push_back(std::move(modelDark));
+  projectileOffset[G_IT] = 2;
+  projectileOffset[G_FT] = 2;
+  projectileOffset[G_FI] = 2;
+  projectileOffset[G2]   = 2;
+  projectileOffset[G_IT2]= 2;
+  projectileOffset[G_FT2]= 2;
+  projectileOffset[G_FI2]= 2;
+  projectileOffset[G3]   = 2;
+ /*
+  B1*/
+
+  return ret;
+}
+
+unsigned int playerBase;
+
+std::vector<gx::graphicsEntity> initPlayerModels(unsigned int base) {
+  playerBase = base;
+  auto modelBadGuy     = loadModel(configModelName("badguy"),Player::playerDepth,true);
+  auto modelPlayer     = loadModel(configModelName("goodguy"),Player::playerDepth,true);
+
+  std::vector<gx::graphicsEntity> ret;
+  ret.push_back(std::move(modelPlayer));
+  ret.push_back(std::move(modelBadGuy));
+  return ret;
+}
+
+std::vector<gx::graphicsEntity> staticModels() {
+  
   auto modelWeapon     = loadModel(configModelName("weapon"),Weapon::weaponDepth,true);
-  auto modelProjectile = loadModel(configModelName("projectile"),Projectile::projDepth,true);
   auto modelPowerUp    = loadModel(configModelName("powerup"),PowerUp::powerUpDepth,true);
+  auto modelProjectile = loadModel(configModelName("ice"),Projectile::projDepth,true);
   auto modelWall       = loadModel(configModelName("wall"),10);
   auto modelPlayer     = loadModel(configModelName("goodguy"),Player::playerDepth,true);
   auto modelTriton     = loadModel(configModelName("triton"),25,true);
@@ -38,13 +85,21 @@ std::vector<gx::graphicsEntity> staticModels() {
   entitiesData.push_back(std::move(skybox));  //ignore
   entitiesData.push_back(std::move(modelPlayer)); //player
   entitiesData.push_back(std::move(modelWall));  //wall
-  entitiesData.push_back(std::move(modelProjectile)); //projectile
+
+  entitiesData.push_back(std::move(modelProjectile));
   entitiesData.push_back(std::move(modelWeapon)); //weapon
   entitiesData.push_back(std::move(modelPowerUp)); //powerup
- // entitiesData.push_back(std::move(modelTriton));
   entitiesData.push_back(std::move(ground));  //ground
+  auto projs = initProjectileModels(entitiesData.size());
   entitiesData.push_back(std::move(modelTriton));
    entitiesData.push_back(std::move(modelDragon));
+  entitiesData.insert(entitiesData.end(), std::make_move_iterator(projs.begin()),
+                                          std::make_move_iterator(projs.end())); //projectile
+  auto players = initPlayerModels(entitiesData.size());
+  entitiesData.insert(entitiesData.end(), std::make_move_iterator(players.begin()),
+                                          std::make_move_iterator(players.end())); //player
+
+  //entitiesData.push_back(std::move(modelTriton));
 
   entitiesData.insert(entitiesData.end(),std::make_move_iterator(cubes.begin()),
                                          std::make_move_iterator(cubes.end())); 
@@ -128,8 +183,8 @@ gx::graphicsClient::graphicsClient():
     skyboxDrawer(display.storage()),
     particles(particlesData(),std::vector<uniform::block*>(1,&(display.storage()))),
     Hud(),Lobby(), Score(ConfigManager::numPlayers()),
-    playerDirection(0.0, 1.0,0.0),//will be changed by init packet
-    playerStartDirection(0.0, 1.0,0.0),
+    playerDirection(0.0, 1.0f,0.0),//will be changed by init packet
+    playerStartDirection(0.0, 1.0f,0.0),
     playerStartRight(playerStartDirection.y,-playerStartDirection.x,
                      playerStartDirection.z),
     playerPosition(0.0, 0.0, 0.0),//will be changed by init packet
@@ -205,11 +260,9 @@ void gx::graphicsClient::draw() {
   this->animatedDrawer.draw();
   this->skyboxDrawer.draw();
 
-  //glEnable(GL_BLEND);
   glDepthMask(GL_FALSE);
   this->particles.draw();
  	glDepthMask(GL_TRUE);
-  //glDisable(GL_BLEND);
  
   //render sfml please don't comment or uncomment anything from the following
   //block
@@ -258,33 +311,6 @@ void gx::graphicsClient::clearEntities() {
   this->entities.reset();
   this->animatedDrawer.reset();
   this->particles.reset();
-  
-  addStaticInstance();
-
-
-}
-
-void gx::graphicsClient::addStaticInstance() {
-    // add ground instance. kinda hacky but works
-  /*
-  staticDrawer::instanceData groundInst;
-  groundInst.pos  = vector3f(0, 0, 0);
-  groundInst.dirY = vector3f(0,1,0);
-  groundInst.type = GROUND;
-  groundInst.scale = 1;
-  
-  this->entities.addInstance(groundInst);
-
-  staticDrawer::instanceData triton;
-  triton.pos  = vector3f(300,300,100);
-  triton.dirY = vector3f(0,1,0);
-  triton.type = TRITON;
-  triton.scale = 40;
-
-  
-  this->entities.addInstance(triton);
-  */
-
 }
 
 void gx::graphicsClient::addEntity(Entity* ent) {
@@ -297,10 +323,10 @@ void gx::graphicsClient::addEntity(Entity* ent) {
     this->particles.addInstance(inst);
   }
 
-  if(type == POWER_UP) { //TODO: change back to type == PLAYER
+  if(false) { //TODO: change back to type == PLAYER
     dynamicDrawer::instanceData inst;
     inst.scale = 1;
-    inst. pos = entity.getPosition();
+    inst. pos = vector4f(0,0,0) + entity.getPosition();
     inst.dirY = entity.getDirection();
     inst.type = 0; //TODO: somehow set this based on type but it can't be absolute type?
     inst.animation = 0; //TODO: select animation based on context
@@ -311,31 +337,46 @@ void gx::graphicsClient::addEntity(Entity* ent) {
   } else {
     staticDrawer::instanceData inst;
     inst.scale = 1;
-    inst. pos = entity.getPosition();
+    inst. pos = vector4f(0,0,0) + entity.getPosition();
     inst.dirY = entity.getDirection();
     inst.type = entity.getType();
     this->entities.addInstance(inst);
   }
 }
 
+void gx::graphicsClient::addEntity(Player* ent) {
+  const auto& entity = *ent;
+  staticDrawer::instanceData inst;
+  inst.scale = 1;
+  inst.pos   = vector4f(0,0,0) + entity.getPosition();
+  inst.dirY  = entity.getDirection();
+  inst.type  = playerBase + (entity.isMinotaur() ? 1 : 0);
+  this->entities.addInstance(inst);
+}
+
 void gx::graphicsClient::addEntity(Projectile* ent) {
   const auto& entity = *ent;
-  {
+  lights.addLight(vector4f(0,0,0) + entity.getPosition());
+  if(entity.getMagicType() == FIR1 || entity.getMagicType() == FIR2 || 
+     entity.getMagicType() == FIR3) {
 	  particleDrawer::instanceData inst;
     inst.position = vector4f(0,0,0) + entity.getPosition();
     inst.type = 0;
     this->particles.addInstance(inst);
+    if(entity.getMagicType() == FIR2 || entity.getMagicType() == FIR3) this->particles.addInstance(inst); //draw more for bigger fire
+    if(entity.getMagicType() == FIR3) this->particles.addInstance(inst); //draw more for bigger fire
+  } else {
+    staticDrawer::instanceData inst;
+    inst.scale = ProjInfo[entity.getMagicType()].size;
+    inst.pos   = vector4f(0,0,0) + entity.getPosition();
+    inst.dirY  = entity.getDirection();
+    inst.type  = projectileBase + projectileOffset[entity.getMagicType()];
+    this->entities.addInstance(inst);
   }
-  lights.addLight(vector4f(0,0,0) + entity.getPosition());
-  staticDrawer::instanceData inst;
-  inst.scale = ProjInfo[entity.getMagicType()].size;
-  inst. pos = entity.getPosition();
-  inst.dirY = entity.getDirection();
-  inst.type = entity.getType();
-  this->entities.addInstance(inst);
 }
 
 void gx::graphicsClient::updateHUD(Player & player) {
+  this->Hud.updateDir(this->playerDirection);
   this->Hud.updateHUD(player);
 }
 
@@ -354,13 +395,14 @@ void gx::graphicsClient::drawLobby() {
   window.display();
 }
 void gx::graphicsClient::setStaticEntities(std::vector<StaticEntity*> e) {
-  for(int i = 0; i < e.size() ;i++) {
+  for(auto itr = e.begin(); itr != e.end(); itr++) {
+    const auto& e1 = *itr;
     staticDrawer::instanceData inst;
     inst.scale = 1;
-    inst.pos = e[i]->getPosition();
-    inst.dirY = e[i]->getDirection();
-    inst.type = e[i]->static_entity_type;
-    inst.scale = e[i]->scale;
+    inst.pos = vector4f(0,0,0) + e1->getPosition();
+    inst.dirY = e1->getDirection();
+    inst.type = e1->static_entity_type;
+    inst.scale = e1->scale;
     this->staticEntities.addInstance(inst);
   }
 }
@@ -381,9 +423,15 @@ void gx::graphicsClient::gameEnd()
   Lobby.endGame();
 }
 
+void gx::graphicsClient::setMinotaur(unsigned int playerid)
+{
+  Score.setMinotaurId(playerid);
+}
+
 void gx::graphicsClient::updateScores(std::vector<int> & pwins,
-                                      std::vector<int> & pkills) {
-  Score.updateScores(pwins,pkills);
+                                      std::vector<int> & pkills,
+                                      std::vector<bool> & pdead) {
+  Score.updateScores(pwins,pkills, pdead);
 }
 
 void gx::graphicsClient::updateLobby(std::vector<std::pair<int,bool>> & playerStatus ) {

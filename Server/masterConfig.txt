@@ -1,8 +1,10 @@
 // System configuration
-log=1
+log=0
 sound=1
 //cannot have music without sound
 music=1
+musicProx=100
+maxMusicVol=50
 graphicsDebug=false
 serverTicksPerSec=30
 gameRestart=1
@@ -12,14 +14,17 @@ anti-alias=0
 window-width=800
 window-height=600
 enableMinotaur=1
+countdown=2
 
 //models
-model-badguy=cat.dae
-model-goodguy=cat.dae
+model-badguy=badguy.dae
+model-goodguy=goodguy.dae
 model-wall=stone_wall.dae
-model-projectile=weird_orange_thing.dae
-model-powerup=cat.dae
-model-weapon=badguy.dae
+model-ice=Ice_projectile.dae
+model-thunder=Thunder_projectile.dae
+model-dark=dark_projectile.dae
+model-powerup=Thunder_projectile.dae
+model-weapon=dark_projectile.dae
 model-triton=triton.DAE
 model-dragon=Dragon.obj
 

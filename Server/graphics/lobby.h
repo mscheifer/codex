@@ -24,6 +24,11 @@ class lobby {
   std::string inputText;
   sf::Texture backGroundTexture;
   sf::Sprite backGroundSprite;
+  sf::Texture codexTexture;
+  sf::Sprite codexSprite;
+  sf::Texture circleTexture;
+  sf::Sprite circleSprite;
+  sf::Clock timer;
 public:
   lobby(void);
   ~lobby(void);

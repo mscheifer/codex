@@ -25,6 +25,7 @@ void Projectile::reset(){
   clearEvents();
   charge_counter.restart();
   charging = true;
+  combined = false;
 }
 
 bool Projectile::correctMovementHit( Entity* e ){
@@ -37,7 +38,6 @@ bool Projectile::correctMovementHit( Entity* e ){
   } else if ( etype == PLAYER ){
     return e != owner;
   }
-
   return false;
 }
 
@@ -188,6 +188,7 @@ void Projectile::fireMutiple(v3_t v, float strengthMultiplier, int number) {
     counter += slice;
     Projectile* pj = map->produceProjectile();
     pj->setVelocity(v3_t(xp,yp,velocity.z));
+    pj->setDirection(pj->velocity);
     pj->setOwner(owner);
     pj->setMagicType(magicType);
     pj->setRender(true);

@@ -31,7 +31,7 @@ private:
 public:
   Quadtree(int pLevel, Rectangle pBounds);
   ~Quadtree();
-  int size(); //TODO nothing should call this this is for testing only
+  //int size(); //TODO nothing should call this this is for testing only
 
   //clear the quadtree
   void clear();
@@ -50,6 +50,7 @@ public:
   std::vector<BoundingObj*>& retrieve(std::vector<BoundingObj*> & returnObjects, BoundingObj* pRect);
   std::vector<BoundingObj*>& retrieve(std::vector<BoundingObj*> & returnObjects, Rectangle* pRect);
   
+  void test();
 /*  
   static void test(){
     Rectangle worldBounds(BoundingObj::vec4_t(0,0,0),1000,1000);

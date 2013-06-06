@@ -65,6 +65,7 @@ class graphicsClient {
     void setStaticEntities(std::vector<StaticEntity*> e);
     void clearEntities();
     void addEntity(Entity*);
+    void addEntity(Player*);
     void addEntity(Projectile*);
     void updateHUD(Player & player);
     void drawLobby();
@@ -72,13 +73,15 @@ class graphicsClient {
     void enableCursor();
     bool gameStart() const;
     void gameEnd();
-    void updateScores(std::vector<int> & pwins, std::vector<int> & pkills);
+    void updateScores(std::vector<int> & pwins, std::vector<int> & pkills, std::vector<bool> & pdead);
+    void setMinotaur(unsigned int playerid);
     void updateLobby(std::vector<std::pair<int,bool>> & playerStatus );
     void updateHUDTimer(float timer); 
     std::string getInputText() const;
     void setConnected(bool connected);
     void updateNames(std::vector<std::string> & names);
     bool closed()        { return this->userInput.getStop(); }
+    void setPlayerId(unsigned int x) { Score.setPlayerId(x); }
 };
 
 } //end namespace gx
