@@ -46,6 +46,7 @@ bool ClientServices::sendMessage(sf::Packet &packet ) {
     return result == sf::Socket::Done;
   }
   return false; 
+  //return (client.send(packet) == sf::Socket::Done);
 }
 
 std::string toHex(unsigned char oneChar) {
