@@ -77,8 +77,10 @@ void ConfigManager::readConfig() {
     }
 
     std::pair<std::string,std::string> s = std::make_pair(line.substr(0,ind),line.substr(ind+1));
-    if(!ConfigManager::configMap.insert(s).second) {
-      std::cout << "Error reading config file" << std::endl;
+    auto result = ConfigManager::configMap.insert(s);
+    if(!result.second) {
+      std::cout << "Error reading config file for " << result.first->first;
+      std::cout << " " << result.first->second << std::endl;
     }
   }
 }
