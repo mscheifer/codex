@@ -10,7 +10,7 @@ gx::HUD::HUD(void):health(100), maxHealth(100), HLossPercentage(0),
   totalChargeTime(-1), chargeMagicType(0), charging(false), timer(0),
   aimerOuter(0), aimerInner(0), playerDirection(0,0,0), hit(0), attackedAngle(0),
   switched(false){
-  font.loadFromFile("arial.ttf");
+  font.loadFromFile("MORPHEUS.TTF");
   emptyBarTexture.loadFromFile("graphics/Images/Empty_bar.png");
   //heart image
   heartTexture.loadFromFile("graphics/Images/heart_color.png");
