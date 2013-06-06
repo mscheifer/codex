@@ -51,6 +51,7 @@ public:
   Entity_Type getType() const { return type; }
   void setRespawnTime(int r);
   void setRandomMagic();
+  int getRespawnTimeLeft() { return respawnTimeLeft; }
 protected:
 	int Range_Cool_Down_Time; //cool down time between uses in milliseconds
 	int Melee_Cool_Down_Time; 
@@ -63,5 +64,6 @@ protected:
 	sf::Clock Melee_Cool_Down_Counter;
   int Respawn_Time;
   sf::Clock Respawn_Counter;
+  int respawnTimeLeft;
 };
 
