@@ -44,6 +44,12 @@ void gx::drawer<T>::draw() {
       this->impl.setUniforms(entityC,inst);
       entityC.draw();
     }
+    for(auto instp  = entityC.staticInstances.begin();
+             instp != entityC.staticInstances.end();   ++instp) {
+      const auto& inst = *instp;
+      this->impl.setUniforms(entityC,inst);
+      entityC.draw();
+    }
   }
 }
 
@@ -57,8 +63,13 @@ void gx::drawer<T>::reset() {
 }
 
 template<typename T>
-void gx::drawer<T>::addInstance(instanceData a) {
-  impl.addInstance(std::move(a),entityClasses);
+void gx::drawer<T>::addInstance(const instanceData& a) {
+  impl.addInstance(a,entityClasses);
+}
+
+template<typename T>
+void gx::drawer<T>::addStaticInstance(const instanceData& a) {
+  impl.addStaticInstance(a,entityClasses);
 }
 
 template class gx::drawer<gx::staticDrawerImpl>;

@@ -24,7 +24,6 @@ class graphicsClient {
     //scene data
     light lights;
     displaySet display;
-    staticDrawer staticEntities;
     staticDrawer entities;
     dynamicDrawer animatedDrawer;
     SkyboxDraw skyboxDrawer;

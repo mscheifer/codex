@@ -23,9 +23,11 @@ model-wall=stone_wall.dae
 model-ice=Ice_projectile.dae
 model-thunder=Thunder_projectile.dae
 model-dark=dark_projectile.dae
+model-basic=Basic_projectile.dae
 model-powerup=Thunder_projectile.dae
 model-weapon=dark_projectile.dae
 model-triton=triton.DAE
+model-torch=Torch.DAE
 
 // Physics
 gravity=-40

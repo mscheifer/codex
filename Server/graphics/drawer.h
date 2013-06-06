@@ -18,7 +18,8 @@ class drawer {
     void draw();
     void reset();
     typedef typename T::instanceData instanceData;
-    void addInstance(instanceData);
+    void addInstance(instanceData const&);
+    void addStaticInstance(instanceData const&);
 };
 
 typedef  drawer<staticDrawerImpl> staticDrawer;

@@ -30,7 +30,9 @@ enum Game_State {WAIT=0, PLAYING,MANOTAUR_WIN, CIVILIAN_WIN};
 //Networking enums
 enum Opcode {INIT=0,JOINID,STARTGAME, CHAT, T1, T2, CGTA, SGTR, ERROR};
 
-enum Entity_Type {UNDEFINED=0, PLAYER, WALL, PROJECTILE, WEAPON, POWER_UP, GROUND, TRITON};
+enum Entity_Type {UNDEFINED=0, PLAYER, WALL, PROJECTILE, WEAPON, POWER_UP,
+                  GROUND, TRITON, TORCH, NUM_ENTITIES};
+//NUM_ENITIES will have the value of the number of types
 
 enum Texture_Type {DEFAULT=0, GROUNDTEX=64};
 

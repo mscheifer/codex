@@ -47,8 +47,8 @@ namespace {
   {
     std::vector<GLfloat> texCoordsData;
 	//fix the texcoords if the texture is fixed
-	std::array<GLfloat,4*2> texCoordsPattern = {{ 0.9, 0.9, 0.9, 0.1,
-	                                              0.1, 0.1, 0.1, 0.9}};
+	std::array<GLfloat,4*2> texCoordsPattern = {{ 0.9f, 0.9f, 0.9f, 0.1f,
+	                                              0.1f, 0.1f, 0.1f, 0.9f}};
     texCoordsData.reserve(4 * 2 * gx::maxParticles); //4 vec2s
 	for(unsigned int i = 0; i < gx::maxParticles; i++) {
       texCoordsData.insert(texCoordsData.end(), texCoordsPattern.begin(), texCoordsPattern.end());
@@ -108,7 +108,7 @@ gx::particleDrawerImpl::entityClass::operator=(entityClass&&) {
 }
 
 void gx::particleDrawerImpl::entityClass::clear() {
-  this->instances.clear();
+  //do nothing
 }
 
 namespace {
@@ -122,29 +122,35 @@ namespace {
     float r = random * diff;
     return min + r;
   }
-
 } //end unnamed namespace
 
-void gx::particleDrawerImpl::entityClass::update() {
-  for(auto itr = this->instances.begin(); itr != this->instances.end(); itr++) {
-    for(unsigned int i = 0; i < particlesPerFrame; i++) {
-      auto randX = randGenf(-10,10) * randGenf(0.00005, 0.0001);
-      auto randY = randGenf(-10,10) * randGenf(0.00005, 0.0001);
-      particle p(*itr, vector3f(randX, randY, 0.0f));
-	    this->particles.push_back(std::move(p));
-    }
-    this->numIndices += 6 * particlesPerFrame;
+void gx::particleDrawerImpl::entityClass::addParticle(const vector4f& pos) {
+  for(unsigned int i = 0; i < particlesPerFrame; i++) {
+    auto randX = randGenf(-10,10) * randGenf(0.00005f, 0.0001f);
+    auto randY = randGenf(-10,10) * randGenf(0.00005f, 0.0001f);
+    particle p(pos, vector3f(randX, randY, 0.0f));
+	  this->particles.push_back(std::move(p));
   }
-  this->instances.resize(1); //only draw once
+  this->numIndices += 6 * particlesPerFrame;
+}
+
+void gx::particleDrawerImpl::entityClass::update() {
+  for(auto itr = this->realInstances.begin(); itr != this->realInstances.end(); itr++) {
+    this->addParticle(*itr);
+  }
+  this->realInstances.clear(); //only draw the single static instance once
+  for(auto itr = this->realStaticInstances.begin(); itr != this->realStaticInstances.end(); itr++) {
+    this->addParticle(*itr);
+  }
 
   positions.clear();
   positions.reserve(particles.size() * 4 * 4); //could move this call to only run for maxParticles at beginning
   colors.clear();
   colors.reserve(particles.size() * 4 * 4); //could move this call to only run for maxParticles at beginning
   for(auto itr = this->particles.begin(); itr != this->particles.end();) {
-    vector3f acceleration(0,0,randGenf(0.000001, 0.00001));
-    acceleration += vector3f(-itr->velocity.x * randGenf(0.00001,0.0001),
-                             -itr->velocity.y * randGenf(0.00001,0.0001),0);
+    vector3f acceleration(0,0,randGenf(0.000001f, 0.00001f));
+    acceleration += vector3f(-itr->velocity.x * randGenf(0.00001f,0.0001f),
+                             -itr->velocity.y * randGenf(0.00001f,0.0001f),0);
     itr->velocity += acceleration;
     itr->position += itr->velocity;
     itr->lifetime++;
@@ -193,8 +199,14 @@ void gx::particleDrawerImpl::setUniforms(const entityClass&,
   //do nothing
 }
 
-void gx::particleDrawerImpl::addInstance(instanceData data,
+void gx::particleDrawerImpl::addInstance(const instanceData& data,
                          std::vector<entityClass>& entityClasses) {
   auto type = data.type;
-  entityClasses[type].instances.push_back(data.position);
+  entityClasses[type].realInstances.push_back(data.position);
+}
+
+void gx::particleDrawerImpl::addStaticInstance(const instanceData& data,
+                         std::vector<entityClass>& entityClasses) {
+  auto type = data.type;
+  entityClasses[type].realStaticInstances.push_back(data.position);
 }

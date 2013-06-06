@@ -26,9 +26,10 @@ unsigned int projectileBase;
 std::vector<gx::graphicsEntity> initProjectileModels(unsigned int base) {
   projectileBase = base;
 
-  auto modelIce  = loadModel(configModelName("ice"),Projectile::projDepth,true);
-  auto modelFire = loadModel(configModelName("thunder"),Projectile::projDepth,true);
-  auto modelDark = loadModel(configModelName("dark"),Projectile::projDepth,true);
+  auto modelIce   = loadModel(configModelName("ice"),Projectile::projDepth,true);
+  auto modelFire  = loadModel(configModelName("thunder"),Projectile::projDepth,true);
+  auto modelDark  = loadModel(configModelName("dark"),Projectile::projDepth,true);
+  auto modelBasic = loadModel(configModelName("basic"),Projectile::projDepth,true);
 
   std::vector<gx::graphicsEntity> ret;
   ret.push_back(std::move(modelIce));
@@ -48,8 +49,8 @@ std::vector<gx::graphicsEntity> initProjectileModels(unsigned int base) {
   projectileOffset[G_FT2]= 2;
   projectileOffset[G_FI2]= 2;
   projectileOffset[G3]   = 2;
- /*
-  B1*/
+  ret.push_back(std::move(modelBasic));
+  projectileOffset[G3]   = 3;
 
   return ret;
 }
@@ -67,6 +68,8 @@ std::vector<gx::graphicsEntity> initPlayerModels(unsigned int base) {
   return ret;
 }
 
+unsigned int generalOffset[NUM_ENTITIES];
+
 std::vector<gx::graphicsEntity> staticModels() {
   
   auto modelWeapon     = loadModel(configModelName("weapon"),Weapon::weaponDepth,true);
@@ -75,28 +78,36 @@ std::vector<gx::graphicsEntity> staticModels() {
   auto modelWall       = loadModel(configModelName("wall"),10);
   auto modelPlayer     = loadModel(configModelName("goodguy"),Player::playerDepth,true);
   //auto modelTriton     = loadModel(configModelName("triton"),Player::playerDepth,true);
+  auto modelTorch      = loadModel(configModelName("torch"),1,true);
 
   auto cubes = gx::loadCube();
   auto skybox = gx::loadSkybox();
   auto ground = gx::loadGround(2000.0f, 0.0f, "models/floor.jpg");
   std::vector<gx::graphicsEntity> entitiesData;
 
-  entitiesData.push_back(std::move(skybox));  //ignore
-  entitiesData.push_back(std::move(modelPlayer)); //player
+  generalOffset[WALL] = entitiesData.size();
   entitiesData.push_back(std::move(modelWall));  //wall
 
-  entitiesData.push_back(std::move(modelProjectile));
+  generalOffset[WEAPON] = entitiesData.size();
   entitiesData.push_back(std::move(modelWeapon)); //weapon
+
+  generalOffset[POWER_UP] = entitiesData.size();
   entitiesData.push_back(std::move(modelPowerUp)); //powerup
+
+  generalOffset[GROUND] = entitiesData.size();
   entitiesData.push_back(std::move(ground));  //ground
+
+  //  generalOffset[TRITON] = entitiesData.size();
+    //entitiesData.push_back(std::move(modelTriton));
+  generalOffset[TORCH] = entitiesData.size();
+  entitiesData.push_back(std::move(modelTorch));
+
   auto projs = initProjectileModels(entitiesData.size());
   entitiesData.insert(entitiesData.end(), std::make_move_iterator(projs.begin()),
                                           std::make_move_iterator(projs.end())); //projectile
   auto players = initPlayerModels(entitiesData.size());
   entitiesData.insert(entitiesData.end(), std::make_move_iterator(players.begin()),
                                           std::make_move_iterator(players.end())); //player
-
-  //entitiesData.push_back(std::move(modelTriton));
 
   entitiesData.insert(entitiesData.end(),std::make_move_iterator(cubes.begin()),
                                          std::make_move_iterator(cubes.end())); 
@@ -175,7 +186,6 @@ gx::graphicsClient::graphicsClient():
     lights(gx::vector4f(1,1,1),0.1,0.1,0.0f),
     display(),
     entities(staticModels(),uniforms()),
-    staticEntities(staticModels(),uniforms()),
     animatedDrawer(dynamicModels(),uniforms()),
     skyboxDrawer(display.storage()),
     particles(particlesData(),std::vector<uniform::block*>(1,&(display.storage()))),
@@ -252,7 +262,6 @@ void gx::graphicsClient::draw() {
   gx::debugout << "| GL_STENCIL_BUFFER_BIT);" << gx::endl;
 
   // draw...
-  this->staticEntities.draw();
   this->entities.draw();
   this->animatedDrawer.draw();
   this->skyboxDrawer.draw();
@@ -313,12 +322,6 @@ void gx::graphicsClient::clearEntities() {
 void gx::graphicsClient::addEntity(Entity* ent) {
   const auto& entity = *ent;
   const auto& type = entity.getType();
-  if(type == WEAPON) {
-	particleDrawer::instanceData inst;
-    inst.position = vector4f(0,0,0) + entity.getPosition();
-    inst.type = 0;
-    this->particles.addInstance(inst);
-  }
 
   if(false) { //TODO: change back to type == PLAYER
     dynamicDrawer::instanceData inst;
@@ -336,7 +339,7 @@ void gx::graphicsClient::addEntity(Entity* ent) {
     inst.scale = 1;
     inst. pos = vector4f(0,0,0) + entity.getPosition();
     inst.dirY = entity.getDirection();
-    inst.type = entity.getType();
+    inst.type = generalOffset[entity.getType()];
     this->entities.addInstance(inst);
   }
 }
@@ -398,9 +401,16 @@ void gx::graphicsClient::setStaticEntities(std::vector<StaticEntity*> e) {
     inst.scale = 1;
     inst.pos = vector4f(0,0,0) + e1->getPosition();
     inst.dirY = e1->getDirection();
-    inst.type = e1->static_entity_type;
-    inst.scale = e1->scale;
-    this->staticEntities.addInstance(inst);
+    inst.type = generalOffset[e1->static_entity_type];
+    inst.scale = static_cast<GLfloat>(e1->scale);
+    this->entities.addStaticInstance(inst);
+
+    if(e1->static_entity_type == TORCH) {
+      particleDrawer::instanceData inst;
+      inst.position = vector4f(0,0,0) + e1->getPosition();
+      inst.type = 0;
+      this->particles.addStaticInstance(inst);
+    }
   }
 }
 void gx::graphicsClient::disableCursor() {

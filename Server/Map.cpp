@@ -54,6 +54,13 @@ void Map::initStaticEntities() {
 
   this->staticEntities.push_back(staticEntity);*/
 
+  staticEntity = new StaticEntity(TORCH);
+  staticEntity->setPosition(v3_t(0,0,10));
+  staticEntity->setDirection(v3_t(0,1,0));
+  staticEntity->scale = 1;
+
+  this->staticEntities.push_back(staticEntity);
+
 }
 void Map::initSpawns()
 {
