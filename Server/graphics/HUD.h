@@ -28,6 +28,7 @@ private :
   float timer;
   int aimerOuter;
   int aimerInner;
+  vector3f playerDirection;
 
   sf::Text healthText;
   sf::Text manaText;
@@ -78,6 +79,7 @@ public:
   HUD(void);
   ~HUD(void);
   void updateHUD(const Player& player);
+  void updateDir(vector3f & dir);
   void updateHUDTimer(float timer);
   void draw(sf::RenderWindow & window);
   void initializeSprites();

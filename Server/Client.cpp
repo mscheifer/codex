@@ -21,7 +21,6 @@ void NetworkClient::receiveMessages() {
     if(count == -1)
       count = 0;
     count++;
-
     //TODO might cause an endless cycle if server sends faster than the time
     //it takes to process a message. 
     sf::Uint32 packetType;
@@ -63,10 +62,12 @@ void NetworkClient::receiveMessages() {
         for(auto entP = s.walls.begin(); entP != s.walls.end(); entP++) {
           this->gxClient.addEntity(*entP);
         }
-        for(auto entP = s.projectiles.begin(); entP != s.projectiles.end(); entP++) {
+
+        for(auto entP = s.projectiles.begin(); entP != s.projectiles.end(); entP++){
           this->gxClient.addEntity(*entP);
            AudioManager::processProjectileSound(**entP);
         }
+
         for(auto entP = s.powerups.begin(); entP != s.powerups.end(); entP++) {
           this->gxClient.addEntity(*entP);
         }
@@ -112,8 +113,7 @@ void NetworkClient::receiveMessages() {
           break;
       default:
         std::cout<<"Error client receive bad packet " << packetType << std::endl;
-        break;
-    }
+        break; }
   }
   //if(count != -1)
   //  std::cout << "packets processed " << count << std::endl;
@@ -229,7 +229,7 @@ void NetworkClient::doClient() {
         this->receiveMessages();
         //receiveMessagesTime = profilerTime.getElapsedTime().asMilliseconds();
 
-        //profilerTime.restart();
+        //profilerTime.restart();c
         //window closed
         if (!this->running) 
           break;

@@ -1,4 +1,10 @@
 #include "NetworkServices.h"
+#include "ConfigManager.h"
+#ifdef _WIN32
+#include <winsock2.h>
+//#elif defined(LINUX)
+//#include <arpa/inet.h>
+#endif
 
 const unsigned short PORT_NUMBER = 55001;
 const int TIMEOUT = 2;
@@ -33,7 +39,8 @@ bool ClientServices::sendMessage(sf::Packet &packet ) {
   return (client.send(packet)==sf::Socket::Done);
 }
 bool ClientServices::receiveMessage(sf::Packet & packet) {
-  return (client.receive(packet)==sf::Socket::Done);
+  auto result = client.receive(packet);
+  return result == sf::Socket::Done;
 }
 
   
@@ -65,7 +72,18 @@ bool ServerServices::receiveMessage(sf::Packet &packet, unsigned int i ) {
 
 bool ServerServices::sendMessage(sf::Packet & packet, unsigned int i) {
   if (i < clients.size()) {//error checking for i?
-    return (clients[i]->send(packet) == sf::Socket::Done);
+    sf::Uint32 packetSize = packet.getDataSize();
+    sf::Uint32 sendSize = htonl(packetSize);
+    //maybe I should do some error checking for packet size
+    std::vector<char> toSend(packetSize+sizeof(sf::Uint32),0);
+    //error checking
+    if (packet.getData() && packetSize >0 ){
+      std::memcpy(&toSend[0],(char*) &sendSize, sizeof(sf::Uint32));
+      std::memcpy(&toSend[sizeof(sf::Uint32)], (char*) packet.getData(), packetSize);
+   
+      auto result = clients[i]->send(&toSend[0],toSend.size());
+      return result == sf::Socket::Done;
+    }
   }
   return false;      
 }

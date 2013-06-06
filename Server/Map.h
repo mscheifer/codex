@@ -27,8 +27,8 @@ public:
   std::vector<int> wins;
   
   v3_t getRespawnPosition(std::size_t player_id);
-  std::vector<Entity *> getEntity(void);
-  std::vector<Player *> getPlayers(void);
+  const std::vector<Entity *>& getEntity(void);
+  const std::vector<Player *>& getPlayers(void);
   std::vector<Projectile *> getLiveProjectTile(void);
   Projectile* produceProjectile(void);
   void destroyProjectile(Projectile *);
@@ -50,6 +50,8 @@ private:
 	std::stack<Projectile *>* freeProjectiles;
 	std::vector<Projectile *> liveProjectTile;
   Quadtree q;
+  void initSpawns(void);
+  void initFloor(void);
   void initWalls(void);
   void initWallsOne(void);
   void initWallsTwo(void);

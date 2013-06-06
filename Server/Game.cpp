@@ -74,8 +74,8 @@ void Game::updateAndResolveCollision() {
 		  world.destroyProjectile(currentProjectile[i]);
 	}
 
-  if(!world.getQuadtreePtr()->checkNullEntities(reinterpret_cast<void*>(this))) //TODO this is for testing only remove on release
-    std::cout << "ERROR things on quadtree with no entity associated" << std::endl;
+  //if(!world.getQuadtreePtr()->checkNullEntities(reinterpret_cast<void*>(this))) //TODO this is for testing only remove on release
+  //  std::cout << "ERROR things on quadtree with no entity associated" << std::endl;
 }
 
 ServerGameTimeRespond Game::prepResponse() {
@@ -124,8 +124,9 @@ ServerGameTimeRespond Game::prepResponse() {
   }
 
   for( unsigned int i = 0; i < currentProjectiles.size(); i++ ) {
-    if(currentProjectiles[i]->canRender())
+    if(currentProjectiles[i]->canRender()){
       s.projectiles.push_back(currentProjectiles[i]);
+    }
   }
 
 	for( unsigned int i = 0; i < currentEntities.size(); i++ ) {
@@ -165,8 +166,8 @@ InitPacket Game::getInitPacket(int playerId) {
 }
 
 void Game::clearEvents(){
-  std::vector<Player *> currentPlayers =  world.getPlayers();
-	std::vector<Entity *> currentEntities = world.getEntity();
+  const std::vector<Player *>& currentPlayers =  world.getPlayers();
+	const std::vector<Entity *>& currentEntities = world.getEntity();
 
   for( unsigned int i = 0; i < currentPlayers.size(); i++ ) {
     currentPlayers[i]->clearEvents();

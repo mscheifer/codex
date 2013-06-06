@@ -11,7 +11,7 @@
 const float Map::Item_Pick_Up_Ranges = 1.0f;
 
 //TODO the rectangle should be the actual world bounds 
-Map::Map(void): spawnPositions(), freeProjectiles(), q(0,Rectangle(BoundingObj::vec4_t(0,0,0),1000,1000))
+Map::Map(void): spawnPositions(), freeProjectiles(), q(0,Rectangle(BoundingObj::vec4_t(0,0,0),500,500))
 {
 	map_size = 15;
 	freeProjectiles = new std::stack<Projectile *>();
@@ -29,6 +29,7 @@ Map::Map(void): spawnPositions(), freeProjectiles(), q(0,Rectangle(BoundingObj::
   //initPowerUps();
 }
 
+
 void Map::mapReset()
 {
   this->q.clear();
@@ -36,16 +37,46 @@ void Map::mapReset()
   spawnPositions.clear();
   entities.clear();
   liveProjectTile.clear();
-  initWalls(); 
- // initWallsOne();
- // initStaticWalls();
- // initWallsTwo();
+  initSpawns();
+  initFloor();
+  //initWalls(); 
+  initWallsOne();
+  initStaticWalls();
+  initWallsTwo();
   
-  initPowerUps();
+  //initPowerUps();
   for(unsigned int i = 0; i < players.size(); i++)
   {
     players[i]->reset(this->getRespawnPosition(players[i]->player_id));
   }
+}
+
+void Map::initSpawns()
+{
+  // Spawns for initwallsone/two
+  spawnPositions.push_back(v3_t(0,0,0));
+  spawnPositions.push_back(v3_t(100,100,0));
+  spawnPositions.push_back(v3_t(100,-100,0));
+  spawnPositions.push_back(v3_t(-100,100,0));
+  spawnPositions.push_back(v3_t(-100,-100,0));
+  spawnPositions.push_back(v3_t(320,310,0));
+  spawnPositions.push_back(v3_t(320,-310,0));
+  spawnPositions.push_back(v3_t(-320,310,0));
+  spawnPositions.push_back(v3_t(-320,-310,0));
+  spawnPositions.push_back(v3_t(330,25,0));
+  spawnPositions.push_back(v3_t(-330,25,0));
+  spawnPositions.push_back(v3_t(0,215,0));
+  spawnPositions.push_back(v3_t(0,215,0));
+  spawnPositions.push_back(v3_t(400,20,0));
+  spawnPositions.push_back(v3_t(-400,20,0));
+}
+
+void Map::initFloor() {
+  const v3_t facingEast(1,0,0);
+
+  Wall * floor = new Wall(1000, 10, 1000, v3_t(0,0,-5), facingEast, this);
+  this->entities.push_back(floor);
+  floor->setRender(false);
 }
 
 void Map::initPowerUps() {
@@ -641,13 +672,13 @@ void Map::destHelper(){
   }
 }
 
-std::vector<Entity *> Map::getEntity() {
-	 return entities;
+const std::vector<Entity *>& Map::getEntity() {
+  return entities;
 }
   
- std::vector<Player *> Map::getPlayers(){
-	 return players;
- }
+const std::vector<Player *>& Map::getPlayers(){
+  return players;
+}
 
  std::vector<Projectile *> Map::getLiveProjectTile(){
    return liveProjectTile;

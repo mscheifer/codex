@@ -277,6 +277,7 @@ void gx::graphicsClient::addEntity(Projectile* ent) {
 }
 
 void gx::graphicsClient::updateHUD(Player & player) {
+  this->Hud.updateDir(this->playerDirection);
   this->Hud.updateHUD(player);
 }
 

@@ -7,7 +7,7 @@ void NetworkServer::combinePackets(ClientGameTimeAction & a) {
 	pPacket.attackRange |= a.attackRange;
 	pPacket.weapon1 |= a.weapon1;
 	pPacket.weapon2 |= a.weapon2;
-	pPacket.jump |= a.jump;
+	pPacket.jump |= a.jump;   
   pPacket.pickup |= a.pickup;
   pPacket.switchWeapon |= a.switchWeapon;
   pPacket.facingDirection = a.facingDirection;
@@ -52,6 +52,12 @@ void NetworkServer::doServer() {
   std::cout << "Server Ip Address: " << myIpAddress.toString() << std::endl;
   sf::Clock clock;
   
+  //sf::Clock profilerTime;
+  //float clearEventsTime;
+  //float receiveMessagesTime;
+  //float updateAndResolveTime;
+  //float sendTime;
+
   //scores should not change
   game.initScores();
  
@@ -96,16 +102,23 @@ void NetworkServer::doServer() {
     while(true) {
       if (gameState == PLAYING) {
         clock.restart();
+        //profilerTime.restart();
         game.clearEvents();
+        //clearEventsTime = profilerTime.getElapsedTime().asMilliseconds();
+        //profilerTime.restart();
         // don't fuck with this order here
  
         //1. handle incoming packet
         for(unsigned int i = 0; i < server.size(); i++){
           this->receiveMessages(i);
         }
+        //receiveMessagesTime = profilerTime.getElapsedTime().asMilliseconds();
+        //profilerTime.restart();
 
         //2. update all entities and resolve collision
         game.updateAndResolveCollision();
+        //updateAndResolveTime = profilerTime.getElapsedTime().asMilliseconds();
+        //profilerTime.restart();
 
         ServerGameTimeRespond gtr = game.prepResponse();
         gameState= gtr.state;
@@ -113,6 +126,16 @@ void NetworkServer::doServer() {
 	      if(!this->server.sendPacketToAll<ServerGameTimeRespond>( gtr ) ) {
           std::cout << "Error sending sgtr to everybody" << std::endl;
         }
+        //sendTime = profilerTime.getElapsedTime().asMilliseconds();
+        //std::cout << "clearEvents: " << clearEventsTime << " ms "
+        //  << "receiveMessage: " << receiveMessagesTime << " ms "
+        //  << "updateAndResolve: " << updateAndResolveTime << " ms "
+        //  << "sendTime: " << sendTime << " ms " << std::endl;
+        //std::stringstream ss;
+        //ss << "clearEvents: " << clearEventsTime << " ms "
+        //  << "receiveMessage: " << receiveMessagesTime << " ms "
+        //  << "updateAndResolve: " << updateAndResolveTime << " ms "
+        //  << "sendTime: " << sendTime << " ms " << std::endl;
 
         // Go back to the lobby to wait for the game to restart
         if(gameState != Game_State::PLAYING ) {
@@ -121,8 +144,12 @@ void NetworkServer::doServer() {
         }
         //4. go back to sleep slave.
         sf::Int32 sleepAmount = static_cast<sf::Int32>(ConfigManager::serverTickLengthMilli()) - clock.getElapsedTime().asMilliseconds();
-        if(sleepAmount < 0 )
+        //ss << sleepAmount;
+        //ConfigManager::log( ss.str() );
+        if(sleepAmount < 0 ){
           std::cout << "Error, sleep negative amount. server can't run at this tick speed, lower it" << std::endl;
+          /*ConfigManager::log( "Error, sleep negative amount. server can't run at this tick speed, lower it" );*/
+        }
         sf::sleep( sf::milliseconds(sleepAmount) );
       } else {
         if (clock.getElapsedTime().asSeconds() > 2) { //TODO make this 5 sec again

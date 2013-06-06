@@ -7,7 +7,7 @@ gx::HUD::HUD(void):health(100), maxHealth(100), HLossPercentage(0),
   mana(100), maxMana(100), MLossPercentage(0), canPickUp(false),
   weapon1(0), weapon2(0), currentSelect(0), elapsedChargeTime(0),
   totalChargeTime(-1), chargeMagicType(0), charging(false), timer(0),
-  aimerOuter(0), aimerInner(0){
+  aimerOuter(0), aimerInner(0), playerDirection(0,0,0){
   font.loadFromFile("arial.ttf");
   emptyBarTexture.loadFromFile("graphics/Images/Empty_bar.png");
   //heart image
@@ -362,6 +362,10 @@ void gx::HUD::initializeSprites() {
    aimerHelper(std::string("graphics/Images/aimerG2.png"));
    aimerHelper(std::string("graphics/Images/aimerG3.png"));
    aimerHelper(std::string("graphics/Images/aimerBasic.png")); //20
+}
+
+void gx::HUD::updateDir(vector3f & dir){
+  playerDirection = dir;
 }
 
 //outer inner
