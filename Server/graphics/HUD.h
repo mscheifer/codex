@@ -31,6 +31,8 @@ private :
   vector3f playerDirection;
   int hit;
   BUFF ptype;
+  vector3f attackedDir;
+  float attackedAngle;
 
   sf::Text healthText;
   sf::Text manaText;
@@ -68,6 +70,8 @@ private :
   std::vector<sf::Sprite*> aimerSprites;
   std::vector<sf::Texture*> hitTextures;
   std::vector<sf::Sprite*> hitSprites;
+  std::vector<sf::Texture*> hitDirTextures;
+  std::vector<sf::Sprite*> hitDirSprites;
   std::vector<bool> renderBuff;
   std::vector<int> remainTime;
   sf::Text currentSpell;
@@ -81,6 +85,8 @@ private :
   void weaponHelper(std::string & path);
   void aimerHelper(std::string & path);
   void hitHelper(std::string & path);
+  void hitDirHelper(std::string & path);
+  float rotateAngle(vector3f v1, vector3f v2);
 
 public:
   static const int aimerIndex[18][2];

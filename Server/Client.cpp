@@ -94,6 +94,7 @@ void NetworkClient::receiveMessages() {
         sf::Listener::setDirection(dir.x, dir.y, dir.z);
         break;
       case JOINID:
+          updateMusic = true;
           newId.deserialize(packet);
           this->id = newId.id;
           std::cout << "USERID: " << this->id << std::endl;

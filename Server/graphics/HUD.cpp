@@ -1,13 +1,14 @@
 #include "HUD.h"
 #include <string>
 #include "Projectile.h"
+#include <math.h>
 
 /* TODO the constants should really be defined somewhere */
 gx::HUD::HUD(void):health(100), maxHealth(100), HLossPercentage(0), 
   mana(100), maxMana(100), MLossPercentage(0), canPickUp(false),
   weapon1(0), weapon2(0), currentSelect(0), elapsedChargeTime(0),
   totalChargeTime(-1), chargeMagicType(0), charging(false), timer(0),
-  aimerOuter(0), aimerInner(0), playerDirection(0,0,0), hit(0) {
+  aimerOuter(0), aimerInner(0), playerDirection(0,0,0), hit(0), attackedAngle(0){
   font.loadFromFile("arial.ttf");
   emptyBarTexture.loadFromFile("graphics/Images/Empty_bar.png");
   //heart image
@@ -109,17 +110,27 @@ gx::HUD::~HUD(void) {
   for (auto itr=hitTextures.begin();itr != hitTextures.end(); itr++) {
     delete *itr;
   }
+  for (auto itr=hitDirSprites.begin();itr != hitDirSprites.end(); itr++) {
+    delete *itr;
+  }
+  for (auto itr=hitDirTextures.begin();itr != hitDirTextures.end(); itr++) {
+    delete *itr;
+  }
 }
 
 void gx::HUD::draw(sf::RenderWindow & window) {
   float passed = hitClock.getElapsedTime().asSeconds();
   if (passed< 1.5) {
-    std::cout<<"i should draw "<<hit<<std::endl;
     hitSprites[hit]->setScale(static_cast<float>(window.getSize().x)/hitTextures[hit]->getSize().x,
     static_cast<float>(window.getSize().y)/hitTextures[hit]->getSize().y);
     sf::Color old = hitSprites[hit]->getColor();
     hitSprites[hit]->setColor(sf::Color(old.r,old.g,old.b, (1-passed/1.5)*255 ));
     window.draw(*(hitSprites[hit]));
+
+    hitDirSprites[hit]->setColor(sf::Color(old.r,old.g,old.b, (1-passed/1.5)*255 ));
+    hitDirSprites[hit]->setPosition((window.getSize().x)/2, (window.getSize().y)/2);
+    hitDirSprites[hit]->setRotation(attackedAngle);
+    window.draw(*(hitDirSprites[hit]));
   }
   if (buffClock.getElapsedTime().asSeconds() <1.5) {
     collectedPU.setString(std::string("Blessed with ") + powerUpNames[ptype]);
@@ -258,8 +269,13 @@ void gx::HUD::updateHUD(const Player& player) {
   if (player.attacked) {
     hitClock.restart(); 
     hit = hitIndex[player.attackedMagicType];
-    std::cout<<"I am attacked by " <<hit<<std::endl;
+    attackedDir = player.attackedDir;
+    attackedDir.negate();
+    std::cout << attackedDir << " " << playerDirection << std::endl;
   }
+
+  attackedAngle = rotateAngle(playerDirection, attackedDir);
+
   if (player.collectPowerUp) {
     buffClock.restart();
     this->ptype = player.ptype;
@@ -324,6 +340,18 @@ void gx::HUD::hitHelper(std::string & path) {
    tSprite->setTexture(*tText);
    hitTextures.push_back(tText);
    hitSprites.push_back(tSprite);
+}
+
+void gx::HUD::hitDirHelper(std::string & path) {
+   sf::Texture* tText;
+   sf::Sprite* tSprite;
+   tText = new sf::Texture();
+   tSprite = new sf::Sprite();
+   tText->loadFromFile(path);
+   tSprite->setTexture(*tText);
+   tSprite->setOrigin(tText->getSize().x/2, tText->getSize().y);
+   hitDirTextures.push_back(tText);
+   hitDirSprites.push_back(tSprite);
 }
 
 void gx::HUD::updateHUDTimer(float timer) {
@@ -406,10 +434,18 @@ void gx::HUD::initializeSprites() {
    hitHelper(std::string("graphics/Images/hitRed.png"));
    hitHelper(std::string("graphics/Images/hitBlue.png"));
 
+   hitDirTextures.push_back(new sf::Texture());
+   hitDirSprites.push_back(new sf::Sprite());
+   hitDirHelper(std::string("graphics/Images/hitDirRed.png"));
+   hitDirHelper(std::string("graphics/Images/hitDirBlue.png"));
 }
 
 void gx::HUD::updateDir(vector3f & dir){
   playerDirection = dir;
+}
+
+float gx::HUD::rotateAngle( vector3f v1, vector3f v2 ){
+  return static_cast<float>(v1.x*v2.y-v2.x*v1.y,v1.x*v2.x+v1.y*v2.y) * 180/M_PI ;
 }
 
 const int gx::HUD::hitIndex[18] = {
