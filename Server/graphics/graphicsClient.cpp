@@ -406,6 +406,7 @@ void gx::graphicsClient::setStaticEntities(std::vector<StaticEntity*> e) {
     this->entities.addStaticInstance(inst);
 
     if(e1->static_entity_type == TORCH) {
+      lights.addStaticLight(vector4f(0,0,0) + e1->getPosition());
       particleDrawer::instanceData inst;
       inst.position = vector4f(0,0,0) + e1->getPosition();
       inst.type = 0;
