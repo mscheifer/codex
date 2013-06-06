@@ -1,5 +1,6 @@
 #include "Map.h"
 #include "Projectile.h"
+#include "StaticEntity.h"
 #include "Player.h"
 #include "Entity.h"
 #include "Wall.h"
@@ -13,8 +14,8 @@ const float Map::Item_Pick_Up_Ranges = 1.0f;
 //TODO the rectangle should be the actual world bounds 
 Map::Map(void): spawnPositions(), freeProjectiles(), q(0,Rectangle(BoundingObj::vec4_t(0,0,0),500,500))
 {
-	map_size = 15;
-	freeProjectiles = new std::stack<Projectile *>();
+  map_size = 15;
+  freeProjectiles = new std::stack<Projectile *>();
   initSpawns(); //needed before reset because
 }
 
@@ -30,7 +31,8 @@ void Map::mapReset()
 
   initPowerUps();
   initFloor();
-  initWalls();
+  initWalls(); 
+  initStaticEntities();
 
   for(unsigned int i = 0; i < players.size(); i++)
   {
@@ -38,24 +40,37 @@ void Map::mapReset()
   }
 }
 
+void Map::initStaticEntities() { 
+  StaticEntity* staticEntity = new StaticEntity(GROUND);
+  staticEntity->setPosition(v3_t(0, 0, 0));
+  staticEntity->setDirection(v3_t(0,1,0));
+  staticEntity->scale = 1;
+  this->staticEntities.push_back(staticEntity);
+
+  /*staticEntity = new StaticEntity(TRITON);
+  staticEntity->setPosition(v3_t(300,300,100));
+  staticEntity->setDirection(v3_t(0,1,0));
+  staticEntity->scale = 40;
+
+  this->staticEntities.push_back(staticEntity);*/
+
+}
 void Map::initSpawns()
 {
-  // Spawns for initwallsone/two
-  spawnPositions.push_back(v3_t(0,0,0));
-  spawnPositions.push_back(v3_t(100,100,0));
-  spawnPositions.push_back(v3_t(100,-100,0));
-  spawnPositions.push_back(v3_t(-100,100,0));
-  spawnPositions.push_back(v3_t(-100,-100,0));
-  spawnPositions.push_back(v3_t(320,310,0));
-  spawnPositions.push_back(v3_t(320,-310,0));
-  spawnPositions.push_back(v3_t(-320,310,0));
-  spawnPositions.push_back(v3_t(-320,-310,0));
-  spawnPositions.push_back(v3_t(330,25,0));
-  spawnPositions.push_back(v3_t(-330,25,0));
-  spawnPositions.push_back(v3_t(0,215,0));
-  spawnPositions.push_back(v3_t(0,215,0));
-  spawnPositions.push_back(v3_t(400,20,0));
-  spawnPositions.push_back(v3_t(-400,20,0));
+  spawnPositions.push_back(v3_t(170,-45,0));
+  spawnPositions.push_back(v3_t(-125,-20,0));
+  spawnPositions.push_back(v3_t(170,45,0));
+  spawnPositions.push_back(v3_t(-170,100,0));
+  spawnPositions.push_back(v3_t(-170,60,0));
+  spawnPositions.push_back(v3_t(-135,130,0));
+  spawnPositions.push_back(v3_t(-95,130,0));
+  spawnPositions.push_back(v3_t(15,130,0));
+  spawnPositions.push_back(v3_t(60,60,0));
+  spawnPositions.push_back(v3_t(165,-80,0));
+  spawnPositions.push_back(v3_t(165,-20,0));
+  spawnPositions.push_back(v3_t(165,125,0));
+  spawnPositions.push_back(v3_t(170,-170,0));
+  spawnPositions.push_back(v3_t(60,-130,0));
 }
 
 void Map::initPowerUps() {
@@ -445,8 +460,7 @@ void Map::initStaticWalls(void) {
     addWallDirection(startingX, startingY, startingZ, facingNorth, rows[i]);
   }
 }
-
-void Map::initWalls(void)
+void Map::initTestWalls(void)
 {
   //TODO move this
   /*WeaponFire* w1 = new WeaponFire(v3_t(100,100,0), this, FIR1);
@@ -504,6 +518,57 @@ void Map::initWalls(void)
   for( i = 0,
     startingX = ((wallX*width)/-2)+(height/2)+centerX,
     startingXNeg = ((wallX*width)/2)-(height/2)+centerX,
+    startingY = ((wallY*width)/-2)+(width/2)+centerY;
+    i < wallY; i++, startingY += width )
+  {
+    Wall* leftWall = new Wall(width, depth, height,
+      v3_t(startingX,startingY, startingZ), facingEast, this);
+    Wall* rightWall = new Wall(width, depth, height,
+      v3_t(startingXNeg,startingY, startingZ), facingEast, this);
+    this->entities.push_back(leftWall);
+    this->entities.push_back(rightWall);
+  }
+
+}
+void Map::initWalls(void)
+{
+  v3_t facingEast(1,0,0);
+  v3_t facingNorth(0,1,0);
+  float width = ConfigManager::wallWidth();
+  float height = ConfigManager::wallHeight(); 
+  float depth = ConfigManager::wallDepth();
+
+  float wallX = 10;
+  float wallY = 10;
+
+  float centerX = 0;
+  float centerY = 0;
+  int i;
+  float startingX;
+  float startingXNeg;
+  float startingY;
+  float startingYNeg;
+  float startingZ = depth/2.0f;
+
+  // Create the top and bottom perimeter from left to right.
+  for( i = 0,
+    startingX = ((wallX*width)/-2)+(width/2)+centerX,
+    startingY = ((wallY*width)/-2)+centerY,
+    startingYNeg = ((wallY*width)/2)+centerY;
+    i < wallX; i++, startingX += width )
+  {
+    Wall* topWall = new Wall(width, depth, height, 
+      v3_t(startingX,startingY, startingZ), facingNorth, this);
+    Wall* bottomWall = new Wall(width, depth, height, 
+      v3_t(startingX,startingYNeg, startingZ), facingNorth, this);
+    this->entities.push_back(topWall);
+    this->entities.push_back(bottomWall);
+  }
+
+  // Create the left and right perimeter from bottom up
+  for( i = 0,
+    startingX = ((wallX*width)/-2)+centerX,
+    startingXNeg = ((wallX*width)/2)+centerX,
     startingY = ((wallY*width)/-2)+(width/2)+centerY;
     i < wallY; i++, startingY += width )
   {
@@ -795,8 +860,13 @@ void Map::destHelper(){
   }
 }
 
+
 const std::vector<Entity *>& Map::getEntity() {
   return entities;
+}
+
+std::vector<StaticEntity *> Map::getStaticEntities() {
+  return staticEntities;
 }
   
 const std::vector<Player *>& Map::getPlayers(){

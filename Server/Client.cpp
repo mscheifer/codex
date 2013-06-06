@@ -26,6 +26,8 @@ void NetworkClient::receiveMessages() {
     packet >> packetType;
     std::vector<int> kills;
     std::vector<int> wins;
+    std::vector<bool> dead;
+    unsigned int minotaurId;
     v3_t pos;
     v3_t dir;
     IdPacket newId(0);
@@ -56,8 +58,11 @@ void NetworkClient::receiveMessages() {
             } else if (playerP->isMinotaur()) //not far, but minotaur
               minotaur = true;
           }
+          dead.push_back((*playerP).dead);
           kills.push_back((*playerP).kills);
           wins.push_back((*playerP).wins);
+          if(playerP->isMinotaur())
+            minotaurId = playerP->player_id;
           AudioManager::processPlayerSound(*playerP);
         }
         for(auto entP = s.walls.begin(); entP != s.walls.end(); entP++) {
@@ -79,7 +84,8 @@ void NetworkClient::receiveMessages() {
         gxClient.updatePosition(gx::vector4f(pos.x,pos.y,pos.z));
         //entities.push_back(&(this->skybox)); //add skybox
         gxClient.updateHUD(this->s.players[id]);
-        gxClient.updateScores(wins,kills);
+        gxClient.updateScores(wins,kills, dead);
+        gxClient.setMinotaur(minotaurId);
         //std::cout << "num entities received: " << entities.size() << std::endl;
         if (this->s.players[id].dead) { /*render death everytime ? */}
         //render WIN OR LOSE based on s.state
@@ -106,6 +112,8 @@ void NetworkClient::receiveMessages() {
           initPckt.deserialize(packet);
           this->gxClient.updatePosition(gx::vector4f(0,0,0) + initPckt.position);
           this->gxClient.updateDirection(initPckt.direction);
+          this->gxClient.setStaticEntities(initPckt.staticEntities);
+          this->gxClient.setPlayerId(this->id);
           this->gameStart = true;
           flag = true;
           break;

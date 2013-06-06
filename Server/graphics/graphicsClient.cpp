@@ -27,6 +27,8 @@ std::vector<gx::graphicsEntity> staticModels() {
   auto modelPowerUp    = loadModel(configModelName("powerup"),PowerUp::powerUpDepth,true);
   auto modelWall       = loadModel(configModelName("wall"),10);
   auto modelPlayer     = loadModel(configModelName("goodguy"),Player::playerDepth,true);
+  //auto modelTriton     = loadModel(configModelName("triton"),Player::playerDepth,true);
+
   auto cubes = gx::loadCube();
   auto skybox = gx::loadSkybox();
   auto ground = gx::loadGround(2000.0f, 0.0f, "models/floor.jpg");
@@ -38,7 +40,10 @@ std::vector<gx::graphicsEntity> staticModels() {
   entitiesData.push_back(std::move(modelProjectile)); //projectile
   entitiesData.push_back(std::move(modelWeapon)); //weapon
   entitiesData.push_back(std::move(modelPowerUp)); //powerup
+ // entitiesData.push_back(std::move(modelTriton));
   entitiesData.push_back(std::move(ground));  //ground
+  //entitiesData.push_back(std::move(modelTriton));
+
   entitiesData.insert(entitiesData.end(),std::make_move_iterator(cubes.begin()),
                                          std::make_move_iterator(cubes.end())); 
   return entitiesData;
@@ -47,7 +52,7 @@ std::vector<gx::graphicsEntity> staticModels() {
 std::vector<gx::graphicsEntity> dynamicModels() {
   // MODEL LOADING
   auto modelPlayer = loadModel(configModelName("goodguy"),Player::playerDepth,true);
-
+ // auto modelWall =  loadModel(configModelName("ninja"),10);
     //setup drawing data
   std::vector<gx::graphicsEntity> entitiesData;
   entitiesData.push_back(std::move(modelPlayer));
@@ -116,6 +121,7 @@ gx::graphicsClient::graphicsClient():
     lights(gx::vector4f(1,1,1),0.1,0.1,0.0f),
     display(),
     entities(staticModels(),uniforms()),
+    staticEntities(staticModels(),uniforms()),
     animatedDrawer(dynamicModels(),uniforms()),
     skyboxDrawer(display.storage()),
     particles(particlesData(),std::vector<uniform::block*>(1,&(display.storage()))),
@@ -192,6 +198,7 @@ void gx::graphicsClient::draw() {
   gx::debugout << "| GL_STENCIL_BUFFER_BIT);" << gx::endl;
 
   // draw...
+  this->staticEntities.draw();
   this->entities.draw();
   this->animatedDrawer.draw();
   this->skyboxDrawer.draw();
@@ -247,14 +254,6 @@ void gx::graphicsClient::clearEntities() {
   this->entities.reset();
   this->animatedDrawer.reset();
   this->particles.reset();
-  
-  // add ground instance. kinda hacky but works
-  staticDrawer::instanceData groundInst;
-  groundInst.pos  = vector4f(0,0,0) + vector3f(0, 0, 0);
-  groundInst.dirY = vector3f(0,1,0);
-  groundInst.type = GROUND;
-  groundInst.scale = 1;
-  this->entities.addInstance(groundInst);
 }
 
 void gx::graphicsClient::addEntity(Entity* ent) {
@@ -324,6 +323,17 @@ void gx::graphicsClient::drawLobby() {
   window.popGLStates(); 
   window.display();
 }
+void gx::graphicsClient::setStaticEntities(std::vector<StaticEntity*> e) {
+  for(int i = 0; i < e.size() ;i++) {
+    staticDrawer::instanceData inst;
+    inst.scale = 1;
+    inst.pos = e[i]->getPosition();
+    inst.dirY = e[i]->getDirection();
+    inst.type = e[i]->static_entity_type;
+    inst.scale = e[i]->scale;
+    this->staticEntities.addInstance(inst);
+  }
+}
 void gx::graphicsClient::disableCursor() {
   this->window.setMouseCursorVisible(false);
 }
@@ -341,9 +351,15 @@ void gx::graphicsClient::gameEnd()
   Lobby.endGame();
 }
 
+void gx::graphicsClient::setMinotaur(unsigned int playerid)
+{
+  Score.setMinotaurId(playerid);
+}
+
 void gx::graphicsClient::updateScores(std::vector<int> & pwins,
-                                      std::vector<int> & pkills) {
-  Score.updateScores(pwins,pkills);
+                                      std::vector<int> & pkills,
+                                      std::vector<bool> & pdead) {
+  Score.updateScores(pwins,pkills, pdead);
 }
 
 void gx::graphicsClient::updateLobby(std::vector<std::pair<int,bool>> & playerStatus ) {
