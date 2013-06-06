@@ -34,7 +34,18 @@ bool ClientServices::connectServer(std::string serverIP) {
 }
 
 bool ClientServices::sendMessage(sf::Packet &packet ) {
-  return (client.send(packet)==sf::Socket::Done);
+  sf::Uint32 packetSize = packet.getDataSize();
+  sf::Uint32 sendSize = htonl(packetSize);
+  std::vector<char> toSend(packetSize+sizeof(sf::Uint32),0);
+  //error checking
+  if (packet.getData() && packetSize >0 ){
+    std::memcpy(&toSend[0],(char*) &sendSize, sizeof(sf::Uint32));
+    std::memcpy(&toSend[sizeof(sf::Uint32)], (char*) packet.getData(), packetSize);
+ 
+    auto result = client.send(&toSend[0],toSend.size());
+    return result == sf::Socket::Done;
+  }
+  return false; 
 }
 
 std::string toHex(unsigned char oneChar) {
@@ -80,7 +91,6 @@ bool ServerServices::sendMessage(sf::Packet & packet, unsigned int i) {
   if (i < clients.size()) {//error checking for i?
     sf::Uint32 packetSize = packet.getDataSize();
     sf::Uint32 sendSize = htonl(packetSize);
-    //maybe I should do some error checking for packet size
     std::vector<char> toSend(packetSize+sizeof(sf::Uint32),0);
     //error checking
     if (packet.getData() && packetSize >0 ){
