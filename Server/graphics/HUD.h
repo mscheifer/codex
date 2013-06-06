@@ -56,6 +56,8 @@ private :
   sf::Sprite mBarSprite;
   sf::Texture badGuyTexture;
   sf::Sprite badGuySprite;
+  sf::Texture goodGuyTexture;
+  sf::Sprite goodGuySprite;
   sf::Text pickUp;
   sf::Texture energeBarTexture;
   sf::Sprite energeBarSprite;
