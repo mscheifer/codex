@@ -256,33 +256,6 @@ void gx::graphicsClient::clearEntities() {
   this->entities.reset();
   this->animatedDrawer.reset();
   this->particles.reset();
-  
-  addStaticInstance();
-
-
-}
-
-void gx::graphicsClient::addStaticInstance() {
-    // add ground instance. kinda hacky but works
-  /*
-  staticDrawer::instanceData groundInst;
-  groundInst.pos  = vector3f(0, 0, 0);
-  groundInst.dirY = vector3f(0,1,0);
-  groundInst.type = GROUND;
-  groundInst.scale = 1;
-  
-  this->entities.addInstance(groundInst);
-
-  staticDrawer::instanceData triton;
-  triton.pos  = vector3f(300,300,100);
-  triton.dirY = vector3f(0,1,0);
-  triton.type = TRITON;
-  triton.scale = 40;
-
-  
-  this->entities.addInstance(triton);
-  */
-
 }
 
 void gx::graphicsClient::addEntity(Entity* ent) {
@@ -295,7 +268,7 @@ void gx::graphicsClient::addEntity(Entity* ent) {
     this->particles.addInstance(inst);
   }
 
-  if(type == POWER_UP) { //TODO: change back to type == PLAYER
+  if(false) { //TODO: change back to type == PLAYER
     dynamicDrawer::instanceData inst;
     inst.scale = 1;
     inst. pos = entity.getPosition();

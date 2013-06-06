@@ -241,7 +241,6 @@ gx::Mesh::InitMaterials(const aiScene* pScene,const std::string& Filename) {
       diffusePath = Dir + "/" + Path.C_Str();
     } else {
       diffusePath = "models/white.png";
-     // diffusePath = "models/Ninja.png";
     }
     Texture diffuseTex(GL_TEXTURE_2D, diffusePath);
     //material index will correspond to the Mesh's material index
