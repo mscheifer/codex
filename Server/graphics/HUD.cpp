@@ -316,11 +316,10 @@ void gx::HUD::updateHUD(const Player& player) {
     hitClock.restart(); 
     hit = hitIndex[player.attackedMagicType];
     attackedDir = player.attackedDir;
-    attackedDir.negate();
     std::cout << attackedDir << " " << playerDirection << std::endl;
   }
 
-  attackedAngle = rotateAngle(playerDirection, attackedDir);
+  attackedAngle = 180 - rotateAngle(playerDirection, attackedDir);
 
   if (player.collectPowerUp) {
     buffClock.restart();
@@ -491,7 +490,7 @@ void gx::HUD::updateDir(vector3f & dir){
 }
 
 float gx::HUD::rotateAngle( vector3f v1, vector3f v2 ){
-  return static_cast<float>(v1.x*v2.y-v2.x*v1.y,v1.x*v2.x+v1.y*v2.y) * 180/M_PI ;
+  return static_cast<float>(atan2(v1.x*v2.y-v2.x*v1.y,v1.x*v2.x+v1.y*v2.y)) * 180/M_PI ;
 }
 
 const int gx::HUD::hitIndex[18] = {

@@ -17,12 +17,12 @@ enableMinotaur=1
 countdown=2
 
 //models
-model-badguy=cat.dae
-model-goodguy=cat.dae
+model-badguy=badguy.dae
+model-goodguy=goodguy.dae
 model-wall=stone_wall.dae
-model-projectile=weird_orange_thing.dae
-model-powerup=cat.dae
-model-weapon=badguy.dae
+model-projectile=Ice_projectile.dae
+model-powerup=Thunder_projectile.dae
+model-weapon=dark_projectile.dae
 model-triton=triton.DAE
 
 // Physics

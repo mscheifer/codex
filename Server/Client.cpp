@@ -94,7 +94,6 @@ void NetworkClient::receiveMessages() {
         sf::Listener::setDirection(dir.x, dir.y, dir.z);
         break;
       case JOINID:
-          updateMusic = true;
           newId.deserialize(packet);
           this->id = newId.id;
           std::cout << "USERID: " << this->id << std::endl;
@@ -185,7 +184,7 @@ void NetworkClient::processInput(){
 */
 void NetworkClient::doClient() {
   AudioManager::loadSounds();
-
+  AudioManager::updateMusic(2, true);
   //AudioManager::playMusic("m1");
   //if doClient running I already connected to the server 
   gameStart = false;
