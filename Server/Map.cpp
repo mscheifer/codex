@@ -57,6 +57,10 @@ void Map::initStaticEntities() {
   staticEntity->setDirection(v3_t(0,1,0));
   staticEntity->scale = 1;
   this->staticEntities.push_back(staticEntity);
+  
+  /* add bounding box here and addd it to entities so it will run colision detection
+    this->entities.push_back(staticEntity);
+  */
 
   staticEntity = new StaticEntity(TRITON);
   staticEntity->setPosition(v3_t(300,300,100));

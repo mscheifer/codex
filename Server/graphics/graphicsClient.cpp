@@ -27,7 +27,8 @@ std::vector<gx::graphicsEntity> staticModels() {
   auto modelPowerUp    = loadModel(configModelName("powerup"),PowerUp::powerUpDepth,true);
   auto modelWall       = loadModel(configModelName("wall"),10);
   auto modelPlayer     = loadModel(configModelName("goodguy"),Player::playerDepth,true);
-  auto modelTriton     = loadModel(configModelName("triton"),Player::playerDepth,true);
+  auto modelTriton     = loadModel(configModelName("triton"),25,true);
+  auto modelDragon     = loadModel(configModelName("dragon"), 25,true);
 
   auto cubes = gx::loadCube();
   auto skybox = gx::loadSkybox();
@@ -43,6 +44,7 @@ std::vector<gx::graphicsEntity> staticModels() {
  // entitiesData.push_back(std::move(modelTriton));
   entitiesData.push_back(std::move(ground));  //ground
   entitiesData.push_back(std::move(modelTriton));
+   entitiesData.push_back(std::move(modelDragon));
 
   entitiesData.insert(entitiesData.end(),std::make_move_iterator(cubes.begin()),
                                          std::make_move_iterator(cubes.end())); 
