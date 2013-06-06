@@ -34,6 +34,7 @@ public:
   MAGIC_POWER chargeMagicType;
   MAGIC_POWER attackedMagicType;
   BUFF ptype;
+  v3_t attackedDir;
   
   int player_id;
   std::string name;
