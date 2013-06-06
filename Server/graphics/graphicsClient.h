@@ -65,6 +65,7 @@ class graphicsClient {
     void setStaticEntities(std::vector<StaticEntity*> e);
     void clearEntities();
     void addEntity(Entity*);
+    void addEntity(Player*);
     void addEntity(Projectile*);
     void updateHUD(Player & player);
     void drawLobby();
