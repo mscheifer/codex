@@ -4,7 +4,7 @@
 
 scoreBoard::scoreBoard(int numPlayer) {
  minotaurId = 9999;
- font.loadFromFile("arial.ttf");
+ font.loadFromFile("MORPHEUS.TTF");
  boardText.setFont(font);
  boardText.setCharacterSize(24);
  boardText.setColor(sf::Color::Black);
