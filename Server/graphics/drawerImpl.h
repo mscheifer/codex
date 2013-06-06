@@ -36,7 +36,7 @@ class staticDrawerImpl {
     void setUniforms(const entityClass&,const entityClass::instance&) const;
     void setUniforms(const entityClass::instance&) const;
     struct instanceData {
-      vector3f pos;
+      vector4f pos;
       vector3f dirY;
       GLfloat  scale;
       unsigned int type;

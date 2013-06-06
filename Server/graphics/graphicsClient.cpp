@@ -196,11 +196,9 @@ void gx::graphicsClient::draw() {
   this->animatedDrawer.draw();
   this->skyboxDrawer.draw();
 
-  //glEnable(GL_BLEND);
   glDepthMask(GL_FALSE);
   this->particles.draw();
  	glDepthMask(GL_TRUE);
-  //glDisable(GL_BLEND);
  
   //render sfml please don't comment or uncomment anything from the following
   //block
@@ -252,7 +250,7 @@ void gx::graphicsClient::clearEntities() {
   
   // add ground instance. kinda hacky but works
   staticDrawer::instanceData groundInst;
-  groundInst.pos  = vector3f(0, 0, 0);
+  groundInst.pos  = vector4f(0,0,0) + vector3f(0, 0, 0);
   groundInst.dirY = vector3f(0,1,0);
   groundInst.type = GROUND;
   groundInst.scale = 1;
@@ -269,10 +267,10 @@ void gx::graphicsClient::addEntity(Entity* ent) {
     this->particles.addInstance(inst);
   }
 
-  if(type == POWER_UP) { //TODO: change back to type == PLAYER
+  if(false) { //TODO: change back to type == PLAYER
     dynamicDrawer::instanceData inst;
     inst.scale = 1;
-    inst. pos = entity.getPosition();
+    inst. pos = vector4f(0,0,0) + entity.getPosition();
     inst.dirY = entity.getDirection();
     inst.type = 0; //TODO: somehow set this based on type but it can't be absolute type?
     inst.animation = 0; //TODO: select animation based on context
@@ -283,7 +281,7 @@ void gx::graphicsClient::addEntity(Entity* ent) {
   } else {
     staticDrawer::instanceData inst;
     inst.scale = 1;
-    inst. pos = entity.getPosition();
+    inst. pos = vector4f(0,0,0) + entity.getPosition();
     inst.dirY = entity.getDirection();
     inst.type = entity.getType();
     this->entities.addInstance(inst);
@@ -301,9 +299,9 @@ void gx::graphicsClient::addEntity(Projectile* ent) {
   lights.addLight(vector4f(0,0,0) + entity.getPosition());
   staticDrawer::instanceData inst;
   inst.scale = ProjInfo[entity.getMagicType()].size;
-  inst. pos = entity.getPosition();
-  inst.dirY = entity.getDirection();
-  inst.type = entity.getType();
+  inst.pos   = vector4f(0,0,0) + entity.getPosition();
+  inst.dirY  = entity.getDirection();
+  inst.type  = entity.getType();
   this->entities.addInstance(inst);
 }
 
