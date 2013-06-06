@@ -128,6 +128,7 @@
     <ClCompile Include="scoreBoard.cpp" />
     <ClCompile Include="Server.cpp" />
     <ClCompile Include="ServerGameTimeRespond.h" />
+    <ClCompile Include="StaticEntity.cpp" />
     <ClCompile Include="util.cpp" />
     <ClCompile Include="Wall.cpp" />
     <ClCompile Include="Weapon.cpp" />
@@ -192,6 +193,7 @@
     <ClInclude Include="Rectangle.h" />
     <ClInclude Include="scoreBoard.h" />
     <ClInclude Include="Server.h" />
+    <ClInclude Include="StaticEntity.h" />
     <ClInclude Include="StaticEnums.h" />
     <ClInclude Include="AudioManager.h" />
     <ClInclude Include="util.h" />

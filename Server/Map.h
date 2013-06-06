@@ -1,7 +1,4 @@
 #pragma once
-//#include "Entity.h"
-//#include "Player.h"
-//#include "Projectile.h"
 #include <array>
 #include <vector>
 #include <stdlib.h>
@@ -10,6 +7,7 @@
 #include "Physics.h" //typedef
 #include <stdlib.h> 
 
+class StaticEntity;
 class Entity;
 class Player;
 class Projectile;
@@ -46,14 +44,17 @@ public:
   void mapReset();
   void initScores();
   void assignName(std::string name, int id);
+  std::vector<StaticEntity*> getStaticEntities(void);
 private:
   std::vector<v3_t> spawnPositions;
 	std::vector<Player *> players;
 	std::vector<Entity *> entities;
 	std::stack<Projectile *>* freeProjectiles;
 	std::vector<Projectile *> liveProjectTile;
+  std::vector<StaticEntity*> staticEntities;
   Quadtree q;
   void initFloor(void);
+  void initTestWalls(void);
   void initWalls(void);
   void initWallsRed(void);
   void initWallsBlue(void); 
@@ -62,6 +63,7 @@ private:
   void initStaticWalls(void);
   void initSpawns(void);
   void initPowerUps(void);
+  void initStaticEntities(void);
   void addWallDirection(float startingX, float startingY, float startingZ, v3_t dir, int values[]);
   void destHelper();
   void addWallChange(bool start, float startingX, float startingY, float startingZ, v3_t dir, int values[]);

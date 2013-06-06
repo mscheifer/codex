@@ -104,6 +104,7 @@ void NetworkClient::receiveMessages() {
           initPckt.deserialize(packet);
           this->gxClient.updatePosition(gx::vector4f(0,0,0) + initPckt.position);
           this->gxClient.updateDirection(initPckt.direction);
+          this->gxClient.setStaticEntities(initPckt.staticEntities);
           this->gameStart = true;
           flag = true;
           break;

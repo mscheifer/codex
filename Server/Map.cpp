@@ -1,5 +1,6 @@
 #include "Map.h"
 #include "Projectile.h"
+#include "StaticEntity.h"
 #include "Player.h"
 #include "Entity.h"
 #include "Wall.h"
@@ -18,6 +19,7 @@ Map::Map(void): spawnPositions(), freeProjectiles(), q(0,Rectangle(BoundingObj::
   initSpawns();
 
   initPowerUps();
+  initTestWalls();
 }
 
 void Map::mapReset()
@@ -29,19 +31,33 @@ void Map::mapReset()
   liveProjectTile.clear();
   initSpawns();
   initPowerUps();
-  initFloor();
-  initWalls(); 
-  //initWallsOne();
-  //initStaticWalls();
-  //initWallsTwo();
 
-  
+  initFloor();
+  //initWalls(); 
+  initTestWalls(); 
+  initStaticEntities();
+
   for(unsigned int i = 0; i < players.size(); i++)
   {
     players[i]->reset(this->getRespawnPosition());
   }
 }
 
+void Map::initStaticEntities() { 
+  StaticEntity* staticEntity = new StaticEntity(GROUND);
+  staticEntity->setPosition(v3_t(0, 0, 0));
+  staticEntity->setDirection(v3_t(0,1,0));
+  staticEntity->scale = 1;
+  this->staticEntities.push_back(staticEntity);
+
+  staticEntity = new StaticEntity(TRITON);
+  staticEntity->setPosition(v3_t(300,300,100));
+  staticEntity->setDirection(v3_t(0,1,0));
+  staticEntity->scale = 40;
+
+  this->staticEntities.push_back(staticEntity);
+
+}
 void Map::initSpawns()
 {
   // Spawns for initwallsone/two
@@ -454,7 +470,76 @@ void Map::initStaticWalls(void) {
     addWallDirection(startingX, startingY, startingZ, facingNorth, rows[i]);
   }
 }
+void Map::initTestWalls(void)
+{
+  //TODO move this
+  /*WeaponFire* w1 = new WeaponFire(v3_t(100,100,0), this, FIR1);
+  w1->dropDown(v3_t(10,10,0));
+  w1->setDirection(v3_t(0,1,0));
+  entities.push_back(w1);*/
+  /*WeaponFire* w2 = new WeaponFire(v3_t(120,120,0), this, THU1);
+  w2->dropDown(v3_t(10,-10,0));
+  w2->setDirection(v3_t(0,1,0));
+  entities.push_back(w2);
+  WeaponFire* w3 = new WeaponFire(v3_t(120,120,0), this, THU1);
+  w3->dropDown(v3_t(-10,-10,0));
+  w3->setDirection(v3_t(0,1,0));
+  entities.push_back(w3);*/
 
+  spawnPositions.push_back(v3_t(4,-4,1));
+  spawnPositions.push_back(v3_t(4,4,1));
+  spawnPositions.push_back(v3_t(-4,-4,1));
+  spawnPositions.push_back(v3_t(-4,4,1));
+
+  v3_t facingEast(1,0,0);
+  v3_t facingNorth(0,1,0);
+  float width = ConfigManager::wallWidth();
+  float height = ConfigManager::wallHeight(); 
+  float depth = ConfigManager::wallDepth();
+
+  float wallX = 10;
+  float wallY = 10;
+
+  float centerX = 0;
+  float centerY = 0;
+  int i;
+  float startingX;
+  float startingXNeg;
+  float startingY;
+  float startingYNeg;
+  float startingZ = depth/2.0f;
+
+  // Create the top and bottom perimeter from left to right.
+  for( i = 0,
+    startingX = ((wallX*width)/-2)+(width/2)+centerX,
+    startingY = ((wallY*width)/-2)+centerY,
+    startingYNeg = ((wallY*width)/2)+centerY;
+    i < wallX; i++, startingX += width )
+  {
+    Wall* topWall = new Wall(width, depth, height, 
+      v3_t(startingX,startingY, startingZ), facingNorth, this);
+    Wall* bottomWall = new Wall(width, depth, height, 
+      v3_t(startingX,startingYNeg, startingZ), facingNorth, this);
+    this->entities.push_back(topWall);
+    this->entities.push_back(bottomWall);
+  }
+
+  // Create the left and right perimeter from bottom up
+  for( i = 0,
+    startingX = ((wallX*width)/-2)+centerX,
+    startingXNeg = ((wallX*width)/2)+centerX,
+    startingY = ((wallY*width)/-2)+(width/2)+centerY;
+    i < wallY; i++, startingY += width )
+  {
+    Wall* leftWall = new Wall(width, depth, height,
+      v3_t(startingX,startingY, startingZ), facingEast, this);
+    Wall* rightWall = new Wall(width, depth, height,
+      v3_t(startingXNeg,startingY, startingZ), facingEast, this);
+    this->entities.push_back(leftWall);
+    this->entities.push_back(rightWall);
+  }
+
+}
 void Map::initWalls(void)
 {
   //TODO move this
@@ -714,6 +799,7 @@ void Map::addSpawnLocation(v3_t loc)
 
 v3_t Map::getRespawnPosition()
 {
+  return  v3_t(0,0,0);
   if(spawnPositions.size() == 0)
   {
     std::cout<<"TODO: need more spawn positions"<<std::endl;
@@ -806,6 +892,9 @@ void Map::destHelper(){
   }
 }
 
+std::vector<StaticEntity *> Map::getStaticEntities() {
+  return staticEntities;
+}
 
 std::vector<Entity *> Map::getEntity() {
 	 return entities;

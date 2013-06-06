@@ -12,6 +12,7 @@
 #include <SFML/Graphics.hpp>
 #include "Player.h"
 #include "scoreBoard.h"
+#include "StaticEntity.h"
 
 class Entity;
 
@@ -23,7 +24,7 @@ class graphicsClient {
     //scene data
     light lights;
     displaySet display;
-
+    staticDrawer staticEntities;
     staticDrawer entities;
     dynamicDrawer animatedDrawer;
     SkyboxDraw skyboxDrawer;
@@ -58,8 +59,10 @@ class graphicsClient {
     graphicsClient& operator=(graphicsClient&&);// = delete;
     ClientGameTimeAction handleInput();
     void draw();
+    void addStaticInstance();
     void updatePosition(vector4f);
     void updateDirection(vector3f);
+    void setStaticEntities(std::vector<StaticEntity*> e);
     void clearEntities();
     void addEntity(Entity*);
     void addEntity(Projectile*);
