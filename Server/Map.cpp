@@ -104,7 +104,7 @@ void Map::initPowerUps() {
     w->setRandomMagic();
     w->setDirection(v3_t(0,1,0));
     w->dropDown(w->getPosition());
-    w->setRespawnTime(6000);
+    w->setRespawnTime(60000);
     entities.push_back(w);
   }
 }
