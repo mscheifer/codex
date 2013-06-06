@@ -327,7 +327,7 @@ void gx::graphicsClient::setStaticEntities(std::vector<StaticEntity*> e) {
   for(int i = 0; i < e.size() ;i++) {
     staticDrawer::instanceData inst;
     inst.scale = 1;
-    inst.pos = e[i]->getPosition();
+    inst.pos = vector4f(0,0,0) + e[i]->getPosition();
     inst.dirY = e[i]->getDirection();
     inst.type = e[i]->static_entity_type;
     inst.scale = e[i]->scale;
