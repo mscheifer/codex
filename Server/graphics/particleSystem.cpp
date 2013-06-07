@@ -112,6 +112,10 @@ void gx::particleDrawerImpl::entityClass::clear() {
   //do nothing
 }
 
+void gx::particleDrawerImpl::entityClass::clearStatic() {
+  this->realStaticInstances.clear();
+}
+
 namespace {
   std::vector<GLfloat> positions;
   std::vector<GLfloat> colors;

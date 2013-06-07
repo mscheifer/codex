@@ -18,6 +18,7 @@ class drawer {
     drawer(displaySet const&,std::vector<typename T::entity_t>, std::vector<uniform::block*>);
     void draw();
     void reset();
+	  void resetStatic();
     typedef typename T::instanceData instanceData;
     void addInstance(instanceData const&);
     void addStaticInstance(instanceData const&);

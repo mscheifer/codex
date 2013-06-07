@@ -32,7 +32,7 @@ void Map::mapReset()
   initPowerUps();
   initFloor();
   
-  //initStaticEntities();
+  initStaticEntities();
   initWalls(); 
 
   for(unsigned int i = 0; i < players.size(); i++)
@@ -46,7 +46,7 @@ void Map::initStaticEntities() {
   //float w, float d, float h, v3_t sc, v3_t direct, Map * m, Entity_Type e
   StaticEntity* staticEntity = new StaticEntity(0, 0, 0, v3_t(0, 0, 0),v3_t(0,1,0), this, GROUND);
   staticEntity->scale = 1;
-  //this->staticEntities.push_back(staticEntity);
+  this->staticEntities.push_back(staticEntity);
   
   /* add bounding box here and addd it to entities so it will run colision detection
     this->entities.push_back(staticEntity);
@@ -60,9 +60,9 @@ void Map::initStaticEntities() {
   this->staticEntities.push_back(staticEntity);*/
 
   //30
-  staticEntity = new StaticEntity( 0 , 0 , 0, v3_t(-250,-250,150),v3_t(0.5,0.5,0), this, DRAGON);
-  staticEntity->scale = 1;
-  this->staticEntities.push_back(staticEntity);
+  //staticEntity = new StaticEntity( 0 , 0 , 0, v3_t(-250,-250,150),v3_t(0.5,0.5,0), this, DRAGON);
+  //staticEntity->scale = 1;
+  //this->staticEntities.push_back(staticEntity);
 
  // this->entities.push_back(staticEntity);
 

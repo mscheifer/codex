@@ -20,6 +20,7 @@ struct light {
     unsigned int numStaticLights;
   public:
     void clear();
+    void clearStatic();
     light(vector4f,GLfloat,GLfloat,GLfloat);
     void addLight(vector4f);
     void addStaticLight(vector4f);

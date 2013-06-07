@@ -65,6 +65,15 @@ void gx::drawer<T>::reset() {
 }
 
 template<typename T>
+void gx::drawer<T>::resetStatic() {
+  for(auto entityCp = entityClasses.begin(); entityCp != entityClasses.end();
+                                                                 ++entityCp) {
+    auto& entityC = *entityCp;
+    entityC.clearStatic();
+  }
+}
+
+template<typename T>
 void gx::drawer<T>::addInstance(const instanceData& a) {
   impl.addInstance(a,entityClasses);
 }

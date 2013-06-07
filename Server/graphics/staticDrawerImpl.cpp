@@ -74,6 +74,10 @@ void gx::staticDrawerImpl::entityClass::clear() {
   this->instances.clear();
 }
 
+void gx::staticDrawerImpl::entityClass::clearStatic() {
+  this->staticInstances.clear();
+}
+
 void gx::staticDrawerImpl::entityClass::update(displaySet const&) {
   //do nothing
 }

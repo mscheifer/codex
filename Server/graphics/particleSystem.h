@@ -61,6 +61,7 @@ class particleDrawerImpl {
         entityClass(entityClass&&) noexcept;
         entityClass& operator=(entityClass&&);// = delete;
         void clear();
+        void clearStatic();
         void update(displaySet const&);
         void draw();
     };

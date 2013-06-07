@@ -90,6 +90,10 @@ void gx::dynamicDrawerImpl::entityClass::clear() {
   this->instances.clear();
 }
 
+void gx::dynamicDrawerImpl::entityClass::clearStatic() {
+  this->staticInstances.clear();
+}
+
 void gx::dynamicDrawerImpl::entityClass::update(displaySet const&) {
   //do nothing
 }

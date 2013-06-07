@@ -399,6 +399,13 @@ void gx::graphicsClient::drawLobby() {
   window.display();
 }
 void gx::graphicsClient::setStaticEntities(std::vector<StaticEntity*> e) {
+  lights.clearStatic();
+
+  this->entities.resetStatic();
+  this->animatedDrawer.resetStatic();
+  this->particles.resetStatic();
+
+
   for(auto itr = e.begin(); itr != e.end(); itr++) {
     const auto& e1 = *itr;
     staticDrawer::instanceData inst;
