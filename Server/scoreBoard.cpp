@@ -42,7 +42,7 @@ scoreBoard::scoreBoard(int numPlayer) {
    playerSprite.push_back(sf::Sprite());
    playerSprite[i].setTexture(goodGuyTexture);
    playerSprite[i].setPosition(25+xOffset, 25*(i+3)+5+yOffset);
-   playerSprite[i].setScale(0.06f,0.06f);
+   playerSprite[i].setScale(0.16f,0.16f);
    playerScores.push_back(sf::Text());
    playerScores[i].setFont(font);
    playerScores[i].setCharacterSize(18);
@@ -64,7 +64,6 @@ scoreBoard::scoreBoard(int numPlayer) {
    pwins.push_back(0);
    pdead.push_back(false);
  }
- playerSprite[0].setTexture(badGuyTexture);
 }
 
 
