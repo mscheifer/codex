@@ -224,13 +224,17 @@
     <None Include="graphics\Images\BG_Icon.png" />
     <None Include="graphics\Images\chargebar.png" />
     <None Include="graphics\Images\chargebarempty.png" />
+    <None Include="graphics\Images\dark_icon.png" />
     <None Include="graphics\Images\Empty_bar.png" />
+    <None Include="graphics\Images\fire_icon.png" />
+    <None Include="graphics\Images\fist_icon.png" />
     <None Include="graphics\Images\Full_life_bar.png" />
     <None Include="graphics\Images\Full_mana_bar.png" />
     <None Include="graphics\Images\GG_Icon.png" />
     <None Include="graphics\Images\heart_color.png" />
     <None Include="graphics\Images\hitBlue.png" />
     <None Include="graphics\Images\hitRed.png" />
+    <None Include="graphics\Images\ice_icon.png" />
     <None Include="graphics\Images\magic_color.png" />
     <None Include="graphics\Images\notready.png" />
     <None Include="graphics\Images\powerAttack.png" />
@@ -265,6 +269,7 @@
     <None Include="graphics\Images\stunIL.png" />
     <None Include="graphics\Images\stunT.png" />
     <None Include="graphics\Images\stunTL.png" />
+    <None Include="graphics\Images\thunder_icon.png" />
     <None Include="graphics\Images\weaponBasic.png" />
     <None Include="graphics\Images\weaponFire.png" />
     <None Include="graphics\Images\weaponFist.png" />

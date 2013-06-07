@@ -646,5 +646,20 @@
     <None Include="graphics\Images\GG_Icon.png">
       <Filter>Resource Files\graphics\Images</Filter>
     </None>
+    <None Include="graphics\Images\dark_icon.png">
+      <Filter>Resource Files\graphics\Images</Filter>
+    </None>
+    <None Include="graphics\Images\fire_icon.png">
+      <Filter>Resource Files\graphics\Images</Filter>
+    </None>
+    <None Include="graphics\Images\fist_icon.png">
+      <Filter>Resource Files\graphics\Images</Filter>
+    </None>
+    <None Include="graphics\Images\ice_icon.png">
+      <Filter>Resource Files\graphics\Images</Filter>
+    </None>
+    <None Include="graphics\Images\thunder_icon.png">
+      <Filter>Resource Files\graphics\Images</Filter>
+    </None>
   </ItemGroup>
 </Project>
