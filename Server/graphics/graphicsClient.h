@@ -81,6 +81,7 @@ class graphicsClient {
     void updateNames(std::vector<std::string> & names);
     bool closed()        { return this->userInput.getStop(); }
     void setPlayerId(unsigned int x) { Score.setPlayerId(x); }
+    void setWinner(Game_State w) { Hud.setWinner(w); }
 };
 
 } //end namespace gx

@@ -189,7 +189,7 @@ bool Player::damageBy(Projectile *deadly)
   for( auto d = debuffs.begin(); d != debuffs.end(); d++)
     applyBuff(*d);
 
-  std::cout << health  << " HP left" << " for " << player_id << std::endl;
+ // std::cout << health  << " HP left" << " for " << player_id << std::endl;
 
 	return true;
 }
@@ -388,7 +388,7 @@ void Player::fireProjectile() {
   v3_t v = direction;
   v.normalize();
   if(minotaur) {
-    chargedProjectile->fireMutiple(v,getStrengthMultiplier(),10);
+    chargedProjectile->fireMutiple(v,getStrengthMultiplier(),5);
   } else {
     chargedProjectile->fire(v,getStrengthMultiplier());
   }
@@ -496,7 +496,7 @@ void Player::handleCollisions(){
 
     switch( e->getType() ) {
       case WALL:
-       // std::cout << "wall" << << std::endl;
+        //std::cout << "wall" << std::endl;
         restart = collideWall(*it);
         break;
       case PLAYER:
@@ -531,6 +531,7 @@ void Player::handleCollisions(){
 }
 
 bool Player::collideWall(const std::pair<Entity*,BoundingObj::vec3_t>& p){
+ // std::cout << "("<<p.second.x << "," << p.second.y << "," << p.second.z<< ")" <<std::endl;
   BoundingObj::vec3_t fixShit = p.second;
   restartJump(fixShit.z);
   position += p.second;

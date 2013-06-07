@@ -77,7 +77,8 @@ std::vector<gx::graphicsEntity> staticModels() {
   auto modelProjectile = loadModel(configModelName("ice"),Projectile::projDepth,true);
   auto modelWall       = loadModel(configModelName("wall"),10);
   auto modelPlayer     = loadModel(configModelName("goodguy"),Player::playerDepth,true);
-  //auto modelTriton     = loadModel(configModelName("triton"),Player::playerDepth,true);
+  auto modelTriton     = loadModel(configModelName("triton"),25,true);
+  auto modelDragon     = loadModel(configModelName("dragon"), 25,true);
   auto modelTorch      = loadModel(configModelName("torch"),1,true);
 
   auto cubes = gx::loadCube();
@@ -101,6 +102,9 @@ std::vector<gx::graphicsEntity> staticModels() {
     //entitiesData.push_back(std::move(modelTriton));
   generalOffset[TORCH] = entitiesData.size();
   entitiesData.push_back(std::move(modelTorch));
+
+  generalOffset[DRAGON] = entitiesData.size();
+  entitiesData.push_back(std::move(modelDragon));
 
   auto projs = initProjectileModels(entitiesData.size());
   entitiesData.insert(entitiesData.end(), std::make_move_iterator(projs.begin()),

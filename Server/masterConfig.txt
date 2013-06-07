@@ -1,6 +1,6 @@
 // System configuration
 log=0
-sound=1
+sound=0
 //cannot have music without sound
 music=1
 musicProx=100
@@ -31,6 +31,7 @@ model-weapon=dark_projectile.dae
 model-triton=triton.DAE
 model-torch=Torch.DAE
 model-animated=cat.dae
+model-dragon=dragon_141.dae
 
 // Physics
 gravity=-40
@@ -51,7 +52,7 @@ playerMp=100
 playerMaxMp=100
 
 minotaurmovescale=.6
-minotaurairMovescale=.6
+minotaurairMovescale=.49
 minotaurmaxJump=2
 minotaurjumpSpeed=20.19
 minotaurHpRegen=.02

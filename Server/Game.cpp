@@ -54,6 +54,8 @@ void Game::updateAndResolveCollision() {
 		currentProjectile[i]->update();
 	}
 
+  
+
   //run collision fix here
   for( unsigned int i = 0; i <  currentPlayers.size(); i++ ) {
     currentPlayers[i]->handleCollisions();
