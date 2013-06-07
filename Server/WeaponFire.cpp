@@ -4,8 +4,8 @@
 WeaponFire::WeaponFire(v3_t c, Map* m, MAGIC_POWER basicAttack1)
   : Weapon(2.0, 300, c, m) {
 
-	Range_Cool_Down_Time = 500; //TODO set these values to what we want them to be
-	Melee_Cool_Down_Time = 300;
+	Range_Cool_Down_Time = 1500; //TODO set these values to what we want them to be
+	Melee_Cool_Down_Time = 1500;
   basicAttack = basicAttack1;
 
   BoundingBox* b = new BoundingBox(BoundingObj::vec4_t(c.x,c.y,c.z),

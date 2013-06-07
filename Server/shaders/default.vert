@@ -10,7 +10,7 @@ out float interpNormDiff;
 out vec3  interpNormal;
 out vec4  interpPosition; //position of vert / frag in eye space
 
-const int maxLights = 30; //must be the same as defined in lights.h
+const int maxLights = 10; //must be the same as defined in lights.h
 
 out vec3  lightDir[maxLights]; //direction of light in eye space
  
