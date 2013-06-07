@@ -11,7 +11,7 @@ scoreBoard::scoreBoard(int numPlayer) {
  font.loadFromFile("MORPHEUS.TTF");
  boardText.setFont(font);
  boardText.setCharacterSize(24);
- boardText.setColor(sf::Color::Black);
+ boardText.setColor(sf::Color::White);
  boardText.setString("Score Board");
  highlight.setFillColor(sf::Color(31,69,252,100));
  highlight.setSize(sf::Vector2f(160,25*numPlayer));
@@ -26,12 +26,12 @@ scoreBoard::scoreBoard(int numPlayer) {
  boardText.setPosition((boardRect.width-textRect.width)/2+15 + xOffset, 25 + yOffset);
  winText.setFont(font);
  winText.setCharacterSize(18);
- winText.setColor(sf::Color::Black);
+ winText.setColor(sf::Color::White);
  winText.setString("Wins");
  winText.setPosition(155 + xOffset, 55 + yOffset);
  killText.setFont(font);
  killText.setCharacterSize(18);
- killText.setColor(sf::Color::Black);
+ killText.setColor(sf::Color::White);
  killText.setString("Kills");
  killText.setPosition(110+xOffset, 55+yOffset);
 
@@ -46,18 +46,18 @@ scoreBoard::scoreBoard(int numPlayer) {
    playerScores.push_back(sf::Text());
    playerScores[i].setFont(font);
    playerScores[i].setCharacterSize(18);
-   playerScores[i].setColor(sf::Color::Black);
+   playerScores[i].setColor(sf::Color::White);
    playerScores[i].setPosition(55+xOffset, 25*(i+3)+5+yOffset);
    playerKills.push_back(sf::Text());
    playerKills[i].setFont(font);
    playerKills[i].setCharacterSize(18);
-   playerKills[i].setColor(sf::Color::Black);
+   playerKills[i].setColor(sf::Color::White);
    playerKills[i].setString("0");
    playerKills[i].setPosition(110+xOffset, 25*(i+3)+5+yOffset);
    playerWins.push_back(sf::Text());
    playerWins[i].setFont(font);
    playerWins[i].setCharacterSize(18);
-   playerWins[i].setColor(sf::Color::Black);
+   playerWins[i].setColor(sf::Color::White);
    playerWins[i].setString("0");
    playerWins[i].setPosition(155+xOffset, 25*(i+3)+5+yOffset);
    pkills.push_back(0);
@@ -88,9 +88,9 @@ void scoreBoard::draw(sf::RenderWindow & window) {
     }
     else 
     {
-      playerKills[i].setColor(sf::Color::Black);
-      playerWins[i].setColor(sf::Color::Black);
-      playerScores[i].setColor(sf::Color::Black);
+      playerKills[i].setColor(sf::Color::White);
+      playerWins[i].setColor(sf::Color::White);
+      playerScores[i].setColor(sf::Color::White);
     }
     window.draw(playerScores[i]);
     window.draw(playerKills[i]);
