@@ -76,6 +76,7 @@ minotaurHp=100
 minotaurMaxHp=100
 minotaurMp=100
 minotaurMaxMp=100
+minoStrMult=2
 
 // Projectile
 projectileRange=300

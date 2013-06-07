@@ -175,7 +175,7 @@ bool Player::damageBy(Projectile *deadly)
   dead = health==0;
 
   //TODO remove this to allow charging while hit
-  if(charging) {
+  if(charging && !isMinotaur()) {
     chargedProjectile->live = false;
   }
 
@@ -689,6 +689,8 @@ float Player::getStrengthMultiplier() const{
       strMult *= (BuffInfo[buff->first].strengthMultiplier);
     }
   }
+  if(isMinotaur)
+    strMult*= StringToNumber<float>(ConfigManager::configMap["minoStrMult"]);
   return strMult;
 }
 
