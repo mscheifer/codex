@@ -32,6 +32,25 @@ Wall::~Wall(void)
 {
 }
 
+ v3_t Wall::getLeftEdge() {
+
+   v3_t right;
+   if(direction == v3_t(0,1,0)){
+      right = v3_t(1,0,0);
+   } else if( direction == v3_t(1,0,0)) {
+      right = v3_t(0,-1,0);
+   }
+   right.scale(width/2);
+
+   return position + right;
+
+ }
+
+ v3_t Wall::getRightEdge() {
+   return getLeftEdge()*-1;
+ }
+
+
 /**
   * Cycle through the possible positions of the wall
   */

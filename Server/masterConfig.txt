@@ -1,6 +1,6 @@
 // System configuration
 log=0
-sound=0
+sound=1
 //cannot have music without sound
 music=1
 musicProx=100
@@ -34,8 +34,8 @@ model-dragon1=dragon_141.dae
 model-dragon2=statue_02.dae
 model-animated=cat.dae
 model-coloumn1=Coloumn_01.DAE
-model-coloumn2=Coloumn_01.DAE
-model-coloumn3=Coloumn_01.DAE
+model-coloumn2=Coloumn_02.DAE
+model-coloumn3=Coloumn_03.DAE
 
 
 // Physics
@@ -59,7 +59,7 @@ playerMaxMp=100
 minotaurmovescale=.6
 minotaurairMovescale=.49
 //.6
-minotaurmaxJump=200
+minotaurmaxJump=2
 minotaurjumpSpeed=20.19
 minotaurHpRegen=.02
 minotaurMpRegen=.112
