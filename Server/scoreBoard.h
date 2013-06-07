@@ -21,6 +21,8 @@ class scoreBoard {
   sf::Texture badGuyTexture;
   sf::Texture goodGuyTexture;
   std::vector<sf::Sprite> playerSprite;
+  int windowSizeX;
+  int windowSizeY;
 public:
   scoreBoard(int numPlayer);
   ~scoreBoard(void);
@@ -29,5 +31,6 @@ public:
   void updateNames(std::vector<std::string> & names);
   void setPlayerId(unsigned int);
   void setMinotaurId(unsigned int);
+  void windowResize(int x, int y);
 };
 

@@ -221,11 +221,13 @@
     <None Include="graphics\Images\aimerOuter.png" />
     <None Include="graphics\Images\background.jpg" />
     <None Include="graphics\Images\badguy.png" />
+    <None Include="graphics\Images\BG_Icon.png" />
     <None Include="graphics\Images\chargebar.png" />
     <None Include="graphics\Images\chargebarempty.png" />
     <None Include="graphics\Images\Empty_bar.png" />
     <None Include="graphics\Images\Full_life_bar.png" />
     <None Include="graphics\Images\Full_mana_bar.png" />
+    <None Include="graphics\Images\GG_Icon.png" />
     <None Include="graphics\Images\heart_color.png" />
     <None Include="graphics\Images\hitBlue.png" />
     <None Include="graphics\Images\hitRed.png" />

@@ -5,7 +5,7 @@
 gx::lobby::lobby(void):start(false),ready(false),connected(false),clickedIP(false){
   font.loadFromFile("MORPHEUS.TTF");
   welcome.setFont(font);
-  welcome.setColor(sf::Color::Yellow);
+  welcome.setColor(sf::Color::White);
   welcome.setCharacterSize(36);
   welcome.setString("Please connect to the server");
   welcome.setPosition(200,200);

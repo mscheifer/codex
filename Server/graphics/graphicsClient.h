@@ -24,7 +24,6 @@ class graphicsClient {
     //scene data
     light lights;
     displaySet display;
-    staticDrawer staticEntities;
     staticDrawer entities;
     dynamicDrawer animatedDrawer;
     SkyboxDraw skyboxDrawer;
@@ -65,6 +64,7 @@ class graphicsClient {
     void setStaticEntities(std::vector<StaticEntity*> e);
     void clearEntities();
     void addEntity(Entity*);
+    void addEntity(Player*);
     void addEntity(Projectile*);
     void updateHUD(int id, const std::vector<Player>& players);
     void drawLobby();

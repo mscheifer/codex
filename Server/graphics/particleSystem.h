@@ -38,24 +38,29 @@ class particleDrawerImpl {
     typedef particleEntity entity_t;
     static const std::string vertShader;
     static const std::string fragShader;
-    struct entityClass {
-      typedef vector4f instance;
-      //just draw once for all of this kind of particle effect
-      std::vector<vector4f> instances;
-      std::vector<particle> particles;
-      std::shared_ptr<dynamicVertexAttrib> positionAttrib;
-      std::shared_ptr<dynamicVertexAttrib> colorAttrib;
-      unsigned int          numIndices;
-      vao                   vertData;
-      material     mat;
-      entityClass(entity_t,varSigs_t);
-      entityClass(const entityClass&);// = delete;
-      entityClass& operator=(const entityClass&);// = delete;
-      entityClass(entityClass&&) noexcept;
-      entityClass& operator=(entityClass&&);// = delete;
-      void clear();
-      void update();
-      void draw();
+    class entityClass {
+        void addParticle(vector4f const&);
+      public:
+        typedef vector4f instance;
+        //just draw once for all of this kind of particle effect
+        std::array<vector4f,1> instances;
+        std::array<vector4f,0> staticInstances;
+        std::vector<vector4f>  realInstances;
+        std::vector<vector4f>  realStaticInstances;
+        std::vector<particle>  particles;
+        std::shared_ptr<dynamicVertexAttrib> positionAttrib;
+        std::shared_ptr<dynamicVertexAttrib> colorAttrib;
+        unsigned int          numIndices;
+        vao                   vertData;
+        material     mat;
+        entityClass(entity_t,varSigs_t);
+        entityClass(const entityClass&);// = delete;
+        entityClass& operator=(const entityClass&);// = delete;
+        entityClass(entityClass&&) noexcept;
+        entityClass& operator=(entityClass&&);// = delete;
+        void clear();
+        void update();
+        void draw();
     };
     struct instanceData {
       vector4f position;
@@ -63,6 +68,7 @@ class particleDrawerImpl {
     };
     particleDrawerImpl(const shaderProgram&);
     void setUniforms(const entityClass&,const entityClass::instance&) const;
-    void addInstance(instanceData,std::vector<entityClass>&);
+    void addInstance(instanceData const&,std::vector<entityClass>&);
+    void addStaticInstance(instanceData const&,std::vector<entityClass>&);
 };
 } //end namespace gx

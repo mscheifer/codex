@@ -210,6 +210,7 @@ void Weapon::serialize(sf::Packet & packet) const {
     //length_t projectileRange; 
     packet << mpCost;
     packet << pickedUp;
+    packet << static_cast<sf::Int32>( Respawn_Time - Respawn_Counter.getElapsedTime().asMilliseconds());
     //sf::Clock Range_Cool_Down_Counter;
     //sf::Clock Melee_Cool_Down_Counter;
   }
@@ -221,6 +222,9 @@ void Weapon::serialize(sf::Packet & packet) const {
     //length_t projectileRange; 
     packet >> mpCost;
     packet >> pickedUp;
+    sf::Int32 temp;
+    packet >> temp;
+    respawnTimeLeft = temp;
     //sf::Clock Range_Cool_Down_Counter;
     //sf::Clock Melee_Cool_Down_Counter;
   }

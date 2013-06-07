@@ -15,15 +15,20 @@ window-width=800
 window-height=600
 enableMinotaur=1
 countdown=2
+skyboxDir=skybox_sunset/
 
 //models
-model-badguy=cat.dae
-model-goodguy=cat.dae
+model-badguy=badguy.dae
+model-goodguy=goodguy.dae
 model-wall=stone_wall.dae
-model-projectile=weird_orange_thing.dae
-model-powerup=cat.dae
-model-weapon=badguy.dae
+model-ice=Ice_projectile.dae
+model-thunder=Thunder_projectile.dae
+model-dark=dark_projectile.dae
+model-basic=Basic_projectile.dae
+model-powerup=Thunder_projectile.dae
+model-weapon=dark_projectile.dae
 model-triton=triton.DAE
+model-torch=Torch.DAE
 
 // Physics
 gravity=-40

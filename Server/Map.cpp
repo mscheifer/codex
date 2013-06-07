@@ -54,6 +54,13 @@ void Map::initStaticEntities() {
 
   this->staticEntities.push_back(staticEntity);*/
 
+  staticEntity = new StaticEntity(TORCH);
+  staticEntity->setPosition(v3_t(0,0,10));
+  staticEntity->setDirection(v3_t(0,1,0));
+  staticEntity->scale = 1;
+
+  this->staticEntities.push_back(staticEntity);
+
 }
 void Map::initSpawns()
 {
@@ -104,7 +111,7 @@ void Map::initPowerUps() {
     w->setRandomMagic();
     w->setDirection(v3_t(0,1,0));
     w->dropDown(w->getPosition());
-    w->setRespawnTime(6000);
+    w->setRespawnTime(60000);
     entities.push_back(w);
   }
 }
@@ -603,7 +610,7 @@ void Map::initWalls(void)
   int row8[] = {0,1,2,3,4,8,10,11,12,13, -1};
   int row9[] = {0,2,3,4,5,6,7,10,11,13, -1};*/
   //int row10[] = {1,3,4,5,9/*,14*/, -1};
-  int row11[] = {1,2,4,5,8,9/*,10,11,13,14*/, -1};
+  int row11[] = {1,2,4,5,8/*,10,11,13,14*/, -1};
   int row12[] = {1,3,5,6,7/*,11,12,13*/, -1};
   int row13[] = {0,2,3,-1};
   int row14[] = {/*15,*/ -1};

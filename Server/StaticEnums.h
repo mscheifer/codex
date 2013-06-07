@@ -30,7 +30,9 @@ enum Game_State {WAIT=0, PLAYING,MANOTAUR_WIN, CIVILIAN_WIN};
 //Networking enums
 enum Opcode {INIT=0,JOINID,STARTGAME, CHAT, T1, T2, CGTA, SGTR, ERROR};
 
-enum Entity_Type {UNDEFINED=0, PLAYER, WALL, PROJECTILE, WEAPON, POWER_UP, GROUND, TRITON};
+enum Entity_Type {UNDEFINED=0, PLAYER, WALL, PROJECTILE, WEAPON, POWER_UP,
+                  GROUND, TRITON, TORCH, NUM_ENTITIES};
+//NUM_ENITIES will have the value of the number of types
 
 enum Texture_Type {DEFAULT=0, GROUNDTEX=64};
 
@@ -54,7 +56,8 @@ enum MAGIC_POWER {
   G2,
   G_IT2, G_FT2, G_FI2,
   G3,
-  B1
+  B1,
+  NUM_MAGIC //Leave this as the last one, it's value is the size of the enum
 }; 
 
 const std::string spellNames[] = {

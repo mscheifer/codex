@@ -2,7 +2,7 @@
 <COLLADA xmlns="http://www.collada.org/2005/11/COLLADASchema" version="1.4.1">
   <asset><contributor><author></author><authoring_tool>FBX COLLADA exporter</authoring_tool><comments></comments></contributor><created>2013-06-03T03:42:56Z</created><keywords></keywords><modified>2013-06-03T03:42:56Z</modified><revision></revision><subject></subject><title></title><unit meter="0.025400" name="centimeter"></unit><up_axis>Y_UP</up_axis></asset>
   <library_images>
-    <image id="Map #23-image" name="Map #23"><init_from>file://Dark-Evil-Portal-Spirits-Demons-Entrance-Gateway.jpg</init_from></image>
+    <image id="Map #23-image" name="Map #23"><init_from>file://Dark_texture.jpg</init_from></image>
   </library_images>
   <library_materials>
     <material id="Material #47" name="Material #47">

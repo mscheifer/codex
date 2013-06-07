@@ -9,7 +9,9 @@ namespace {
 									   GL_TEXTURE_CUBE_MAP_NEGATIVE_Z};
 
 	const std::string fileExt = ".jpg";
-	const std::string dir = "./models/skybox_sunset/";
+  std::string dir() {
+    return std::string("./models/").append(ConfigManager::configMap["skyboxDir"]);
+  }
 	const std::string right = "right" + fileExt;
 	const std::string left = "left" + fileExt;
 	const std::string front = "front" + fileExt;
@@ -32,12 +34,12 @@ gx::CubemapTexture::CubemapTexture()
 								   : m_fileNames(6), 
 								     m_textureObj() 
 {
-	m_fileNames[0] = dir + left;
-	m_fileNames[1] = dir + right;
-	m_fileNames[2] = dir + front;
-	m_fileNames[3] = dir + back;
-	m_fileNames[4] = dir + top;
-	m_fileNames[5] = dir + bottom;
+	m_fileNames[0] = dir() + left;
+	m_fileNames[1] = dir() + right;
+	m_fileNames[2] = dir() + front;
+	m_fileNames[3] = dir() + back;
+	m_fileNames[4] = dir() + top;
+	m_fileNames[5] = dir() + bottom;
 	this->Load();
 }
 

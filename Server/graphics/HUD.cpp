@@ -10,7 +10,7 @@ gx::HUD::HUD(void):health(100), maxHealth(100), HLossPercentage(0),
   totalChargeTime(-1), chargeMagicType(0), charging(false), timer(0),
   aimerOuter(0), aimerInner(0), playerDirection(0,0,0), hit(0), attackedAngle(0),
   switched(false), miniMapProx(0){
-  font.loadFromFile("arial.ttf");
+  font.loadFromFile("MORPHEUS.TTF");
   emptyBarTexture.loadFromFile("graphics/Images/Empty_bar.png");
   //heart image
   heartTexture.loadFromFile("graphics/Images/heart_color.png");
@@ -30,7 +30,7 @@ gx::HUD::HUD(void):health(100), maxHealth(100), HLossPercentage(0),
   //heath text
   healthText.setFont(font);
   healthText.setCharacterSize(18);
-  healthText.setColor(sf::Color::Black);
+  healthText.setColor(sf::Color::White);
   //mana bar empty 
   mEmptyBarSprite.setTexture(emptyBarTexture);
   mEmptyBarSprite.setPosition(55,60);
@@ -41,17 +41,23 @@ gx::HUD::HUD(void):health(100), maxHealth(100), HLossPercentage(0),
   //mana text
   manaText.setFont(font);
   manaText.setCharacterSize(18);
-  manaText.setColor(sf::Color::Black);
+  manaText.setColor(sf::Color::White);
   //weapin pick up text
   pickUp.setFont(font);
   pickUp.setCharacterSize(24);
-  pickUp.setColor(sf::Color::Yellow);
+  pickUp.setColor(sf::Color::White);
   pickUp.setPosition(100,100);
   //bad guy icon
-  badGuyTexture.loadFromFile("graphics/Images/badguy.png");
+  badGuyTexture.loadFromFile("graphics/Images/BG_Icon.png");
   badGuySprite.setTexture(badGuyTexture);
   badGuySprite.setPosition(10,110);
   badGuySprite.setScale(0.1f,0.1f);
+  //good guy icon
+  goodGuyTexture.loadFromFile("graphics/Images/GG_Icon.png");
+  goodGuySprite.setTexture(goodGuyTexture);
+  goodGuySprite.setPosition(10,110);
+  goodGuySprite.setScale(0.1f,0.1f);
+
   //positionText
   positionText.setFont(font);
   positionText.setCharacterSize(24);
@@ -69,14 +75,14 @@ gx::HUD::HUD(void):health(100), maxHealth(100), HLossPercentage(0),
   nextSpell.setFont(font);
   currentSpell.setCharacterSize(18);
   nextSpell.setCharacterSize(18);
-  currentSpell.setColor(sf::Color::Black);
-  nextSpell.setColor(sf::Color::Black);
+  currentSpell.setColor(sf::Color::White);
+  nextSpell.setColor(sf::Color::White);
   clockText.setFont(font);
   clockText.setCharacterSize(36);
-  clockText.setColor(sf::Color::Yellow);
+  clockText.setColor(sf::Color::White);
   collectedPU.setFont(font);
   collectedPU.setCharacterSize(24);
-  collectedPU.setColor(sf::Color::Yellow);
+  collectedPU.setColor(sf::Color::White);
   collectedPU.setPosition(60,110);
   //minimap
   //miniMapTexture.loadFromFile("graphics/Images/minimap.png");
@@ -171,6 +177,8 @@ void gx::HUD::draw(sf::RenderWindow & window) {
   window.draw(positionText);
   if (minotaur) 
     window.draw(badGuySprite);
+  else 
+    window.draw(goodGuySprite);
   if (canPickUp) 
     window.draw(pickUp);
 
@@ -225,8 +233,8 @@ void gx::HUD::draw(sf::RenderWindow & window) {
   int buffn = 0; 
   for ( unsigned int i =0; i<renderBuff.size(); i++ ) {
     if (renderBuff[i]) {
-      buffSprites[i]->setPosition(10+buffn*37,window.getSize().y-42);
-      buffLSprites[i]->setPosition(10+buffn*37,window.getSize().y-42);
+      buffSprites[i]->setPosition(70+buffn*37,window.getSize().y-134);
+      buffLSprites[i]->setPosition(70+buffn*37,window.getSize().y-134);
       if (remainTime[i]<1000 && (remainTime[i]/100 % 2))
         window.draw(*buffLSprites[i]);
       else 
@@ -332,10 +340,9 @@ void gx::HUD::updateHUD(int id, const std::vector<Player>& players) {
     hitClock.restart(); 
     hit = hitIndex[player.attackedMagicType];
     attackedDir = player.attackedDir;
-    attackedDir.negate();
   }
 
-  attackedAngle = rotateAngle(playerDirection, attackedDir);
+  attackedAngle = 180 - rotateAngle(playerDirection, attackedDir);
 
   if (player.collectPowerUp) {
     buffClock.restart();
@@ -371,7 +378,7 @@ void gx::HUD::buffHelper(std::string & path) {
    tSprite = new sf::Sprite();
    tText->loadFromFile(path);
    tSprite->setTexture(*tText);
-   tSprite->setScale(0.5,0.5);
+//   tSprite->setScale(0.5,0.5);
    buffTextures.push_back(tText);
    buffSprites.push_back(tSprite);
    renderBuff.push_back(false);
@@ -384,7 +391,7 @@ void gx::HUD::buffLHelper(std::string & path) {
    tSprite = new sf::Sprite();
    tText->loadFromFile(path);
    tSprite->setTexture(*tText);
-   tSprite->setScale(0.5,0.5);
+ //  tSprite->setScale(0.5,0.5);
    buffLTextures.push_back(tText);
    buffLSprites.push_back(tSprite);
    remainTime.push_back(0);

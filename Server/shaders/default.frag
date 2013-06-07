@@ -3,7 +3,7 @@ in float interpNormDiff;
 in vec3  interpNormal;
 in vec4  interpPosition; //position of frag in eye space
 
-const int maxLights = 10; //must be the same as defined in lights.h
+const int maxLights = 30; //must be the same as defined in lights.h
 
 in vec3  lightDir[maxLights]; //direction of light in world space
 
@@ -18,7 +18,7 @@ void main() {
   vec3 viewDirection = normalize(-vec3(interpPosition));
   vec3 normal = normalize(interpNormal);
 
-  const vec4 ambient = vec4(0.3, 0.3, 0.3, 1.0);
+  const vec4 ambient = vec4(0.5, 0.5, 0.5, 1.0);
 
   vec4 lightVal = ambient;
   for(uint i = 0u; i < numLights; i++) {
