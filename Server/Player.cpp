@@ -689,7 +689,7 @@ float Player::getStrengthMultiplier() const{
       strMult *= (BuffInfo[buff->first].strengthMultiplier);
     }
   }
-  if(isMinotaur)
+  if(isMinotaur())
     strMult*= StringToNumber<float>(ConfigManager::configMap["minoStrMult"]);
   return strMult;
 }
