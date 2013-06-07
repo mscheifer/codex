@@ -141,6 +141,8 @@ void gx::lobby::setConnected(bool connected) {
     inputText = ""; 
     welcome.setString("Please enter a name and start.");
     button.setString("Start");
+    buttonBounds = buttonRect.getGlobalBounds();
+    textBounds = button.getGlobalBounds();
     button.setPosition(280+(buttonBounds.width-textBounds.width)/2,500);
   }
 }
