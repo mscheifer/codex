@@ -9,7 +9,7 @@ gx::HUD::HUD(void):health(100), maxHealth(100), HLossPercentage(0),
   weapon1(0), weapon2(0), currentSelect(0), elapsedChargeTime(0),
   totalChargeTime(-1), chargeMagicType(0), charging(false), timer(0),
   aimerOuter(0), aimerInner(0), playerDirection(0,0,0), hit(0), attackedAngle(0),
-  switched(false), miniMapProx(0){
+  switched(false), miniMapProx(0), doMiniMap(false){
   font.loadFromFile("MORPHEUS.TTF");
   emptyBarTexture.loadFromFile("graphics/Images/Empty_bar.png");
   //heart image
@@ -274,18 +274,20 @@ void gx::HUD::draw(sf::RenderWindow & window) {
   }
 
   //minimap
-  float centerMiniMapX = winX - miniMapProx-10;
-  float centerMiniMapY = winY - miniMapProx-10;
-  miniMapSprite.setPosition(centerMiniMapX, centerMiniMapY);
-  //window.draw(miniMapSprite);
-  for( unsigned int i = 0; i < playerPositions.size(); i++){
-  //recalculate miniMapX
-    vector3f v = playerPositions[i];
-    v += vector3f(winX/2, winY/2,0);
+  if(doMiniMap){
+    float centerMiniMapX = winX - miniMapProx-10;
+    float centerMiniMapY = winY - miniMapProx-10;
+    miniMapSprite.setPosition(centerMiniMapX, centerMiniMapY);
+    //window.draw(miniMapSprite);
+    for( unsigned int i = 0; i < playerPositions.size(); i++){
+       //recalculate miniMapX
+       vector3f v = playerPositions[i];
+       v += vector3f(winX/2, winY/2,0);
  
-   playerSprites[i]->setPosition( v.x, v.y );
-   window.draw(*(playerSprites[i]));
- }
+      playerSprites[i]->setPosition( v.x, v.y );
+      window.draw(*(playerSprites[i]));
+    }
+  }
 }
 
 void gx::HUD::updateHUD(int id, const std::vector<Player>& players) {
@@ -351,6 +353,7 @@ void gx::HUD::updateHUD(int id, const std::vector<Player>& players) {
 
   //minimap
   if( player.isMinotaur() || StringToNumber<int>(ConfigManager::configMap["minotaurRadarOnly"])==0){
+    doMiniMap = true;
     static float miniMapScaling = 0.5; //bigger number means players appear farther away
     playerPositions.clear();
     vector3f myPos = players[id].getPosition();

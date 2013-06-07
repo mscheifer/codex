@@ -36,6 +36,7 @@ private :
   bool switched;
   std::vector<vector3f> playerPositions;
   float miniMapProx;
+  bool doMiniMap;
 
 
   sf::Text healthText;
