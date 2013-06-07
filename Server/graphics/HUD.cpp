@@ -9,7 +9,7 @@ gx::HUD::HUD(void):health(100), maxHealth(100), HLossPercentage(0),
   weapon1(0), weapon2(0), currentSelect(0), elapsedChargeTime(0),
   totalChargeTime(-1), chargeMagicType(0), charging(false), timer(0),
   aimerOuter(0), aimerInner(0), playerDirection(0,0,0), hit(0), attackedAngle(0),
-  switched(false){
+  switched(false), miniMapProx(0), doMiniMap(false){
   font.loadFromFile("MORPHEUS.TTF");
   emptyBarTexture.loadFromFile("graphics/Images/Empty_bar.png");
   //heart image
@@ -88,6 +88,11 @@ gx::HUD::HUD(void):health(100), maxHealth(100), HLossPercentage(0),
   collectedPU.setCharacterSize(24);
   collectedPU.setColor(sf::Color::White);
   collectedPU.setPosition(60,110);
+  //minimap
+  //miniMapTexture.loadFromFile("graphics/Images/minimap.png");
+  miniMapProx = aimerTextures[1]->getSize().x/2;//miniMapTexture.getSize().x/2; //this should be the radius of the minimap
+  miniMapSprite.setTexture(miniMapTexture);
+  miniMapSprite.setOrigin(miniMapTexture.getSize().x/2, miniMapTexture.getSize().y/2);
 }
 
 gx::HUD::~HUD(void) {
@@ -125,6 +130,9 @@ gx::HUD::~HUD(void) {
     delete *itr;
   }
   for (auto itr=hitDirTextures.begin();itr != hitDirTextures.end(); itr++) {
+    delete *itr;
+  }
+  for (auto itr=playerSprites.begin();itr != playerSprites.end(); itr++) {
     delete *itr;
   }
 }
@@ -191,7 +199,7 @@ void gx::HUD::draw(sf::RenderWindow & window) {
     window.draw(*aimerSprites[aimerOuter]);
   } else if( timer <= 0 ){//only display this when in the actual game not during countdown
 
-    //AIMER switch pivot calculation
+  //AIMER switch pivot calculation
     float pivotX = winX/2;
     static float pivotY = 0;
     static float theta = M_PI/90;
@@ -207,6 +215,7 @@ void gx::HUD::draw(sf::RenderWindow & window) {
       startY = 0;
     }
     
+	//switch in calculation
     if ( M_PI/2 - currAngle > 1.0E-8){
       float tmpX = cos(static_cast<float>(theta)) * (startX-pivotX) - 
         sin(static_cast<float>(theta)) * (startY-pivotY) + pivotX;
@@ -216,7 +225,7 @@ void gx::HUD::draw(sf::RenderWindow & window) {
       startX = tmpX;
       startY = tmpY;
       currAngle += theta;
-    } else {
+    } else { //center of screen
       startX = winX/2;
       startY = winY/2;
       //aimerSprites[1]->setPosition(winX/2, winY/2);
@@ -270,9 +279,26 @@ void gx::HUD::draw(sf::RenderWindow & window) {
     window.draw(clockText);
     window.draw(winnerSprite);    
   }
+
+  //minimap
+  if(doMiniMap){
+    //float centerMiniMapX = winX - miniMapProx;
+    //float centerMiniMapY = winY - miniMapProx;
+    //miniMapSprite.setPosition(centerMiniMapX, centerMiniMapY);
+    //window.draw(miniMapSprite);
+    for( unsigned int i = 0; i < playerSprites.size(); i++){
+       //recalculate miniMapX
+       vector3f v = playerPositions[i];
+       v += vector3f(winX/2, winY/2,0); //this should be += center of minimap
+ 
+      playerSprites[i]->setPosition( v.x, v.y );
+      window.draw(*(playerSprites[i]));
+    }
+  }
 }
 
-void gx::HUD::updateHUD(const Player& player) {
+void gx::HUD::updateHUD(int id, const std::vector<Player>& players) {
+  const Player & player = players[id];
   HLossPercentage = (maxHealth-player.getHealth()) / maxHealth;
   MLossPercentage = (maxMana-player.getMana()) / maxMana;
   health = player.getHealth();
@@ -323,7 +349,6 @@ void gx::HUD::updateHUD(const Player& player) {
     hitClock.restart(); 
     hit = hitIndex[player.attackedMagicType];
     attackedDir = player.attackedDir;
-    std::cout << attackedDir << " " << playerDirection << std::endl;
   }
 
   attackedAngle = 180 - rotateAngle(playerDirection, attackedDir);
@@ -331,6 +356,30 @@ void gx::HUD::updateHUD(const Player& player) {
   if (player.collectPowerUp) {
     buffClock.restart();
     this->ptype = player.ptype;
+  }
+
+  //minimap
+  if( player.isMinotaur() || StringToNumber<int>(ConfigManager::configMap["minotaurRadarOnly"])==0){
+    doMiniMap = true;
+    static float miniMapScaling = 0.5; //bigger number means players appear farther away
+    playerPositions.clear();
+    vector3f myPos = players[id].getPosition();
+
+    for( auto playerP = players.begin(); playerP != players.end(); playerP++){
+      vector3f playerVec = playerP->getPosition() - myPos;
+    
+      float thetaBA = rotateAngleRad(playerDirection, playerVec);
+      vector3f playerRes(sin(thetaBA),cos(thetaBA),0);
+      playerRes.scale(playerVec.magnitude()*miniMapScaling);
+      playerRes.negate();
+      if(playerRes.magnitude() > miniMapProx){
+        playerRes.normalize();
+        playerRes.scale(miniMapProx);
+      }
+      playerPositions.push_back(playerRes);
+    }
+  } else {
+    doMiniMap = false;
   }
 }
 
@@ -490,6 +539,15 @@ void gx::HUD::initializeSprites() {
    hitDirSprites.push_back(new sf::Sprite());
    hitDirHelper(std::string("graphics/Images/hitDirRed.png"));
    hitDirHelper(std::string("graphics/Images/hitDirBlue.png"));
+
+   miniMapBlipTexture.loadFromFile("graphics/Images/blip.png");
+   for( int i = 0 ; i < StringToNumber<int>(ConfigManager::configMap["players"]); i++){
+     sf::Sprite* spritePtr = new sf::Sprite();
+     spritePtr->setTexture(miniMapBlipTexture);
+     spritePtr->setOrigin(miniMapBlipTexture.getSize().x/2, miniMapBlipTexture.getSize().y/2);
+     playerSprites.push_back(spritePtr);
+   }
+
 }
 
 void gx::HUD::setWinner(Game_State w)
@@ -517,6 +575,10 @@ void gx::HUD::updateDir(vector3f & dir){
 
 float gx::HUD::rotateAngle( vector3f v1, vector3f v2 ){
   return static_cast<float>(atan2(v1.x*v2.y-v2.x*v1.y,v1.x*v2.x+v1.y*v2.y)) * 180/M_PI ;
+}
+
+float gx::HUD::rotateAngleRad( vector3f v1, vector3f v2 ){
+  return static_cast<float>(atan2(v1.x*v2.y-v2.x*v1.y,v1.x*v2.x+v1.y*v2.y));
 }
 
 const int gx::HUD::hitIndex[18] = {

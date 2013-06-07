@@ -89,7 +89,7 @@ void Player::init(v3_t pos, int assigned_id, Map * m)
   elapsedChargeTime = 0;
   totalChargeTime = -1;
 	map = m;
-	weapon[0] = new WeaponFire(position, this->map, ICE1);
+	weapon[0] = new WeaponFire(position, this->map, B1);
     //new WeaponFist(position, this->map); //has no bounds so it doesnt drop
   //weapon[1] = new WeaponFist(position, this->map);
 	weapon[1] = new WeaponFire(position, this->map, FIR1); //TODO make this basic
@@ -174,6 +174,7 @@ bool Player::damageBy(Projectile *deadly)
 	health = (newHealth > 0 ? newHealth : 0);
   dead = health==0;
 
+  //TODO remove this to allow charging while hit
   if(charging) {
     chargedProjectile->live = false;
   }

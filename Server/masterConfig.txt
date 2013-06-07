@@ -4,7 +4,8 @@ sound=1
 //cannot have music without sound
 music=1
 musicProx=100
-maxMusicVol=50
+maxMusicVol=10
+maxSoundVol=50
 graphicsDebug=false
 serverTicksPerSec=30
 gameRestart=1
@@ -15,6 +16,7 @@ window-width=800
 window-height=600
 enableMinotaur=1
 countdown=2
+skyboxDir=skybox_sunset/
 
 //models
 model-badguy=badguy.dae
@@ -23,14 +25,17 @@ model-wall=stone_wall.dae
 model-ice=Ice_projectile.dae
 model-thunder=Thunder_projectile.dae
 model-dark=dark_projectile.dae
+model-basic=Basic_projectile.dae
 model-powerup=Thunder_projectile.dae
 model-weapon=dark_projectile.dae
 model-triton=triton.DAE
+model-torch=Torch.DAE
 
 // Physics
 gravity=-40
 
 // Player configuration
+minotaurRadarOnly=1
 players=1
 movescale=.6
 airMovescale=.49

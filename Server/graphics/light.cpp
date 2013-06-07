@@ -17,7 +17,7 @@ namespace { //to not export
 } //end unnamed namespace
 
 gx::light::light(vector4f co, GLfloat ca, GLfloat la, GLfloat qa)
-  : data(), unif(uniformName,uniformVarsMap) {
+  : data(), unif(uniformName,uniformVarsMap), numStaticLights(0) {
   //have to initialize here instead of initialization list because of visual
   //studio
   this->data.constantAttenuation = ca;
@@ -37,7 +37,7 @@ gx::light::light(vector4f co, GLfloat ca, GLfloat la, GLfloat qa)
 }
 
 void gx::light::clear() {
-  this->data.numLights = 0;
+  this->data.numLights = this->numStaticLights; //only static remain
   this->unif.write(uniformVars[2].first, this->data.numLights);
 }
 
@@ -52,6 +52,11 @@ void gx::light::addLight(vector4f pos) {
   } else {
    // std::cout << "warning too many lights" << std::endl;
   }
+}
+
+void gx::light::addStaticLight(vector4f pos) {
+  this->addLight(pos);
+  this->numStaticLights++; //make it permanent
 }
 
 gx::uniform::block& gx::light::storage() {

@@ -108,7 +108,7 @@ bool ServerServices::sendMessage(sf::Packet & packet, unsigned int i) {
 bool ServerServices::sendToAll(sf::Packet & packet ) {
   bool allGood = true;
   for (unsigned int i = 0;i < clients.size();i++) {
-    allGood = allGood && this->sendMessage(packet, i);
+    allGood = this->sendMessage(packet, i) && allGood;
   }
   return allGood;
 }
