@@ -29,7 +29,7 @@ void Map::mapReset()
   liveProjectTile.clear();
   initSpawns();
 
- // initPowerUps();
+  initPowerUps();
   initFloor();
   
   initStaticEntities();
