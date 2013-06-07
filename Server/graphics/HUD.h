@@ -58,6 +58,7 @@ private :
   sf::Sprite badGuySprite;
   sf::Texture goodGuyTexture;
   sf::Sprite goodGuySprite;
+  sf::Sprite winnerSprite;
   sf::Text pickUp;
   sf::Texture energeBarTexture;
   sf::Sprite energeBarSprite;
@@ -101,5 +102,6 @@ public:
   void updateHUDTimer(float timer);
   void draw(sf::RenderWindow & window);
   void initializeSprites();
+  void setWinner(Game_State w);
 };
 } //end of namespace gx

@@ -40,6 +40,7 @@ void NetworkClient::receiveMessages() {
         this->s.deserialize(packet);
 		    if (this->s.state != PLAYING) {
           gameRestart = true;
+          this->gxClient.setWinner(s.state);
         }
         pos = this->s.players[this->id].getPosition();
         proximity = 2;
