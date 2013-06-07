@@ -6,7 +6,7 @@
 #include "vector3.h"
 
 namespace gx {
-const unsigned int maxParticleSources = 10;
+const unsigned int maxParticleSources = 30;
 const unsigned int particlesPerFrame = 1;
 const unsigned int particlesLifeTime = 750;
 const unsigned int maxParticles = maxParticleSources * particlesPerFrame * particlesLifeTime;

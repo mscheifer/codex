@@ -999,7 +999,7 @@ const std::vector<Player *>& Map::getPlayers(){
   return players;
 }
 
- std::vector<Projectile *> Map::getLiveProjectTile(){
+ const std::vector<Projectile *>& Map::getLiveProjectTile(){
    return liveProjectTile;
  }
 
