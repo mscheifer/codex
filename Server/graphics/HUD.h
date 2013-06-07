@@ -34,6 +34,10 @@ private :
   vector3f attackedDir;
   float attackedAngle;
   bool switched;
+  std::vector<vector3f> playerPositions;
+  float miniMapProx;
+  bool doMiniMap;
+
 
   sf::Text healthText;
   sf::Text manaText;
@@ -58,11 +62,15 @@ private :
   sf::Sprite badGuySprite;
   sf::Texture goodGuyTexture;
   sf::Sprite goodGuySprite;
+  sf::Sprite winnerSprite;
   sf::Text pickUp;
   sf::Texture energeBarTexture;
   sf::Sprite energeBarSprite;
   sf::Texture energeBarFrameTexture;
   sf::Sprite energeBarFrameSprite;
+  sf::Texture miniMapTexture;
+  sf::Sprite miniMapSprite;
+  sf::Texture miniMapBlipTexture;
   std::vector<sf::Texture*> buffTextures;
   std::vector<sf::Sprite*> buffSprites;
   std::vector<sf::Texture*> buffLTextures;
@@ -75,6 +83,7 @@ private :
   std::vector<sf::Sprite*> hitSprites;
   std::vector<sf::Texture*> hitDirTextures;
   std::vector<sf::Sprite*> hitDirSprites;
+  std::vector<sf::Sprite*> playerSprites; //for minimap
   std::vector<bool> renderBuff;
   std::vector<int> remainTime;
   sf::Text currentSpell;
@@ -90,16 +99,18 @@ private :
   void hitHelper(std::string & path);
   void hitDirHelper(std::string & path);
   float rotateAngle(vector3f v1, vector3f v2);
+  float rotateAngleRad(vector3f v1, vector3f v2);
 
 public:
   static const int aimerIndex[18][2];
   static const int hitIndex[18];
   HUD(void);
   ~HUD(void);
-  void updateHUD(const Player& player);
+  void updateHUD(int id, const std::vector<Player>& players);
   void updateDir(vector3f & dir);
   void updateHUDTimer(float timer);
   void draw(sf::RenderWindow & window);
   void initializeSprites();
+  void setWinner(Game_State w);
 };
 } //end of namespace gx

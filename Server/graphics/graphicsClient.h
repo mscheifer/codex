@@ -66,7 +66,7 @@ class graphicsClient {
     void addEntity(Entity*);
     void addEntity(Player*);
     void addEntity(Projectile*);
-    void updateHUD(Player & player);
+    void updateHUD(int id, const std::vector<Player>& players);
     void drawLobby();
     void disableCursor();
     void enableCursor();
@@ -81,6 +81,7 @@ class graphicsClient {
     void updateNames(std::vector<std::string> & names);
     bool closed()        { return this->userInput.getStop(); }
     void setPlayerId(unsigned int x) { Score.setPlayerId(x); }
+    void setWinner(Game_State w) { Hud.setWinner(w); }
 };
 
 } //end namespace gx

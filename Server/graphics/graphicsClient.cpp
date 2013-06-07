@@ -120,8 +120,8 @@ std::vector<gx::graphicsEntity> staticModels() {
 
 std::vector<gx::graphicsEntity> dynamicModels() {
   // MODEL LOADING
-  auto modelPlayer = loadModel(configModelName("goodguy"),Player::playerDepth,true);
- // auto modelWall =  loadModel(configModelName("ninja"),10);
+  auto modelPlayer = loadModel(configModelName("powerup"),Player::playerDepth,true);
+  //if(!modelPlayer.rootBone.animated(0)) std::cout << "Error, model not animated" << std::endl;
     //setup drawing data
   std::vector<gx::graphicsEntity> entitiesData;
   entitiesData.push_back(std::move(modelPlayer));
@@ -336,7 +336,7 @@ void gx::graphicsClient::addEntity(Entity* ent) {
     inst.animation = 0; //TODO: select animation based on context
     ++aniFrame;
     aniFrame %= 240;
-    inst.timePosition = static_cast<double>(aniFrame) / 1200.0;
+    inst.timePosition = static_cast<double>(aniFrame) / 12000.0;
     this->animatedDrawer.addInstance(inst);
   } else {
     staticDrawer::instanceData inst;
@@ -379,9 +379,9 @@ void gx::graphicsClient::addEntity(Projectile* ent) {
   }
 }
 
-void gx::graphicsClient::updateHUD(Player & player) {
+void gx::graphicsClient::updateHUD(int id, const std::vector<Player>& players) {
   this->Hud.updateDir(this->playerDirection);
-  this->Hud.updateHUD(player);
+  this->Hud.updateHUD(id, players);
 }
 
 void gx::graphicsClient::drawLobby() {

@@ -40,6 +40,7 @@ void NetworkClient::receiveMessages() {
         this->s.deserialize(packet);
 		    if (this->s.state != PLAYING) {
           gameRestart = true;
+          this->gxClient.setWinner(s.state);
         }
         pos = this->s.players[this->id].getPosition();
         proximity = 2;
@@ -83,7 +84,7 @@ void NetworkClient::receiveMessages() {
         
         gxClient.updatePosition(gx::vector4f(pos.x,pos.y,pos.z));
         //entities.push_back(&(this->skybox)); //add skybox
-        gxClient.updateHUD(this->s.players[id]);
+        gxClient.updateHUD(id, s.players);
         gxClient.updateScores(wins,kills, dead);
         gxClient.setMinotaur(minotaurId);
         //std::cout << "num entities received: " << entities.size() << std::endl;
@@ -100,7 +101,7 @@ void NetworkClient::receiveMessages() {
           this->action.player_id = id;
           break;
       case STARTGAME:
-          joined = true; 
+          joined = true;
           std::cout<<"CLIENT RECEIVED START GAME"<<std::endl;
           playerSt.deserialize(packet);
           this->gxClient.updateLobby(playerSt.playerStatus);

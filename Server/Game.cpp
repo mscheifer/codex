@@ -28,8 +28,8 @@ int Game::join()
 }
 
 void Game::evaluate(ClientGameTimeAction a) {
-	std::vector<Player *> currentPlayers =  world.getPlayers();
-	std::vector<Entity *> currentEntities = world.getEntity();
+	const std::vector<Player *>& currentPlayers =  world.getPlayers();
+	const std::vector<Entity *>& currentEntity = world.getEntity();
 	
 	for( unsigned int i = 0; i <  currentPlayers.size(); i++ ) {
 		currentPlayers[i]->handleAction(a);
@@ -39,8 +39,8 @@ void Game::evaluate(ClientGameTimeAction a) {
 
 /* updates & resolve collision for each clock tick */
 void Game::updateAndResolveCollision() {
-  std::vector<Player *> currentPlayers =  world.getPlayers();
-	std::vector<Entity *> currentEntities = world.getEntity();
+  const std::vector<Player *>& currentPlayers =  world.getPlayers();
+	const std::vector<Entity *>& currentEntities = world.getEntity();
   std::vector<Projectile*> currentProjectile = world.getLiveProjectTile();
   for( unsigned int i = 0; i < currentPlayers.size(); i++ ) {
 		currentPlayers[i]->update();
@@ -84,8 +84,8 @@ void Game::prepResponse(ServerGameTimeRespond& sgtr) {
 	sgtr.walls.clear();
 	sgtr.powerups.clear();
   sgtr.players.clear();
-	std::vector<Player*>  currentPlayers =  world.getPlayers();
-	std::vector<Entity*> currentEntities = world.getEntity();
+	const std::vector<Player *>&  currentPlayers =  world.getPlayers();
+	const std::vector<Entity *>& currentEntities = world.getEntity();
   std::vector<Projectile*> currentProjectiles = world.getLiveProjectTile();
 	
   unsigned int deadPlayers = 0;

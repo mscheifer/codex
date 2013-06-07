@@ -4,7 +4,8 @@ sound=0
 //cannot have music without sound
 music=1
 musicProx=100
-maxMusicVol=50
+maxMusicVol=10
+maxSoundVol=50
 graphicsDebug=false
 serverTicksPerSec=30
 gameRestart=1
@@ -35,6 +36,7 @@ model-dragon=dragon_141.dae
 gravity=-40
 
 // Player configuration
+minotaurRadarOnly=1
 players=1
 movescale=.6
 airMovescale=.49
