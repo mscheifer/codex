@@ -1,9 +1,8 @@
 in vec2	 interpDiffuseCoord;
-in float interpNormDiff;
 in vec3  interpNormal;
 in vec4  interpPosition; //position of frag in eye space
 
-const int maxLights = 30; //must be the same as defined in lights.h
+const int maxLights = 15; //must be the same as defined in lights.h
 
 in vec3  lightDir[maxLights]; //direction of light in world space
 
