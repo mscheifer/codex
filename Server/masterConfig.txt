@@ -1,12 +1,12 @@
 // System configuration
 log=0
-sound=1
+sound=0
 //cannot have music without sound
 music=1
 musicProx=100
 maxMusicVol=10
 maxSoundVol=50
-graphicsDebug=false
+graphicsDebug=true
 serverTicksPerSec=30
 gameRestart=1
 soundScaling=10
@@ -36,11 +36,11 @@ model-animated=bb_walk.X
 model-coloumn1=Coloumn_01.DAE
 model-coloumn2=Coloumn_01.DAE
 model-coloumn3=Coloumn_01.DAE
-model-bg-idle=gg_idle.X
+model-bg-idle=bg_idle.X
 model-bg-walk=bb_walk.X
-model-bg-attack=bb_attack.X
+model-bg-attack=bg_fire.X
 model-bg-fire=bg_fire.X
-model-bg-idle=gg_charge.X
+model-bg-charge=bg_charge.X
 model-gg-idle=gg_idle.X
 model-gg-walk=bb_walk.X
 model-gg-attack=gg_melle.X
@@ -57,8 +57,7 @@ movescale=.6
 airMovescale=.49
 maxJump=2
 jumpSpeed=20.17
-playerHpRegen=.0025
-//.01
+playerHpRegen=.01
 playerMpRegen=.056
 playerDef=5
 playerHp=100
@@ -71,8 +70,7 @@ minotaurairMovescale=.49
 //.6
 minotaurmaxJump=200
 minotaurjumpSpeed=20.19
-minotaurHpRegen=.0035
-//.01
+minotaurHpRegen=.02
 minotaurMpRegen=.112
 minotaurDef=5
 minotaurHp=100

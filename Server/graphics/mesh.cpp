@@ -143,14 +143,19 @@ std::vector<double> initAnimDurs(const aiScene* scene) {
   return ret;
 }
 
-const gx::matrix fudgeMat(1, 0,0,0,
-                          0,-1,0,0,
-                          0, 0,1,0,
-                          0, 0,0,1);
+const gx::matrix fudgeMat(1, 0, 0, 0,
+                          0,-1, 0, 0,
+                          0, 0, 1, 0,
+                          0, 0, 0, 1);
+
+const gx::matrix dfudgeMat(1, 0,0, 0,
+                           0, 1,0, 0,
+                           0, 0,1,2.5,
+                           0, 0,0, 1);
 
 } //end unnamed namespace
 
-gx::Mesh::Mesh(const std::string& Filename, length_t height, bool flipUVs, bool fudge)
+gx::Mesh::Mesh(const std::string& Filename, length_t height, bool flipUVs, bool fudge, bool doublefudge)
   : mImporter(), mScene(LoadFile(mImporter, Filename, flipUVs)),
     m_boundary(CalcBoundBox(mScene, height)), idMap(),
     bones(initBones(idMap,mScene)),
@@ -163,7 +168,7 @@ gx::Mesh::Mesh(const std::string& Filename, length_t height, bool flipUVs, bool 
       std::move(m_Entries[0].boneWeights.second),
       std::move(m_Entries[0].indices), std::move(m_Entries[0].offsets),
       std::move(m_Materials[0]), initAnimDurs(mScene), std::move(bones),
-      (fudge ? fudgeMat : identity) * std::move(m_boundary.centerAndResize)) {}
+      (doublefudge ? dfudgeMat : identity) * (fudge ? fudgeMat : identity) * std::move(m_boundary.centerAndResize)) {}
 
 const aiScene* gx::Mesh::LoadFile(Assimp::Importer& Importer,
                                  const std::string& Filename, bool flipUVs) {

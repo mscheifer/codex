@@ -49,7 +49,7 @@ void NetworkClient::receiveMessages() {
         this->gxClient.clearEntities();
 
         for(auto playerP = s.players.begin(); playerP != s.players.end(); playerP++) {
-          //if(playerP->player_id != this->id) {
+          if(playerP->player_id != this->id) {
             //make sure the SGTR stays in scope
             this->gxClient.addEntity(&(*playerP));
 
@@ -58,7 +58,7 @@ void NetworkClient::receiveMessages() {
               proximity--;
             } else if (playerP->isMinotaur()) //not far, but minotaur
               minotaur = true;
-          //}
+          }
           dead.push_back((*playerP).dead);
           kills.push_back((*playerP).kills);
           wins.push_back((*playerP).wins);

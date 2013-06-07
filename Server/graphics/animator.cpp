@@ -12,8 +12,17 @@ gx::animator::animator() {
 }
 
 gx::animator::animationKey_t gx::animator::updatePlayer(Player const& p) {
-  this->currentAnimations[p.player_id].second++;
-  this->currentAnimations[p.player_id].second = 
-    std::fmod(this->currentAnimations[p.player_id].second,animationLength);
-  return this->currentAnimations[p.player_id];
+  auto& anim = this->currentAnimations[p.player_id];
+  unsigned int type = anim.first;
+  if(!(type == 2 || type == 3) || anim.second >= 98.0) {
+    type = 0;
+    if(p.charging) type = 4;
+    if(p.walking) type = 1;
+    if(p.meleeAttack) type = 2;
+    if(p.shotProjectile) type = 3;
+  }
+  anim.first = type;
+  anim.second++;
+  anim.second = std::fmod(anim.second,animationLength);
+  return anim;
 }

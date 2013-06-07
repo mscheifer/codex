@@ -17,7 +17,7 @@ class Mesh {
     static const unsigned int maxBonesPerVertex = 4;
     typedef float length_t;
 
-    Mesh(const std::string& Filename,length_t, bool flipUVs = false, bool fudge = false);
+    Mesh(const std::string& Filename,length_t, bool flipUVs = false, bool fudge = false, bool doublefudge = false);
     Mesh(const Mesh&);// = delete; //don't copy
     Mesh& operator=(const Mesh&);// = delete; //don't assign
     Mesh(Mesh&&);// = delete //define later
