@@ -625,12 +625,6 @@
     <None Include="graphics\Images\aimerOuter.png">
       <Filter>Resource Files\graphics\Images</Filter>
     </None>
-    <None Include="graphics\Images\hitBlue.png">
-      <Filter>Resource Files\graphics\Images</Filter>
-    </None>
-    <None Include="graphics\Images\hitRed.png">
-      <Filter>Resource Files\graphics\Images</Filter>
-    </None>
     <None Include="graphics\Images\splashBG.png">
       <Filter>Resource Files\graphics\Images</Filter>
     </None>
@@ -659,6 +653,54 @@
       <Filter>Resource Files\graphics\Images</Filter>
     </None>
     <None Include="graphics\Images\thunder_icon.png">
+      <Filter>Resource Files\graphics\Images</Filter>
+    </None>
+    <None Include="graphics\Images\basic_icon.png">
+      <Filter>Resource Files\graphics\Images</Filter>
+    </None>
+    <None Include="graphics\Images\fireHitDir.png">
+      <Filter>Resource Files\graphics\Images</Filter>
+    </None>
+    <None Include="graphics\Images\gravityHitDir.png">
+      <Filter>Resource Files\graphics\Images</Filter>
+    </None>
+    <None Include="graphics\Images\iceHitDir.png">
+      <Filter>Resource Files\graphics\Images</Filter>
+    </None>
+    <None Include="graphics\Images\thuHitDir.png">
+      <Filter>Resource Files\graphics\Images</Filter>
+    </None>
+    <None Include="graphics\Images\basicHitDir.png">
+      <Filter>Resource Files\graphics\Images</Filter>
+    </None>
+    <None Include="graphics\Images\hitFire.png">
+      <Filter>Resource Files\graphics\Images</Filter>
+    </None>
+    <None Include="graphics\Images\hitIce.png">
+      <Filter>Resource Files\graphics\Images</Filter>
+    </None>
+    <None Include="graphics\Images\hitBasic.png">
+      <Filter>Resource Files\graphics\Images</Filter>
+    </None>
+    <None Include="graphics\Images\hitGravity.png">
+      <Filter>Resource Files\graphics\Images</Filter>
+    </None>
+    <None Include="graphics\Images\hitThu.png">
+      <Filter>Resource Files\graphics\Images</Filter>
+    </None>
+    <None Include="graphics\Images\emptybar.png">
+      <Filter>Resource Files\graphics\Images</Filter>
+    </None>
+    <None Include="graphics\Images\health_icon.png">
+      <Filter>Resource Files\graphics\Images</Filter>
+    </None>
+    <None Include="graphics\Images\life.png">
+      <Filter>Resource Files\graphics\Images</Filter>
+    </None>
+    <None Include="graphics\Images\mana.png">
+      <Filter>Resource Files\graphics\Images</Filter>
+    </None>
+    <None Include="graphics\Images\mana_icon.png">
       <Filter>Resource Files\graphics\Images</Filter>
     </None>
   </ItemGroup>
