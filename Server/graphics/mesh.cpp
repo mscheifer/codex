@@ -155,8 +155,8 @@ const gx::matrix dfudgeMat(1, 0,0, 0,
 
 } //end unnamed namespace
 
-gx::Mesh::Mesh(const std::string& Filename, length_t height, bool flipUVs, bool fudge, bool doublefudge)
-  : mImporter(), mScene(LoadFile(mImporter, Filename, flipUVs)),
+gx::Mesh::Mesh(const std::string& Filename, length_t height, bool flipUVs, bool all, bool fudge, bool doublefudge)
+  : mImporter(), mScene(LoadFile(mImporter, Filename, flipUVs, all)),
     m_boundary(CalcBoundBox(mScene, height)), idMap(),
     bones(initBones(idMap,mScene)),
     m_Entries(InitFromScene(idMap,mScene)),
@@ -171,12 +171,13 @@ gx::Mesh::Mesh(const std::string& Filename, length_t height, bool flipUVs, bool 
       (doublefudge ? dfudgeMat : identity) * (fudge ? fudgeMat : identity) * std::move(m_boundary.centerAndResize)) {}
 
 const aiScene* gx::Mesh::LoadFile(Assimp::Importer& Importer,
-                                 const std::string& Filename, bool flipUVs) {
+                                 const std::string& Filename, bool flipUVs, bool all) {
   const aiScene* pScene = Importer.ReadFile(Filename.c_str(), 0
          | aiProcess_Triangulate
          | aiProcess_GenSmoothNormals
          | aiProcess_FixInfacingNormals
-         | (flipUVs ? aiProcess_ConvertToLeftHanded : 0));
+         | (flipUVs ? aiProcess_FlipUVs : 0)
+         | (all ? aiProcess_ConvertToLeftHanded : 0));
        //| aiProcess_FindDegenerates, aiProcess_FindInvalidData
        //| aiProcess_TransformUVCoords 	
   if (!pScene) {

@@ -7,7 +7,7 @@
 
 namespace gx {
 const unsigned int maxParticleSources = 30;
-const unsigned int particlesPerFrame = 1;
+const unsigned int particlesPerFrame = 3;
 const unsigned int particlesLifeTime = 750;
 const unsigned int maxParticles = maxParticleSources * particlesPerFrame * particlesLifeTime;
 

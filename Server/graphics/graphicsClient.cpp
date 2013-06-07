@@ -11,8 +11,8 @@ const unsigned int defaultWindowWidth  = 800;
 const unsigned int defaultWindowHeight = 600;
 
 gx::graphicsEntity loadModel(const std::string& ModelPath,
-    gx::Mesh::length_t height, bool flipUVs = false, bool fudge = false, bool doublefudge = false) {
-  return gx::Mesh(ModelPath,height,flipUVs,fudge,doublefudge).entityData;
+    gx::Mesh::length_t height, bool flipUVs = false, bool all = false, bool fudge = false, bool doublefudge = false) {
+  return gx::Mesh(ModelPath,height,flipUVs,all,fudge,doublefudge).entityData;
 }
 
 std::string configModelName(std::string s) {
@@ -59,7 +59,7 @@ unsigned int playerBase;
 
 std::vector<gx::graphicsEntity> initPlayerModels(unsigned int base) {
   playerBase = base;
-  auto modelBadGuy     = loadModel(configModelName("badguy"),Player::playerDepth,true);
+  auto modelBadGuy     = loadModel(configModelName("badguy"),Player::playerDepth,true,true);
   auto modelPlayer     = loadModel(configModelName("goodguy"),Player::playerDepth,true);
 
   std::vector<gx::graphicsEntity> ret;
@@ -149,12 +149,12 @@ unsigned int ggOffset;
 
 std::vector<gx::graphicsEntity> dynamicModels() {
   // MODEL LOADING
-  auto modelBGidle   = loadModel(configModelName("bg-idle"),Player::playerDepth,true,true);
-  auto modelBGwalk   = loadModel(configModelName("bg-walk"),Player::playerDepth,true,true,true);
-  auto modelBGattack = loadModel(configModelName("bg-attack"),Player::playerDepth,true,true);
-  auto modelBGfire   = loadModel(configModelName("bg-fire"),Player::playerDepth,true,true);
-  auto modelBGcharge = loadModel(configModelName("bg-charge"),Player::playerDepth,true,true);
-  auto modelGGidle   = loadModel(configModelName("gg-idle"),Player::playerDepth,true,true);
+  auto modelBGidle   = loadModel(configModelName("bg-idle"),Player::playerDepth,true,true,true);
+  auto modelBGwalk   = loadModel(configModelName("bg-walk"),Player::playerDepth,true,true,true,true);
+  auto modelBGattack = loadModel(configModelName("bg-attack"),Player::playerDepth,true,true,true);
+  auto modelBGfire   = loadModel(configModelName("bg-fire"),Player::playerDepth,true,true,true);
+  auto modelBGcharge = loadModel(configModelName("bg-charge"),Player::playerDepth,true,true,true);
+  auto modelGGidle   = loadModel(configModelName("gg-idle"),Player::playerDepth,true,true,true);
   if(modelBGwalk.rootBone.animations.empty()) {
     std::cout << "Error, model not animated" << std::endl;
   }
