@@ -83,7 +83,7 @@ void NetworkClient::receiveMessages() {
         
         gxClient.updatePosition(gx::vector4f(pos.x,pos.y,pos.z));
         //entities.push_back(&(this->skybox)); //add skybox
-        gxClient.updateHUD(this->s.players[id]);
+        gxClient.updateHUD(id, s.players);
         gxClient.updateScores(wins,kills, dead);
         gxClient.setMinotaur(minotaurId);
         //std::cout << "num entities received: " << entities.size() << std::endl;
@@ -94,14 +94,13 @@ void NetworkClient::receiveMessages() {
         sf::Listener::setDirection(dir.x, dir.y, dir.z);
         break;
       case JOINID:
-          updateMusic = true;
           newId.deserialize(packet);
           this->id = newId.id;
           std::cout << "USERID: " << this->id << std::endl;
           this->action.player_id = id;
           break;
       case STARTGAME:
-          joined = true; 
+          joined = true;
           std::cout<<"CLIENT RECEIVED START GAME"<<std::endl;
           playerSt.deserialize(packet);
           this->gxClient.updateLobby(playerSt.playerStatus);
@@ -185,7 +184,7 @@ void NetworkClient::processInput(){
 */
 void NetworkClient::doClient() {
   AudioManager::loadSounds();
-
+  AudioManager::updateMusic(2, true);
   //AudioManager::playMusic("m1");
   //if doClient running I already connected to the server 
   gameStart = false;

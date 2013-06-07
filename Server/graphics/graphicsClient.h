@@ -66,7 +66,7 @@ class graphicsClient {
     void clearEntities();
     void addEntity(Entity*);
     void addEntity(Projectile*);
-    void updateHUD(Player & player);
+    void updateHUD(int id, const std::vector<Player>& players);
     void drawLobby();
     void disableCursor();
     void enableCursor();

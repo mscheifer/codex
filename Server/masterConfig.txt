@@ -29,6 +29,7 @@ model-triton=triton.DAE
 gravity=-40
 
 // Player configuration
+minotaurRadarOnly=1
 players=1
 movescale=.6
 airMovescale=.49

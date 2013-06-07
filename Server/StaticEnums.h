@@ -43,7 +43,7 @@ const std::string WeaponNames[] = {
   "ICE",
   "MJORLNIR",
   "FIST",
-  "BASIC"
+  "QBasic"
 };
 
 enum MAGIC_POWER { 

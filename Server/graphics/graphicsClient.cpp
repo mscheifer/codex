@@ -304,9 +304,9 @@ void gx::graphicsClient::addEntity(Projectile* ent) {
   this->entities.addInstance(inst);
 }
 
-void gx::graphicsClient::updateHUD(Player & player) {
+void gx::graphicsClient::updateHUD(int id, const std::vector<Player>& players) {
   this->Hud.updateDir(this->playerDirection);
-  this->Hud.updateHUD(player);
+  this->Hud.updateHUD(id, players);
 }
 
 void gx::graphicsClient::drawLobby() {

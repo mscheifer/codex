@@ -37,7 +37,8 @@ void AudioManager::loadSounds(){
 
   loadSound("sc1", "sounds/scream_1.wav");
   
-  loadSound("c1", "sounds/charge1.wav");
+  //loadSound("c1", "sounds/charge1.wav");
+  loadSound("c1", "sounds/187119__unfa_charge.wav");
   loadSound("upgrade", "sounds/upgrade.wav");
   
   loadSound("w1", "sounds/foot_step_1.wav");
@@ -57,6 +58,7 @@ void AudioManager::loadSounds(){
   loadSound("shootIce", "sounds/shootIce.wav");
   loadSound("shootThu", "sounds/shootThu.wav");
   loadSound("shootBasic", "sounds/shootBasic.wav");
+  loadSound("shootBasicPong", "sounds/shootBasicPong_byNoiseCollector.wav");
   loadSound("shootGrav", "sounds/shootGrav.wav");
         
   loadSound("collectPowerup", "sounds/collectPowerup.wav");
@@ -108,15 +110,18 @@ void AudioManager::stopPlayerSound(int player_id, std::string key) {
    }
 }
 void AudioManager::playSoundHelper( sf::Sound* s, v3_t pos, sf::SoundBuffer* sbuff){
+  static float maxSoundVol = StringToNumber<float>(ConfigManager::configMap["maxSoundVol"]);
+
   s->setPosition(pos.x/soundScaling,pos.y/soundScaling,pos.z/soundScaling);
   if(s->getStatus() != sf::Sound::Playing)  {
     s->setBuffer(*sbuff);
     s->play();
+    s->setVolume(maxSoundVol);
   }
 
 }
 
-void AudioManager::updateMusic(const int numPlayers,const bool minotaur ){
+void AudioManager::updateMusic(const int numPlayers,const bool minotaur){
   if(!useSound)
     return;
 
@@ -172,10 +177,11 @@ void AudioManager::updateMusic(const int numPlayers,const bool minotaur ){
 
   //switch the songs if needed
   if(keepPlaying == -1){
-    music[notCurrentlyPlaying()].setVolume(0);
+    float volume = music[notCurrentlyPlaying()].getVolume();
     playMusic( getTrack(trackNo, numPlayers, minotaur), notCurrentlyPlaying() );
     music[notCurrentlyPlaying()].setPlayingOffset(music[currentlyPlayingMusic].getPlayingOffset());
     musicProx[notCurrentlyPlaying()] = proxStruct(numPlayers,minotaur);
+    music[notCurrentlyPlaying()].setVolume(volume);
     currentlyPlayingMusic = notCurrentlyPlaying();
   } else {
     currentlyPlayingMusic = keepPlaying;
@@ -232,6 +238,7 @@ void AudioManager::playMusic(std::string musicN, int index){
     return;
   if (music[index].openFromFile(musics[musicN])){
     music[index].play();
+    music[index].setVolume(0);
   }
 }
 
@@ -282,7 +289,7 @@ void AudioManager::processPlayerSound(Player& o){
     playPlayerSound("upgrade", o.player_id,  "upgrade", o.getPosition());
   }
 
-  if(o.charging) {
+  if(o.charging && o.totalChargeTime != -1) {
 //    std::cout << " player is charging"<< std::endl;
     playPlayerSound("c1", o.player_id,  "charging", o.getPosition());
   } else {
@@ -378,7 +385,10 @@ std::string AudioManager::getShootSound(MAGIC_POWER m){
   case THU3:
     return "shootThu";
   case B1:
-    return "shootBasic";
+    if(rand() % 2 + 1 == 1)
+      return "shootBasic";
+    else
+      return "shootBasicPong";
   default:
     return "shootGrav";
   }

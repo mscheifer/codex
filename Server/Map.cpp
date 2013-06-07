@@ -549,7 +549,7 @@ void Map::initWalls(void)
   float startingY;
   float startingYNeg;
   float startingZ = depth/2.0f;
-
+  float extraDepth = 100; //so you can't jump out
   // Create the top and bottom perimeter from left to right.
   for( i = 0,
     startingX = ((wallX*width)/-2)+(width/2)+centerX,
@@ -557,9 +557,9 @@ void Map::initWalls(void)
     startingYNeg = ((wallY*width)/2)+centerY;
     i < wallX; i++, startingX += width )
   {
-    Wall* topWall = new Wall(width, depth, height, 
+    Wall* topWall = new Wall(width, depth+extraDepth, height, 
       v3_t(startingX,startingY, startingZ), facingNorth, this);
-    Wall* bottomWall = new Wall(width, depth, height, 
+    Wall* bottomWall = new Wall(width, depth+extraDepth, height, 
       v3_t(startingX,startingYNeg, startingZ), facingNorth, this);
     this->entities.push_back(topWall);
     this->entities.push_back(bottomWall);
@@ -572,9 +572,9 @@ void Map::initWalls(void)
     startingY = ((wallY*width)/-2)+(width/2)+centerY;
     i < wallY; i++, startingY += width )
   {
-    Wall* leftWall = new Wall(width, depth, height,
+    Wall* leftWall = new Wall(width, depth+extraDepth, height,
       v3_t(startingX,startingY, startingZ), facingEast, this);
-    Wall* rightWall = new Wall(width, depth, height,
+    Wall* rightWall = new Wall(width, depth+extraDepth, height,
       v3_t(startingXNeg,startingY, startingZ), facingEast, this);
     this->entities.push_back(leftWall);
     this->entities.push_back(rightWall);
@@ -827,7 +827,7 @@ void Map::addWallChange(bool start, float startingX, float startingY, float star
        wall->setWallChangeTime(15000.f);
        wall->addNewCenter(v3_t(startingX,startingY, startingZ ));
      }
-      std::cout << "(" << startingX << "," << startingY << "," << startingZ << ")" << std::endl;
+      //std::cout << "(" << startingX << "," << startingY << "," << startingZ << ")" << std::endl;
 
       this->entities.push_back(wall);
       j++;
