@@ -54,7 +54,7 @@ playerMaxMp=100
 minotaurmovescale=.6
 minotaurairMovescale=.6
 //.6
-minotaurmaxJump=2000
+minotaurmaxJump=2
 //2
 minotaurjumpSpeed=20.19
 minotaurHpRegen=.02
