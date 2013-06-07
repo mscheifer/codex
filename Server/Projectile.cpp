@@ -176,9 +176,9 @@ void Projectile::fireMutiple(v3_t v, float strengthMultiplier, int number) {
   fired = true;
   charging = false;
   
-  double slice = 70.0/number;
-  double counter = slice;
-  double start = -35.0; 
+  double slice = 50.0/number;
+  double counter = 0;
+  double start = -20.0; 
   double PI = 3.14159265;
   for( int i = 0; i < number ; i++) {
     double adjusted = (start + counter)* PI /180.0;

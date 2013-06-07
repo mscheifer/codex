@@ -29,10 +29,11 @@ void Map::mapReset()
   liveProjectTile.clear();
   initSpawns();
 
-  initPowerUps();
+ // initPowerUps();
   initFloor();
-  initWalls(); 
+  
   initStaticEntities();
+  initWalls(); 
 
   for(unsigned int i = 0; i < players.size(); i++)
   {
@@ -41,11 +42,14 @@ void Map::mapReset()
 }
 
 void Map::initStaticEntities() { 
-  StaticEntity* staticEntity = new StaticEntity(GROUND);
-  staticEntity->setPosition(v3_t(0, 0, 0));
-  staticEntity->setDirection(v3_t(0,1,0));
+  //float w, float d, float h, v3_t sc, v3_t direct, Map * m, Entity_Type e
+  StaticEntity* staticEntity = new StaticEntity(0, 0, 0, v3_t(0, 0, 0),v3_t(0,1,0), this, GROUND);
   staticEntity->scale = 1;
   this->staticEntities.push_back(staticEntity);
+  
+  /* add bounding box here and addd it to entities so it will run colision detection
+    this->entities.push_back(staticEntity);
+  */  
 
   /*staticEntity = new StaticEntity(TRITON);
   staticEntity->setPosition(v3_t(300,300,100));
@@ -54,12 +58,24 @@ void Map::initStaticEntities() {
 
   this->staticEntities.push_back(staticEntity);*/
 
+  /*staticEntity = new StaticEntity(35, 35, 10, v3_t(15,15,30),v3_t(0,1,0), this, DRAGON);
+  
+  staticEntity->scale = 1;
+
+
+  this->staticEntities.push_back(staticEntity);*/
+ // this->entities.push_back(staticEntity);
+
+  /*
   staticEntity = new StaticEntity(TORCH);
   staticEntity->setPosition(v3_t(0,0,10));
   staticEntity->setDirection(v3_t(0,1,0));
   staticEntity->scale = 1;
 
+  
+
   this->staticEntities.push_back(staticEntity);
+  */
 
 }
 void Map::initSpawns()
@@ -517,6 +533,17 @@ void Map::initTestWalls(void)
       v3_t(startingX,startingY, startingZ), facingNorth, this);
     Wall* bottomWall = new Wall(width, depth, height, 
       v3_t(startingX,startingYNeg, startingZ), facingNorth, this);
+    
+      v3_t tp = topWall->getTorchPosition();
+       
+      StaticEntity* staticEntity;
+      staticEntity = new StaticEntity(0.1,0.1,0.1,
+        tp, topWall->getDirection(), this, TORCH);
+
+       staticEntity->scale = 1;
+       this->staticEntities.push_back(staticEntity);
+    
+
     this->entities.push_back(topWall);
     this->entities.push_back(bottomWall);
   }
@@ -775,6 +802,7 @@ void Map::addSpawnLocation(v3_t loc)
 
 v3_t Map::getRespawnPosition()
 {
+  // return v3_t(0,0,0);
   if(spawnPositions.size() == 0)
   {
     std::cout<<"TODO: need more spawn positions"<<std::endl;
@@ -810,6 +838,8 @@ void Map::addWallDirection(float startingX, float startingY, float startingZ, v3
     startingX += width;
   }
 }
+
+
 
 /*
  * Add walls from left to right. Assumes array ends with -1

@@ -195,7 +195,7 @@ void AudioManager::updateMusic(const int numPlayers,const bool minotaur){
       if(volume == maxVol)
         continue;
 
-      volume += 3;
+      volume += maxVol/20.f;
       if(volume > maxVol)
         volume = maxVol;
       music[i].setVolume(volume);
@@ -205,7 +205,7 @@ void AudioManager::updateMusic(const int numPlayers,const bool minotaur){
       if(volume == 0)
         continue;
 
-      volume -= 5;
+      volume -= maxVol/20.f;
       if(volume < 0)
         volume = 0;
       music[i].setVolume(volume);

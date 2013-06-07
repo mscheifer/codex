@@ -63,6 +63,10 @@ gx::HUD::HUD(void):health(100), maxHealth(100), HLossPercentage(0),
   pickUp.setColor(sf::Color::White);
   pickUp.setPosition(10,15+badGuyTexture.getSize().y);
 
+  winnerSprite.setTexture(goodGuyTexture);
+  winnerSprite.setOrigin(goodGuyTexture.getSize().x/2, goodGuyTexture.getSize().y/2);
+  winnerSprite.setColor(sf::Color(255,255,255,80));
+
   //positionText
 //  positionText.setFont(font);
 //  positionText.setCharacterSize(24);
@@ -277,12 +281,15 @@ void gx::HUD::draw(sf::RenderWindow & window) {
     currentSpell.setPosition( (window.getSize().x-400)/2,  window.getSize().y*0.8+20 );
     window.draw(currentSpell);
   } 
+
   if (timer > 0 ) {
+    winnerSprite.setPosition(window.getSize().x/2, window.getSize().y/2);
     clockText.setString(std::string("Game starts in ") +
       std::to_string(static_cast<long long>(timer)) +
       std::string(" seconds"));
     clockText.setPosition((window.getSize().x -clockText.getGlobalBounds().width)/2,200);
     window.draw(clockText);
+    window.draw(winnerSprite);    
   }
 
   //minimap
@@ -561,6 +568,25 @@ void gx::HUD::initializeSprites() {
      playerSprites.push_back(spritePtr);
    }
 
+}
+
+void gx::HUD::setWinner(Game_State w)
+{
+  winnerSprite.setColor(sf::Color(255,255,255,80));
+  if(w == MANOTAUR_WIN)
+  {
+    winnerSprite.setTexture(badGuyTexture);
+    winnerSprite.setOrigin(badGuyTexture.getSize().x/2, badGuyTexture.getSize().y/2);
+  }
+  else if( w == CIVILIAN_WIN )
+  {
+    winnerSprite.setTexture(badGuyTexture);
+    winnerSprite.setOrigin(badGuyTexture.getSize().x/2, badGuyTexture.getSize().y/2);
+  }
+  else
+  {
+    winnerSprite.setColor(sf::Color(255,255,255,0));
+  }
 }
 
 void gx::HUD::updateDir(vector3f & dir){
