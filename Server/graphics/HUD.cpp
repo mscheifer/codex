@@ -275,14 +275,14 @@ void gx::HUD::draw(sf::RenderWindow & window) {
 
   //minimap
   if(doMiniMap){
-    float centerMiniMapX = winX - miniMapProx-10;
-    float centerMiniMapY = winY - miniMapProx-10;
-    miniMapSprite.setPosition(centerMiniMapX, centerMiniMapY);
+    //float centerMiniMapX = winX - miniMapProx;
+    //float centerMiniMapY = winY - miniMapProx;
+    //miniMapSprite.setPosition(centerMiniMapX, centerMiniMapY);
     //window.draw(miniMapSprite);
     for( unsigned int i = 0; i < playerSprites.size(); i++){
        //recalculate miniMapX
        vector3f v = playerPositions[i];
-       v += vector3f(winX/2, winY/2,0);
+       v += vector3f(winX/2, winY/2,0); //this should be += center of minimap
  
       playerSprites[i]->setPosition( v.x, v.y );
       window.draw(*(playerSprites[i]));
@@ -371,6 +371,8 @@ void gx::HUD::updateHUD(int id, const std::vector<Player>& players) {
       }
       playerPositions.push_back(playerRes);
     }
+  } else {
+    doMiniMap = true;
   }
 }
 
