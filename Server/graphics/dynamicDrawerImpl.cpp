@@ -106,7 +106,7 @@ void gx::dynamicDrawerImpl::setUniforms(const entityClass& entC,
 }
 
 void gx::dynamicDrawerImpl::addInstance(
-    instanceData d,std::vector<entityClass>& entityClasses) {
+    const instanceData& d,std::vector<entityClass>& entityClasses) {
   auto type = d.type;
   entityClass::instance newInst;
   newInst.animation = d.animation;
@@ -114,4 +114,15 @@ void gx::dynamicDrawerImpl::addInstance(
   newInst. position = staticDrawerImpl::makePositionMatrix(std::move(d));
 
   entityClasses[type].instances.push_back(std::move(newInst));
+}
+
+void gx::dynamicDrawerImpl::addStaticInstance(
+    const instanceData& d,std::vector<entityClass>& entityClasses) {
+  auto type = d.type;
+  entityClass::instance newInst;
+  newInst.animation = d.animation;
+  newInst.  timePos = d.timePosition;
+  newInst. position = staticDrawerImpl::makePositionMatrix(d);
+
+  entityClasses[type].staticInstances.push_back(newInst);
 }

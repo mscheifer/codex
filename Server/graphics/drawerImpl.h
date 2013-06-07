@@ -21,6 +21,7 @@ class staticDrawerImpl {
     struct entityClass {
       typedef matrix        instance;
       std::vector<instance> instances;
+      std::vector<instance> staticInstances;
       vao                   vertData;
       material              mat;
       entityClass(entity_t,varSigs_t);
@@ -41,8 +42,9 @@ class staticDrawerImpl {
       GLfloat  scale;
       unsigned int type;
     };
-    static matrix makePositionMatrix(instanceData d);
-    void addInstance(instanceData,std::vector<entityClass>&);
+    static matrix makePositionMatrix(instanceData const&);
+    void addInstance(const instanceData&,std::vector<entityClass>&);
+    void addStaticInstance(const instanceData&,std::vector<entityClass>&);
 };
 
 class dynamicDrawerImpl {
@@ -61,6 +63,7 @@ class dynamicDrawerImpl {
               double timePos;
       };
       std::vector<instance> instances;
+      std::vector<instance> staticInstances;
       vao                   vertData;
       material              mat;
       bone                  rootBone;
@@ -79,7 +82,8 @@ class dynamicDrawerImpl {
       unsigned int animation;
       double timePosition;
     };
-    void addInstance(instanceData,std::vector<entityClass>&);
+    void addInstance(instanceData const&,std::vector<entityClass>&);
+    void addStaticInstance(instanceData const&,std::vector<entityClass>&);
 };
 
 } //end namespace gx

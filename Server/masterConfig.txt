@@ -1,6 +1,6 @@
 // System configuration
 log=0
-sound=1
+sound=0
 //cannot have music without sound
 music=1
 musicProx=100
@@ -15,6 +15,7 @@ window-width=800
 window-height=600
 enableMinotaur=1
 countdown=2
+skyboxDir=skybox_sunset/
 
 //models
 model-badguy=badguy.dae
@@ -23,10 +24,12 @@ model-wall=stone_wall.dae
 model-ice=Ice_projectile.dae
 model-thunder=Thunder_projectile.dae
 model-dark=dark_projectile.dae
+model-basic=Basic_projectile.dae
 model-powerup=Thunder_projectile.dae
 model-weapon=dark_projectile.dae
 model-triton=triton.DAE
-model-dragon=Dragon.obj
+model-torch=Torch.DAE
+model-dragon=dragon_141.dae
 
 // Physics
 gravity=-40
@@ -47,7 +50,9 @@ playerMaxMp=100
 
 minotaurmovescale=.6
 minotaurairMovescale=.6
-minotaurmaxJump=2
+//.6
+minotaurmaxJump=2000
+//2
 minotaurjumpSpeed=20.19
 minotaurHpRegen=.02
 minotaurMpRegen=.112

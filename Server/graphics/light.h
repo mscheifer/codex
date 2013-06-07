@@ -17,10 +17,12 @@ struct light {
       GLfloat               quadraticAttenuation;
     } data;
     uniform::block unif;
+    unsigned int numStaticLights;
   public:
     void clear();
     light(vector4f,GLfloat,GLfloat,GLfloat);
     void addLight(vector4f);
+    void addStaticLight(vector4f);
     uniform::block& storage();
 };
 

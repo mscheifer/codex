@@ -4,12 +4,13 @@
 #include "uniformBlock.h"
 #include "util.h"
 
-gx::matrix gx::staticDrawerImpl::makePositionMatrix(instanceData d) {
-  d.dirY.z = 0;
-  d.dirY.normalize();
+gx::matrix gx::staticDrawerImpl::makePositionMatrix(const instanceData& d) {
+  auto dirY = d.dirY;
+  dirY.z = 0;
+  dirY.normalize();
   const gx::vector3f up  = gx::vector3f(0,0,1);
   gx::matrix rotAndTrans = gx::translation(d.pos.x,d.pos.y,d.pos.z) *
-                           gx::toRightHandBasisFromYandUp(d.dirY,up) *
+                           gx::toRightHandBasisFromYandUp(dirY,up) *
                            uniformScaling(d.scale);
   return rotAndTrans;
 }
@@ -92,8 +93,14 @@ void gx::staticDrawerImpl::setUniforms(const entityClass::instance& inst) const{
 }
 
 void gx::staticDrawerImpl::addInstance(
-    instanceData d,std::vector<entityClass>& entityClasses) {
+    const instanceData& d,std::vector<entityClass>& entityClasses) {
   auto type = d.type;
-  entityClasses[type].instances.push_back(makePositionMatrix(std::move(d)));
+  entityClasses[type].instances.push_back(makePositionMatrix(d));
+}
+
+void gx::staticDrawerImpl::addStaticInstance(
+    const instanceData& d,std::vector<entityClass>& entityClasses) {
+  auto type = d.type;
+  entityClasses[type].staticInstances.push_back(makePositionMatrix(d));
 }
 
