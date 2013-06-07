@@ -78,9 +78,13 @@ std::vector<gx::graphicsEntity> staticModels() {
   auto modelWall       = loadModel(configModelName("wall"),10);
   auto modelPlayer     = loadModel(configModelName("goodguy"),Player::playerDepth,true);
   //auto modelTriton     = loadModel(configModelName("triton"),25,true);
+<<<<<<< HEAD
   auto modelDragon1     = loadModel(configModelName("dragon1"), 100,true);
   auto modelDragon2     = loadModel(configModelName("dragon2"), 100,true);
  
+=======
+  //auto modelDragon     = loadModel(configModelName("dragon"), 50,true);//100
+>>>>>>> c54c632ed26d5200992ee2219b3f621195317552
   auto modelTorch      = loadModel(configModelName("torch"),1,true);
   auto modelFakeTorch   = loadModel(configModelName("torch"),1,true);
  
@@ -114,6 +118,7 @@ std::vector<gx::graphicsEntity> staticModels() {
   entitiesData.push_back(std::move(modelFakeTorch));
 
 
+<<<<<<< HEAD
   generalOffset[DRAGON1] = entitiesData.size();
   entitiesData.push_back(std::move(modelDragon1));
 
@@ -128,6 +133,10 @@ std::vector<gx::graphicsEntity> staticModels() {
 
   generalOffset[COLOUMN3] = entitiesData.size();
   entitiesData.push_back(std::move(modelcoloumn3));
+=======
+  //generalOffset[DRAGON] = entitiesData.size();
+  //entitiesData.push_back(std::move(modelDragon));
+>>>>>>> c54c632ed26d5200992ee2219b3f621195317552
 
   auto projs = initProjectileModels(entitiesData.size());
   entitiesData.insert(entitiesData.end(), std::make_move_iterator(projs.begin()),

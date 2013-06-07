@@ -219,6 +219,9 @@
     <ClCompile Include="StaticEntity.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="graphics\animator.cpp">
+      <Filter>Source Files\graphics</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">
@@ -415,6 +418,9 @@
     </ClInclude>
     <ClInclude Include="StaticEntity.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="graphics\animator.h">
+      <Filter>Header Files\graphics</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -701,6 +707,90 @@
       <Filter>Resource Files\graphics\Images</Filter>
     </None>
     <None Include="graphics\Images\mana_icon.png">
+      <Filter>Resource Files\graphics\Images</Filter>
+    </None>
+    <None Include="graphics\Images\aimerBasic.png">
+      <Filter>Resource Files\graphics\Images</Filter>
+    </None>
+    <None Include="graphics\Images\aimerG1.png">
+      <Filter>Resource Files\graphics\Images</Filter>
+    </None>
+    <None Include="graphics\Images\aimerG2.png">
+      <Filter>Resource Files\graphics\Images</Filter>
+    </None>
+    <None Include="graphics\Images\aimerG3.png">
+      <Filter>Resource Files\graphics\Images</Filter>
+    </None>
+    <None Include="graphics\Images\aimerT1I.png">
+      <Filter>Resource Files\graphics\Images</Filter>
+    </None>
+    <None Include="graphics\Images\aimerT1O.png">
+      <Filter>Resource Files\graphics\Images</Filter>
+    </None>
+    <None Include="graphics\Images\aimerT2O.png">
+      <Filter>Resource Files\graphics\Images</Filter>
+    </None>
+    <None Include="graphics\Images\aimerT3I.png">
+      <Filter>Resource Files\graphics\Images</Filter>
+    </None>
+    <None Include="graphics\Images\aimerT3O.png">
+      <Filter>Resource Files\graphics\Images</Filter>
+    </None>
+    <None Include="graphics\Images\attack_boost.png">
+      <Filter>Resource Files\graphics\Images</Filter>
+    </None>
+    <None Include="graphics\Images\attack_speed.png">
+      <Filter>Resource Files\graphics\Images</Filter>
+    </None>
+    <None Include="graphics\Images\BG_Icon_orig.png">
+      <Filter>Resource Files\graphics\Images</Filter>
+    </None>
+    <None Include="graphics\Images\blip.png">
+      <Filter>Resource Files\graphics\Images</Filter>
+    </None>
+    <None Include="graphics\Images\burn_debuff.png">
+      <Filter>Resource Files\graphics\Images</Filter>
+    </None>
+    <None Include="graphics\Images\dark_debuff.png">
+      <Filter>Resource Files\graphics\Images</Filter>
+    </None>
+    <None Include="graphics\Images\dark_stun.png">
+      <Filter>Resource Files\graphics\Images</Filter>
+    </None>
+    <None Include="graphics\Images\defenseup.png">
+      <Filter>Resource Files\graphics\Images</Filter>
+    </None>
+    <None Include="graphics\Images\GG_Icon_orig.png">
+      <Filter>Resource Files\graphics\Images</Filter>
+    </None>
+    <None Include="graphics\Images\health_regen.png">
+      <Filter>Resource Files\graphics\Images</Filter>
+    </None>
+    <None Include="graphics\Images\hitDirBlue.png">
+      <Filter>Resource Files\graphics\Images</Filter>
+    </None>
+    <None Include="graphics\Images\hitDirRed.png">
+      <Filter>Resource Files\graphics\Images</Filter>
+    </None>
+    <None Include="graphics\Images\ice_debuff.png">
+      <Filter>Resource Files\graphics\Images</Filter>
+    </None>
+    <None Include="graphics\Images\ice_stun.png">
+      <Filter>Resource Files\graphics\Images</Filter>
+    </None>
+    <None Include="graphics\Images\mana_regen.png">
+      <Filter>Resource Files\graphics\Images</Filter>
+    </None>
+    <None Include="graphics\Images\speed_boost.png">
+      <Filter>Resource Files\graphics\Images</Filter>
+    </None>
+    <None Include="graphics\Images\thunder_debuff.png">
+      <Filter>Resource Files\graphics\Images</Filter>
+    </None>
+    <None Include="graphics\Images\thunder_stun.png">
+      <Filter>Resource Files\graphics\Images</Filter>
+    </None>
+    <None Include="graphics\Images\weaponUnk.png">
       <Filter>Resource Files\graphics\Images</Filter>
     </None>
   </ItemGroup>

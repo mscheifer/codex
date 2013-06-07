@@ -71,3 +71,7 @@ void gx::displaySet::setView(const vector4f& e, const vector4f& d,
 gx::uniform::block& gx::displaySet::storage() {
   return this->unif;
 }
+
+gx::vector4f gx::displaySet::getCameraPos() const {
+  return this->cameraPos;
+}

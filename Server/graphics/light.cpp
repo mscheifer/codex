@@ -41,6 +41,11 @@ void gx::light::clear() {
   this->unif.write(uniformVars[2].first, this->data.numLights);
 }
 
+void gx::light::clearStatic() {
+  this->data.numLights = 0; //nothing remains
+  this->unif.write(uniformVars[2].first, this->data.numLights);
+}
+
 void gx::light::addLight(vector4f pos) {
   if(this->data.numLights < maxLights) {
     auto newpos = pos.oglVec4();

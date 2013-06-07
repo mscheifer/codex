@@ -10,6 +10,7 @@
 
 namespace gx {
 struct graphicsEntity;
+class displaySet;
 
 class staticDrawerImpl {
     uniform::mat4floc modelToWorldLoc;
@@ -30,7 +31,8 @@ class staticDrawerImpl {
       entityClass(entityClass&&) noexcept;
       entityClass& operator=(entityClass&&);// = delete;
       void clear();
-      void update();
+      void clearStatic();
+      void update(displaySet const&);
       void draw();
     };
     staticDrawerImpl(const shaderProgram&);
@@ -64,6 +66,7 @@ class dynamicDrawerImpl {
       };
       std::vector<instance> instances;
       std::vector<instance> staticInstances;
+      std::vector<double>   animationDurations;
       vao                   vertData;
       material              mat;
       bone                  rootBone;
@@ -73,7 +76,8 @@ class dynamicDrawerImpl {
       entityClass(entityClass&&) noexcept;
       entityClass& operator=(entityClass&&);// = delete;
       void clear();
-      void update();
+      void clearStatic();
+      void update(displaySet const&);
       void draw();
     };
     dynamicDrawerImpl(const shaderProgram&);

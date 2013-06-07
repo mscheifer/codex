@@ -37,7 +37,7 @@ private :
   std::vector<vector3f> playerPositions;
   float miniMapProx;
   bool doMiniMap;
-
+  int energeBarIndex;
 
   sf::Text healthText;
   sf::Text manaText;
@@ -64,8 +64,6 @@ private :
   sf::Sprite goodGuySprite;
   sf::Sprite winnerSprite;
   sf::Text pickUp;
-  sf::Texture energeBarTexture;
-  sf::Sprite energeBarSprite;
   sf::Texture energeBarFrameTexture;
   sf::Sprite energeBarFrameSprite;
   sf::Texture miniMapTexture;
@@ -84,6 +82,8 @@ private :
   std::vector<sf::Texture*> hitDirTextures;
   std::vector<sf::Sprite*> hitDirSprites;
   std::vector<sf::Sprite*> playerSprites; //for minimap
+  std::vector<sf::Texture*> energeBarTextures;
+  std::vector<sf::Sprite*> energeBarSprites;
   std::vector<bool> renderBuff;
   std::vector<int> remainTime;
   sf::Text currentSpell;
@@ -98,11 +98,12 @@ private :
   void aimerHelper(std::string & path);
   void hitHelper(std::string & path);
   void hitDirHelper(std::string & path);
+  void energeBarHelper(std::string & path);
   float rotateAngle(vector3f v1, vector3f v2);
   float rotateAngleRad(vector3f v1, vector3f v2);
 
 public:
-  static const int aimerIndex[18][2];
+  static const int aimerIndex[18][3];
   static const int hitIndex[18];
   HUD(void);
   ~HUD(void);

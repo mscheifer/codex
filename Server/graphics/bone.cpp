@@ -33,7 +33,8 @@ gx::bone& gx::bone::operator=(bone&& other) {
 }
 
 bool gx::bone::animated(unsigned int index) const {
-  return !this->animations[index].keyFrames.empty();
+  return index < this->animations.size() && 
+	    !this->animations[index].keyFrames.empty();
 }
 
 std::vector<GLfloat>

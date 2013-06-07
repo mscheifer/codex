@@ -9,7 +9,7 @@ gx::HUD::HUD(void):health(100), maxHealth(100), HLossPercentage(0),
   weapon1(0), weapon2(0), currentSelect(0), elapsedChargeTime(0),
   totalChargeTime(-1), chargeMagicType(0), charging(false), timer(0),
   aimerOuter(0), aimerInner(0), playerDirection(0,0,0), hit(0), attackedAngle(0),
-  switched(false), miniMapProx(0), doMiniMap(false){
+  switched(false), miniMapProx(0), doMiniMap(false), energeBarIndex(0){
   font.loadFromFile("MORPHEUS.TTF");
   //bad guy icon
   badGuyTexture.loadFromFile("graphics/Images/BG_Icon.png");
@@ -65,7 +65,7 @@ gx::HUD::HUD(void):health(100), maxHealth(100), HLossPercentage(0),
 
   winnerSprite.setTexture(goodGuyTexture);
   winnerSprite.setOrigin(goodGuyTexture.getSize().x/2, goodGuyTexture.getSize().y/2);
-  winnerSprite.setColor(sf::Color(255,255,255,80));
+  winnerSprite.setColor(sf::Color(255,255,255,0));
 
   //positionText
 //  positionText.setFont(font);
@@ -77,8 +77,8 @@ gx::HUD::HUD(void):health(100), maxHealth(100), HLossPercentage(0),
   //chargig
   energeBarFrameTexture.loadFromFile("graphics/Images/chargebarempty.png"); 
   energeBarFrameSprite.setTexture(energeBarFrameTexture);
-  energeBarTexture.loadFromFile("graphics/Images/chargebar.png"); 
-  energeBarSprite.setTexture(energeBarTexture);
+  //energeBarTexture.loadFromFile("graphics/Images/chargebar.png"); 
+  //energeBarSprite.setTexture(energeBarTexture);
   //spells
   currentSpell.setFont(font);
   nextSpell.setFont(font);
@@ -140,6 +140,12 @@ gx::HUD::~HUD(void) {
   for (auto itr=playerSprites.begin();itr != playerSprites.end(); itr++) {
     delete *itr;
   }
+  for (auto itr=energeBarTextures.begin();itr != energeBarTextures.end(); itr++) {
+    delete *itr;
+  }
+  for (auto itr=energeBarSprites.begin();itr != energeBarSprites.end(); itr++) {
+    delete *itr;
+  }
 }
 
 void gx::HUD::draw(sf::RenderWindow & window) {
@@ -160,8 +166,8 @@ void gx::HUD::draw(sf::RenderWindow & window) {
     window.draw(*(hitDirSprites[hit]));
   }
   if (buffClock.getElapsedTime().asSeconds() <1.5) {
-    collectedPU.setString(std::string("Blessed with ") + powerUpNames[ptype]);
-    window.draw(collectedPU);
+   // collectedPU.setString(std::string("Blessed with ") + powerUpNames[ptype]);
+   // window.draw(collectedPU);
   }
   std::string healthS(std::to_string(static_cast<long long>(health)) + 
     std::string("/") +std::to_string(static_cast<long long>(maxHealth)));
@@ -242,16 +248,23 @@ void gx::HUD::draw(sf::RenderWindow & window) {
   }
 
   int buffn = 0; 
+  int debuffn = 0;
   for ( unsigned int i =0; i<renderBuff.size(); i++ ) {
     if (renderBuff[i]) {
-      buffSprites[i]->setPosition(70+buffn*37,window.getSize().y-134);
-      buffLSprites[i]->setPosition(70+buffn*37,window.getSize().y-134);
-      if (remainTime[i]<1000 && (remainTime[i]/100 % 2))
-        window.draw(*buffLSprites[i]);
+      if (i>=7 && i <=13) {
+        buffSprites[i]->setPosition(badGuyTexture.getSize().x+debuffn*52.5,window.getSize().y-150+55);
+        debuffn++;
+      } else {
+        buffSprites[i]->setPosition(badGuyTexture.getSize().x+buffn*52.5,window.getSize().y-150);
+        buffn++;
+      }
+//      buffLSprites[i]->setPosition(70+buffn*37,window.getSize().y-150);
+      if (remainTime[i]<1000 && (remainTime[i]/100 % 2)){
+        //window.draw(*buffLSprites[i]);
+      }
       else 
         window.draw(*buffSprites[i]);
-      buffn++;
-    }
+      }
   }
   //draw selected weapon
   int index1 = (currentSelect) ? weapon2 : weapon1;
@@ -271,9 +284,9 @@ void gx::HUD::draw(sf::RenderWindow & window) {
   //charge bar
   if (totalChargeTime != -1) {
     energeBarFrameSprite.setPosition((window.getSize().x-400)/2,window.getSize().y*0.8);
-    energeBarSprite.setPosition((window.getSize().x-400)/2,window.getSize().y*(0.8));
+    energeBarSprites[energeBarIndex]->setPosition((window.getSize().x-400)/2,window.getSize().y*(0.8));
     window.draw(energeBarFrameSprite);
-    window.draw(energeBarSprite);
+    window.draw(*(energeBarSprites[energeBarIndex]));
     nextSpell.setPosition( (window.getSize().x-400)/2+400-nextSpell.getGlobalBounds().width,  window.getSize().y*0.8+20 );
     window.draw(nextSpell);
   }
@@ -320,10 +333,10 @@ void gx::HUD::updateHUD(int id, const std::vector<Player>& players) {
   if (canPickUp) pickUp.setString("Hold F to pick up " + WeaponNames[player.getPickupWeaponType()]);
   hBarSprite.setTextureRect(sf::IntRect(0,0, static_cast<int>(health/maxHealth*emptyBarTexture.getSize().x), 40));
   mBarSprite.setTextureRect(sf::IntRect(0,0, static_cast<int>(mana/maxMana*emptyBarTexture.getSize().x), 40));
-  if (totalChargeTime)
-    energeBarSprite.setTextureRect(sf::IntRect(0,0,static_cast<int>(elapsedChargeTime/totalChargeTime*400),15));  
-
-  //positionText.setString(std::to_string(static_cast<long double>(player.getPosition().x))+" , "+
+  if (totalChargeTime != -1){
+    energeBarIndex = aimerIndex[chargeMagicType][2];
+    energeBarSprites[energeBarIndex]->setTextureRect(sf::IntRect(0,0,static_cast<int>(elapsedChargeTime/totalChargeTime*400),15));  
+  }
 //    std::to_string(static_cast<long double>(player.getPosition().y))+" , "+
 //    std::to_string(static_cast<long double>(player.getPosition().z)));  
  
@@ -401,8 +414,9 @@ void gx::HUD::buffHelper(std::string & path) {
    tText = new sf::Texture();
    tSprite = new sf::Sprite();
    tText->loadFromFile(path);
+   tText->setSmooth(true);
    tSprite->setTexture(*tText);
-//   tSprite->setScale(0.5,0.5);
+   tSprite->setScale(0.5,0.5);
    buffTextures.push_back(tText);
    buffSprites.push_back(tSprite);
    renderBuff.push_back(false);
@@ -468,6 +482,17 @@ void gx::HUD::hitDirHelper(std::string & path) {
    hitDirSprites.push_back(tSprite);
 }
 
+void gx::HUD::energeBarHelper(std::string & path) {
+   sf::Texture* tText;
+   sf::Sprite* tSprite;
+   tText = new sf::Texture();
+   tSprite = new sf::Sprite();
+   tText->loadFromFile(path);
+   tSprite->setTexture(*tText);
+   energeBarTextures.push_back(tText);
+   energeBarSprites.push_back(tSprite);
+}
+
 void gx::HUD::updateHUDTimer(float timer) {
   this->timer = timer;
 }
@@ -477,20 +502,20 @@ void gx::HUD::initializeSprites() {
    buffTextures.push_back(new sf::Texture());
    buffSprites.push_back(new sf::Sprite());
    renderBuff.push_back(false);
-   buffHelper(std::string("graphics/Images/powerMove.png"));
-   buffHelper(std::string("graphics/Images/powerMana.png"));
-   buffHelper(std::string("graphics/Images/powerHealth.png"));
-   buffHelper(std::string("graphics/Images/powerStr.png"));
+   buffHelper(std::string("graphics/Images/speed_boost.png"));
+   buffHelper(std::string("graphics/Images/mana_regen.png"));
+   buffHelper(std::string("graphics/Images/health_regen.png"));
+   buffHelper(std::string("graphics/Images/attack_boost.png"));
    buffHelper(std::string("graphics/Images/powerAttack.png"));
-   buffHelper(std::string("graphics/Images/powerCharge.png"));
-   buffHelper(std::string("graphics/Images/statF.png"));
-   buffHelper(std::string("graphics/Images/statI.png"));
-   buffHelper(std::string("graphics/Images/stunT.png"));
-   buffHelper(std::string("graphics/Images/statT.png"));
-   buffHelper(std::string("graphics/Images/statG.png"));
-   buffHelper(std::string("graphics/Images/stunG.png"));
-   buffHelper(std::string("graphics/Images/stunI.png"));
-   buffHelper(std::string("graphics/Images/powerDef.png"));
+   buffHelper(std::string("graphics/Images/attack_speed.png"));
+   buffHelper(std::string("graphics/Images/burn_debuff.png")); //burn
+   buffHelper(std::string("graphics/Images/ice_debuff.png")); //ice slow
+   buffHelper(std::string("graphics/Images/thunder_stun.png")); //stun thunder
+   buffHelper(std::string("graphics/Images/thunder_debuff.png")); //thunder debuff
+   buffHelper(std::string("graphics/Images/dark_debuff.png"));  //dark 1
+   buffHelper(std::string("graphics/Images/dark_stun.png"));  //dark 2 (stun)
+   buffHelper(std::string("graphics/Images/ice_stun.png"));   //frozen
+   buffHelper(std::string("graphics/Images/defenseup.png")); 
    
    //buffL
    buffLTextures.push_back(new sf::Texture());
@@ -513,8 +538,7 @@ void gx::HUD::initializeSprites() {
 
 
    //waepon   
-   weaponTextures.push_back(new sf::Texture());
-   weaponSprites.push_back(new sf::Sprite());
+   weaponHelper(std::string("graphics/Images/dark_icon.png"));
    weaponHelper(std::string("graphics/Images/fire_icon.png"));
    weaponHelper(std::string("graphics/Images/ice_icon.png"));
    weaponHelper(std::string("graphics/Images/thunder_icon.png"));
@@ -544,6 +568,15 @@ void gx::HUD::initializeSprites() {
    aimerHelper(std::string("graphics/Images/aimerG3.png"));
    aimerHelper(std::string("graphics/Images/aimerBasic.png")); //20
 
+   energeBarTextures.push_back(new sf::Texture());
+   energeBarSprites.push_back(new sf::Sprite());
+   energeBarHelper(std::string("graphics/Images/chargeBarF1.png"));
+   energeBarHelper(std::string("graphics/Images/chargeBarF2.png"));
+   energeBarHelper(std::string("graphics/Images/chargeBarI1.png"));
+   energeBarHelper(std::string("graphics/Images/chargeBarI2.png"));
+   energeBarHelper(std::string("graphics/Images/chargeBarT1.png"));
+   energeBarHelper(std::string("graphics/Images/chargeBarT2.png"));
+
    hitTextures.push_back(new sf::Texture());
    hitSprites.push_back(new sf::Sprite());
    hitHelper(std::string("graphics/Images/hitFire.png"));
@@ -567,6 +600,7 @@ void gx::HUD::initializeSprites() {
      spritePtr->setOrigin(miniMapBlipTexture.getSize().x/2, miniMapBlipTexture.getSize().y/2);
      playerSprites.push_back(spritePtr);
    }
+
 
 }
 
@@ -622,33 +656,32 @@ const int gx::HUD::hitIndex[18] = {
   5
 };
 
-
 //outer inner
-const int gx::HUD::aimerIndex[18][2] = {
+const int gx::HUD::aimerIndex[18][3] = {
   //FIR1=0, FIR2, FIR3, 
-  { 2, 3 },
-  { 4, 3 },
-  { 5, 6 },
+  { 2, 3, 1},
+  { 4, 3, 2},
+  { 5, 6, 0},
   //ICE1, ICE2, ICE3,
-  { 7, 8 },
-  { 9, 8 },
-  { 10, 11 },
+  { 7, 8, 3},
+  { 9, 8, 4},
+  { 10, 11, 0},
   //THU1, THU2, THU3,
-  { 12, 13 },
-  { 14, 13 },
-  { 15, 16 },
+  { 12, 13, 5},
+  { 14, 13, 6},
+  { 15, 16, 0},
   //G_IT, G_FT, G_FI, //gravity and what it is missing
-  { 17, 0 },
-  { 17, 0 },
-  { 17, 0 },
+  { 17, 0, 0},
+  { 17, 0, 0},
+  { 17, 0, 0},
   //G2,
-  { 18, 0 },
+  { 18, 0, 0},
   //G_IT2, G_FT2, G_FI2,
-  { 17, 0 },
-  { 17, 0 },
-  { 17, 0 },
+  { 17, 0, 0},
+  { 17, 0, 0},
+  { 17, 0, 0},
   //G3,
-  { 19, 0 },
+  { 19, 0, 0},
   //B1
-  { 20, 0 }
+  { 20, 0, 0}
 };

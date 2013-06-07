@@ -6,7 +6,7 @@
 namespace gx {
 
 struct light {
-    static const unsigned int maxLights = 15;
+    static const unsigned int maxLights = 10;
   private:
     struct lightData {
       std::array<GLfloat,4 * maxLights> position;
@@ -20,6 +20,7 @@ struct light {
     unsigned int numStaticLights;
   public:
     void clear();
+    void clearStatic();
     light(vector4f,GLfloat,GLfloat,GLfloat);
     void addLight(vector4f);
     void addStaticLight(vector4f);

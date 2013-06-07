@@ -132,6 +132,16 @@ gx::bone initBones(std::map<std::string,unsigned int>& idMap,
                            std::move(animations), scene->mRootNode);
   return boneTree;
 }
+
+std::vector<double> initAnimDurs(const aiScene* scene) {
+  std::vector<double> ret;
+  for(unsigned int i = 0; i < scene->mNumAnimations; i++) {
+    const aiAnimation* anim = scene->mAnimations[i];
+    ret.push_back(anim->mDuration);
+    //TODO: use ticks per second too
+  }
+  return ret;
+}
 } //end unnamed namespace
 
 gx::Mesh::Mesh(const std::string& Filename, length_t height, bool flipUVs)
@@ -146,7 +156,7 @@ gx::Mesh::Mesh(const std::string& Filename, length_t height, bool flipUVs)
       std::move(m_Entries[0].boneWeights.first),
       std::move(m_Entries[0].boneWeights.second),
       std::move(m_Entries[0].indices), std::move(m_Entries[0].offsets),
-      std::move(m_Materials[0]), std::move(bones),
+      std::move(m_Materials[0]), initAnimDurs(mScene), std::move(bones),
       std::move(m_boundary.centerAndResize)) {}
 
 const aiScene* gx::Mesh::LoadFile(Assimp::Importer& Importer,
@@ -155,7 +165,7 @@ const aiScene* gx::Mesh::LoadFile(Assimp::Importer& Importer,
          | aiProcess_Triangulate
          | aiProcess_GenSmoothNormals
          | aiProcess_FixInfacingNormals
-         | (flipUVs ? aiProcess_FlipUVs : 0));
+         | (flipUVs ? aiProcess_ConvertToLeftHanded : 0));
        //| aiProcess_FindDegenerates, aiProcess_FindInvalidData
        //| aiProcess_TransformUVCoords 	
   if (!pScene) {
