@@ -32,11 +32,20 @@ model-triton=triton.DAE
 model-torch=Torch.DAE
 model-dragon1=dragon_141.dae
 model-dragon2=statue_02.dae
-model-animated=cat.dae
+model-animated=bb_walk.X
 model-coloumn1=Coloumn_01.DAE
 model-coloumn2=Coloumn_01.DAE
 model-coloumn3=Coloumn_01.DAE
-
+model-bg-idle=gg_idle.X
+model-bg-walk=bb_walk.X
+model-bg-attack=bb_attack.X
+model-bg-fire=bg_fire.X
+model-bg-idle=gg_charge.X
+model-gg-idle=gg_idle.X
+model-gg-walk=bb_walk.X
+model-gg-attack=gg_melle.X
+model-gg-fire=bg_fire.X
+model-gg-charge=gg_charge.X
 
 // Physics
 gravity=-40

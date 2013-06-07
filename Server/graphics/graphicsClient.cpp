@@ -11,8 +11,8 @@ const unsigned int defaultWindowWidth  = 800;
 const unsigned int defaultWindowHeight = 600;
 
 gx::graphicsEntity loadModel(const std::string& ModelPath,
-    gx::Mesh::length_t height, bool flipUVs = false) {
-  return gx::Mesh(ModelPath,height,flipUVs).entityData;
+    gx::Mesh::length_t height, bool flipUVs = false, bool fudge = false) {
+  return gx::Mesh(ModelPath,height,flipUVs,fudge).entityData;
 }
 
 std::string configModelName(std::string s) {
@@ -78,8 +78,8 @@ std::vector<gx::graphicsEntity> staticModels() {
   auto modelWall       = loadModel(configModelName("wall"),10);
   auto modelPlayer     = loadModel(configModelName("goodguy"),Player::playerDepth,true);
   //auto modelTriton     = loadModel(configModelName("triton"),25,true);
-  auto modelDragon1     = loadModel(configModelName("dragon1"), 100,true);
-  auto modelDragon2     = loadModel(configModelName("dragon2"), 100,true);
+  /*auto modelDragon1     = loadModel(configModelName("dragon1"), 100,true);
+  auto modelDragon2     = loadModel(configModelName("dragon2"), 100,true);*/
  
   auto modelTorch      = loadModel(configModelName("torch"),1,true);
   auto modelFakeTorch   = loadModel(configModelName("torch"),1,true);
@@ -114,11 +114,11 @@ std::vector<gx::graphicsEntity> staticModels() {
   entitiesData.push_back(std::move(modelFakeTorch));
 
 
-  generalOffset[DRAGON1] = entitiesData.size();
+  /*generalOffset[DRAGON1] = entitiesData.size();
   entitiesData.push_back(std::move(modelDragon1));
 
   generalOffset[DRAGON2] = entitiesData.size();
-  entitiesData.push_back(std::move(modelDragon2));
+  entitiesData.push_back(std::move(modelDragon2));*/
 
   generalOffset[COLOUMN1] = entitiesData.size();
   entitiesData.push_back(std::move(modelcoloumn1));
@@ -141,20 +141,32 @@ std::vector<gx::graphicsEntity> staticModels() {
   return entitiesData;
 }
 
+unsigned int bgOffset = 0;
+unsigned int ggOffset;
+
 std::vector<gx::graphicsEntity> dynamicModels() {
   // MODEL LOADING
-  auto modelPlayer   = loadModel(configModelName("animated"),Player::playerDepth,true);
-  auto modelMinotaur = loadModel(configModelName("animated"),Player::playerDepth,true);
-  if(modelPlayer.rootBone.animations.empty()) {
+  auto modelBGwalk   = loadModel(configModelName("bg-walk"),Player::playerDepth,true,true);
+  auto modelBGattack = loadModel(configModelName("bg-attack"),Player::playerDepth,true,true);
+  auto modelBGfire   = loadModel(configModelName("bg-fire"),Player::playerDepth,true,true);
+  auto modelGGwalk   = loadModel(configModelName("bg-walk"),Player::playerDepth,true,true);
+  auto modelGGattack = loadModel(configModelName("bg-attack"),Player::playerDepth,true,true);
+  auto modelGGfire   = loadModel(configModelName("bg-fire"),Player::playerDepth,true,true);
+  if(modelBGwalk.rootBone.animations.empty()) {
     std::cout << "Error, model not animated" << std::endl;
   }
-  if(modelMinotaur.rootBone.animations.empty()) {
+  if(modelBGattack.rootBone.animations.empty()) {
     std::cout << "Error, model not animated" << std::endl;
   }
     //setup drawing data
   std::vector<gx::graphicsEntity> entitiesData;
-  entitiesData.push_back(std::move(modelPlayer));
-  entitiesData.push_back(std::move(modelMinotaur));
+  entitiesData.push_back(std::move(modelBGwalk));
+  entitiesData.push_back(std::move(modelBGattack));
+  entitiesData.push_back(std::move(modelBGfire));
+  ggOffset = entitiesData.size();
+  entitiesData.push_back(std::move(modelGGwalk));
+  entitiesData.push_back(std::move(modelGGattack));
+  entitiesData.push_back(std::move(modelGGfire));
   return entitiesData;
 }
 
@@ -183,7 +195,7 @@ void gx::graphicsClient::setCamera() {
   //add the direction vector to the player's position to get the position to
   //look at
   this->display.setView(playerPosition,
-                        playerDirection + playerPosition,
+                        playerDirection + playerPosition + vector3f(0,-0.5,0),
                         upDirection);
 }
 
@@ -369,8 +381,10 @@ void gx::graphicsClient::addEntity(Player* ent) {
   inst.scale = 1;
   inst.pos   = vector4f(0,0,0) + entity.getPosition();
   inst.dirY  = entity.getDirection();
-  //inst.type  = playerBase + (entity.isMinotaur() ? 1 : 0);
-  inst.type = (entity.isMinotaur() ? 1 : 0);
+  if(entity.walking) inst.type = 0;
+  if(entity.attacking) inst.type = 1;
+  if(entity.shotProjectile) inst.type = 2;
+  //if(!entity.isMinotaur()) inst.type += ggOffset;
   auto anim  = this->animCalc.updatePlayer(entity);
   inst.animation = anim.first;
   inst.timePosition = anim.second;
@@ -424,7 +438,6 @@ void gx::graphicsClient::setStaticEntities(std::vector<StaticEntity*> e) {
   this->animatedDrawer.resetStatic();
   this->particles.resetStatic();
 
-
   for(auto itr = e.begin(); itr != e.end(); itr++) {
     const auto& e1 = *itr;
     staticDrawer::instanceData inst;
@@ -435,10 +448,10 @@ void gx::graphicsClient::setStaticEntities(std::vector<StaticEntity*> e) {
     inst.scale = static_cast<GLfloat>(e1->scale);
     this->entities.addStaticInstance(inst);
 
+    if(e1->static_entity_type == TORCH) {
+      lights.addStaticLight(vector4f(0,0,0) + e1->getPosition());
+    }
     if(e1->static_entity_type == TORCH || e1->static_entity_type == FAKETORCH) {
-      if(e1->static_entity_type == TORCH) {
-         lights.addStaticLight(vector4f(0,0,0) + e1->getPosition());
-      }
       particleDrawer::instanceData inst;
       inst.position = vector4f(0,0,.5) + e1->getPosition();
       inst.type = 0;

@@ -94,6 +94,7 @@ public:
   bool shotProjectile;
   bool attacked;
   bool upgraded;
+  bool attacking;
 private:
   Weapon* pickup;
   WeaponType pickupWeaponType;
@@ -118,7 +119,6 @@ private:
   bool speedUp;
   int jumpCount;
   bool canJump;
-  bool attacking;
   Weapon* weapon[MAXWEAPONS]; //0 bare hand, 1 fireball
   int current_weapon_selection; //0 bare hand, 1 fireball
 
