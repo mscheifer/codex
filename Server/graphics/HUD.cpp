@@ -372,7 +372,7 @@ void gx::HUD::updateHUD(int id, const std::vector<Player>& players) {
       playerPositions.push_back(playerRes);
     }
   } else {
-    doMiniMap = true;
+    doMiniMap = false;
   }
 }
 
