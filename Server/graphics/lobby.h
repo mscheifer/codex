@@ -29,6 +29,8 @@ class lobby {
   sf::Texture circleTexture;
   sf::Sprite circleSprite;
   sf::Clock timer;
+  sf::Texture instructionTexture;
+  sf::Sprite instructionSprite;
 
 public:
   lobby(void);
