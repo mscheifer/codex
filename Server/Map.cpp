@@ -58,12 +58,12 @@ void Map::initStaticEntities() {
 
   this->staticEntities.push_back(staticEntity);*/
 
-  staticEntity = new StaticEntity(35, 35, 10, v3_t(15,15,30),v3_t(0,1,0), this, DRAGON);
+  /*staticEntity = new StaticEntity(35, 35, 10, v3_t(15,15,30),v3_t(0,1,0), this, DRAGON);
   
   staticEntity->scale = 1;
 
 
-  this->staticEntities.push_back(staticEntity);
+  this->staticEntities.push_back(staticEntity);*/
  // this->entities.push_back(staticEntity);
 
   /*
