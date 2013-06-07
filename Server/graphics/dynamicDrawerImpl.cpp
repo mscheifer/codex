@@ -1,5 +1,6 @@
 #include "drawerImpl.h"
 #include "graphicsEntity.h"
+#include "animator.h"
 
 namespace {
 gx::graphicsEntity::attribsList_t processAttribs(const gx::graphicsEntity& gentity) {
@@ -64,7 +65,8 @@ const std::string gx::dynamicDrawerImpl::fragShader =
 
 gx::dynamicDrawerImpl::entityClass::entityClass(entity_t drawData,
                                                 varSigs_t vars)
-  : vertData(std::move(drawData.indices),processAttribs(drawData),
+  : animationDurations(std::move(drawData.animationDurations)),
+    vertData(std::move(drawData.indices),processAttribs(drawData),
              std::move(vars)), mat(std::move(drawData.mat)),
     rootBone(std::move(drawData.rootBone)) {
   this->rootBone.transform = std::move(drawData.centerAndResize) *
@@ -72,7 +74,10 @@ gx::dynamicDrawerImpl::entityClass::entityClass(entity_t drawData,
 }
 
 gx::dynamicDrawerImpl::entityClass::entityClass(entityClass&& other) noexcept
-  : instances(std::move(other.instances)), vertData(std::move(other.vertData)),
+  : instances(std::move(other.instances)), 
+    staticInstances(std::move(other.staticInstances)),
+    animationDurations(std::move(other.animationDurations)),
+    vertData(std::move(other.vertData)),
     mat(std::move(other.mat)), rootBone(std::move(other.rootBone)) {}
 
 gx::dynamicDrawerImpl::entityClass&
@@ -85,7 +90,11 @@ void gx::dynamicDrawerImpl::entityClass::clear() {
   this->instances.clear();
 }
 
-void gx::dynamicDrawerImpl::entityClass::update() {
+void gx::dynamicDrawerImpl::entityClass::clearStatic() {
+  this->staticInstances.clear();
+}
+
+void gx::dynamicDrawerImpl::entityClass::update(displaySet const&) {
   //do nothing
 }
 
@@ -110,7 +119,8 @@ void gx::dynamicDrawerImpl::addInstance(
   auto type = d.type;
   entityClass::instance newInst;
   newInst.animation = d.animation;
-  newInst.  timePos = d.timePosition;
+  newInst.  timePos = d.timePosition / animator::animationLength * 
+                      entityClasses[type].animationDurations[d.animation];
   newInst. position = staticDrawerImpl::makePositionMatrix(std::move(d));
 
   entityClasses[type].instances.push_back(std::move(newInst));
@@ -124,5 +134,5 @@ void gx::dynamicDrawerImpl::addStaticInstance(
   newInst.  timePos = d.timePosition;
   newInst. position = staticDrawerImpl::makePositionMatrix(d);
 
-  entityClasses[type].staticInstances.push_back(newInst);
+  entityClasses[type].staticInstances.push_back(std::move(newInst));
 }

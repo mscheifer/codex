@@ -54,6 +54,7 @@ struct graphicsEntity {
     //-- would be part of seperate meshes
     material mat; //would be a vector if we had more than one mesh    
 
+    std::vector<double> animationDurations;
     bone rootBone;
 
     matrix centerAndResize;
@@ -61,13 +62,13 @@ struct graphicsEntity {
     graphicsEntity(std::vector<vector4f> position,std::vector<vector3f> normals,
                    std::vector<vector2f> diffTxCo,std::vector<vector4i> boneIDs,
                    std::vector<vector4f> bWeights,std::vector<GLuint>   indices,
-                   std::map<int,matrix>, material, bone, matrix);
+                   std::map<int,matrix>, material, std::vector<double>, bone, matrix);
 
     graphicsEntity(
       rawAttribPtr_t<vector4f>::t positions,  rawAttribPtr_t<vector3f>::t norms,
       rawAttribPtr_t<vector2f>::t diffuseCoos,rawAttribPtr_t<vector4i>::t bIDs,
       rawAttribPtr_t<vector4f>::t bWts,       std::vector<GLuint> indices,
-      std::map<int,matrix>, material, bone, matrix);
+      std::map<int,matrix>, material, std::vector<double>, bone, matrix);
 
     graphicsEntity(graphicsEntity const&);// = delete; //don't copy
     graphicsEntity& operator=(graphicsEntity const&);// = delete; //don't copy

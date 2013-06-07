@@ -78,7 +78,7 @@ std::vector<gx::graphicsEntity> staticModels() {
   auto modelWall       = loadModel(configModelName("wall"),10);
   auto modelPlayer     = loadModel(configModelName("goodguy"),Player::playerDepth,true);
   //auto modelTriton     = loadModel(configModelName("triton"),25,true);
-  auto modelDragon     = loadModel(configModelName("dragon"), 50,true);//100
+  //auto modelDragon     = loadModel(configModelName("dragon"), 50,true);//100
   auto modelTorch      = loadModel(configModelName("torch"),1,true);
   auto modelFakeTorch   = loadModel(configModelName("torch"),1,true);
   auto cubes = gx::loadCube();
@@ -107,8 +107,8 @@ std::vector<gx::graphicsEntity> staticModels() {
   entitiesData.push_back(std::move(modelFakeTorch));
 
 
-  generalOffset[DRAGON] = entitiesData.size();
-  entitiesData.push_back(std::move(modelDragon));
+  //generalOffset[DRAGON] = entitiesData.size();
+  //entitiesData.push_back(std::move(modelDragon));
 
   auto projs = initProjectileModels(entitiesData.size());
   entitiesData.insert(entitiesData.end(), std::make_move_iterator(projs.begin()),
@@ -124,11 +124,18 @@ std::vector<gx::graphicsEntity> staticModels() {
 
 std::vector<gx::graphicsEntity> dynamicModels() {
   // MODEL LOADING
-  auto modelPlayer = loadModel(configModelName("powerup"),Player::playerDepth,true);
-  //if(!modelPlayer.rootBone.animated(0)) std::cout << "Error, model not animated" << std::endl;
+  auto modelPlayer   = loadModel(configModelName("animated"),Player::playerDepth,true);
+  auto modelMinotaur = loadModel(configModelName("animated"),Player::playerDepth,true);
+  if(modelPlayer.rootBone.animations.empty()) {
+    std::cout << "Error, model not animated" << std::endl;
+  }
+  if(modelMinotaur.rootBone.animations.empty()) {
+    std::cout << "Error, model not animated" << std::endl;
+  }
     //setup drawing data
   std::vector<gx::graphicsEntity> entitiesData;
   entitiesData.push_back(std::move(modelPlayer));
+  entitiesData.push_back(std::move(modelMinotaur));
   return entitiesData;
 }
 
@@ -190,13 +197,13 @@ gx::graphicsClient::graphicsClient():
     sf::ContextSettings(24,0,ConfigManager::antiAliasingLevel())),
     //glew needs to be called here, after window, before anything else
     glewStatus(initGlew()),
-    userInput(),
+    userInput(), animCalc(),
     lights(gx::vector4f(1,1,1),0.1,0.1,0.0f),
     display(),
-    entities(staticModels(),uniforms()),
-    animatedDrawer(dynamicModels(),uniforms()),
+    entities(display,staticModels(),uniforms()),
+    animatedDrawer(display,dynamicModels(),uniforms()),
     skyboxDrawer(display.storage()),
-    particles(particlesData(),std::vector<uniform::block*>(1,&(display.storage()))),
+    particles(display,particlesData(),std::vector<uniform::block*>(1,&(display.storage()))),
     Hud(),Lobby(), Score(ConfigManager::numPlayers()),
     playerDirection(0.0, 1.0f,0.0),//will be changed by init packet
     playerStartDirection(0.0, 1.0f,0.0),
@@ -330,8 +337,6 @@ void gx::graphicsClient::updateDirection(vector3f dir) {
   this->setCamera();
 }
 
-int aniFrame = 0;
-
 void gx::graphicsClient::clearEntities() {
   lights.clear();
 
@@ -344,35 +349,26 @@ void gx::graphicsClient::addEntity(Entity* ent) {
   const auto& entity = *ent;
   const auto& type = entity.getType();
 
-  if(false) { //TODO: change back to type == PLAYER
-    dynamicDrawer::instanceData inst;
-    inst.scale = 1;
-    inst. pos = vector4f(0,0,0) + entity.getPosition();
-    inst.dirY = entity.getDirection();
-    inst.type = 0; //TODO: somehow set this based on type but it can't be absolute type?
-    inst.animation = 0; //TODO: select animation based on context
-    ++aniFrame;
-    aniFrame %= 240;
-    inst.timePosition = static_cast<double>(aniFrame) / 12000.0;
-    this->animatedDrawer.addInstance(inst);
-  } else {
-    staticDrawer::instanceData inst;
-    inst.scale = 1;
-    inst. pos = vector4f(0,0,0) + entity.getPosition();
-    inst.dirY = entity.getDirection();
-    inst.type = generalOffset[entity.getType()];
-    this->entities.addInstance(inst);
-  }
+  staticDrawer::instanceData inst;
+  inst.scale = 1;
+  inst. pos = vector4f(0,0,0) + entity.getPosition();
+  inst.dirY = entity.getDirection();
+  inst.type = generalOffset[entity.getType()];
+  this->entities.addInstance(inst);
 }
 
 void gx::graphicsClient::addEntity(Player* ent) {
   const auto& entity = *ent;
-  staticDrawer::instanceData inst;
+  dynamicDrawer::instanceData inst;
   inst.scale = 1;
   inst.pos   = vector4f(0,0,0) + entity.getPosition();
   inst.dirY  = entity.getDirection();
-  inst.type  = playerBase + (entity.isMinotaur() ? 1 : 0);
-  this->entities.addInstance(inst);
+  //inst.type  = playerBase + (entity.isMinotaur() ? 1 : 0);
+  inst.type = (entity.isMinotaur() ? 1 : 0);
+  auto anim  = this->animCalc.updatePlayer(entity);
+  inst.animation = anim.first;
+  inst.timePosition = anim.second;
+  this->animatedDrawer.addInstance(inst);
 }
 
 void gx::graphicsClient::addEntity(Projectile* ent) {
@@ -416,6 +412,13 @@ void gx::graphicsClient::drawLobby() {
   window.display();
 }
 void gx::graphicsClient::setStaticEntities(std::vector<StaticEntity*> e) {
+  lights.clearStatic();
+
+  this->entities.resetStatic();
+  this->animatedDrawer.resetStatic();
+  this->particles.resetStatic();
+
+
   for(auto itr = e.begin(); itr != e.end(); itr++) {
     const auto& e1 = *itr;
     staticDrawer::instanceData inst;

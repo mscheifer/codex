@@ -166,8 +166,8 @@ void gx::HUD::draw(sf::RenderWindow & window) {
     window.draw(*(hitDirSprites[hit]));
   }
   if (buffClock.getElapsedTime().asSeconds() <1.5) {
-    collectedPU.setString(std::string("Blessed with ") + powerUpNames[ptype]);
-    window.draw(collectedPU);
+   // collectedPU.setString(std::string("Blessed with ") + powerUpNames[ptype]);
+   // window.draw(collectedPU);
   }
   std::string healthS(std::to_string(static_cast<long long>(health)) + 
     std::string("/") +std::to_string(static_cast<long long>(maxHealth)));
@@ -248,16 +248,23 @@ void gx::HUD::draw(sf::RenderWindow & window) {
   }
 
   int buffn = 0; 
+  int debuffn = 0;
   for ( unsigned int i =0; i<renderBuff.size(); i++ ) {
     if (renderBuff[i]) {
-      buffSprites[i]->setPosition(70+buffn*37,window.getSize().y-134);
-      buffLSprites[i]->setPosition(70+buffn*37,window.getSize().y-134);
-      if (remainTime[i]<1000 && (remainTime[i]/100 % 2))
-        window.draw(*buffLSprites[i]);
+      if (i>=7 && i <=13) {
+        buffSprites[i]->setPosition(badGuyTexture.getSize().x+debuffn*52.5,window.getSize().y-150+55);
+        debuffn++;
+      } else {
+        buffSprites[i]->setPosition(badGuyTexture.getSize().x+buffn*52.5,window.getSize().y-150);
+        buffn++;
+      }
+//      buffLSprites[i]->setPosition(70+buffn*37,window.getSize().y-150);
+      if (remainTime[i]<1000 && (remainTime[i]/100 % 2)){
+        //window.draw(*buffLSprites[i]);
+      }
       else 
         window.draw(*buffSprites[i]);
-      buffn++;
-    }
+      }
   }
   //draw selected weapon
   int index1 = (currentSelect) ? weapon2 : weapon1;
@@ -407,8 +414,9 @@ void gx::HUD::buffHelper(std::string & path) {
    tText = new sf::Texture();
    tSprite = new sf::Sprite();
    tText->loadFromFile(path);
+   tText->setSmooth(true);
    tSprite->setTexture(*tText);
-//   tSprite->setScale(0.5,0.5);
+   tSprite->setScale(0.5,0.5);
    buffTextures.push_back(tText);
    buffSprites.push_back(tSprite);
    renderBuff.push_back(false);
@@ -494,20 +502,20 @@ void gx::HUD::initializeSprites() {
    buffTextures.push_back(new sf::Texture());
    buffSprites.push_back(new sf::Sprite());
    renderBuff.push_back(false);
-   buffHelper(std::string("graphics/Images/powerMove.png"));
-   buffHelper(std::string("graphics/Images/powerMana.png"));
-   buffHelper(std::string("graphics/Images/powerHealth.png"));
-   buffHelper(std::string("graphics/Images/powerStr.png"));
+   buffHelper(std::string("graphics/Images/speed_boost.png"));
+   buffHelper(std::string("graphics/Images/mana_regen.png"));
+   buffHelper(std::string("graphics/Images/health_regen.png"));
+   buffHelper(std::string("graphics/Images/attack_boost.png"));
    buffHelper(std::string("graphics/Images/powerAttack.png"));
-   buffHelper(std::string("graphics/Images/powerCharge.png"));
-   buffHelper(std::string("graphics/Images/statF.png"));
-   buffHelper(std::string("graphics/Images/statI.png"));
-   buffHelper(std::string("graphics/Images/stunT.png"));
-   buffHelper(std::string("graphics/Images/statT.png"));
-   buffHelper(std::string("graphics/Images/statG.png"));
-   buffHelper(std::string("graphics/Images/stunG.png"));
-   buffHelper(std::string("graphics/Images/stunI.png"));
-   buffHelper(std::string("graphics/Images/powerDef.png"));
+   buffHelper(std::string("graphics/Images/attack_speed.png"));
+   buffHelper(std::string("graphics/Images/burn_debuff.png")); //burn
+   buffHelper(std::string("graphics/Images/ice_debuff.png")); //ice slow
+   buffHelper(std::string("graphics/Images/thunder_stun.png")); //stun thunder
+   buffHelper(std::string("graphics/Images/thunder_debuff.png")); //thunder debuff
+   buffHelper(std::string("graphics/Images/dark_debuff.png"));  //dark 1
+   buffHelper(std::string("graphics/Images/dark_stun.png"));  //dark 2 (stun)
+   buffHelper(std::string("graphics/Images/ice_stun.png"));   //frozen
+   buffHelper(std::string("graphics/Images/defenseup.png")); 
    
    //buffL
    buffLTextures.push_back(new sf::Texture());
@@ -530,8 +538,7 @@ void gx::HUD::initializeSprites() {
 
 
    //waepon   
-   weaponTextures.push_back(new sf::Texture());
-   weaponSprites.push_back(new sf::Sprite());
+   weaponHelper(std::string("graphics/Images/dark_icon.png"));
    weaponHelper(std::string("graphics/Images/fire_icon.png"));
    weaponHelper(std::string("graphics/Images/ice_icon.png"));
    weaponHelper(std::string("graphics/Images/thunder_icon.png"));
