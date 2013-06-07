@@ -13,6 +13,7 @@
 #include "Player.h"
 #include "scoreBoard.h"
 #include "StaticEntity.h"
+#include "animator.h"
 
 class Entity;
 
@@ -21,6 +22,8 @@ class graphicsClient {
     sf::RenderWindow window;
     GLenum     glewStatus;
     input      userInput;
+    animator   animCalc;
+
     //scene data
     light lights;
     displaySet display;

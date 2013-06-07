@@ -94,6 +94,7 @@ typename gx::vector3<T>::elem_t gx::vector3<T>::dot(const vector3<T> &a) const {
 }
 template<typename T>
 void gx::vector3<T>::cross(const vector3<T> &a,const vector3<T> &b) {
+  assert(this != &a && this != &b);
   this->x = a.y * b.z - a.z * b.y;
   this->y = a.z * b.x - a.x * b.z;
   this->z = a.x * b.y - a.y * b.x;

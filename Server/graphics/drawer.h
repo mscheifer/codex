@@ -9,12 +9,13 @@ namespace gx {
 
 template<typename T>
 class drawer {
+                       const displaySet& camData;
                            shaderProgram program;
                                        T impl;
     std::vector<typename T::entityClass> entityClasses;
             std::vector<uniform::block*> globalUniforms;
   public:
-    drawer(std::vector<typename T::entity_t>, std::vector<uniform::block*>);
+    drawer(displaySet const&,std::vector<typename T::entity_t>, std::vector<uniform::block*>);
     void draw();
     void reset();
     typedef typename T::instanceData instanceData;

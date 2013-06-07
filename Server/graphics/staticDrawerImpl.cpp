@@ -59,7 +59,9 @@ gx::staticDrawerImpl::entityClass::entityClass(entity_t drawData,
     std::move(vars)), mat(std::move(drawData.mat)) {}
 
 gx::staticDrawerImpl::entityClass::entityClass(entityClass&& other) noexcept
-  : instances(std::move(other.instances)), vertData(std::move(other.vertData)),
+  : instances(std::move(other.instances)),
+    staticInstances(std::move(other.staticInstances)),
+    vertData(std::move(other.vertData)),
     mat(std::move(other.mat)) {}
 
 gx::staticDrawerImpl::entityClass&
@@ -72,7 +74,7 @@ void gx::staticDrawerImpl::entityClass::clear() {
   this->instances.clear();
 }
 
-void gx::staticDrawerImpl::entityClass::update() {
+void gx::staticDrawerImpl::entityClass::update(displaySet const&) {
   //do nothing
 }
 

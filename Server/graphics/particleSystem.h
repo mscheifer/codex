@@ -11,6 +11,8 @@ const unsigned int particlesPerFrame = 1;
 const unsigned int particlesLifeTime = 750;
 const unsigned int maxParticles = maxParticleSources * particlesPerFrame * particlesLifeTime;
 
+class displaySet;
+
 struct particleEntity {
   typedef std::vector<std::shared_ptr<const vertexAttrib>> attribsList_t;
   typedef std::shared_ptr<dynamicVertexAttrib> dynamicPtr_t;
@@ -59,7 +61,7 @@ class particleDrawerImpl {
         entityClass(entityClass&&) noexcept;
         entityClass& operator=(entityClass&&);// = delete;
         void clear();
-        void update();
+        void update(displaySet const&);
         void draw();
     };
     struct instanceData {

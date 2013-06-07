@@ -17,9 +17,11 @@ std::vector<typename T::entityClass> setupEntities(
 } //end unnamed namespace
 
 template<typename T>
-gx::drawer<T>::drawer(std::vector<typename T::entity_t> entDatas,
+gx::drawer<T>::drawer(displaySet const& ds,
+                      std::vector<typename T::entity_t> entDatas,
                       std::vector<uniform::block*> globalUnifs)
-  : program(T::vertShader, T::fragShader, globalUnifs), impl(program), 
+  : camData(ds), program(T::vertShader, T::fragShader, globalUnifs),
+    impl(program), 
     entityClasses(setupEntities<T>(std::move(entDatas),program.vars())),
     globalUniforms(globalUnifs) {
   material::setupBindings(this->program);
@@ -35,7 +37,7 @@ void gx::drawer<T>::draw() {
   for(auto entityCp = entityClasses.begin(); entityCp != entityClasses.end();
                                                                  ++entityCp) {
     auto& entityC = *entityCp;
-    entityC.update();
+    entityC.update(this->camData);
     entityC.mat.bind();
     entityC.vertData.drawHead();
     for(auto instp = entityC.instances.begin();instp != entityC.instances.end();

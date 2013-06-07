@@ -1,5 +1,6 @@
 #include "particleSystem.h"
 #include <algorithm>
+#include "displaySet.h"
 #include "vector3.h"
 
 const std::string gx::particleDrawerImpl::shaderID = "particle";
@@ -134,7 +135,7 @@ void gx::particleDrawerImpl::entityClass::addParticle(const vector4f& pos) {
   this->numIndices += 6 * particlesPerFrame;
 }
 
-void gx::particleDrawerImpl::entityClass::update() {
+void gx::particleDrawerImpl::entityClass::update(displaySet const& ds) {
   for(auto itr = this->realInstances.begin(); itr != this->realInstances.end(); itr++) {
     this->addParticle(*itr);
   }
@@ -162,11 +163,18 @@ void gx::particleDrawerImpl::entityClass::update() {
     } else {
       //convert particles to positions
       //not billboarded for now
-      const float billboardSize = 0.1f;
-      auto pos1 = itr->position + vector3f( billboardSize,0, billboardSize);
-      auto pos2 = itr->position + vector3f(-billboardSize,0, billboardSize);
-      auto pos3 = itr->position + vector3f(-billboardSize,0,-billboardSize);
-      auto pos4 = itr->position + vector3f( billboardSize,0,-billboardSize);
+      const float billboardSize = 0.5f;
+      auto billBoardVec = ds.getCameraPos() - itr->position;
+      vector3f upVec(0,0,1);
+      auto temp = billBoardVec;
+      billBoardVec.cross(upVec,temp);
+      billBoardVec.normalize();
+      billBoardVec.scale(billboardSize);
+      upVec.scale(billboardSize);
+      auto pos1 = itr->position + billBoardVec + upVec;
+      auto pos2 = itr->position + upVec;
+      auto pos3 = itr->position;
+      auto pos4 = itr->position + billBoardVec;
       positions.insert(positions.end(), pos1.begin(), pos1.end());
       positions.insert(positions.end(), pos2.begin(), pos2.end());
       positions.insert(positions.end(), pos3.begin(), pos3.end());
@@ -174,7 +182,7 @@ void gx::particleDrawerImpl::entityClass::update() {
 
       float factor = static_cast<float>(itr->lifetime) / particlesLifeTime;
 
-      vector4f startColor(1, 0.2, 0);
+      vector4f startColor(1, 0.2f, 0);
       vector3f endColor(0, 0, 0);
       vector4f currColor = startColor * (1-factor) + endColor * factor;
       colors.insert(colors.end(), currColor.begin(), currColor.end());

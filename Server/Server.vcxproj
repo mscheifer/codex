@@ -84,6 +84,7 @@
     <ClCompile Include="DeadlyEntity.cpp" />
     <ClCompile Include="Entity.cpp" />
     <ClCompile Include="Game.cpp" />
+    <ClCompile Include="graphics\animator.cpp" />
     <ClCompile Include="graphics\basicUniform.cpp" />
     <ClCompile Include="graphics\bone.cpp" />
     <ClCompile Include="graphics\buffer.cpp" />
@@ -148,6 +149,7 @@
     <ClInclude Include="Entity.h" />
     <ClInclude Include="EntityPool.h" />
     <ClInclude Include="Game.h" />
+    <ClInclude Include="graphics\animator.h" />
     <ClInclude Include="graphics\assimpUtil.h" />
     <ClInclude Include="graphics\basicUniform.h" />
     <ClInclude Include="graphics\bone.h" />

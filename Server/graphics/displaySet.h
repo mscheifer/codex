@@ -20,6 +20,7 @@ class displaySet {
     void setView(const vector4f&, const vector4f&, const vector3f&);
     void addView(const vector3f&, const vector3f&, const vector3f&);
     uniform::block& storage();
+    vector4f getCameraPos() const;
 };
 
 } //end namespace gx
