@@ -84,15 +84,11 @@ void AudioManager::playSound(std::string key, std::string id, v3_t pos){
   std::map<std::string,sf::SoundBuffer*>::iterator it;
   it = soundBuffers.find(key);
 
-  if(it != soundBuffers.end()){ //element exists
-
-
+  if(it != soundBuffers.end()){ //element exist
     if( sounds.find(id) ==  sounds.end()) {
       sounds.insert(std::pair<std::string,sf::Sound>(id,sf::Sound()));
     }
-
     playSoundHelper( &sounds.find(id)->second ,pos, it->second);
-  
   }
 }
 

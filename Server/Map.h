@@ -28,7 +28,7 @@ public:
   v3_t getRespawnPosition();
   const std::vector<Entity *>& getEntity(void);
   const std::vector<Player *>& getPlayers(void);
-  std::vector<Projectile *> getLiveProjectTile(void);
+  const std::vector<Projectile *>& getLiveProjectTile(void);
   Projectile* produceProjectile(void);
   void destroyProjectile(Projectile *);
   bool addPlayer(Player *);

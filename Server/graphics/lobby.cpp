@@ -41,6 +41,8 @@ gx::lobby::lobby(void):start(false),ready(false),connected(false),clickedIP(fals
   circleSprite.setTexture(circleTexture);
   circleSprite.setOrigin(circleTexture.getSize().x/2,circleTexture.getSize().y/2);
   timer.restart();
+  instructionTexture.loadFromFile("graphics/Images/instructions.png");
+  instructionSprite.setTexture(instructionTexture);
 }
 
 gx::lobby::~lobby(void) {}
@@ -109,7 +111,9 @@ void gx::lobby::drawLobby(sf::RenderWindow & window) {
   backGroundSprite.setScale(static_cast<float>(window.getSize().x)/backGroundTexture.getSize().x,
   static_cast<float>(window.getSize().y)/backGroundTexture.getSize().y);
   circleSprite.setRotation((static_cast<int>(this->timer.getElapsedTime().asMilliseconds())% 25000000 ) *72/5000); 
+  instructionSprite.setPosition(window.getSize().x-instructionTexture.getSize().x ,0);
   window.draw(backGroundSprite);
+  window.draw(instructionSprite);
   window.draw(circleSprite);
   window.draw(codexSprite);
  // std::cout<<"connected is "<< connected<<" start is "<< start<< " ready is "<< ready <<std::endl;
