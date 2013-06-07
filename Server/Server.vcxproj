@@ -282,6 +282,7 @@
     <None Include="graphics\Images\ice_debuff.png" />
     <None Include="graphics\Images\ice_icon.png" />
     <None Include="graphics\Images\ice_stun.png" />
+    <None Include="graphics\Images\instructions-2.png" />
     <None Include="graphics\Images\life.png" />
     <None Include="graphics\Images\magic_color.png" />
     <None Include="graphics\Images\mana.png" />
