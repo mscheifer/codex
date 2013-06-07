@@ -239,16 +239,16 @@ void NetworkClient::doClient() {
   gameRestart = true;
   while(this->running) {
     if (gameStart) {
-    /*sf::Clock profilerTime;
+    sf::Clock profilerTime;
     float processInputTime;
     float receiveMessagesTime;
     float drawTime;
-    float sendPackTime;*/
+    float sendPackTime;
     if (!gameRestart) {
-      //profilerTime.restart();
+      profilerTime.restart();
       this->processInput();
-      //processInputTime = profilerTime.getElapsedTime().asMilliseconds();
-      //profilerTime.restart();
+      processInputTime = profilerTime.getElapsedTime().asMilliseconds();
+      profilerTime.restart();
       this->receiveMessages();
       if (setName && notSet) {
         //really hacky here
@@ -258,9 +258,9 @@ void NetworkClient::doClient() {
         gxClient.updateNames(names);
         notSet = false;
       }
-      //receiveMessagesTime = profilerTime.getElapsedTime().asMilliseconds();
+      receiveMessagesTime = profilerTime.getElapsedTime().asMilliseconds();
 
-        //profilerTime.restart();c
+        profilerTime.restart();
         //window closed
         if (!this->running) 
           break;
@@ -272,15 +272,15 @@ void NetworkClient::doClient() {
           continue;
         }
         this->gxClient.draw();
-        //drawTime = profilerTime.getElapsedTime().asMilliseconds();
-        //profilerTime.restart();
+        drawTime = profilerTime.getElapsedTime().asMilliseconds();
+        profilerTime.restart();
         if(this->sendPacket) {
           //this->action.print();
           this->netRecv.sendPacket<ClientGameTimeAction>(action);
           this->sendPacket = false;
         }
-        //sendPackTime = profilerTime.getElapsedTime().asMilliseconds();
-       // std::cout<<"processInput: "<< processInputTime <<"ms\treceiveMessagesTime: "<<
+        sendPackTime = profilerTime.getElapsedTime().asMilliseconds();
+        //std::cout<<"processInput: "<< processInputTime <<"ms\treceiveMessagesTime: "<<
         //receiveMessagesTime <<"ms\tdrawTime: "<< drawTime <<"ms\tsendPackTime: "<< sendPackTime <<std::endl;
       } else {
         float remaining = StringToNumber<unsigned int>(ConfigManager::configMap["countdown"]) - clock.getElapsedTime().asSeconds(); //TODO make this 5 sec again

@@ -1,6 +1,6 @@
 // System configuration
 log=0
-sound=0
+sound=1
 //cannot have music without sound
 music=1
 musicProx=100
@@ -38,7 +38,7 @@ gravity=-40
 
 // Player configuration
 minotaurRadarOnly=1
-players=1
+players=2
 movescale=.6
 airMovescale=.49
 maxJump=2

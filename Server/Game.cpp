@@ -86,7 +86,7 @@ void Game::prepResponse(ServerGameTimeRespond& sgtr) {
   sgtr.players.clear();
 	const std::vector<Player *>&  currentPlayers =  world.getPlayers();
 	const std::vector<Entity *>& currentEntities = world.getEntity();
-  std::vector<Projectile*> currentProjectiles = world.getLiveProjectTile();
+  const std::vector<Projectile*>& currentProjectiles = world.getLiveProjectTile();
 	
   unsigned int deadPlayers = 0;
   bool minotaurLose  = false;
@@ -166,6 +166,7 @@ InitPacket Game::getInitPacket(int playerId) {
 void Game::clearEvents(){
   const std::vector<Player *>& currentPlayers =  world.getPlayers();
 	const std::vector<Entity *>& currentEntities = world.getEntity();
+  const std::vector<Projectile*>& currentProjectiles = world.getLiveProjectTile();
 
   for( unsigned int i = 0; i < currentPlayers.size(); i++ ) {
     currentPlayers[i]->clearEvents();
@@ -173,6 +174,10 @@ void Game::clearEvents(){
    
 	for( unsigned int i = 0; i < currentEntities.size(); i++ ) {
 		currentEntities[i]->clearEvents();
+	}
+  for( unsigned int i = 0; i < currentProjectiles.size(); i++ ) {
+    //if(currentProjectile[i]->live) //TODO (but not really) fix this to use live
+		  currentProjectiles[i]->clearEvents();
 	}
 }
 

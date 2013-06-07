@@ -264,7 +264,12 @@ ClientGameTimeAction gx::graphicsClient::handleInput() {
 }
 
 void gx::graphicsClient::draw() {
-    // clear the buffers
+    sf::Clock profilerTime;
+    float drawCalls;
+    float hudCalls; 
+    profilerTime.restart();
+
+  // clear the buffers
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
   gx::debugout << "glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT";
   gx::debugout << "| GL_STENCIL_BUFFER_BIT);" << gx::endl;
@@ -273,6 +278,9 @@ void gx::graphicsClient::draw() {
   this->entities.draw();
   this->animatedDrawer.draw();
   this->skyboxDrawer.draw();
+  
+  drawCalls = profilerTime.getElapsedTime().asMilliseconds();
+  profilerTime.restart();
 
   glDepthMask(GL_FALSE);
   this->particles.draw();
@@ -290,6 +298,9 @@ void gx::graphicsClient::draw() {
   if (this->userInput.drawS()) {
     this->Score.draw(window);
   }
+    hudCalls = profilerTime.getElapsedTime().asMilliseconds();
+  profilerTime.restart();
+
   //end of SFML graphics
   this->window.popGLStates();
   //glDisableClientState(GL_VERTEX_ARRAY);
@@ -305,6 +316,8 @@ void gx::graphicsClient::draw() {
     this->fpsFrames = 0;
     this->fpsClock.restart();
   }
+
+  std::cout << "draw Call " << drawCalls << " HudCall " << hudCalls << std::endl;
 }
 
 void gx::graphicsClient::updatePosition(vector4f pos) {
