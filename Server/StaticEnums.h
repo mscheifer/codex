@@ -31,7 +31,7 @@ enum Game_State {WAIT=0, PLAYING,MANOTAUR_WIN, CIVILIAN_WIN};
 enum Opcode {INIT=0,JOINID,STARTGAME, CHAT, T1, T2, CGTA, SGTR, ERROR};
 
 enum Entity_Type {UNDEFINED=0, PLAYER, WALL, PROJECTILE, WEAPON, POWER_UP,
-                  GROUND, TRITON, TORCH, DRAGON, NUM_ENTITIES};
+                  GROUND, TRITON, TORCH, FAKETORCH, DRAGON, NUM_ENTITIES};
 //NUM_ENITIES will have the value of the number of types
 
 enum Texture_Type {DEFAULT=0, GROUNDTEX=64};
@@ -154,13 +154,13 @@ struct BuffData{
 const BuffData BuffInfo[] = {
   //                  code lvl time  |  move       |mpRegen      | hpRegen | str           | atkCD      |  chargeCD  |defense
   BuffData(NONE,        0,  1, 100,    false, 0,    false, 0,     false, 0,    false, 0,    false, 0,    false, 0,     false, 0),
-  BuffData(MOVEBOOST,   1,  1, 4000, true, 2,     false, 0,     false, 0,    false, 0,    false, 0,    false, 0,     false, 0),
-  BuffData(MANABOOST,   2,  1, 4000, false, 0,    true, 2,      false, 0,    false, 0,    false, 0,    false, 0,     false, 0),
-  BuffData(HEALTHBOOST, 3,  1, 4000, false, 0,    false, 0,     true, 2,     false, 0,    false, 0,    false, 0,     false, 0),
-  BuffData(STRBOOST,    4,  1, 4000, false, 0,    false, 0,     false, 0,    true, 2,     false, 0,    false, 0,     false, 0),
-  BuffData(ATTACKCD,    5,  1, 60000, false, 0,    false, 0,     false, 0,    false, 0,    true, 0.25,  false, 0,     false, 0),
-  BuffData(CHARGECD,    6,  1, 60000, false, 0,    false, 0,     false, 0,    false, 0,    false, 0,    true, 0.5,     false, 0),
-  BuffData(DEFENSEBOOST,14, 1, 120000, false, 0,    false, 0,     false, 0,    false, 0,    false, 0,    false, 0,     true, 1.15f),
+  BuffData(MOVEBOOST,   1,  1, 4500, true, 2,     false, 0,     false, 0,    false, 0,    false, 0,    false, 0,     false, 0),
+  BuffData(MANABOOST,   2,  1, 45000, false, 0,    true, 2,      false, 0,    false, 0,    false, 0,    false, 0,     false, 0),
+  BuffData(HEALTHBOOST, 3,  1, 45000, false, 0,    false, 0,     true, 2,     false, 0,    false, 0,    false, 0,     false, 0),
+  BuffData(STRBOOST,    4,  1, 45000, false, 0,    false, 0,     false, 0,    true, 2,     false, 0,    false, 0,     false, 0),
+  BuffData(ATTACKCD,    5,  1, 45000, false, 0,    false, 0,     false, 0,    false, 0,    true, 0.25,  false, 0,     false, 0),
+  BuffData(CHARGECD,    6,  1, 45000, false, 0,    false, 0,     false, 0,    false, 0,    false, 0,    true, 0.5,     false, 0),
+  BuffData(DEFENSEBOOST,14, 1, 45000, false, 0,    false, 0,     false, 0,    false, 0,    false, 0,    false, 0,     true, 1.15f),
 
   BuffData(FIR1DEBUFF,  7,  1, 10000,   false, 0,    false, 0,     true, -1.25f, false, 0,  false, 0,    false, 0,     false, 0),
   BuffData(FIR2DEBUFF,  7,  2, 10000,   false, 0,    false, 0,     true, -3.f, false, 0,  false, 0,    false, 0,     false, 0),

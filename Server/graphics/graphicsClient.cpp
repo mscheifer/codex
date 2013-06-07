@@ -50,7 +50,7 @@ std::vector<gx::graphicsEntity> initProjectileModels(unsigned int base) {
   projectileOffset[G_FI2]= 2;
   projectileOffset[G3]   = 2;
   ret.push_back(std::move(modelBasic));
-  projectileOffset[G3]   = 3;
+  projectileOffset[B1]   = 3;
 
   return ret;
 }
@@ -78,9 +78,9 @@ std::vector<gx::graphicsEntity> staticModels() {
   auto modelWall       = loadModel(configModelName("wall"),10);
   auto modelPlayer     = loadModel(configModelName("goodguy"),Player::playerDepth,true);
   //auto modelTriton     = loadModel(configModelName("triton"),25,true);
-  //auto modelDragon     = loadModel(configModelName("dragon"), 25,true);
+  //auto modelDragon     = loadModel(configModelName("dragon"), 50,true);//100
   auto modelTorch      = loadModel(configModelName("torch"),1,true);
-
+  auto modelFakeTorch   = loadModel(configModelName("torch"),1,true);
   auto cubes = gx::loadCube();
   auto skybox = gx::loadSkybox();
   auto ground = gx::loadGround(2000.0f, 0.0f, "models/floor.jpg");
@@ -102,6 +102,10 @@ std::vector<gx::graphicsEntity> staticModels() {
     //entitiesData.push_back(std::move(modelTriton));
   generalOffset[TORCH] = entitiesData.size();
   entitiesData.push_back(std::move(modelTorch));
+
+  generalOffset[FAKETORCH] = entitiesData.size();
+  entitiesData.push_back(std::move(modelFakeTorch));
+
 
   //generalOffset[DRAGON] = entitiesData.size();
   //entitiesData.push_back(std::move(modelDragon));
@@ -408,9 +412,14 @@ void gx::graphicsClient::setStaticEntities(std::vector<StaticEntity*> e) {
     if(e1->static_entity_type == TORCH) {
       lights.addStaticLight(vector4f(0,0,0) + e1->getPosition());
       particleDrawer::instanceData inst;
-      inst.position = vector4f(0,0,0) + e1->getPosition();
+      inst.position = vector4f(0,0,.5) + e1->getPosition();
       inst.type = 0;
       this->particles.addStaticInstance(inst);
+    } 
+    else if (e1->static_entity_type == FAKETORCH) {
+      particleDrawer::instanceData inst;
+      inst.position = vector4f(0,0,0) + e1->getPosition();
+      inst.type = 0;
     }
   }
 }
