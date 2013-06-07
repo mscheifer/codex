@@ -98,6 +98,10 @@ gx::HUD::HUD(void):health(100), maxHealth(100), HLossPercentage(0),
   miniMapProx = aimerTextures[1]->getSize().x/2;//miniMapTexture.getSize().x/2; //this should be the radius of the minimap
   miniMapSprite.setTexture(miniMapTexture);
   miniMapSprite.setOrigin(miniMapTexture.getSize().x/2, miniMapTexture.getSize().y/2);
+  deathTexture.loadFromFile("graphics/Images/death.png");
+  deathScreen.setTexture(deathTexture);
+  deathScreen.setPosition(0,0);
+
 }
 
 gx::HUD::~HUD(void) {
@@ -149,10 +153,14 @@ gx::HUD::~HUD(void) {
 }
 
 void gx::HUD::draw(sf::RenderWindow & window) {
+  deathScreen.setScale(static_cast<float>(window.getSize().x)/deathTexture.getSize().x,
+  static_cast<float>(window.getSize().y)/deathTexture.getSize().y);
+  if (this->health ==0 && timer<0 ) 
+    window.draw(deathScreen);
   float passed = hitClock.getElapsedTime().asSeconds();
   float winX = window.getSize().x;
   float winY = window.getSize().y;
-
+  
   if (passed< 1.5) {
     hitSprites[hit]->setScale(static_cast<float>(window.getSize().x)/hitTextures[hit]->getSize().x,
     static_cast<float>(window.getSize().y)/hitTextures[hit]->getSize().y);

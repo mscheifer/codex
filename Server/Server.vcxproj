@@ -245,6 +245,7 @@
     <None Include="graphics\Images\dark_debuff.png" />
     <None Include="graphics\Images\dark_icon.png" />
     <None Include="graphics\Images\dark_stun.png" />
+    <None Include="graphics\Images\death.png" />
     <None Include="graphics\Images\defenseup.png" />
     <None Include="graphics\Images\emptybar.png" />
     <None Include="graphics\Images\Empty_bar.png" />

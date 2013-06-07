@@ -92,6 +92,8 @@ private :
   sf::Clock buffClock;
   sf::Clock hitClock;
   sf::Text collectedPU;
+  sf::Texture deathTexture;
+  sf::Sprite deathScreen;
   void buffHelper(std::string & path);
   void buffLHelper(std::string & path);
   void weaponHelper(std::string & path);
