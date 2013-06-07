@@ -61,10 +61,19 @@ void Map::initStaticEntities() {
   this->staticEntities.push_back(staticEntity);*/
 
   //30
-  //staticEntity = new StaticEntity( 0 , 0 , 0, v3_t(-250,-250,150),v3_t(0.5,0.5,0), this, DRAGON);
-  //staticEntity->scale = 1;
-  //this->staticEntities.push_back(staticEntity);
+  staticEntity = new StaticEntity( 0 , 0 , 0, v3_t(-250,-250,40),v3_t(1,1,0), this, DRAGON1);
+  staticEntity->scale = 1;
+  this->staticEntities.push_back(staticEntity);
 
+  staticEntity = new StaticEntity( 0 , 0 , 0, v3_t(250,250,50),v3_t(-1,1,0), this, DRAGON2);
+  staticEntity->scale = 1;
+  this->staticEntities.push_back(staticEntity);
+
+  staticEntity = new StaticEntity( 0 , 0 , 0, v3_t(0,-5,20),v3_t(-1,1,0), this, COLOUMN1);
+  staticEntity->scale = 1;
+  this->staticEntities.push_back(staticEntity);
+
+ 
  // this->entities.push_back(staticEntity);
 
   /*

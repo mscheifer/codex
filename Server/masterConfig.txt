@@ -30,9 +30,13 @@ model-powerup=Thunder_projectile.dae
 model-weapon=dark_projectile.dae
 model-triton=triton.DAE
 model-torch=Torch.DAE
+model-dragon1=dragon_141.dae
+model-dragon2=statue_02.dae
 model-animated=cat.dae
-model-dragon=statue_02.dae
-model-statue01=statue_01.dae
+model-coloumn1=Coloumn_01.DAE
+model-coloumn2=Coloumn_01.DAE
+model-coloumn3=Coloumn_01.DAE
+
 
 // Physics
 gravity=-40
@@ -55,7 +59,8 @@ playerMaxMp=100
 
 minotaurmovescale=.6
 minotaurairMovescale=.49
-minotaurmaxJump=2
+//.6
+minotaurmaxJump=200
 minotaurjumpSpeed=20.19
 minotaurHpRegen=.0035
 //.01
