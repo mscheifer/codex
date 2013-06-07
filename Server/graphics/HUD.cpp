@@ -160,8 +160,8 @@ void gx::HUD::draw(sf::RenderWindow & window) {
     window.draw(*(hitDirSprites[hit]));
   }
   if (buffClock.getElapsedTime().asSeconds() <1.5) {
-    collectedPU.setString(std::string("Blessed with ") + powerUpNames[ptype]);
-    window.draw(collectedPU);
+   // collectedPU.setString(std::string("Blessed with ") + powerUpNames[ptype]);
+   // window.draw(collectedPU);
   }
   std::string healthS(std::to_string(static_cast<long long>(health)) + 
     std::string("/") +std::to_string(static_cast<long long>(maxHealth)));
@@ -242,16 +242,23 @@ void gx::HUD::draw(sf::RenderWindow & window) {
   }
 
   int buffn = 0; 
+  int debuffn = 0;
   for ( unsigned int i =0; i<renderBuff.size(); i++ ) {
     if (renderBuff[i]) {
-      buffSprites[i]->setPosition(70+buffn*37,window.getSize().y-134);
-      buffLSprites[i]->setPosition(70+buffn*37,window.getSize().y-134);
-      if (remainTime[i]<1000 && (remainTime[i]/100 % 2))
-        window.draw(*buffLSprites[i]);
+      if (i>=7 && i <=13) {
+        buffSprites[i]->setPosition(badGuyTexture.getSize().x+debuffn*52.5,window.getSize().y-150+55);
+        debuffn++;
+      } else {
+        buffSprites[i]->setPosition(badGuyTexture.getSize().x+buffn*52.5,window.getSize().y-150);
+        buffn++;
+      }
+//      buffLSprites[i]->setPosition(70+buffn*37,window.getSize().y-150);
+      if (remainTime[i]<1000 && (remainTime[i]/100 % 2)){
+        //window.draw(*buffLSprites[i]);
+      }
       else 
         window.draw(*buffSprites[i]);
-      buffn++;
-    }
+      }
   }
   //draw selected weapon
   int index1 = (currentSelect) ? weapon2 : weapon1;
