@@ -2,7 +2,7 @@
 <COLLADA xmlns="http://www.collada.org/2005/11/COLLADASchema" version="1.4.1">
   <asset><contributor><author></author><authoring_tool>FBX COLLADA exporter</authoring_tool><comments></comments></contributor><created>2013-06-02T20:49:49Z</created><keywords></keywords><modified>2013-06-02T20:49:49Z</modified><revision></revision><subject></subject><title></title><unit meter="0.025400" name="centimeter"></unit><up_axis>Y_UP</up_axis></asset>
   <library_images>
-    <image id="Map #2-image" name="Map #2"><init_from>file://C:\Users\kan023\Desktop\walll texture\stock-photo-4167890-white-marble-texture.jpg</init_from></image>
+    <image id="Map #2-image" name="Map #2"><init_from>file://panda.JPG</init_from></image>
   </library_images>
   <library_materials>
     <material id="Material #2" name="Material #2">

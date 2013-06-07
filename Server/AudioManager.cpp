@@ -84,15 +84,11 @@ void AudioManager::playSound(std::string key, std::string id, v3_t pos){
   std::map<std::string,sf::SoundBuffer*>::iterator it;
   it = soundBuffers.find(key);
 
-  if(it != soundBuffers.end()){ //element exists
-
-
+  if(it != soundBuffers.end()){ //element exist
     if( sounds.find(id) ==  sounds.end()) {
       sounds.insert(std::pair<std::string,sf::Sound>(id,sf::Sound()));
     }
-
     playSoundHelper( &sounds.find(id)->second ,pos, it->second);
-  
   }
 }
 
@@ -128,6 +124,13 @@ void AudioManager::updateMusic(const int numPlayers,const bool minotaur){
   static bool useMusic = StringToNumber<int>(ConfigManager::configMap["music"]) == 1;
   if(!useMusic)
     return;
+
+  /*
+  for(auto itr = sounds.begin() ; itr != sounds.end(); itr++) {
+    if(itr->second.getStatus() != sf::Sound::Playing) {
+      sounds.erase(itr->first);
+    }
+  }*/
 
   static float maxVol = StringToNumber<float>(ConfigManager::configMap["maxMusicVol"]);
 

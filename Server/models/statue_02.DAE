@@ -2,8 +2,8 @@
 <COLLADA xmlns="http://www.collada.org/2005/11/COLLADASchema" version="1.4.1">
   <asset><contributor><author></author><authoring_tool>FBX COLLADA exporter</authoring_tool><comments></comments></contributor><created>2013-06-07T11:56:25Z</created><keywords></keywords><modified>2013-06-07T11:56:25Z</modified><revision></revision><subject></subject><title></title><unit meter="0.025400" name="centimeter"></unit><up_axis>Z_UP</up_axis></asset>
   <library_images>
-    <image id="Map #2-image" name="Map #2"><init_from>file://dragon_141.JPG</init_from></image>
-    <image id="Map #1-image" name="Map #1"><init_from>file://dragon_141.JPG</init_from></image>
+    <image id="Map #2-image" name="Map #2"><init_from>file://panda.JPG</init_from></image>
+    <image id="Map #1-image" name="Map #1"><init_from>file://panda.JPG</init_from></image>
   </library_images>
   <library_materials>
     <material id="RefRep.22" name="RefRep.22">

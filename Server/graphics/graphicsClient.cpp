@@ -78,15 +78,15 @@ std::vector<gx::graphicsEntity> staticModels() {
   auto modelWall       = loadModel(configModelName("wall"),10);
   auto modelPlayer     = loadModel(configModelName("goodguy"),Player::playerDepth,true);
   //auto modelTriton     = loadModel(configModelName("triton"),25,true);
-  auto modelDragon1     = loadModel(configModelName("dragon1"), 100,true);
-  auto modelDragon2     = loadModel(configModelName("dragon2"), 100,true);
+  auto modelDragon1     = loadModel(configModelName("dragon1"), 100);
+  auto modelDragon2     = loadModel(configModelName("dragon2"), 100);
  
-  auto modelTorch      = loadModel(configModelName("torch"),1,true);
-  auto modelFakeTorch   = loadModel(configModelName("torch"),1,true);
+  auto modelTorch      = loadModel(configModelName("torch"),1);
+  auto modelFakeTorch   = loadModel(configModelName("torch"),1);
  
-  auto modelcoloumn1   = loadModel(configModelName("coloumn1"),40,true);
-  auto modelcoloumn2   = loadModel(configModelName("coloumn2"),20,true);
-  auto modelcoloumn3   = loadModel(configModelName("coloumn3"),20,true);
+  auto modelcoloumn1   = loadModel(configModelName("coloumn1"),45);
+  auto modelcoloumn2   = loadModel(configModelName("coloumn2"),30);
+  auto modelcoloumn3   = loadModel(configModelName("coloumn3"),30);
 
   auto cubes = gx::loadCube();
   auto skybox = gx::loadSkybox();
@@ -290,7 +290,12 @@ ClientGameTimeAction gx::graphicsClient::handleInput() {
 }
 
 void gx::graphicsClient::draw() {
-    // clear the buffers
+    //sf::Clock profilerTime;
+    //float drawCalls;
+    //float hudCalls; 
+    //profilerTime.restart();
+
+  // clear the buffers
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
   gx::debugout << "glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT";
   gx::debugout << "| GL_STENCIL_BUFFER_BIT);" << gx::endl;
@@ -299,6 +304,9 @@ void gx::graphicsClient::draw() {
   this->entities.draw();
   this->animatedDrawer.draw();
   this->skyboxDrawer.draw();
+  
+  //drawCalls = profilerTime.getElapsedTime().asMilliseconds();
+  //profilerTime.restart();
 
   glDepthMask(GL_FALSE);
   this->particles.draw();
@@ -316,6 +324,9 @@ void gx::graphicsClient::draw() {
   if (this->userInput.drawS()) {
     this->Score.draw(window);
   }
+  //  hudCalls = profilerTime.getElapsedTime().asMilliseconds();
+  //profilerTime.restart();
+
   //end of SFML graphics
   this->window.popGLStates();
   //glDisableClientState(GL_VERTEX_ARRAY);
@@ -331,6 +342,8 @@ void gx::graphicsClient::draw() {
     this->fpsFrames = 0;
     this->fpsClock.restart();
   }
+
+  //std::cout << "draw Call " << drawCalls << " HudCall " << hudCalls << std::endl;
 }
 
 void gx::graphicsClient::updatePosition(vector4f pos) {
@@ -440,7 +453,7 @@ void gx::graphicsClient::setStaticEntities(std::vector<StaticEntity*> e) {
          lights.addStaticLight(vector4f(0,0,0) + e1->getPosition());
       }
       particleDrawer::instanceData inst;
-      inst.position = vector4f(0,0,.5) + e1->getPosition();
+      inst.position = vector4f(0,0, 0.5) + e1->getPosition();
       inst.type = 0;
       this->particles.addStaticInstance(inst);
     } 
