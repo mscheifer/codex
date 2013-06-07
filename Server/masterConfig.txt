@@ -44,7 +44,8 @@ movescale=.6
 airMovescale=.49
 maxJump=2
 jumpSpeed=20.17
-playerHpRegen=.01
+playerHpRegen=.0025
+//.01
 playerMpRegen=.056
 playerDef=5
 playerHp=100
@@ -56,7 +57,8 @@ minotaurmovescale=.6
 minotaurairMovescale=.49
 minotaurmaxJump=2
 minotaurjumpSpeed=20.19
-minotaurHpRegen=.02
+minotaurHpRegen=.0035
+//.01
 minotaurMpRegen=.112
 minotaurDef=5
 minotaurHp=100

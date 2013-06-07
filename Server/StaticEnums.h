@@ -167,13 +167,13 @@ const BuffData BuffInfo[] = {
   BuffData(FIR3DEBUFF,  7,  3, 15000,   false, 0,    false, 0,     true, -5.f,  false, 0,  false, 0,    false, 0,     false, 0),
   
   BuffData(ICESTUN,     13, 1, 3000,    true, 0,     false, 0,     false, 0,   false, 0,    false, 0,    false, 0,     false, 0),
-  BuffData(ICESTUN2,    13, 2, 3000,    true, 0,     false, 0,     false, 0,   false, 0,    false, 0,    false, 0,     false, 0),
+  BuffData(ICESTUN2,    13, 2, 4000,    true, 0,     false, 0,     false, 0,   false, 0,    false, 0,    false, 0,     false, 0),
   BuffData(ICE1DEBUFF,  8,  1, 10000,   true, 0.55f, false, 0,     false, 0,   false, 0,    false, 0,    false, 0,     false, 0),
   BuffData(ICE2DEBUFF,  8,  2, 10000,   true, 0.45f, false, 0,     false, 0,   false, 0,    false, 0,    false, 0,     false, 0),
   BuffData(ICE3DEBUFF,  8,  3, 15000,   true, 0.35f, false, 0,     false, 0,   false, 0,    false, 0,    false, 0,     false, 0),
 
   BuffData(THUSTUN,     9,  1, 1500,   true, 0,     false, 0,     false, 0,    false, 0,    false, 0,    false, 0,     false, 0),
-  BuffData(THUSTUN2,    9,  2, 4000,   true, 0,     false, 0,     false, 0,    false, 0,    false, 0,    false, 0,     false, 0),
+  BuffData(THUSTUN2,    9,  2, 5000,   true, 0,     false, 0,     false, 0,    false, 0,    false, 0,    false, 0,     false, 0),
   BuffData(THU1DEBUFF,  10, 1, 10000,  false, 0,    false,-1.25f, false, 0,    false, 0,    false, 0,    false, 0,     false, 0),
   BuffData(THU2DEBUFF,  10, 2, 10000,  false, 0,    false, -2,    false, 0,    false, 0,    false, 0,    true, 1.25,   false, 0),
   BuffData(THU3DEBUFF,  10, 3, 15000,  false, 0,    false, -3,    false, 0,    false, 0,    false, 0,    true, 1.5,    false, 0),
@@ -184,6 +184,6 @@ const BuffData BuffInfo[] = {
   BuffData(G2DEBUFF,    11, 2, 15000,  true, 0.55f, true, -2,     true, -1,    true, .90f,  false, 0,    false, 0,     false, 0),
   BuffData(G2MDEBUFF,   11, 1, 10000,  true, 0.55f, true, -1.25f, true, -1,    true, .95f,  false, 0,    false, 0,     false, 0),
   
-  BuffData(G3DEBUFF1,   12, 1, 3000,   true, 0,     false, 0,     false, 0,    false, 0,    false, 0,    false, 0,     false, 0), 
+  BuffData(G3DEBUFF1,   12, 1, 7000,   true, 0,     false, 0,     false, 0,    false, 0,    false, 0,    false, 0,     false, 0), 
   BuffData(G3DEBUFF2,   11, 3, 15000,  true, 0.45f, true, -4,     true, -4.5f, true, .85f,  false, 0,    true, 1.25,   true, 0)
 };

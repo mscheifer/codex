@@ -311,7 +311,7 @@ void gx::HUD::draw(sf::RenderWindow & window) {
     //float centerMiniMapY = winY - miniMapProx;
     //miniMapSprite.setPosition(centerMiniMapX, centerMiniMapY);
     //window.draw(miniMapSprite);
-    for( unsigned int i = 0; i < playerSprites.size(); i++){
+    for( unsigned int i = 0; i < playerPositions.size(); i++){
        //recalculate miniMapX
        vector3f v = playerPositions[i];
        v += vector3f(winX/2, winY/2,0); //this should be += center of minimap
@@ -397,11 +397,12 @@ void gx::HUD::updateHUD(int id, const std::vector<Player>& players) {
       vector3f playerRes(sin(thetaBA),cos(thetaBA),0);
       playerRes.scale(playerVec.magnitude()*miniMapScaling);
       playerRes.negate();
-      if(playerRes.magnitude() > miniMapProx){
-        playerRes.normalize();
-        playerRes.scale(miniMapProx);
+      if(playerRes.magnitude() > miniMapProx){ // show everyone on the map
+      //  playerRes.normalize();
+      //  playerRes.scale(miniMapProx);
+      } else {
+        playerPositions.push_back(playerRes);
       }
-      playerPositions.push_back(playerRes);
     }
   } else {
     doMiniMap = false;
