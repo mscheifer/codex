@@ -20,6 +20,7 @@ public:
   void serialize(sf::Packet & packet ) const;
   void deserialize(sf::Packet & packet );
   v3_t getTorchPosition(void);
+  v3_t getInvertedTorchPosition(void);
   std::string toString();
 
   Entity_Type getType() const { return type; }

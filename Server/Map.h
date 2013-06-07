@@ -65,6 +65,8 @@ private:
   void initPowerUps(void);
   void initStaticEntities(void);
   void addWallDirection(float startingX, float startingY, float startingZ, v3_t dir, int values[]);
+  void addWallDirectionWithTorch(float startingX, float startingY, float startingZ, v3_t dir, std::pair<int,int> values[]);
+ 
   void destHelper();
   void addWallChange(bool start, float startingX, float startingY, float startingZ, v3_t dir, int values[]);
 };
