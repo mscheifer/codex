@@ -279,7 +279,7 @@ void gx::HUD::draw(sf::RenderWindow & window) {
     float centerMiniMapY = winY - miniMapProx-10;
     miniMapSprite.setPosition(centerMiniMapX, centerMiniMapY);
     //window.draw(miniMapSprite);
-    for( unsigned int i = 0; i < playerPositions.size(); i++){
+    for( unsigned int i = 0; i < playerSprites.size(); i++){
        //recalculate miniMapX
        vector3f v = playerPositions[i];
        v += vector3f(winX/2, winY/2,0);
