@@ -69,9 +69,6 @@ void Map::initStaticEntities() {
   staticEntity->scale = 1;
   this->staticEntities.push_back(staticEntity);
 
-  staticEntity = new StaticEntity( 0 , 0 , 0, v3_t(0,-5,20),v3_t(-1,1,0), this, COLOUMN1);
-  staticEntity->scale = 1;
-  this->staticEntities.push_back(staticEntity);
 
  
  // this->entities.push_back(staticEntity);
@@ -595,6 +592,8 @@ void Map::initWalls(void)
   float startingZ = depth/2.0f;
   float extraDepth = 100; //so you can't jump out
   // Create the top and bottom perimeter from left to right.
+  Entity_Type cololumns[] = {COLOUMN1, COLOUMN2, COLOUMN3};
+  int hahaha[] = { 22, 15,15 };
   for( i = 0,
     startingX = ((wallX*width)/-2)+(width/2)+centerX,
     startingY = ((wallY*width)/-2)+centerY,
@@ -607,7 +606,24 @@ void Map::initWalls(void)
       v3_t(startingX,startingYNeg, startingZ), facingNorth, this);
     this->entities.push_back(topWall);
     this->entities.push_back(bottomWall);
-   
+    
+    v3_t tp = bottomWall->getLeftEdge();
+       StaticEntity* staticEntity;
+        int r = rand() % 3;
+        tp.z = hahaha[r];  //22
+    
+        staticEntity = new StaticEntity(0.1,0.1,0.1, tp, bottomWall->getDirection()*-1, this, cololumns[r]);
+        staticEntity->scale = 1;
+        this->staticEntities.push_back(staticEntity);
+        
+   tp = topWall->getLeftEdge();
+  
+         r = rand() % 3;
+         tp.z = hahaha[r]; 
+        staticEntity = new StaticEntity(0.1,0.1,0.1, tp, topWall->getDirection(), this, cololumns[r]);
+        staticEntity->scale = 1;
+        this->staticEntities.push_back(staticEntity);
+
     //hack nigga
     if(i == 0 || i == wallX-1 ) {
         v3_t tp = bottomWall->getInvertedTorchPosition();
@@ -636,6 +652,25 @@ void Map::initWalls(void)
       v3_t(startingX,startingY, startingZ), facingEast, this);
     Wall* rightWall = new Wall(width, depth+extraDepth, height,
       v3_t(startingXNeg,startingY, startingZ), facingEast, this);
+
+       
+    v3_t tp = leftWall->getLeftEdge();
+       StaticEntity* staticEntity;
+        int r = rand() % 3;
+        tp.z = hahaha[r];  //22
+    
+        staticEntity = new StaticEntity(0.1,0.1,0.1, tp, leftWall->getDirection()*-1, this, cololumns[r]);
+        staticEntity->scale = 1;
+        this->staticEntities.push_back(staticEntity);
+        
+   tp = rightWall->getLeftEdge();
+  
+         r = rand() % 3;
+         tp.z = hahaha[r]; 
+        staticEntity = new StaticEntity(0.1,0.1,0.1, tp, rightWall->getDirection(), this, cololumns[r]);
+        staticEntity->scale = 1;
+        this->staticEntities.push_back(staticEntity);
+
     this->entities.push_back(leftWall);
     this->entities.push_back(rightWall);
   }

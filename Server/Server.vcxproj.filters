@@ -793,5 +793,11 @@
     <None Include="graphics\Images\weaponUnk.png">
       <Filter>Resource Files\graphics\Images</Filter>
     </None>
+    <None Include="graphics\Images\death.png">
+      <Filter>Resource Files\graphics\Images</Filter>
+    </None>
+    <None Include="graphics\Images\instructions-2.png">
+      <Filter>Resource Files\graphics\Images</Filter>
+    </None>
   </ItemGroup>
 </Project>

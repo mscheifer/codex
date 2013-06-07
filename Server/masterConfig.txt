@@ -34,8 +34,6 @@ model-dragon1=dragon_141.dae
 model-dragon2=statue_02.dae
 model-animated=bb_walk.X
 model-coloumn1=Coloumn_01.DAE
-model-coloumn2=Coloumn_01.DAE
-model-coloumn3=Coloumn_01.DAE
 model-bg-idle=bg_idle.X
 model-bg-walk=bb_walk.X
 model-bg-attack=bg_fire.X
@@ -46,6 +44,8 @@ model-gg-walk=bb_walk.X
 model-gg-attack=gg_melle.X
 model-gg-fire=bg_fire.X
 model-gg-charge=gg_charge.X
+model-coloumn2=Coloumn_02.DAE
+model-coloumn3=Coloumn_03.DAE
 
 // Physics
 gravity=-40
@@ -68,7 +68,7 @@ playerMaxMp=100
 minotaurmovescale=.6
 minotaurairMovescale=.49
 //.6
-minotaurmaxJump=200
+minotaurmaxJump=2
 minotaurjumpSpeed=20.19
 minotaurHpRegen=.02
 minotaurMpRegen=.112

@@ -125,6 +125,13 @@ void AudioManager::updateMusic(const int numPlayers,const bool minotaur){
   if(!useMusic)
     return;
 
+  /*
+  for(auto itr = sounds.begin() ; itr != sounds.end(); itr++) {
+    if(itr->second.getStatus() != sf::Sound::Playing) {
+      sounds.erase(itr->first);
+    }
+  }*/
+
   static float maxVol = StringToNumber<float>(ConfigManager::configMap["maxMusicVol"]);
 
   //less intensive way

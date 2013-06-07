@@ -41,7 +41,7 @@ gx::lobby::lobby(void):start(false),ready(false),connected(false),clickedIP(fals
   circleSprite.setTexture(circleTexture);
   circleSprite.setOrigin(circleTexture.getSize().x/2,circleTexture.getSize().y/2);
   timer.restart();
-  instructionTexture.loadFromFile("graphics/Images/instructions.png");
+  instructionTexture.loadFromFile("graphics/Images/instructions-2.png");
   instructionSprite.setTexture(instructionTexture);
 }
 
@@ -141,5 +141,8 @@ void gx::lobby::setConnected(bool connected) {
     inputText = ""; 
     welcome.setString("Please enter a name and start.");
     button.setString("Start");
+    buttonBounds = buttonRect.getGlobalBounds();
+    textBounds = button.getGlobalBounds();
+    button.setPosition(280+(buttonBounds.width-textBounds.width)/2,500);
   }
 }
