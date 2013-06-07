@@ -78,9 +78,16 @@ std::vector<gx::graphicsEntity> staticModels() {
   auto modelWall       = loadModel(configModelName("wall"),10);
   auto modelPlayer     = loadModel(configModelName("goodguy"),Player::playerDepth,true);
   //auto modelTriton     = loadModel(configModelName("triton"),25,true);
-  auto modelDragon     = loadModel(configModelName("dragon"), 50,true);//100
+  auto modelDragon1     = loadModel(configModelName("dragon1"), 100,true);
+  auto modelDragon2     = loadModel(configModelName("dragon2"), 100,true);
+ 
   auto modelTorch      = loadModel(configModelName("torch"),1,true);
   auto modelFakeTorch   = loadModel(configModelName("torch"),1,true);
+ 
+  auto modelcoloumn1   = loadModel(configModelName("coloumn1"),40,true);
+  auto modelcoloumn2   = loadModel(configModelName("coloumn2"),20,true);
+  auto modelcoloumn3   = loadModel(configModelName("coloumn3"),20,true);
+
   auto cubes = gx::loadCube();
   auto skybox = gx::loadSkybox();
   auto ground = gx::loadGround(2000.0f, 0.0f, "models/floor.jpg");
@@ -107,8 +114,20 @@ std::vector<gx::graphicsEntity> staticModels() {
   entitiesData.push_back(std::move(modelFakeTorch));
 
 
-  generalOffset[DRAGON] = entitiesData.size();
-  entitiesData.push_back(std::move(modelDragon));
+  generalOffset[DRAGON1] = entitiesData.size();
+  entitiesData.push_back(std::move(modelDragon1));
+
+  generalOffset[DRAGON2] = entitiesData.size();
+  entitiesData.push_back(std::move(modelDragon2));
+
+  generalOffset[COLOUMN1] = entitiesData.size();
+  entitiesData.push_back(std::move(modelcoloumn1));
+
+  generalOffset[COLOUMN2] = entitiesData.size();
+  entitiesData.push_back(std::move(modelcoloumn2));
+
+  generalOffset[COLOUMN3] = entitiesData.size();
+  entitiesData.push_back(std::move(modelcoloumn3));
 
   auto projs = initProjectileModels(entitiesData.size());
   entitiesData.insert(entitiesData.end(), std::make_move_iterator(projs.begin()),
@@ -413,18 +432,16 @@ void gx::graphicsClient::setStaticEntities(std::vector<StaticEntity*> e) {
     inst.scale = static_cast<GLfloat>(e1->scale);
     this->entities.addStaticInstance(inst);
 
-    if(e1->static_entity_type == TORCH) {
-      lights.addStaticLight(vector4f(0,0,0) + e1->getPosition());
+    if(e1->static_entity_type == TORCH || e1->static_entity_type == FAKETORCH) {
+      if(e1->static_entity_type == TORCH) {
+         lights.addStaticLight(vector4f(0,0,0) + e1->getPosition());
+      }
       particleDrawer::instanceData inst;
       inst.position = vector4f(0,0,.5) + e1->getPosition();
       inst.type = 0;
       this->particles.addStaticInstance(inst);
     } 
-    else if (e1->static_entity_type == FAKETORCH) {
-      particleDrawer::instanceData inst;
-      inst.position = vector4f(0,0,0) + e1->getPosition();
-      inst.type = 0;
-    }
+  
   }
 }
 void gx::graphicsClient::disableCursor() {
