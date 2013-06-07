@@ -30,6 +30,7 @@ model-powerup=Thunder_projectile.dae
 model-weapon=dark_projectile.dae
 model-triton=triton.DAE
 model-torch=Torch.DAE
+model-animated=cat.dae
 
 // Physics
 gravity=-40

@@ -116,8 +116,10 @@ std::vector<gx::graphicsEntity> staticModels() {
 
 std::vector<gx::graphicsEntity> dynamicModels() {
   // MODEL LOADING
-  auto modelPlayer = loadModel(configModelName("powerup"),Player::playerDepth,true);
-  //if(!modelPlayer.rootBone.animated(0)) std::cout << "Error, model not animated" << std::endl;
+  auto modelPlayer = loadModel(configModelName("animated"),Player::playerDepth,true);
+  if(modelPlayer.rootBone.animations.empty()) {
+    std::cout << "Error, model not animated" << std::endl;
+  }
     //setup drawing data
   std::vector<gx::graphicsEntity> entitiesData;
   entitiesData.push_back(std::move(modelPlayer));
@@ -332,7 +334,7 @@ void gx::graphicsClient::addEntity(Entity* ent) {
     inst.animation = 0; //TODO: select animation based on context
     ++aniFrame;
     aniFrame %= 240;
-    inst.timePosition = static_cast<double>(aniFrame) / 12000.0;
+    inst.timePosition = static_cast<double>(aniFrame) / 1200.0;
     this->animatedDrawer.addInstance(inst);
   } else {
     staticDrawer::instanceData inst;
