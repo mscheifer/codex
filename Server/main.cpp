@@ -1,7 +1,7 @@
 #include <cctype> //this is for toupper method
 #include "Server.h"
 #include "Client.h"
-#include <vld.h>
+//#include <vld.h>
 
 int main() {
   std::cout.sync_with_stdio(false); //speed up printing

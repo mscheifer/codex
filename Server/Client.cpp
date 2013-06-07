@@ -27,7 +27,7 @@ void NetworkClient::receiveMessages() {
     std::vector<int> kills;
     std::vector<int> wins;
     std::vector<bool> dead;
-    unsigned int minotaurId;
+    int minotaurId = -1;
     v3_t pos;
     v3_t dir;
     IdPacket newId(0);
