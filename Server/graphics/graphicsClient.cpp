@@ -117,7 +117,7 @@ std::vector<gx::graphicsEntity> staticModels() {
 std::vector<gx::graphicsEntity> dynamicModels() {
   // MODEL LOADING
   auto modelPlayer = loadModel(configModelName("powerup"),Player::playerDepth,true);
-  if(!modelPlayer.rootBone.animated(0)) std::cout << "Error, model not animated" << std::endl;
+  //if(!modelPlayer.rootBone.animated(0)) std::cout << "Error, model not animated" << std::endl;
     //setup drawing data
   std::vector<gx::graphicsEntity> entitiesData;
   entitiesData.push_back(std::move(modelPlayer));
