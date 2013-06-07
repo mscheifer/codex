@@ -1,21 +1,21 @@
 // System configuration
 log=0
-sound=0
+sound=1
 //cannot have music without sound
 music=1
 musicProx=100
 maxMusicVol=10
 maxSoundVol=50
-graphicsDebug=true
+graphicsDebug=false
 serverTicksPerSec=30
 gameRestart=1
 soundScaling=10
-fullscreen=false
-anti-alias=0
-window-width=800
-window-height=600
+fullscreen=true
+anti-alias=8
+window-width=1920
+window-height=1080
 enableMinotaur=1
-countdown=2
+countdown=5
 skyboxDir=skybox_sunset/
 
 //models
@@ -52,12 +52,12 @@ gravity=-40
 
 // Player configuration
 minotaurRadarOnly=1
-players=2
+players=4
 movescale=.6
 airMovescale=.49
 maxJump=2
 jumpSpeed=20.17
-playerHpRegen=.01
+playerHpRegen=.0025
 playerMpRegen=.056
 playerDef=5
 playerHp=100
@@ -66,11 +66,10 @@ playerMp=100
 playerMaxMp=100
 
 minotaurmovescale=.6
-minotaurairMovescale=.49
-//.6
+minotaurairMovescale=.55
 minotaurmaxJump=2
 minotaurjumpSpeed=20.19
-minotaurHpRegen=.02
+minotaurHpRegen=.0035
 minotaurMpRegen=.112
 minotaurDef=5
 minotaurHp=100
