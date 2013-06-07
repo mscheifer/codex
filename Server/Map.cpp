@@ -23,6 +23,7 @@ Map::Map(void): spawnPositions(), freeProjectiles(), q(0,Rectangle(BoundingObj::
 void Map::mapReset()
 {
   this->q.clear();
+  this->staticEntities.clear();
   destHelper();
   spawnPositions.clear();
   entities.clear();
@@ -42,7 +43,7 @@ void Map::mapReset()
 }
 
 void Map::initStaticEntities() {
-  this->staticEntities.clear();
+
   //float w, float d, float h, v3_t sc, v3_t direct, Map * m, Entity_Type e
   StaticEntity* staticEntity = new StaticEntity(0, 0, 0, v3_t(0, 0, 0),v3_t(0,1,0), this, GROUND);
   staticEntity->scale = 1;
