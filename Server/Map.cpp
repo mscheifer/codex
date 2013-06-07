@@ -54,15 +54,12 @@ void Map::initStaticEntities() {
   /*staticEntity = new StaticEntity(TRITON);
   staticEntity->setPosition(v3_t(300,300,100));
   staticEntity->setDirection(v3_t(0,1,0));
-  staticEntity->scale = 40;
+  staticEntity->scale = 40;+
 
   this->staticEntities.push_back(staticEntity);*/
-
-  staticEntity = new StaticEntity(35, 35, 10, v3_t(15,15,30),v3_t(0,1,0), this, DRAGON);
-  
+  //30
+  staticEntity = new StaticEntity( 0 , 0 , 0, v3_t(-250,-250,150),v3_t(0.5,0.5,0), this, DRAGON);
   staticEntity->scale = 1;
-
-
   this->staticEntities.push_back(staticEntity);
  // this->entities.push_back(staticEntity);
 
@@ -597,6 +594,22 @@ void Map::initWalls(void)
       v3_t(startingX,startingYNeg, startingZ), facingNorth, this);
     this->entities.push_back(topWall);
     this->entities.push_back(bottomWall);
+   
+    //hack nigga
+    if(i == 0 || i == wallX-1 ) {
+        v3_t tp = bottomWall->getInvertedTorchPosition();
+        StaticEntity* staticEntity;
+        staticEntity = new StaticEntity(0.1,0.1,0.1, tp, bottomWall->getDirection()*-1, this, TORCH);
+        staticEntity->scale = 1;
+        this->staticEntities.push_back(staticEntity);
+        
+        tp = topWall->getTorchPosition();
+        staticEntity = new StaticEntity(0.1,0.1,0.1, tp, topWall->getDirection(), this, TORCH);
+        staticEntity->scale = 1;
+        this->staticEntities.push_back(staticEntity);
+      
+    }
+
   }
 
   // Create the left and right perimeter from bottom up
@@ -637,16 +650,16 @@ void Map::initWalls(void)
   int row8[] = {0,1,2,3,4,8,10,11,12,13, -1};
   int row9[] = {0,2,3,4,5,6,7,10,11,13, -1};*/
   //int row10[] = {1,3,4,5,9/*,14*/, -1};
-  int row11[] = {1,2,4,5,8/*,10,11,13,14*/, -1};
-  int row12[] = {1,3,5,6,7/*,11,12,13*/, -1};
-  int row13[] = {0,2,3,-1};
-  int row14[] = {/*15,*/ -1};
-  int row15[] = {9/*,10,11,12*/, -1};
-  int row16[] = {5,/*10,*/ -1};
-  int row17[] = {5,6/*,12,13*/, -1};
-  int row18[] = {0,1,2,5,6,/*11,12,13,*/ -1};
-  int row19[] = {3,4,6,9,/*10,12,13,14,*/ -1};
-  int * rows[] = {/*row1, row2, row3, row4, row5, row6, row7, row8, row9,
+  std::pair<int, int> row11[] = {std::pair<int, int>(1,2),std::pair<int, int>(2,0), std::pair<int, int>(4,0), std::pair<int, int>(5,0), std::pair<int, int>(8,0)/*,10,11,13,14*/, std::pair<int, int>(-1,0)};
+  std::pair<int, int> row12[] = {std::pair<int, int>(1,0),std::pair<int, int>(3,0) , std::pair<int, int>(5,0), std::pair<int, int>(6,0) ,std::pair<int, int>(7,0)/*,11,12,13*/, std::pair<int, int>(-1,0)};
+  std::pair<int, int> row13[] = {std::pair<int, int>(0,2),std::pair<int, int>(2,0),std::pair<int, int>(3,0),std::pair<int, int>(-1,0)};
+  std::pair<int, int> row14[] = {/*15,*/std::pair<int, int>(-1,0)};
+  std::pair<int, int> row15[] = {std::pair<int, int>(9,2)/*,10,11,12*/, std::pair<int, int>(-1,0)};
+  std::pair<int, int> row16[] = {std::pair<int, int>(5,0)/*10,*/, std::pair<int, int>(-1,0)};
+  std::pair<int, int> row17[] = {std::pair<int, int>(5,0),std::pair<int, int>(6,0)/*,12,13*/, std::pair<int, int>(-1,0)};
+  std::pair<int, int> row18[] = {std::pair<int, int>(0,0), std::pair<int, int>(1,0), std::pair<int, int>(2,0),std::pair<int, int>(5,0),std::pair<int, int>(6,0),/*11,12,13,*/ std::pair<int, int>(-1,0)};
+  std::pair<int, int> row19[] = {std::pair<int, int>(3,0),std::pair<int, int>(4,0),std::pair<int, int>(6,0),std::pair<int, int>(9,0),/*10,12,13,14,*/ std::pair<int, int>(-1,0)};
+  std::pair<int, int> * rows[] = {/*row1, row2, row3, row4, row5, row6, row7, row8, row9,
                   row10,*/ row11, row12, row13, row14, row15, row16, row17,
                   row18, row19};
   for( i = 0,
@@ -654,7 +667,7 @@ void Map::initWalls(void)
     startingY = ((wallY*width)/2)-width+centerY;
     i < 9; i++, startingY -= width)
   {
-    addWallDirection(startingX, startingY, startingZ, facingNorth, rows[i]);
+    addWallDirectionWithTorch(startingX, startingY, startingZ, facingNorth, rows[i]);
   }
   /*int column1[] = {8,10, -1};
   int column2[] = {0,3,4,7, -1};
@@ -666,24 +679,25 @@ void Map::initWalls(void)
   int column8[] = {5,7,8,10,14, -1};
   int column9[] = {1,6,7,8,9,11,12,14, -1};*/
   //int column10[] = {0,2,6,7,10/*,12,13*/, -1};
-  int column11[] = {1,3,5,8,/*13,14,*/ -1};
-  int column12[] = {0,4,7,8,9,/*10,13,14,*/ -1};
-  int column13[] = {0,1,8,9,/*13,14,*/ -1};
-  int column14[] = {2,7,8,9,/*10,13,14,*/ -1};
-  int column15[] = {2,7,/*12,13,14,*/ -1};
-  int column16[] = {2,3,6,7,8,/*10,11,13,14,*/ -1};
-  int column17[] = {2,3,8,9,/*10,14,*/ -1};
-  int column18[] = {3,6,9,/*11,14,*/ -1};
-  int * columns[] = {/*column1, column2, column3, column4, column5, column6,
-                     column7, column8, column9, column10,*/ column11, column12,
+  
+  std::pair<int, int> column11[] = {std::pair<int, int>(1,0), std::pair<int, int>(3,0) , std::pair<int, int>(5,0) ,std::pair<int, int>(8,0) , std::pair<int, int>(-1,0)};
+  std::pair<int, int> column12[] = {std::pair<int, int>(0,0), std::pair<int, int>(4,0) , std::pair<int, int>(7,0) ,std::pair<int, int>(8,0) ,std::pair<int, int>(9,0) , std::pair<int, int>(-1,0)};
+  std::pair<int, int> column13[] = {std::pair<int, int>(0,0), std::pair<int, int>(1,0) , std::pair<int, int>(8,0), std::pair<int, int>(9,0) ,std::pair<int, int>(-1,0)};
+  std::pair<int, int> column14[] = {std::pair<int, int>(2,0), std::pair<int, int>(7,0) , std::pair<int, int>(8,0) ,std::pair<int, int>(9,0) ,std::pair<int, int>(-1,0)};
+  std::pair<int, int> column15[] = {std::pair<int, int>(2,0) ,std::pair<int, int>(7,0) , std::pair<int, int>(-1,0) };
+  std::pair<int, int> column16[] = {std::pair<int, int>(2,0) ,std::pair<int, int>(3,0) , std::pair<int, int>(6,0) ,std::pair<int, int>(7,0) ,std::pair<int, int>(8,0), std::pair<int, int>(-1,0)};
+  std::pair<int, int> column17[] = {std::pair<int, int>(2,0) ,std::pair<int, int>(3,0) , std::pair<int, int>(8,0) ,std::pair<int, int>(9,0) ,std::pair<int, int>(-1,0)};
+  std::pair<int, int> column18[] = {std::pair<int, int>(3,0) ,std::pair<int, int>(6,0) , std::pair<int, int>(9,0) ,std::pair<int, int>(-1,0)};
+  std::pair<int, int> * columns[] = {column11, column12,
                      column13, column14, column15, column16, column17, column18};
   for( i = 0,
     startingX = ((wallX*width)/-2)+width+centerX,
     startingY = ((wallY*width)/2)-(width*1.5f)+centerY;
     i < 8; i++, startingY -= width)
   {
-    addWallDirection(startingX, startingY, startingZ, facingEast, columns[i]);
+    addWallDirectionWithTorch(startingX, startingY, startingZ, facingEast, columns[i]);
   }
+    
 }
 
 void Map::initWallsRed(void)
@@ -814,6 +828,67 @@ v3_t Map::getRespawnPosition()
   return randomPosition;
 }
 
+
+/*
+ * Add walls from left to right. Assumes array ends with -1
+ */
+void Map::addWallDirectionWithTorch(float startingX, float startingY, float startingZ, v3_t dir, std::pair<int,int> values[])
+{
+  float width = ConfigManager::wallWidth();
+  float height = ConfigManager::wallHeight(); 
+  float depth = ConfigManager::wallDepth();
+  int x = 0;
+  int j = 0;
+  while(values[j].first != -1)
+  {
+    if(values[j].first == x){
+      Wall* wall = new Wall(width, depth, height, v3_t(startingX,startingY, startingZ), dir, this);
+      this->entities.push_back(wall);
+
+      //add torch same direction
+      if(values[j].second == 1){
+        v3_t tp = wall->getTorchPosition();
+        StaticEntity* staticEntity;
+        staticEntity = new StaticEntity(0.1,0.1,0.1, tp, wall->getDirection(), this, TORCH);
+        staticEntity->scale = 1;
+        this->staticEntities.push_back(staticEntity);
+      //add torch invert
+      } else if(values[j].second == -1) {
+        v3_t tp = wall->getInvertedTorchPosition();
+        StaticEntity* staticEntity;
+        staticEntity = new StaticEntity(0.1,0.1,0.1, tp, wall->getDirection() * -1, this, TORCH);
+        staticEntity->scale = 1;
+        this->staticEntities.push_back(staticEntity);
+
+      //add torch both direction
+      } else if(values[j].second == 2) {
+
+         v3_t tp = wall->getTorchPosition();
+        StaticEntity* staticEntity;
+        staticEntity = new StaticEntity(0.1,0.1,0.1, tp, wall->getDirection(), this, TORCH);
+        staticEntity->scale = 1;
+        this->staticEntities.push_back(staticEntity);
+
+        tp = wall->getInvertedTorchPosition();
+        staticEntity = new StaticEntity(0.1,0.1,0.1, tp, wall->getDirection()*-1, this, FAKETORCH);
+        staticEntity->scale = 1;
+        this->staticEntities.push_back(staticEntity);
+
+    
+
+      } 
+    //  std::cout << "(" << startingX << "," << startingY << "," << startingZ << ")" << std::endl;
+
+      j++;
+    }
+
+    x++;
+    startingX += width;
+  }
+}
+
+
+
 /*
  * Add walls from left to right. Assumes array ends with -1
  */
@@ -827,6 +902,7 @@ void Map::addWallDirection(float startingX, float startingY, float startingZ, v3
   while(values[j] != -1)
   {
     if(values[j] == x){
+    
       Wall* wall = new Wall(width, depth, height, v3_t(startingX,startingY, startingZ), dir, this);
     //  std::cout << "(" << startingX << "," << startingY << "," << startingZ << ")" << std::endl;
 

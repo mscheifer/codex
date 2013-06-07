@@ -129,8 +129,15 @@ void Wall::setWallChangeTime(float t)
   v3_t Wall::getTorchPosition() {
       v3_t temp = direction;
       temp.normalize() ;
-      temp.scale(height/2);
+      temp.scale(height/2.5);
       return position +temp;
+  }
+  
+  v3_t Wall::getInvertedTorchPosition() {
+      v3_t temp = direction;
+      temp.normalize();
+      temp.scale(height/2.5);
+      return position + (temp)*-1;
   }
 
   std::string Wall::toString(){

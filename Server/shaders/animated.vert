@@ -4,16 +4,12 @@ uniform  mat4 modelToWorld;
 uniform  mat4 boneTransformations[MAX_BONES];
  
 in vec4  position;
-in vec4  color;
 in vec2  diffuseCoord;
 in vec3  normal;
-in float normDiff;
 in ivec4 boneIDs;
 in vec4  boneWeights;
  
-out vec4  interpColor;
 out vec2  interpDiffuseCoord;
-out float interpNormDiff;
 out vec3  interpNormal;
 out vec4  interpPosition; //position of vert / frag in eye space
 
@@ -42,9 +38,7 @@ void main() {
   //this works as long as we don't scale models non-uniformly
   mat3 normalMatrix = mat3(viewMatrix * modelToWorld * boneTransform);
 
-  interpColor    =                                                          color;
   interpDiffuseCoord =                                                      diffuseCoord;
-  interpNormDiff =                                                          normDiff;
   interpNormal   =                                           normalMatrix * normal;
   interpPosition =              viewMatrix * modelToWorld * boneTransform * position;
   gl_Position    = projMatrix * viewMatrix * modelToWorld * boneTransform * position;

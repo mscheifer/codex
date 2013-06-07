@@ -1,5 +1,4 @@
 in vec2	 interpDiffuseCoord;
-in float interpNormDiff;
 in vec3  interpNormal;
 in vec4  interpPosition; //position of frag in eye space
 
