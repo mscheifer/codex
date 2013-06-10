@@ -175,7 +175,8 @@ bool Player::damageBy(Projectile *deadly)
   dead = health==0;
 
   //TODO remove this to allow charging while hit
-  if(charging && !isMinotaur()) {
+  //is basic or not minotaur
+  if(charging && !isMinotaur() ) {
     chargedProjectile->live = false;
   }
 

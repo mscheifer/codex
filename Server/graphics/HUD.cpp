@@ -67,6 +67,13 @@ gx::HUD::HUD(void):health(100), maxHealth(100), HLossPercentage(0),
   winnerSprite.setOrigin(goodGuyTexture.getSize().x/2, goodGuyTexture.getSize().y/2);
   winnerSprite.setColor(sf::Color(255,255,255,0));
 
+  minoCorruptHUDTexture1.loadFromFile("graphics/Images/minoHud.png");
+  minoCorruptHUDTexture1.setSmooth(true);
+  minoCorruptHUDSprite1.setTexture(minoCorruptHUDTexture1);
+  minoCorruptHUDTexture2.loadFromFile("graphics/Images/minoHud2.png");
+  minoCorruptHUDTexture2.setSmooth(true);
+  minoCorruptHUDSprite2.setTexture(minoCorruptHUDTexture2);
+
   //positionText
 //  positionText.setFont(font);
 //  positionText.setCharacterSize(24);
@@ -77,8 +84,6 @@ gx::HUD::HUD(void):health(100), maxHealth(100), HLossPercentage(0),
   //chargig
   energeBarFrameTexture.loadFromFile("graphics/Images/chargebarempty.png"); 
   energeBarFrameSprite.setTexture(energeBarFrameTexture);
-  //energeBarTexture.loadFromFile("graphics/Images/chargebar.png"); 
-  //energeBarSprite.setTexture(energeBarTexture);
   //spells
   currentSpell.setFont(font);
   nextSpell.setFont(font);
@@ -153,13 +158,38 @@ gx::HUD::~HUD(void) {
 }
 
 void gx::HUD::draw(sf::RenderWindow & window) {
+  float winX = window.getSize().x;
+  float winY = window.getSize().y;
+
+  if(minotaur){
+    float minoHUDFade = minoHUDClock.getElapsedTime().asSeconds();
+    if( minoHUDFade > 2 ){
+      minoHUDClock.restart();
+      sf::Sprite temp = minoCorruptHUDSprite1;
+      minoCorruptHUDSprite1 = minoCorruptHUDSprite2;
+      minoCorruptHUDSprite2 = temp;
+    }
+
+    minoCorruptHUDSprite1.setScale(winX/minoCorruptHUDTexture1.getSize().x,
+      winY/minoCorruptHUDTexture1.getSize().y);
+    minoCorruptHUDSprite2.setScale(winX/minoCorruptHUDTexture2.getSize().x,
+      winY/minoCorruptHUDTexture2.getSize().y);
+    sf::Color old = minoCorruptHUDSprite1.getColor();
+
+    //1.5 is the fade time
+    float fadeOut = (1-minoHUDFade/1.5)*255 < 0 ? 0 : (1-minoHUDFade/1.5)*255;
+    minoCorruptHUDSprite1.setColor(sf::Color(old.r,old.g,old.b, fadeOut ));
+    minoCorruptHUDSprite2.setColor(sf::Color(old.r,old.g,old.b, 255-fadeOut ));
+
+    window.draw(minoCorruptHUDSprite1);
+    window.draw(minoCorruptHUDSprite2);
+  }
+
   deathScreen.setScale(static_cast<float>(window.getSize().x)/deathTexture.getSize().x,
   static_cast<float>(window.getSize().y)/deathTexture.getSize().y);
   if (this->health ==0 && timer<0 ) 
     window.draw(deathScreen);
   float passed = hitClock.getElapsedTime().asSeconds();
-  float winX = window.getSize().x;
-  float winY = window.getSize().y;
   
   if (passed< 1.5) {
     hitSprites[hit]->setScale(static_cast<float>(window.getSize().x)/hitTextures[hit]->getSize().x,
@@ -174,8 +204,8 @@ void gx::HUD::draw(sf::RenderWindow & window) {
     window.draw(*(hitDirSprites[hit]));
   }
   if (buffClock.getElapsedTime().asSeconds() <1.5) {
-   // collectedPU.setString(std::string("Blessed with ") + powerUpNames[ptype]);
-   // window.draw(collectedPU);
+    collectedPU.setString(std::string("Blessed with ") + powerUpNames[ptype]);
+    window.draw(collectedPU);
   }
   std::string healthS(std::to_string(static_cast<long long>(health)) + 
     std::string("/") +std::to_string(static_cast<long long>(maxHealth)));
@@ -623,8 +653,8 @@ void gx::HUD::setWinner(Game_State w)
   }
   else if( w == CIVILIAN_WIN )
   {
-    winnerSprite.setTexture(badGuyTexture);
-    winnerSprite.setOrigin(badGuyTexture.getSize().x/2, badGuyTexture.getSize().y/2);
+    winnerSprite.setTexture(goodGuyTexture);
+    winnerSprite.setOrigin(goodGuyTexture.getSize().x/2, goodGuyTexture.getSize().y/2);
   }
   else
   {

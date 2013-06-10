@@ -41,10 +41,10 @@ enum WeaponType{UNK=0, FIRE, ICE, THUNDER, FIST, BASIC, NONEWEAPON};
 
 const std::string WeaponNames[] = {
   "Forbidden Art",
-  "STAFF OF FIRE",
-  "ICE",
-  "MJORLNIR",
-  "FIST",
+  "Fire",
+  "Ice",
+  "Thunder",
+  "Fist",
   "QBasic"
 };
 
@@ -72,8 +72,8 @@ const std::string spellNames[] = {
 };
 
 const std::string powerUpNames[] = {
-  "Nothing", "Move boost", "Mana boost", "Health boost",
-  "Strength boost", "Attacked", "Charged", "Defense boost"
+  "Nothing", "Move boost", "Mana Boost", "Health Boost",
+  "Strength Boost", "Attack Frenzy", "Charge Reduction", "Defense Boost"
 };
 
 enum BUFF{ 

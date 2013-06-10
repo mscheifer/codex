@@ -69,6 +69,10 @@ private :
   sf::Texture miniMapTexture;
   sf::Sprite miniMapSprite;
   sf::Texture miniMapBlipTexture;
+  sf::Texture minoCorruptHUDTexture1;
+  sf::Sprite minoCorruptHUDSprite1;
+  sf::Texture minoCorruptHUDTexture2;
+  sf::Sprite minoCorruptHUDSprite2;
   std::vector<sf::Texture*> buffTextures;
   std::vector<sf::Sprite*> buffSprites;
   std::vector<sf::Texture*> buffLTextures;
@@ -91,6 +95,7 @@ private :
   sf::Text clockText;
   sf::Clock buffClock;
   sf::Clock hitClock;
+  sf::Clock minoHUDClock;
   sf::Text collectedPU;
   sf::Texture deathTexture;
   sf::Sprite deathScreen;
