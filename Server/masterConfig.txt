@@ -52,18 +52,20 @@ gravity=-40
 
 // Player configuration
 minotaurRadarOnly=1
+playerProjSpeed=2
 players=4
 movescale=.6
 airMovescale=.49
 maxJump=2
 jumpSpeed=20.17
 playerHpRegen=.0025
-playerMpRegen=.056
+playerMpRegen=.090
 playerDef=5
 playerHp=100
 playerMaxHp=100
 playerMp=100
 playerMaxMp=100
+playerAttackSpeed=.75
 
 minotaurmovescale=.6
 minotaurairMovescale=.55

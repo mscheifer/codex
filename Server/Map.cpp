@@ -19,7 +19,6 @@ Map::Map(void): spawnPositions(), freeProjectiles(), q(0,Rectangle(BoundingObj::
   initSpawns(); //needed before reset because
 }
 
-
 void Map::mapReset()
 {
   this->q.clear();
@@ -571,8 +570,8 @@ void Map::initTestWalls(void)
   }
 
 }
-void Map::initWalls(void)
-{
+void Map::initWallsBox(void){
+  //TODO all this stuff should probably be parameterized (should match initwalls)
   v3_t facingEast(1,0,0);
   v3_t facingNorth(0,1,0);
   float width = ConfigManager::wallWidth();
@@ -591,6 +590,8 @@ void Map::initWalls(void)
   float startingYNeg;
   float startingZ = depth/2.0f;
   float extraDepth = 100; //so you can't jump out
+  /////////end of the stuff taht should be parameterizeds
+
   // Create the top and bottom perimeter from left to right.
   Entity_Type cololumns[] = {COLOUMN1, COLOUMN2, COLOUMN3};
   int hahaha[] = { 22, 15,15 };
@@ -674,15 +675,30 @@ void Map::initWalls(void)
     this->entities.push_back(leftWall);
     this->entities.push_back(rightWall);
   }
+}
 
-  //Wall *moveableWall = new Wall(width, depth, height, v3_t(0,0,20), facingNorth, this);
-  //moveableWall->setWallChangeTime(1000.f);
-  //moveableWall->addNewCenter(v3_t(0,0,5));
-  //moveableWall->addNewCenter(v3_t(0,0,20));
-  //moveableWall->addNewCenter(v3_t(0,10,20));
-  //moveableWall->addNewCenter(v3_t(0,0,20));
-  //this->entities.push_back(moveableWall);
+void Map::initWalls(void)
+{
+  v3_t facingEast(1,0,0);
+  v3_t facingNorth(0,1,0);
+  float width = ConfigManager::wallWidth();
+  float height = ConfigManager::wallHeight(); 
+  float depth = ConfigManager::wallDepth();
 
+  float wallX = 10;
+  float wallY = 10;
+
+  float centerX = 0;
+  float centerY = 0;
+  int i;
+  float startingX;
+  float startingXNeg;
+  float startingY;
+  float startingYNeg;
+  float startingZ = depth/2.0f;
+  float extraDepth = 100; //so you can't jump out
+
+  initWallsBox();
   initWallsBlue();
   initWallsRed();
  // return; // REMOVE THIS TO KILL GRAPHICS
@@ -710,6 +726,7 @@ void Map::initWalls(void)
   std::pair<int, int> * rows[] = {/*row1, row2, row3, row4, row5, row6, row7, row8, row9,
                   row10,*/ row11, row12, row13, row14, row15, row16, row17,
                   row18, row19};
+
   for( i = 0,
     startingX = ((wallX*width)/-2)+(width/2)+centerX,
     startingY = ((wallY*width)/2)-width+centerY;
@@ -876,7 +893,6 @@ v3_t Map::getRespawnPosition()
   return randomPosition;
 }
 
-
 /*
  * Add walls from left to right. Assumes array ends with -1
  */
@@ -935,8 +951,6 @@ void Map::addWallDirectionWithTorch(float startingX, float startingY, float star
   }
 }
 
-
-
 /*
  * Add walls from left to right. Assumes array ends with -1
  */
@@ -962,8 +976,6 @@ void Map::addWallDirection(float startingX, float startingY, float startingZ, v3
     startingX += width;
   }
 }
-
-
 
 /*
  * Add walls from left to right. Assumes array ends with -1

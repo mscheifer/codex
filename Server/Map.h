@@ -57,7 +57,8 @@ private:
   void initFloor(void);
   void initTestWalls(void);
   void initWalls(void);
-  void initWallsRed(void);
+  void initWallsBox(void);
+  void initWallsRed(void); 
   void initWallsBlue(void); 
   void initWallsOne(void);
   void initWallsTwo(void);

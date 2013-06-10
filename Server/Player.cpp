@@ -92,7 +92,7 @@ void Player::init(v3_t pos, int assigned_id, Map * m)
 	weapon[0] = new WeaponFire(position, this->map, B1);
     //new WeaponFist(position, this->map); //has no bounds so it doesnt drop
   //weapon[1] = new WeaponFist(position, this->map);
-	weapon[1] = new WeaponFire(position, this->map, FIR1); //TODO make this basic
+	weapon[1] = new WeaponFire(position, this->map, ICE1); //TODO make this basic
 	m->addEntity(weapon[1]);
   weapon[1]->pickUp();
   weapon[1]->setRespawnTime(60000);
@@ -392,6 +392,7 @@ void Player::fireProjectile() {
   if(minotaur) {
     chargedProjectile->fireMutiple(v,getStrengthMultiplier(),5);
   } else {
+    v * StringToNumber<float>(ConfigManager::configMap["playerProjSpeed"]) ;
     chargedProjectile->fire(v,getStrengthMultiplier());
   }
     
@@ -671,6 +672,10 @@ float Player::getAttackCD() const{
       cdMult *= (BuffInfo[buff->first].attackCDMultiplier);
     }
   }
+
+  if(!isMinotaur())
+    cdMult *= StringToNumber<float>(ConfigManager::configMap["playerAttackSpeed"]);
+
   return cdMult;
 }
 
