@@ -56,7 +56,7 @@ enum MAGIC_POWER {
   G2,
   G_IT2, G_FT2, G_FI2,
   G3,
-  B1,
+  B1, B2,
   NUM_MAGIC //Leave this as the last one, it's value is the size of the enum
 }; 
 
@@ -68,7 +68,7 @@ const std::string spellNames[] = {
   "GravityFull2",
   "Gravity2", "Gravity2", "Gravity2",
   "Gravity3",
-  "Basic"
+  "QBasic", "MSDOS"
 };
 
 const std::string powerUpNames[] = {

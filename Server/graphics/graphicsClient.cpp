@@ -51,6 +51,7 @@ std::vector<gx::graphicsEntity> initProjectileModels(unsigned int base) {
   projectileOffset[G3]   = 2;
   ret.push_back(std::move(modelBasic));
   projectileOffset[B1]   = 3;
+  projectileOffset[B2]   = 3;
 
   return ret;
 }

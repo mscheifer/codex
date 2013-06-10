@@ -605,7 +605,10 @@ void gx::HUD::initializeSprites() {
    aimerHelper(std::string("graphics/Images/aimerG1.png"));
    aimerHelper(std::string("graphics/Images/aimerG2.png"));
    aimerHelper(std::string("graphics/Images/aimerG3.png"));
-   aimerHelper(std::string("graphics/Images/aimerBasic.png")); //20
+   aimerHelper(std::string("graphics/Images/aimerB1O.png")); //20
+   aimerHelper(std::string("graphics/Images/aimerB1I.png"));
+   aimerHelper(std::string("graphics/Images/aimerB2O.png"));
+   aimerHelper(std::string("graphics/Images/aimerB2I.png"));
 
    energeBarTextures.push_back(new sf::Texture());
    energeBarSprites.push_back(new sf::Sprite());
@@ -615,6 +618,7 @@ void gx::HUD::initializeSprites() {
    energeBarHelper(std::string("graphics/Images/chargeBarI2.png"));
    energeBarHelper(std::string("graphics/Images/chargeBarT1.png"));
    energeBarHelper(std::string("graphics/Images/chargeBarT2.png"));
+   energeBarHelper(std::string("graphics/Images/chargeBar.png"));
 
    hitTextures.push_back(new sf::Texture());
    hitSprites.push_back(new sf::Sprite());
@@ -674,7 +678,7 @@ float gx::HUD::rotateAngleRad( vector3f v1, vector3f v2 ){
   return static_cast<float>(atan2(v1.x*v2.y-v2.x*v1.y,v1.x*v2.x+v1.y*v2.y));
 }
 
-const int gx::HUD::hitIndex[18] = {
+const int gx::HUD::hitIndex[19] = {
   1,
   1,
   1,
@@ -692,11 +696,12 @@ const int gx::HUD::hitIndex[18] = {
   4,
   4,
   4,
+  5,
   5
 };
 
 //outer inner
-const int gx::HUD::aimerIndex[18][3] = {
+const int gx::HUD::aimerIndex[19][3] = {
   //FIR1=0, FIR2, FIR3, 
   { 2, 3, 1},
   { 4, 3, 2},
@@ -722,5 +727,6 @@ const int gx::HUD::aimerIndex[18][3] = {
   //G3,
   { 19, 0, 0},
   //B1
-  { 20, 0, 0}
+  { 20, 21, 7},
+  { 22, 23, 0}
 };

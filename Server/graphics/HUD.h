@@ -110,8 +110,8 @@ private :
   float rotateAngleRad(vector3f v1, vector3f v2);
 
 public:
-  static const int aimerIndex[18][3];
-  static const int hitIndex[18];
+  static const int aimerIndex[19][3];
+  static const int hitIndex[19];
   HUD(void);
   ~HUD(void);
   void updateHUD(int id, const std::vector<Player>& players);
