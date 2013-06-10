@@ -72,7 +72,7 @@ const std::string spellNames[] = {
 };
 
 const std::string powerUpNames[] = {
-  "Nothing", "Move boost", "Mana Boost", "Health Boost",
+  "Nothing", "Move Boost", "Mana Boost", "Health Boost",
   "Strength Boost", "Attack Frenzy", "Charge Reduction", "Defense Boost"
 };
 

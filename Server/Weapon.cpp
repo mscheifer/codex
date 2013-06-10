@@ -152,7 +152,7 @@ void Weapon::setRandomMagic()
       this->basicAttack = THU1;
       break;
     default:
-      this->basicAttack = static_cast<MAGIC_POWER>(rand() % B1);
+      this->basicAttack = static_cast<MAGIC_POWER>(rand() % NUM_MAGIC);
       break;
   }
 }

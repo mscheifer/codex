@@ -176,7 +176,7 @@ bool Player::damageBy(Projectile *deadly)
 
   //TODO remove this to allow charging while hit
   //is basic or not minotaur
-  if(charging && !isMinotaur() ) {
+  if(charging && !isMinotaur() || deadly->getMagicType() == B1) {
     chargedProjectile->live = false;
   }
 
