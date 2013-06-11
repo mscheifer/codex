@@ -74,6 +74,11 @@ gx::HUD::HUD(void):health(100), maxHealth(100), HLossPercentage(0),
   minoCorruptHUDTexture2.setSmooth(true);
   minoCorruptHUDSprite2.setTexture(minoCorruptHUDTexture2);
 
+  aimAssistTextureWhite.loadFromFile("graphics/Images/aimerAssist.png");
+  aimAssistTextureGreen.loadFromFile("graphics/Images/aimerAssistL.png");
+  aimAssistSprite.setTexture(aimAssistTextureWhite);
+  aimAssistSprite.setOrigin(aimAssistTextureWhite.getSize().x/2, aimAssistTextureWhite.getSize().y/2);
+
   //positionText
 //  positionText.setFont(font);
 //  positionText.setCharacterSize(24);
@@ -106,7 +111,6 @@ gx::HUD::HUD(void):health(100), maxHealth(100), HLossPercentage(0),
   deathTexture.loadFromFile("graphics/Images/death.png");
   deathScreen.setTexture(deathTexture);
   deathScreen.setPosition(0,0);
-
 }
 
 gx::HUD::~HUD(void) {
@@ -161,6 +165,7 @@ void gx::HUD::draw(sf::RenderWindow & window) {
   float winX = window.getSize().x;
   float winY = window.getSize().y;
 
+  //the black crap that only the minotaur sees
   if(minotaur){
     float minoHUDFade = minoHUDClock.getElapsedTime().asSeconds();
     if( minoHUDFade > 2 ){
@@ -242,9 +247,8 @@ void gx::HUD::draw(sf::RenderWindow & window) {
     window.draw(pickUp);
 
   //draw aimer
-  //vector of sprites
-  //set an int based on which ones to draw
-  //update[aimerIndex]
+  aimAssistSprite.setPosition(winX/2, winY/2);
+  window.draw(aimAssistSprite);
   if (charging) {
     aimerSprites[aimerOuter]->setPosition((window.getSize().x)/2, (window.getSize().y)/2);
     aimerSprites[aimerInner]->setPosition((window.getSize().x)/2, (window.getSize().y)/2);
@@ -445,6 +449,11 @@ void gx::HUD::updateHUD(int id, const std::vector<Player>& players) {
   } else {
     doMiniMap = false;
   }
+
+  if(player.aimAssistOk)
+    aimAssistSprite.setTexture(aimAssistTextureGreen);
+  else
+    aimAssistSprite.setTexture(aimAssistTextureWhite);
 }
 
 void gx::HUD::buffHelper(std::string & path) {

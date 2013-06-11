@@ -73,6 +73,9 @@ private :
   sf::Sprite minoCorruptHUDSprite1;
   sf::Texture minoCorruptHUDTexture2;
   sf::Sprite minoCorruptHUDSprite2;
+  sf::Texture aimAssistTextureWhite;
+  sf::Texture aimAssistTextureGreen;
+  sf::Sprite aimAssistSprite;
   std::vector<sf::Texture*> buffTextures;
   std::vector<sf::Sprite*> buffSprites;
   std::vector<sf::Texture*> buffLTextures;

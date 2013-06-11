@@ -176,7 +176,7 @@ bool Player::damageBy(Projectile *deadly)
 
   //TODO remove this to allow charging while hit
   //is basic or not minotaur
-  if(charging && 
+  if(charging && StringToNumber<float>(ConfigManager::configMap["removeChargeOnHit"])==1 &&
     (!isMinotaur() || deadly->getMagicType() == B1 || deadly->getMagicType() == B2)) {
     chargedProjectile->live = false;
   }
@@ -274,6 +274,7 @@ void Player::clearEvents(){
   weaponCall = false;
   collectPowerUp = false;
   attackedDir = v3_t(0,0,0);
+  aimAssistOk = false;
 }
 
 void Player::die()
@@ -329,6 +330,8 @@ void Player::update(){
   if(health <= 0)
     die();
   updateBounds();
+
+  aimAssistOk = aimAssist();
 }
 
 void Player::restartJump(length_t zPosFix){
@@ -550,13 +553,35 @@ bool Player::collidePlayer(const std::pair<Entity*,BoundingObj::vec3_t>& p){
   return true;
 }
 
-
 bool Player::collidePowerUp(const std::pair<Entity*,BoundingObj::vec3_t>& p){
   BUFF ptype = ((PowerUp*)p.first)->getBuffType();
   this->ptype = ptype;
   applyBuff(ptype);
   ((PowerUp*)p.first)->pickUp();
   collectPowerUp = true;
+  return false;
+}
+
+bool Player::aimAssist(){
+  if(!isMinotaur() && chargedProjectile){
+    v3_t rayDir(direction.x, direction.y, direction.z);   
+    rayDir.normalize();
+    rayDir.scale(300);
+    Ray r(v4_t(position.x,position.y,position.z), rayDir);
+    std::vector<RayCollision> potentialHits = Entity::detectCollision(&r);
+    if( potentialHits.size() > 0 ){
+      RayCollision coll = potentialHits[0];
+      if( coll.e->getType() == PROJECTILE ){
+        Projectile * proj = static_cast<Projectile*>(coll.e);
+        //same team and upgradeable
+        if( proj->sameTeam(chargedProjectile) && 
+          proj->getMagicType() != 
+          Projectile::combine(chargedProjectile->getMagicType() , proj->getMagicType())){
+          return true;
+        }
+      }
+    }
+  }
   return false;
 }
 
@@ -793,6 +818,7 @@ void Player::serialize(sf::Packet& packet) const {
     packet << static_cast<sf::Uint32>(ptype);
     packet << upgraded;
     attackedDir.serialize(packet);
+    packet << aimAssistOk;
   }
 
   void Player::deserialize(sf::Packet& packet) {
@@ -866,6 +892,7 @@ void Player::serialize(sf::Packet& packet) const {
     ptype = static_cast<BUFF>(weaponType32);
     packet >> upgraded;
     attackedDir.deserialize(packet);
+    packet >> aimAssistOk;
   }
 
   std::string Player::toString(){

@@ -119,6 +119,7 @@ public:
   void fireMutiple(v3_t v, float strengthMultiplier, int number);
   std::string toString();
   void reset();
+  bool sameTeam( Projectile * p );
  
 private:
   Player * owner;
@@ -129,7 +130,7 @@ private:
   int Charge_Time;
 
   bool correctMovementHit( Entity* e );
-  bool sameTeam( Projectile * p );
+
 
 public:
   int id;

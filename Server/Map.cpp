@@ -27,13 +27,16 @@ void Map::mapReset()
   spawnPositions.clear();
   entities.clear();
   liveProjectTile.clear();
+  
   initSpawns();
-
   initPowerUps();
   initFloor();
-  
-  initStaticEntities();
-  initWalls(); 
+  if(false){
+    initStaticEntities();
+    initWalls(); 
+  } else {
+    initWallsBox();
+  }
 
   for(unsigned int i = 0; i < players.size(); i++)
   {

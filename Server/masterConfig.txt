@@ -52,6 +52,7 @@ gravity=-40
 
 // Player configuration
 minotaurRadarOnly=1
+removeChargeOnHit=0
 playerProjSpeed=2
 players=4
 movescale=.6

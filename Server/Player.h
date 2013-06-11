@@ -35,6 +35,7 @@ public:
   MAGIC_POWER attackedMagicType;
   BUFF ptype;
   v3_t attackedDir;
+  bool aimAssistOk;
   
   int player_id;
   std::string name;
@@ -56,6 +57,7 @@ public:
   bool moveTowardDirection(move_t degree, bool jump); //handle movement input WADS jump
   void handleAction(ClientGameTimeAction a);
   void removeChargingProj();
+  bool aimAssist();
   
   //getters and setters
   int getCurrentWeaponSelection() const { return current_weapon_selection; };
