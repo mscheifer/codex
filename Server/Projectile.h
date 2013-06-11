@@ -105,6 +105,9 @@ public:
   static const float projWidth;
   static const float projHeight;
   static const float projDepth;
+  static const float chargeWidth;
+  static const float chargeHeight;
+  static const float chargeDepth;
 
   bool live; //if proj is in air or not
   bool combined; //for sound event
@@ -146,7 +149,7 @@ public:
   void setOwner(Player *);
   void setCharing( bool c ){ charging = c; }
   MAGIC_POWER getMagicType() const { return magicType; }
-  void setMagicType( MAGIC_POWER m, bool melee = false); //TODO this is not the best way
+  void setMagicType( MAGIC_POWER m, bool melee, bool charge); //TODO this is not the best way
   Player* getOwner(){return owner;}
   void setChargeTime(int t) { Charge_Time = t ;};
   Entity_Type getType() const { return type; }

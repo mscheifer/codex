@@ -61,7 +61,7 @@ Projectile* Weapon::attackMelee(v3_t dir , v3_t pos, Player* owner)
   pj->setRange(5);
 
   pj->setCharing(false); 
-  pj->setMagicType(basicAttack, true); //TODO this is not a good way to do it
+  pj->setMagicType(basicAttack, true, false); //TODO this is not a good way to do it
   pj->setRender(false);
 
   //std::cout << pj->toString();

@@ -6,6 +6,9 @@ const float Projectile::meleeDepth = 5.0f; //up and down width
 const float Projectile::projWidth = 1.0f;
 const float Projectile::projHeight = 1.0f;
 const float Projectile::projDepth = 1.0f;
+const float Projectile::chargeWidth = 5.0f;
+const float Projectile::chargeHeight = 5.0f;
+const float Projectile::chargeDepth = 5.0f;
 
 
 Projectile::Projectile(Map* m):fired(false)
@@ -52,7 +55,7 @@ void Projectile::update(void) {
     if(chargeTime != -1 && charge_counter.getElapsedTime().asMilliseconds() > chargeTime*cdr ) {
       getOwner()->upgraded = true;
       charge_counter.restart();
-      setMagicType(upgrade(magicType));
+      setMagicType(upgrade(magicType), false, true);
     }
   } else {
     v3_t distanceTravelled = velocity * ConfigManager::serverTickLengthSec();
@@ -126,28 +129,15 @@ void Projectile::handleCollisions() {
         destroy = true;
       break;
     case PROJECTILE:
-      
       Projectile * proj = (Projectile*) e;
-      //if(charging && sameTeam(proj) ){ //this one is charging
-      //  setMagicType(combine(proj->getMagicType(), magicType));
-      //  map->destroyProjectile(proj);
-      //  combined = true;
-      //} 
-      //else
-
       //I am moving and proj is charging and we same team
       //same team logic is handled by correct move hit
       if ( !this->charging && proj->charging ){ //the other one is charging
-        proj->setMagicType(combine(proj->getMagicType(), magicType));
+        proj->setMagicType(combine(proj->getMagicType(), magicType), false, true);
         proj->combined = true;
         destroy = true;
         //map->destroyProjectile(this);
       }
-      
-      //else { //2 in the air
-      //  map->destroyProjectile(proj);
-      //  map->destroyProjectile(this);
-      //}
       break;
     }
     
@@ -165,6 +155,7 @@ void Projectile::clearEvents(){
 }
 
 void Projectile::fire(v3_t v, float strengthMultiplier) {
+  setMagicType(magicType,false,false);
   velocity = v * ProjInfo[magicType].speed;
   setRange(ProjInfo[magicType].range); //this also sets travel distance left
   strength = ProjInfo[magicType].strength * strengthMultiplier;
@@ -175,6 +166,7 @@ void Projectile::fire(v3_t v, float strengthMultiplier) {
 
 void Projectile::fireMutiple(v3_t v, float strengthMultiplier, int number) {
  
+  setMagicType(magicType,false,false);
   velocity = v * ProjInfo[magicType].speed;
   setRange(ProjInfo[magicType].range); //this also sets travel distance left
   strength = ProjInfo[magicType].strength * strengthMultiplier;
@@ -195,7 +187,7 @@ void Projectile::fireMutiple(v3_t v, float strengthMultiplier, int number) {
     pj->setVelocity(v3_t(xp,yp,velocity.z));
     pj->setDirection(pj->velocity);
     pj->setOwner(owner);
-    pj->setMagicType(magicType);
+    pj->setMagicType(magicType, false, false);
     pj->setRender(true);
     pj->setPosition(getPosition());
     pj->setRange(ProjInfo[magicType].range); //this also sets travel distance left
@@ -250,7 +242,7 @@ bool Projectile::sameTeam( Player * p ){
 }
 
 
-void Projectile::setMagicType( MAGIC_POWER m, bool melee ) {
+void Projectile::setMagicType( MAGIC_POWER m, bool melee, bool charge ) {
   magicType = m;
   charge_counter.restart();
   float size = ProjInfo[magicType].size;
@@ -258,6 +250,10 @@ void Projectile::setMagicType( MAGIC_POWER m, bool melee ) {
     ((BoundingBox*) boundingObjs[0])->setHw( meleeWidth/2.f );
     ((BoundingBox*) boundingObjs[0])->setHh( meleeHeight/2.f );
     ((BoundingBox*) boundingObjs[0])->setHd( meleeDepth/2.f );
+  } else if(charge){
+    ((BoundingBox*) boundingObjs[0])->setHw( chargeWidth/2.f );
+    ((BoundingBox*) boundingObjs[0])->setHh( chargeHeight/2.f );
+    ((BoundingBox*) boundingObjs[0])->setHd( chargeDepth/2.f );
   } else {
     ((BoundingBox*) boundingObjs[0])->setHw( size/2.f );
     ((BoundingBox*) boundingObjs[0])->setHh( size/2.f );
@@ -301,8 +297,8 @@ std::string Projectile::toString(){
   std::stringstream ss;
   ss << "mtype " << spellNames[magicType] << std::endl
   //<< "range " << range << std::endl
-  << "strength " << strength << std::endl
-  << "owner "<< owner->player_id <<std::endl
+  //<< "strength " << strength << std::endl
+  //<< "owner "<< owner->player_id <<std::endl
   << "bbox " << this->boundingObjs[0]->toString() << std::endl;
   return ss.str();
 }
