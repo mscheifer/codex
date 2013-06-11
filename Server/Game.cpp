@@ -123,7 +123,6 @@ void Game::prepResponse(ServerGameTimeRespond& sgtr) {
 
   int numMino = StringToNumber<int>(ConfigManager::configMap["numMinotaur"]);
   int numPlayers = StringToNumber<int>(ConfigManager::configMap["players"]);
-  std::cout << "dead mino " << deadMinotaur << " numMino " << numMino << " dead players " << deadPlayers << " numPlayers " << numPlayers-numMino << std::endl;
 
   if (currentPlayers.size() > 1) {
     if (deadMinotaur == numMino) {
