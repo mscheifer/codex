@@ -563,7 +563,8 @@ bool Player::collidePowerUp(const std::pair<Entity*,BoundingObj::vec3_t>& p){
 }
 
 bool Player::aimAssist(){
-  if(!isMinotaur() && chargedProjectile){
+  if(chargedProjectile){
+    bool friendlyCombine = StringToNumber<float>(ConfigManager::configMap["friendlyCombineOnly"]) == 1;
     v3_t rayDir(direction.x, direction.y, direction.z);   
     rayDir.normalize();
     rayDir.scale(300);
@@ -574,7 +575,7 @@ bool Player::aimAssist(){
       if( coll.e->getType() == PROJECTILE ){
         Projectile * proj = static_cast<Projectile*>(coll.e);
         //same team and upgradeable
-        if( proj->sameTeam(chargedProjectile) && 
+        if( (!friendlyCombine || proj->sameTeam(chargedProjectile)) && 
           proj->getMagicType() != 
           Projectile::combine(chargedProjectile->getMagicType() , proj->getMagicType())){
           return true;

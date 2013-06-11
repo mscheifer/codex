@@ -34,7 +34,10 @@ bool Projectile::correctMovementHit( Entity* e ){
     return true;
   else if (etype == PROJECTILE && ((Projectile*) e)->charging){
     //same team check TODO decide to add or not
-    return sameTeam((Projectile*)e);
+    if( StringToNumber<float>(ConfigManager::configMap["friendlyCombineOnly"]) == 1) 
+      return sameTeam((Projectile*)e);
+    else
+      return true;
   } else if ( etype == PLAYER ){
     return e != owner;
   }
@@ -113,7 +116,9 @@ void Projectile::handleCollisions() {
       if(e == owner)
         break;
       else{
-        ((Player*)e)->attackBy(this);
+        bool friendlyFire = StringToNumber<float>(ConfigManager::configMap["friendlyfire"]) == 1;
+        if( !(!friendlyFire && sameTeam((Player*)e)) )
+          ((Player*)e)->attackBy(this);
         destroy = true;
       }
     case WALL:
@@ -131,7 +136,8 @@ void Projectile::handleCollisions() {
       //else
 
       //I am moving and proj is charging and we same team
-      if ( !this->charging && proj->charging && sameTeam(proj) ){ //the other one is charging
+      //same team logic is handled by correct move hit
+      if ( !this->charging && proj->charging ){ //the other one is charging
         proj->setMagicType(combine(proj->getMagicType(), magicType));
         proj->combined = true;
         destroy = true;
@@ -166,7 +172,6 @@ void Projectile::fire(v3_t v, float strengthMultiplier) {
   fired = true;
   charging = false;
 }
-
 
 void Projectile::fireMutiple(v3_t v, float strengthMultiplier, int number) {
  
@@ -237,6 +242,11 @@ MAGIC_POWER Projectile::combine( MAGIC_POWER m1, MAGIC_POWER m2 ){
 bool Projectile::sameTeam( Projectile * p ){
   return p->getOwner()->isMinotaur() == getOwner()->isMinotaur();
 }
+
+bool Projectile::sameTeam( Player * p ){
+  return p->isMinotaur() == getOwner()->isMinotaur();
+}
+
 
 void Projectile::setMagicType( MAGIC_POWER m, bool melee ) {
   magicType = m;

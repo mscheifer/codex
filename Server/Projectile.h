@@ -120,6 +120,7 @@ public:
   std::string toString();
   void reset();
   bool sameTeam( Projectile * p );
+  bool sameTeam( Player *p);
  
 private:
   Player * owner;
