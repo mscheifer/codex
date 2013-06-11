@@ -9,7 +9,8 @@ gx::HUD::HUD(void):health(100), maxHealth(100), HLossPercentage(0),
   weapon1(0), weapon2(0), currentSelect(0), elapsedChargeTime(0),
   totalChargeTime(-1), chargeMagicType(0), charging(false), timer(0),
   aimerOuter(0), aimerInner(0), playerDirection(0,0,0), hit(0), attackedAngle(0),
-  switched(false), miniMapProx(0), doMiniMap(false), energeBarIndex(0){
+  switched(false), miniMapProx(0), doMiniMap(false), energeBarIndex(0),
+  aimAssistOk(false){
   font.loadFromFile("MORPHEUS.TTF");
   //bad guy icon
   badGuyTexture.loadFromFile("graphics/Images/BG_Icon.png");
@@ -77,7 +78,9 @@ gx::HUD::HUD(void):health(100), maxHealth(100), HLossPercentage(0),
   aimAssistTextureWhite.loadFromFile("graphics/Images/aimerAssist.png");
   aimAssistTextureGreen.loadFromFile("graphics/Images/aimerAssistL.png");
   aimAssistSprite.setTexture(aimAssistTextureWhite);
+  aimAssistGreenSprite.setTexture(aimAssistTextureGreen);
   aimAssistSprite.setOrigin(aimAssistTextureWhite.getSize().x/2, aimAssistTextureWhite.getSize().y/2);
+  aimAssistGreenSprite.setOrigin(aimAssistTextureGreen.getSize().x/2, aimAssistTextureGreen.getSize().y/2);
 
   //positionText
 //  positionText.setFont(font);
@@ -249,6 +252,11 @@ void gx::HUD::draw(sf::RenderWindow & window) {
   //draw aimer
   aimAssistSprite.setPosition(winX/2, winY/2);
   window.draw(aimAssistSprite);
+  if(aimAssistOk){
+    aimAssistGreenSprite.setPosition(winX/2, winY/2);
+    window.draw(aimAssistGreenSprite);
+  }
+
   if (charging) {
     aimerSprites[aimerOuter]->setPosition((window.getSize().x)/2, (window.getSize().y)/2);
     aimerSprites[aimerInner]->setPosition((window.getSize().x)/2, (window.getSize().y)/2);
@@ -450,10 +458,7 @@ void gx::HUD::updateHUD(int id, const std::vector<Player>& players) {
     doMiniMap = false;
   }
 
-  if(player.aimAssistOk)
-    aimAssistSprite.setTexture(aimAssistTextureGreen);
-  else
-    aimAssistSprite.setTexture(aimAssistTextureWhite);
+  aimAssistOk = player.aimAssistOk;
 }
 
 void gx::HUD::buffHelper(std::string & path) {

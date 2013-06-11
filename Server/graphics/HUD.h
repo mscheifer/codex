@@ -38,6 +38,7 @@ private :
   float miniMapProx;
   bool doMiniMap;
   int energeBarIndex;
+  bool aimAssistOk;
 
   sf::Text healthText;
   sf::Text manaText;
@@ -76,6 +77,7 @@ private :
   sf::Texture aimAssistTextureWhite;
   sf::Texture aimAssistTextureGreen;
   sf::Sprite aimAssistSprite;
+  sf::Sprite aimAssistGreenSprite;
   std::vector<sf::Texture*> buffTextures;
   std::vector<sf::Sprite*> buffSprites;
   std::vector<sf::Texture*> buffLTextures;
