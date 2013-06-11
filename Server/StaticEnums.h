@@ -41,9 +41,9 @@ enum WeaponType{UNK=0, FIRE, ICE, THUNDER, FIST, BASIC, NONEWEAPON};
 
 const std::string WeaponNames[] = {
   "Forbidden Art",
-  "Fire",
-  "Ice",
-  "Thunder",
+  "Infernal Stone",
+  "Eye of Frost Wyrm",
+  "Shard of Mjolnir",
   "Fist",
   "QBasic"
 };

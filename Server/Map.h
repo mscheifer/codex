@@ -54,6 +54,7 @@ private:
   std::vector<StaticEntity*> staticEntities;
   Quadtree q;
   void initSpawns(void);
+  void initSpawnsLightning(void);
   void initFloor(void);
   void initTestWalls(void);
   void initWalls(void);
@@ -64,6 +65,7 @@ private:
   void initWallsTwo(void);
   void initStaticWalls(void);
   void initPowerUps(void);
+  void initPowerUpsLightning(void);
   void initStaticEntities(void);
   void addWallDirection(float startingX, float startingY, float startingZ, v3_t dir, int values[]);
   void addWallDirectionWithTorch(float startingX, float startingY, float startingZ, v3_t dir, std::pair<int,int> values[]);

@@ -652,8 +652,6 @@ void gx::HUD::initializeSprites() {
      spritePtr->setOrigin(miniMapBlipTexture.getSize().x/2, miniMapBlipTexture.getSize().y/2);
      playerSprites.push_back(spritePtr);
    }
-
-
 }
 
 void gx::HUD::setWinner(Game_State w)

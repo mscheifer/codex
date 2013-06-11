@@ -28,14 +28,19 @@ void Map::mapReset()
   entities.clear();
   liveProjectTile.clear();
   
-  initSpawns();
-  initPowerUps();
   initFloor();
-  if(false){
-    initStaticEntities();
-    initWalls(); 
-  } else {
+  bool tryLightning = StringToNumber<int>(ConfigManager::configMap["enableLightningRounds"]) == 1;
+  bool forceLightning = StringToNumber<int>(ConfigManager::configMap["forceLightningRounds"]) == 1;
+  initStaticEntities();
+
+  if(forceLightning || (tryLightning && rand()%4 == 1)){
+    initSpawnsLightning();
+    initPowerUpsLightning();
     initWallsBox();
+  } else {
+    initSpawns();
+    initPowerUps();
+    initWalls(); 
   }
 
   for(unsigned int i = 0; i < players.size(); i++)
@@ -104,7 +109,13 @@ void Map::initSpawns()
   spawnPositions.push_back(v3_t(170,-170,0));
   spawnPositions.push_back(v3_t(60,-130,0));
 }
-
+void Map::initSpawnsLightning(){
+  for( float y = -170; y <= 170; y=y+20){
+    for( float x = -170; x <= 170; x=x+20){
+      spawnPositions.push_back(v3_t(x,y,0));
+    }
+  }
+}
 void Map::initPowerUps() {
   PowerUp* superPower = new PowerUp(v3_t(0,0,PowerUp::powerUpDepth / 2), this, MANABOOST);
   superPower->setRespownTime(5000);
@@ -132,6 +143,23 @@ void Map::initPowerUps() {
   // Spawn 5 random weapon
   for(unsigned int i = 0; i < 5; i++)
   {
+    w = new WeaponFire(getRespawnPosition()+v3_t(0,0,WeaponFire::weaponDepth/2),this, B1);
+    w->setRandomMagic();
+    w->setDirection(v3_t(0,1,0));
+    w->dropDown(w->getPosition());
+    w->setRespawnTime(60000);
+    entities.push_back(w);
+  }
+}
+void Map::initPowerUpsLightning(){
+  PowerUp* superPower;
+  WeaponFire * w;
+  for(int i = 0; i < 30; i++){
+    superPower = new PowerUp(v3_t(0,0,PowerUp::powerUpDepth / 2), this, 
+      static_cast<BUFF>(rand()%7+1));
+    superPower->setRespownTime(5000);
+    this->entities.push_back(superPower);
+
     w = new WeaponFire(getRespawnPosition()+v3_t(0,0,WeaponFire::weaponDepth/2),this, B1);
     w->setRandomMagic();
     w->setDirection(v3_t(0,1,0));
