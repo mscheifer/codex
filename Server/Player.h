@@ -84,6 +84,7 @@ public:
   float getManaRegenMultiplier() const;
   float getHealthRegenMultiplier() const;
   float getDefenseMultiplier() const;
+  bool  getStopShot() const;
   int getKills() const { return kills; }
   int getWins() const { return wins; }
   std::string toString();

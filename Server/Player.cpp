@@ -92,7 +92,7 @@ void Player::init(v3_t pos, int assigned_id, Map * m)
 	weapon[0] = new WeaponFire(position, this->map, B1);
     //new WeaponFist(position, this->map); //has no bounds so it doesnt drop
   //weapon[1] = new WeaponFist(position, this->map);
-	weapon[1] = new WeaponFire(position, this->map, ICE1); //TODO make this basic
+	weapon[1] = new WeaponFire(position, this->map, THU1); //TODO make this basic
 	m->addEntity(weapon[1]);
   weapon[1]->pickUp();
   weapon[1]->setRespawnTime(60000);
@@ -370,7 +370,7 @@ void Player::handleSelfAction(ClientGameTimeAction a) {
 
 	//start of attacking logic
   //std::cout << " attackRng " << a.attackRange << " chrg " << (chargedProjectile == nullptr) << std::endl;
-  if ( chargedProjectile && !a.attackRange ) { //@fire the projectile!
+  if ( chargedProjectile && !a.attackRange && !getStopShot()) { //@fire the projectile!
     elapsedChargeTime = totalChargeTime = -1;
     fireProjectile();
   }
@@ -762,6 +762,14 @@ float Player::getDefenseMultiplier() const{
         defenseMultiplier *= BuffInfo[buff->first].defenseMult;
   }
   return defenseMultiplier;
+}
+
+bool Player::getStopShot() const{
+  for(auto buff = buffs.begin(); buff != buffs.end(); buff++){
+    if( BuffInfo[buff->first].stopShot )
+        return true;
+  }
+  return false;
 }
 
 void Player::serialize(sf::Packet& packet) const {

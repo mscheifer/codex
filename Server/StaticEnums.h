@@ -109,6 +109,7 @@ struct BuffData{
   float chargeCDMult;
   bool affectDefense;
   float defenseMult;
+  bool stopShot;
 
   BuffData( BUFF buff1,
     int code1,
@@ -127,7 +128,8 @@ struct BuffData{
     bool affectChargeCD1,
     float chargeCDMult1,
     bool affectDefense1,
-    float defenseMult1
+    float defenseMult1,
+    bool stopShot1
     )
   : buff(buff1),
     code(code1),
@@ -146,44 +148,46 @@ struct BuffData{
     affectChargeCD(affectChargeCD1),
     chargeCDMult(chargeCDMult1),
     affectDefense(affectDefense1),
-    defenseMult(defenseMult1)
+    defenseMult(defenseMult1),
+    stopShot(stopShot1)
   {}
 };
 
 //make sure the buffInfo matches the buff enum index, the BUFF is just for readability
 const BuffData BuffInfo[] = {
-  //                  code lvl time  |  move       |mpRegen      | hpRegen | str           | atkCD      |  chargeCD  |defense
-  BuffData(NONE,        0,  1, 100,    false, 0,    false, 0,     false, 0,    false, 0,    false, 0,    false, 0,     false, 0),
-  BuffData(MOVEBOOST,   1,  1, 4500, true, 2,     false, 0,     false, 0,    false, 0,    false, 0,    false, 0,     false, 0),
-  BuffData(MANABOOST,   2,  1, 45000, false, 0,    true, 2,      false, 0,    false, 0,    false, 0,    false, 0,     false, 0),
-  BuffData(HEALTHBOOST, 3,  1, 45000, false, 0,    false, 0,     true, 2,     false, 0,    false, 0,    false, 0,     false, 0),
-  BuffData(STRBOOST,    4,  1, 45000, false, 0,    false, 0,     false, 0,    true, 2,     false, 0,    false, 0,     false, 0),
-  BuffData(ATTACKCD,    5,  1, 45000, false, 0,    false, 0,     false, 0,    false, 0,    true, 0.25,  false, 0,     false, 0),
-  BuffData(CHARGECD,    6,  1, 45000, false, 0,    false, 0,     false, 0,    false, 0,    false, 0,    true, 0.5,     false, 0),
-  BuffData(DEFENSEBOOST,14, 1, 45000, false, 0,    false, 0,     false, 0,    false, 0,    false, 0,    false, 0,     true, 1.15f),
+  //                  code lvl time  |  move       |mpRegen      | hpRegen | str           | atkCD      |  chargeCD  |defense  | stop shot
+  BuffData(NONE,        0,  1, 100,   false, 0,    false, 0,     false, 0,    false, 0,    false, 0,    false, 0,     false, 0,    false),
+  BuffData(MOVEBOOST,   1,  1, 45000, true, 2,     false, 0,     false, 0,    false, 0,    false, 0,    false, 0,     false, 0,    false),
+  BuffData(MANABOOST,   2,  1, 45000, false, 0,    true, 2,      false, 0,    false, 0,    false, 0,    false, 0,     false, 0,    false),
+  BuffData(HEALTHBOOST, 3,  1, 45000, false, 0,    false, 0,     true, 2,     false, 0,    false, 0,    false, 0,     false, 0,    false),
+  BuffData(STRBOOST,    4,  1, 45000, false, 0,    false, 0,     false, 0,    true, 2,     false, 0,    false, 0,     false, 0,    false),
+  BuffData(ATTACKCD,    5,  1, 45000, false, 0,    false, 0,     false, 0,    false, 0,    true, 0.25,  false, 0,     false, 0,    false),
+  BuffData(CHARGECD,    6,  1, 45000, false, 0,    false, 0,     false, 0,    false, 0,    false, 0,    true, 0.5,    false, 0,    false),
+  BuffData(DEFENSEBOOST,14, 1, 45000, false, 0,    false, 0,     false, 0,    false, 0,    false, 0,    false, 0,     true, 1.15f, false),
 
-  BuffData(FIR1DEBUFF,  7,  1, 10000,   false, 0,    false, 0,     true, -1.25f, false, 0,  false, 0,    false, 0,     false, 0),
-  BuffData(FIR2DEBUFF,  7,  2, 5000,   false, 0,    false, 0,     true, -3.f, false, 0,  false, 0,    false, 0,     false, 0),
-  BuffData(FIR3DEBUFF,  7,  3, 8500,   false, 0,    false, 0,     true, -5.f,  false, 0,  false, 0,    false, 0,     false, 0),
+  BuffData(FIR1DEBUFF,  7,  1, 10000, false, 0,    false, 0,     true, -1.25f,false, 0,    false, 0,    false, 0,     false, 0,    false),
+  BuffData(FIR2DEBUFF,  7,  2, 5000,  false, 0,    false, 0,     true, -3.f,  false, 0,    false, 0,    false, 0,     false, 0,    false),
+  BuffData(FIR3DEBUFF,  7,  3, 8500,  false, 0,    false, 0,     true, -5.f,  false, 0,    false, 0,    false, 0,     false, 0,    false),
   
-  BuffData(ICESTUN,     13, 1, 1500,    true, 0,     false, 0,     false, 0,   false, 0,    false, 0,    false, 0,     false, 0),
-  BuffData(ICESTUN2,    13, 2, 4000,    true, 0,     false, 0,     false, 0,   false, 0,    false, 0,    false, 0,     false, 0),
-  BuffData(ICE1DEBUFF,  8,  1, 10000,   true, 0.55f, false, 0,     false, 0,   false, 0,    false, 0,    false, 0,     false, 0),
-  BuffData(ICE2DEBUFF,  8,  2, 5000,    true, 0.45f, false, 0,     false, 0,   false, 0,    false, 0,    false, 0,     false, 0),
-  BuffData(ICE3DEBUFF,  8,  3, 8500,    true, 0.35f, false, 0,     false, 0,   false, 0,    false, 0,    false, 0,     false, 0),
+  BuffData(ICESTUN,     13, 1, 1500,  true, 0,     false, 0,     false, 0,   false, 0,    false, 0,    false, 0,     false, 0,     false),
+  BuffData(ICESTUN2,    13, 2, 4000,  true, 0,     false, 0,     false, 0,   false, 0,    false, 0,    false, 0,     false, 0,     false),
+  BuffData(ICE1DEBUFF,  8,  1, 10000, true, 0.55f, false, 0,     false, 0,   false, 0,    false, 0,    false, 0,     false, 0,     false),
+  BuffData(ICE2DEBUFF,  8,  2, 5000,  true, 0.45f, false, 0,     false, 0,   false, 0,    false, 0,    false, 0,     false, 0,     false),
+  BuffData(ICE3DEBUFF,  8,  3, 8500,  true, 0.35f, false, 0,     false, 0,   false, 0,    false, 0,    false, 0,     false, 0,     false),
 
-  BuffData(THUSTUN,     9,  1, 1500,   true, 0,     false, 0,     false, 0,    false, 0,    false, 0,    false, 0,     false, 0),
-  BuffData(THUSTUN2,    9,  2, 3000,   true, 0,     false, 0,     false, 0,    false, 0,    false, 0,    false, 0,     false, 0),
-  BuffData(THU1DEBUFF,  10, 1, 10000,  false, 0,    false,-1.25f, false, 0,    false, 0,    false, 0,    false, 0,     false, 0),
-  BuffData(THU2DEBUFF,  10, 2, 5000,   false, 0,    false, -2,    false, 0,    false, 0,    false, 0,    true, 1.25,   false, 0),
-  BuffData(THU3DEBUFF,  10, 3, 8500,   false, 0,    false, -3,    false, 0,    false, 0,    false, 0,    true, 1.5,    false, 0),
+  BuffData(THUSTUN,     9,  1, 1500,  true, 0,     false, 0,     false, 0,   false, 0,    false, 0,    false, 0,     false, 0,     false),
+  BuffData(THUSTUN2,    9,  2, 3000,  true, 0,     false, 0,     false, 0,   false, 0,    false, 0,    false, 0,     false, 0,     false),
+  BuffData(THU1DEBUFF,  10, 1, 10000, false, 0,    false,-1.25f, false, 0,   false, 0,    false, 0,    false, 0,     false, 0,     false),
+  BuffData(THU2DEBUFF,  10, 2, 3000,  false, 0,    false, -2,    false, 0,   false, 0,    false, 0,    false, 0,     false, 0,     true),
+  BuffData(THU3DEBUFF,  10, 3, 5000,  false, 0,    false, -3,    false, 0,   false, 0,    false, 0,    false,  0,    false, 0,     true),
 
   //                           time  |  move       |mpRegen      | hpRegen | str           | atkCD      |  chargeCD  
-  BuffData(G1MDEBUFF,   11, 1, 7000,   false, 0,    false, 0,     false, 0,    true, .95f,  false, 0,    false, 0,     false, 0),
+  BuffData(G1MDEBUFF,   11, 1, 7000,  false, 0,    false, 0,     false, 0,   true, .95f,  false, 0,    false, 0,     false, 0,     false),
   //G2 strong \/
-  BuffData(G2DEBUFF,    11, 2, 15000,  true, 0.55f, true, -2,     true, -1,    true, .90f,  false, 0,    false, 0,     false, 0),
-  BuffData(G2MDEBUFF,   11, 1, 10000,  true, 0.55f, true, -1.25f, true, -1,    true, .95f,  false, 0,    false, 0,     false, 0),
+  BuffData(G2DEBUFF,    11, 2, 15000, true, 0.55f, true, -2,     true, -1,   true, .90f,  false, 0,    false, 0,     false, 0,     false),
+  BuffData(G2MDEBUFF,   11, 1, 10000, true, 0.55f, true, -1.25f, true, -1,   true, .95f,  false, 0,    false, 0,     false, 0,     false),
   
-  BuffData(G3DEBUFF1,   12, 1, 7000,   true, 0,     false, 0,     false, 0,    false, 0,    false, 0,    false, 0,     false, 0), 
-  BuffData(G3DEBUFF2,   11, 3, 15000,  true, 0.45f, true, -4,     true, -4.5f, true, .85f,  false, 0,    true, 1.25,   true, 0)
+  BuffData(G3DEBUFF1,   12, 1, 7000,  true, 0,     false, 0,     false, 0,   false, 0,    false, 0,    false, 0,     false, 0,     false), 
+  BuffData(G3DEBUFF2,   11, 3, 15000, true, 0.45f, true, -4,     true, -4.5f,true, .85f,  false, 0,    true, 1.25,   true, 0,      false)
+  //BuffData(STOPSHOT,    15, 1, 15000,  true, 0.45f, true, -4,     true, -4.5f, true, .85f,  false, 0,    true, 1.25,   true, 0)
 };
