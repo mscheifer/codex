@@ -30,6 +30,7 @@ private :
   int aimerInner;
   vector3f playerDirection;
   int hit;
+  int hitDir;
   BUFF ptype;
   vector3f attackedDir;
   float attackedAngle;
@@ -115,8 +116,8 @@ private :
   float rotateAngleRad(vector3f v1, vector3f v2);
 
 public:
-  static const int aimerIndex[19][3];
-  static const int hitIndex[19];
+  static const int aimerIndex[20][3];
+  static const int hitIndex[20][2];
   HUD(void);
   ~HUD(void);
   void updateHUD(int id, const std::vector<Player>& players);

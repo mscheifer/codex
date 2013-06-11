@@ -389,6 +389,7 @@ std::string AudioManager::getShootSound(MAGIC_POWER m){
     return "shootThu";
   case B1:
   case B2:
+  case B3:
     if(rand() % 2 + 1 == 1)
       return "shootBasic";
     else

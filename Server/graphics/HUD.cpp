@@ -8,9 +8,10 @@ gx::HUD::HUD(void):health(100), maxHealth(100), HLossPercentage(0),
   mana(100), maxMana(100), MLossPercentage(0), canPickUp(false),
   weapon1(0), weapon2(0), currentSelect(0), elapsedChargeTime(0),
   totalChargeTime(-1), chargeMagicType(0), charging(false), timer(0),
-  aimerOuter(0), aimerInner(0), playerDirection(0,0,0), hit(0), attackedAngle(0),
-  switched(false), miniMapProx(0), doMiniMap(false), energeBarIndex(0),
-  aimAssistOk(false){
+  aimerOuter(0), aimerInner(0), playerDirection(0,0,0), hit(0), hitDir(0),
+  attackedAngle(0), switched(false), miniMapProx(0), doMiniMap(false),
+  energeBarIndex(0), aimAssistOk(false)
+  {
   font.loadFromFile("MORPHEUS.TTF");
   //bad guy icon
   badGuyTexture.loadFromFile("graphics/Images/BG_Icon.png");
@@ -206,10 +207,10 @@ void gx::HUD::draw(sf::RenderWindow & window) {
     hitSprites[hit]->setColor(sf::Color(old.r,old.g,old.b, (1-passed/1.5)*255 ));
     window.draw(*(hitSprites[hit]));
 
-    hitDirSprites[hit]->setColor(sf::Color(old.r,old.g,old.b, (1-passed/1.5)*255 ));
-    hitDirSprites[hit]->setPosition((window.getSize().x)/2, (window.getSize().y)/2);
-    hitDirSprites[hit]->setRotation(attackedAngle);
-    window.draw(*(hitDirSprites[hit]));
+    hitDirSprites[hitDir]->setColor(sf::Color(old.r,old.g,old.b, (1-passed/1.5)*255 ));
+    hitDirSprites[hitDir]->setPosition((window.getSize().x)/2, (window.getSize().y)/2);
+    hitDirSprites[hitDir]->setRotation(attackedAngle);
+    window.draw(*(hitDirSprites[hitDir]));
   }
   if (buffClock.getElapsedTime().asSeconds() <1.5) {
     collectedPU.setString(std::string("Blessed with ") + powerUpNames[ptype]);
@@ -422,7 +423,8 @@ void gx::HUD::updateHUD(int id, const std::vector<Player>& players) {
   }
   if (player.attacked) {
     hitClock.restart(); 
-    hit = hitIndex[player.attackedMagicType];
+    hit = hitIndex[player.attackedMagicType][0];
+    hitDir = hitIndex[player.attackedMagicType][1];
     attackedDir = player.attackedDir;
   }
 
@@ -633,6 +635,7 @@ void gx::HUD::initializeSprites() {
    energeBarHelper(std::string("graphics/Images/chargeBarT1.png"));
    energeBarHelper(std::string("graphics/Images/chargeBarT2.png"));
    energeBarHelper(std::string("graphics/Images/chargeBar.png"));
+   energeBarHelper(std::string("graphics/Images/chargeBarBlack.png"));
 
    hitTextures.push_back(new sf::Texture());
    hitSprites.push_back(new sf::Sprite());
@@ -641,6 +644,7 @@ void gx::HUD::initializeSprites() {
    hitHelper(std::string("graphics/Images/hitThu.png"));
    hitHelper(std::string("graphics/Images/hitGravity.png"));
    hitHelper(std::string("graphics/Images/hitBasic.png"));
+   hitHelper(std::string("graphics/Images/hitBSOD.png"));
 
    hitDirTextures.push_back(new sf::Texture());
    hitDirSprites.push_back(new sf::Sprite());
@@ -690,30 +694,32 @@ float gx::HUD::rotateAngleRad( vector3f v1, vector3f v2 ){
   return static_cast<float>(atan2(v1.x*v2.y-v2.x*v1.y,v1.x*v2.x+v1.y*v2.y));
 }
 
-const int gx::HUD::hitIndex[19] = {
-  1,
-  1,
-  1,
-  2,
-  2,
-  2,
-  3,
-  3,
-  3,
-  4,
-  4,
-  4,
-  4,
-  4,
-  4,
-  4,
-  4,
-  5,
-  5
+//hit hitdir
+const int gx::HUD::hitIndex[20][2] = {
+  {1,1},
+  {1,1},
+  {1,1},
+  {2,2},
+  {2,2},
+  {2,2},
+  {3,3},
+  {3,3},
+  {3,3},
+  {4,4},
+  {4,4},
+  {4,4},
+  {4,4},
+  {4,4},
+  {4,4},
+  {4,4},
+  {4,4},
+  {5,5},
+  {5,5},
+  {6,5}
 };
 
-//outer inner
-const int gx::HUD::aimerIndex[19][3] = {
+//outer inner chargebar
+const int gx::HUD::aimerIndex[20][3] = {
   //FIR1=0, FIR2, FIR3, 
   { 2, 3, 1},
   { 4, 3, 2},
@@ -740,5 +746,6 @@ const int gx::HUD::aimerIndex[19][3] = {
   { 19, 0, 0},
   //B1
   { 20, 21, 7},
+  { 22, 21, 8},
   { 22, 23, 0}
 };

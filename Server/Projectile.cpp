@@ -224,6 +224,8 @@ MAGIC_POWER Projectile::upgrade( const MAGIC_POWER m ){
     return THU3;
   case B1:
     return B2;
+  case B2:
+    return B3;
   default:
     return m;
   }
@@ -304,7 +306,7 @@ std::string Projectile::toString(){
   return ss.str();
 }
 
-const MAGIC_POWER Projectile::combinations[19][19] = {
+const MAGIC_POWER Projectile::combinations[20][20] = {
   {FIR2},
   {FIR3,FIR3},
   {FIR3,FIR3,FIR3},
@@ -323,5 +325,6 @@ const MAGIC_POWER Projectile::combinations[19][19] = {
   {G_FI2,G_FI2,G_FI2,G_FI2,G_FI2,G_FI2,G_FI2,G3,G3,G_FI2,G_FI2,G_FI2,G2,G3,G3,G_FI2},
   {G3,G3,G3,G3,G3,G3,G3,G3,G3,G3,G3,G3,G3,G3,G3,G3,G3},
   {B1,B1,B1,B1,B1,B1,B1,B1,B1,B1,B1,B1,B1,B1,B1,B1,B1,B1},
-  {B2,B2,B2,B2,B2,B2,B2,B2,B2,B2,B2,B2,B2,B2,B2,B2,B2,B1,B2}
+  {B2,B2,B2,B2,B2,B2,B2,B2,B2,B2,B2,B2,B2,B2,B2,B2,B2,B1,B2},
+  {B3,B3,B3,B3,B3,B3,B3,B3,B3,B3,B3,B3,B3,B3,B3,B3,B3,B1,B2,B3}
 };

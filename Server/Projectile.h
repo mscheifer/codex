@@ -83,8 +83,9 @@ const ProjectileData ProjInfo[] = { //TODO fix all these numbers
 
   ProjectileData(G3,    300, 400, 3,   50, 30, G3V, -1),
 
-  ProjectileData(B1,    100, 400, 1,   7,  5, NONEV, 3000),
-  ProjectileData(B2,    300, 400, 2,   10, 5, NONEV, -1)
+  ProjectileData(B1,    100, 400, 1,   7,  5, NONEV, 5000),
+  ProjectileData(B2,    300, 400, 2,   10, 5, NONEV, 7000),
+  ProjectileData(B2,    300, 400, 3,   10, 10, NONEV, -1)
 };
 
 class Projectile :
@@ -94,7 +95,7 @@ public:
   static const Entity_Type type = PROJECTILE;
   static MAGIC_POWER upgrade( const MAGIC_POWER m );
   static MAGIC_POWER combine( MAGIC_POWER m1, MAGIC_POWER m2 );
-  static const MAGIC_POWER combinations[19][19];
+  static const MAGIC_POWER combinations[20][20];
   static int ID_Counter;
   static const float meleeWidth;
   static const float meleeHeight;
