@@ -14,10 +14,6 @@ fullscreen=true
 anti-alias=8
 window-width=1920
 window-height=1080
-enableMinotaur=1
-enableLightningRounds=0
-forceLightningRounds=0
-countdown=5
 skyboxDir=skybox_sunset/
 
 //models
@@ -53,9 +49,16 @@ model-coloumn3=Coloumn_03.DAE
 gravity=-40
 
 // Player configuration
-minotaurRadarOnly=1
+//radar needs to be done client side
+minotaurRadarOnly=0
 removeChargeOnHit=0
-playerProjSpeed=2
+friendlyfire=1
+friendlyCombineOnly=1
+enableMinotaur=1
+enableLightningRounds=1
+forceLightningRounds=1
+countdown=5
+
 players=4
 movescale=.6
 airMovescale=.49
