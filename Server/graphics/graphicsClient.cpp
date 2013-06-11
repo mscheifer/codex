@@ -496,9 +496,9 @@ void gx::graphicsClient::gameEnd()
   Lobby.endGame();
 }
 
-void gx::graphicsClient::setMinotaur(unsigned int playerid)
+void gx::graphicsClient::setMinotaurSprites(std::vector<int> minotaurIds)
 {
-  Score.setMinotaurId(playerid);
+  Score.setMinotaurSprites(minotaurIds);
 }
 
 void gx::graphicsClient::updateScores(std::vector<int> & pwins,

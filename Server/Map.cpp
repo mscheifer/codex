@@ -155,7 +155,7 @@ void Map::initPowerUpsLightning(){
   PowerUp* superPower;
   WeaponFire * w;
   for(int i = 0; i < 30; i++){
-    superPower = new PowerUp(v3_t(0,0,PowerUp::powerUpDepth / 2), this, 
+    superPower = new PowerUp(getRespawnPosition() + v3_t(0,0,PowerUp::powerUpDepth / 2), this, 
       static_cast<BUFF>(rand()%7+1));
     superPower->setRespownTime(5000);
     this->entities.push_back(superPower);
@@ -574,7 +574,7 @@ void Map::initTestWalls(void)
       v3_t tp = topWall->getTorchPosition();
        
       StaticEntity* staticEntity;
-      staticEntity = new StaticEntity(0.1,0.1,0.1,
+      staticEntity = new StaticEntity(0.1f,0.1f,0.1f,
         tp, topWall->getDirection(), this, TORCH);
 
        staticEntity->scale = 1;
@@ -644,7 +644,7 @@ void Map::initWallsBox(void){
         int r = rand() % 3;
         tp.z = hahaha[r];  //22
     
-        staticEntity = new StaticEntity(0.1,0.1,0.1, tp, bottomWall->getDirection()*-1, this, cololumns[r]);
+        staticEntity = new StaticEntity(0.1f,0.1f,0.1f, tp, bottomWall->getDirection()*-1, this, cololumns[r]);
         staticEntity->scale = 1;
         this->staticEntities.push_back(staticEntity);
         
@@ -652,7 +652,7 @@ void Map::initWallsBox(void){
   
          r = rand() % 3;
          tp.z = hahaha[r]; 
-        staticEntity = new StaticEntity(0.1,0.1,0.1, tp, topWall->getDirection(), this, cololumns[r]);
+        staticEntity = new StaticEntity(0.1f,0.1f,0.1f, tp, topWall->getDirection(), this, cololumns[r]);
         staticEntity->scale = 1;
         this->staticEntities.push_back(staticEntity);
 
@@ -660,12 +660,12 @@ void Map::initWallsBox(void){
     if(i == 0 || i == wallX-1 ) {
         v3_t tp = bottomWall->getInvertedTorchPosition();
         StaticEntity* staticEntity;
-        staticEntity = new StaticEntity(0.1,0.1,0.1, tp, bottomWall->getDirection()*-1, this, TORCH);
+        staticEntity = new StaticEntity(0.1f,0.1f,0.1f, tp, bottomWall->getDirection()*-1, this, TORCH);
         staticEntity->scale = 1;
         this->staticEntities.push_back(staticEntity);
         
         tp = topWall->getTorchPosition();
-        staticEntity = new StaticEntity(0.1,0.1,0.1, tp, topWall->getDirection(), this, TORCH);
+        staticEntity = new StaticEntity(0.1f,0.1f,0.1f, tp, topWall->getDirection(), this, TORCH);
         staticEntity->scale = 1;
         this->staticEntities.push_back(staticEntity);
       
@@ -691,7 +691,7 @@ void Map::initWallsBox(void){
         int r = rand() % 3;
         tp.z = hahaha[r];  //22
     
-        staticEntity = new StaticEntity(0.1,0.1,0.1, tp, leftWall->getDirection()*-1, this, cololumns[r]);
+        staticEntity = new StaticEntity(0.1f,0.1f,0.1f, tp, leftWall->getDirection()*-1, this, cololumns[r]);
         staticEntity->scale = 1;
         this->staticEntities.push_back(staticEntity);
         
@@ -699,7 +699,7 @@ void Map::initWallsBox(void){
   
          r = rand() % 3;
          tp.z = hahaha[r]; 
-        staticEntity = new StaticEntity(0.1,0.1,0.1, tp, rightWall->getDirection(), this, cololumns[r]);
+        staticEntity = new StaticEntity(0.1f,0.1f,0.1f, tp, rightWall->getDirection(), this, cololumns[r]);
         staticEntity->scale = 1;
         this->staticEntities.push_back(staticEntity);
 
@@ -723,9 +723,7 @@ void Map::initWalls(void)
   float centerY = 0;
   int i;
   float startingX;
-  float startingXNeg;
   float startingY;
-  float startingYNeg;
   float startingZ = depth/2.0f;
   float extraDepth = 100; //so you can't jump out
 
@@ -807,9 +805,7 @@ void Map::initWallsRed(void)
   float centerY = 0;
   int i;
   float startingX;
-  float startingXNeg;
   float startingY;
-  float startingYNeg;
   float startingZ = depth/2.0f;
   float wallX = 10;
   float wallY = 10;
@@ -861,9 +857,7 @@ void Map::initWallsBlue(void)
   float centerY = 0;
   int i;
   float startingX;
-  float startingXNeg;
   float startingY;
-  float startingYNeg;
   float startingZ = depth/2.0f;
   float wallX = 10;
   float wallY = 10;
@@ -944,14 +938,14 @@ void Map::addWallDirectionWithTorch(float startingX, float startingY, float star
       if(values[j].second == 1){
         v3_t tp = wall->getTorchPosition();
         StaticEntity* staticEntity;
-        staticEntity = new StaticEntity(0.1,0.1,0.1, tp, wall->getDirection(), this, TORCH);
+        staticEntity = new StaticEntity(0.1f,0.1f,0.1f, tp, wall->getDirection(), this, TORCH);
         staticEntity->scale = 1;
         this->staticEntities.push_back(staticEntity);
       //add torch invert
       } else if(values[j].second == -1) {
         v3_t tp = wall->getInvertedTorchPosition();
         StaticEntity* staticEntity;
-        staticEntity = new StaticEntity(0.1,0.1,0.1, tp, wall->getDirection() * -1, this, TORCH);
+        staticEntity = new StaticEntity(0.1f,0.1f,0.1f, tp, wall->getDirection() * -1, this, TORCH);
         staticEntity->scale = 1;
         this->staticEntities.push_back(staticEntity);
 
@@ -960,12 +954,12 @@ void Map::addWallDirectionWithTorch(float startingX, float startingY, float star
 
          v3_t tp = wall->getTorchPosition();
         StaticEntity* staticEntity;
-        staticEntity = new StaticEntity(0.1,0.1,0.1, tp, wall->getDirection(), this, TORCH);
+        staticEntity = new StaticEntity(0.1f,0.1f,0.1f, tp, wall->getDirection(), this, TORCH);
         staticEntity->scale = 1;
         this->staticEntities.push_back(staticEntity);
 
         tp = wall->getInvertedTorchPosition();
-        staticEntity = new StaticEntity(0.1,0.1,0.1, tp, wall->getDirection()*-1, this, FAKETORCH);
+        staticEntity = new StaticEntity(0.1f,0.1f,0.1f, tp, wall->getDirection()*-1, this, FAKETORCH);
         staticEntity->scale = 1;
         this->staticEntities.push_back(staticEntity);
 

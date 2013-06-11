@@ -27,7 +27,7 @@ void NetworkClient::receiveMessages() {
     std::vector<int> kills;
     std::vector<int> wins;
     std::vector<bool> dead;
-    int minotaurId = -1;
+    std::vector<int> minotaurIds;
     v3_t pos;
     v3_t dir;
     IdPacket newId(0);
@@ -63,7 +63,7 @@ void NetworkClient::receiveMessages() {
           kills.push_back((*playerP).kills);
           wins.push_back((*playerP).wins);
           if(playerP->isMinotaur())
-            minotaurId = playerP->player_id;
+            minotaurIds.push_back(playerP->player_id);
           AudioManager::processPlayerSound(*playerP);
         }
         for(auto entP = s.walls.begin(); entP != s.walls.end(); entP++) {
@@ -86,7 +86,7 @@ void NetworkClient::receiveMessages() {
         //entities.push_back(&(this->skybox)); //add skybox
         gxClient.updateHUD(id, s.players);
         gxClient.updateScores(wins,kills, dead);
-        gxClient.setMinotaur(minotaurId);
+        gxClient.setMinotaurSprites(minotaurIds);
         //std::cout << "num entities received: " << entities.size() << std::endl;
         if (this->s.players[id].dead) { /*render death everytime ? */}
         //render WIN OR LOSE based on s.state

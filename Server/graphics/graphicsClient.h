@@ -76,7 +76,7 @@ class graphicsClient {
     bool gameStart() const;
     void gameEnd();
     void updateScores(std::vector<int> & pwins, std::vector<int> & pkills, std::vector<bool> & pdead);
-    void setMinotaur(unsigned int playerid);
+    void setMinotaurSprites(std::vector<int> minotaurIds);
     void updateLobby(std::vector<std::pair<int,bool>> & playerStatus );
     void updateHUDTimer(float timer); 
     std::string getInputText() const;

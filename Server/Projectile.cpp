@@ -241,7 +241,6 @@ bool Projectile::sameTeam( Player * p ){
   return p->isMinotaur() == getOwner()->isMinotaur();
 }
 
-
 void Projectile::setMagicType( MAGIC_POWER m, bool melee, bool charge ) {
   magicType = m;
   charge_counter.restart();

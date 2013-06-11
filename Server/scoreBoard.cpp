@@ -113,13 +113,11 @@ void scoreBoard::windowResize(int x, int y)
   int yOffset = y/2 - boardRect.height/2;
   highlight.setSize(sf::Vector2f(boardRect.width-80,25));
   
-  
-
   boardText.setPosition((boardRect.width-textRect.width)/2+15 + xOffset, 25 + yOffset);
   boardText.setPosition((boardRect.width-textRect.width)/2+15 + xOffset, 25 + yOffset);
   winText.setPosition(x/2 + x*.1, 25 + boardText.getPosition().y);
   killText.setPosition(x/2 + x*.2, 25 + boardText.getPosition().y);
-  for (int i = 0; i<playerWins.size(); i++ ) {
+  for (unsigned int i = 0; i<playerWins.size(); i++ ) {
    playerSprite.push_back(sf::Sprite());
    playerSprite[i].setPosition(25+xOffset, 25*(i+3)+5+yOffset);
    playerScores[i].setPosition(55+xOffset, 25*(i+3)+5+yOffset);
@@ -135,7 +133,7 @@ void scoreBoard::updateScores(std::vector<int> & pwins, std::vector<int> & pkill
   this->pdead = pdead;
 }
 void scoreBoard::updateNames(std::vector<std::string> & names) {
-  for (int i=0;i<playerScores.size();i++ ) {
+  for (unsigned int i=0;i<playerScores.size();i++ ) {
     playerScores[i].setString(names[i]);
   }
 }
@@ -144,14 +142,21 @@ void scoreBoard::setPlayerId(unsigned int x)
 {
   playerId = x;
   this->highlight.setPosition(playerScores[x].getPosition());
-  std::cout<<"Changing player's highlight position to "<<this->highlight.getPosition().x <<"," << this->highlight.getPosition().y<<std::endl;
+  //std::cout<<"Changing player's highlight position to "<<this->highlight.getPosition().x <<"," << this->highlight.getPosition().y<<std::endl;
 }
 
-void scoreBoard::setMinotaurId(unsigned int id)
+void scoreBoard::setMinotaurSprites(std::vector<int> minotaurIds)
 {
-  if(id == minotaurId || id >= playerScores.size())
-    return;
-  playerSprite[minotaurId].setTexture(goodGuyTexture);
-  minotaurId = id;
-  playerSprite[minotaurId].setTexture(badGuyTexture);
+  for(unsigned int i = 0; i < playerScores.size(); i++){
+    playerSprite[i].setTexture(goodGuyTexture);
+  }
+
+  for(unsigned int i = 0; i < minotaurIds.size(); i++){
+    playerSprite[i].setTexture(badGuyTexture);
+  }
+  //if(id == minotaurId || id >= playerScores.size())
+  //  return;
+  //playerSprite[minotaurId].setTexture(goodGuyTexture);
+  //minotaurId = id;
+  //playerSprite[minotaurId].setTexture(badGuyTexture);
 }

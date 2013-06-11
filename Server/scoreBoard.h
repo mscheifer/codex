@@ -30,7 +30,7 @@ public:
   void updateScores(std::vector<int> & pwins, std::vector<int> & pkills, std::vector<bool>& pdead);
   void updateNames(std::vector<std::string> & names);
   void setPlayerId(unsigned int);
-  void setMinotaurId(unsigned int);
+  void setMinotaurSprites(std::vector<int> minotaurIds);
   void windowResize(int x, int y);
 };
 

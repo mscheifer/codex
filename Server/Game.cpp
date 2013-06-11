@@ -3,6 +3,7 @@
 
 Game::Game(void) : world()
 {
+    srand(static_cast<unsigned int>(time(nullptr)));
 }
 
 
@@ -14,9 +15,27 @@ void Game::chooseMinotaur()
 {
   if(StringToNumber<int>(ConfigManager::configMap["enableMinotaur"]) == 0)
     return;
-  srand(static_cast<unsigned int>(time(nullptr)));
-  int minotaur = rand() % ConfigManager::numPlayers();
-  world.getPlayers()[minotaur]->setAsMinotaur(true);
+
+  std::vector<unsigned int> playerIds;
+  for( unsigned int i = 0; i < ConfigManager::numPlayers(); i++){
+    playerIds.push_back(i);
+  }
+
+  unsigned int numMino = StringToNumber<unsigned int>(ConfigManager::configMap["numMinotaur"]);
+  std::vector<unsigned int> selectedMinos;
+  for( unsigned int i = 0, j = 0; i < numMino; i++, j++){
+    int mino = rand() % (playerIds.size()-j);
+    selectedMinos.push_back(playerIds[mino]);
+    //switch the values
+    int temp = playerIds[playerIds.size()-j-1];
+    playerIds[playerIds.size()-j-1] = playerIds[mino];
+    playerIds[mino] = temp;
+  }
+
+  for( unsigned int i = 0; i < numMino; i++){
+    world.getPlayers()[selectedMinos[i]]->setAsMinotaur(true);
+  }
+  //int minotaur = rand() % ConfigManager::numPlayers();
 }
 
 int Game::join()
@@ -54,8 +73,6 @@ void Game::updateAndResolveCollision() {
 		currentProjectile[i]->update();
 	}
 
-  
-
   //run collision fix here
   for( unsigned int i = 0; i <  currentPlayers.size(); i++ ) {
     currentPlayers[i]->handleCollisions();
@@ -88,30 +105,36 @@ void Game::prepResponse(ServerGameTimeRespond& sgtr) {
 	const std::vector<Entity *>& currentEntities = world.getEntity();
   const std::vector<Projectile*>& currentProjectiles = world.getLiveProjectTile();
 	
+  unsigned int deadMinotaur = 0;
   unsigned int deadPlayers = 0;
-  bool minotaurLose  = false;
   //determine who wins
   for (unsigned int i = 0; i< currentPlayers.size(); i++ ) {
      currentPlayers[i]->kills = world.kills[i];
      currentPlayers[i]->wins = world.wins[i];
-     if (!currentPlayers[i]->isMinotaur()) {
-        if (currentPlayers[i]->dead) {
+
+     if (currentPlayers[i]->dead) {
+        if (currentPlayers[i]->isMinotaur()) {
+          deadMinotaur++;
+        } else {
           deadPlayers++;
         }
-     } else if (currentPlayers[i]->dead) {
-        minotaurLose = true;
-     }
+     } 
   }
+
+  int numMino = StringToNumber<int>(ConfigManager::configMap["numMinotaur"]);
+  int numPlayers = StringToNumber<int>(ConfigManager::configMap["players"]);
+  std::cout << "dead mino " << deadMinotaur << " numMino " << numMino << " dead players " << deadPlayers << " numPlayers " << numPlayers-numMino << std::endl;
+
   if (currentPlayers.size() > 1) {
-    if (minotaurLose) {
+    if (deadMinotaur == numMino) {
       sgtr.state = CIVILIAN_WIN; 
     }
-    if (deadPlayers == currentPlayers.size()-1 ) {
+    if (deadPlayers == numPlayers-numMino) {
       sgtr.state = MANOTAUR_WIN;
     }
     for (unsigned int i = 0; i < currentPlayers.size() ; i++ ) {
       if((!currentPlayers[i]->isMinotaur() && sgtr.state == CIVILIAN_WIN)
-      || (currentPlayers[i]->isMinotaur() && sgtr.state ==MANOTAUR_WIN)) {
+      || (currentPlayers[i]->isMinotaur() && sgtr.state == MANOTAUR_WIN)) {
         world.wins[i]++;
         currentPlayers[i]->wins++;
       }
