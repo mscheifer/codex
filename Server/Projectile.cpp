@@ -1,7 +1,7 @@
 #include "Projectile.h"
 int Projectile::ID_Counter = 0;
-const float Projectile::meleeWidth = 3.0f; //left right width
-const float Projectile::meleeHeight = 10.0f; //how far
+const float Projectile::meleeWidth = 1.5f; //left right width
+const float Projectile::meleeHeight = 7.0f; //how far
 const float Projectile::meleeDepth = 5.0f; //up and down width
 const float Projectile::projWidth = 1.0f;
 const float Projectile::projHeight = 1.0f;
@@ -300,9 +300,10 @@ std::string Projectile::toString2(){
 std::string Projectile::toString(){
   std::stringstream ss;
   ss << "mtype " << spellNames[magicType] << std::endl
-  << "range " << range << std::endl
+  //<< "range " << range << std::endl
   << "strength " << strength << std::endl
-  << "owner "<< owner->player_id <<std::endl;
+  << "owner "<< owner->player_id <<std::endl
+  << "bbox " << this->boundingObjs[0]->toString() << std::endl;
   return ss.str();
 }
 

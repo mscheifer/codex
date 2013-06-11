@@ -393,10 +393,14 @@ void Player::fireProjectile() {
   v3_t v = direction;
   v.normalize();
   if(minotaur) {
+    v * StringToNumber<float>(ConfigManager::configMap["minotaurProjSpeed"]) ;
     chargedProjectile->fireMutiple(v,getStrengthMultiplier(),5);
   } else {
     v * StringToNumber<float>(ConfigManager::configMap["playerProjSpeed"]) ;
-    chargedProjectile->fire(v,getStrengthMultiplier());
+    if(ProjInfo[chargedProjectile->getMagicType()].level == 3)
+      chargedProjectile->fireMutiple(v,getStrengthMultiplier(),5);
+    else
+      chargedProjectile->fire(v,getStrengthMultiplier());
   }
     
   chargedProjectile = nullptr;
@@ -701,7 +705,8 @@ float Player::getAttackCD() const{
 
   if(!isMinotaur())
     cdMult *= StringToNumber<float>(ConfigManager::configMap["playerAttackSpeed"]);
-
+  else
+    cdMult *= StringToNumber<float>(ConfigManager::configMap["minotaurAttackSpeed"]);
   return cdMult;
 }
 
@@ -712,6 +717,12 @@ float Player::getChargeCD() const{
       cdMult *= (BuffInfo[buff->first].chargeCDMult);
     }
   }
+
+  if(!isMinotaur())
+    cdMult *= StringToNumber<float>(ConfigManager::configMap["playerChargeSpeed"]);
+  else
+    cdMult *= StringToNumber<float>(ConfigManager::configMap["minotaurChargeSpeed"]);
+
   return cdMult;
 }
 
@@ -724,6 +735,8 @@ float Player::getStrengthMultiplier() const{
   }
   if(isMinotaur())
     strMult*= StringToNumber<float>(ConfigManager::configMap["minoStrMult"]);
+  else
+    strMult*= StringToNumber<float>(ConfigManager::configMap["playerStrMult"]);
   return strMult;
 }
 

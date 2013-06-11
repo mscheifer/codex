@@ -4,6 +4,7 @@
 
 struct ProjectileData{
   MAGIC_POWER magicType;
+  int level;
   length_t range;
   length_t speed;
   length_t size;
@@ -13,6 +14,7 @@ struct ProjectileData{
   std::vector<BUFF> debuff;
 
   ProjectileData( MAGIC_POWER magicType1, 
+    int level1,
     length_t range1,
     length_t speed1,
     length_t size1,
@@ -21,7 +23,7 @@ struct ProjectileData{
     std::vector<BUFF> debuff1,
     int chargeTime1
     )
-    : magicType(magicType1), range(range1), speed(speed1), size(size1),
+    : magicType(magicType1), level(level1), range(range1), speed(speed1), size(size1),
     strength(strength1), mpCost(mpCost1), chargeTime(chargeTime1), debuff(debuff1){}
 };
 
@@ -60,32 +62,32 @@ const std::vector<BUFF> NONEV(NONEarr,NONEarr+1);
 
 //these need to match the MAGIC_POWER enum, the type is just for readability
 const ProjectileData ProjInfo[] = { //TODO fix all these numbers
-  //             type,  rng, spd size    str mp buff chrgTime
-  ProjectileData(FIR1,  300, 400, 1.5,   10, 10, NONEV, 5000),
-  ProjectileData(FIR2,  300, 400, 2.25,  13, 20,  FIR2V, -1),//7000),
-  ProjectileData(FIR3,  300, 400, 3,     20, 30,  FIR3V, -1),
-  ProjectileData(ICE1,  300, 400, 1.5,   10, 10, NONEV, 5000),
-  ProjectileData(ICE2,  300, 400, 2.25,  13, 20,  ICE2V, -1),//7000),
-  ProjectileData(ICE3,  300, 400, 3,     20, 30,  ICE3V, -1),
-  ProjectileData(THU1,  300, 400, 1.5,   10, 10, NONEV, 5000),
-  ProjectileData(THU2,  300, 400, 2.25,  13, 20,  THU2V, -1),//7000),
-  ProjectileData(THU3,  300, 400, 3,     20, 30,  THU3V, -1),
+  //             type,  lvl, rng, spd size    str mp buff chrgTime
+  ProjectileData(FIR1,  1,   300, 400, 1.5,   10, 10, NONEV, 5000),
+  ProjectileData(FIR2,  2,   300, 400, 2.25,  13, 20,  FIR2V, -1),//7000),
+  ProjectileData(FIR3,  3,   300, 400, 3,     20, 30,  FIR3V, -1),
+  ProjectileData(ICE1,  1,   300, 400, 1.5,   10, 10, NONEV, 5000),
+  ProjectileData(ICE2,  2,   300, 400, 2.25,  13, 20,  ICE2V, -1),//7000),
+  ProjectileData(ICE3,  3,   300, 400, 3,     20, 30,  ICE3V, -1),
+  ProjectileData(THU1,  1,   300, 400, 1.5,   10, 10, NONEV, 5000),
+  ProjectileData(THU2,  2,   300, 400, 2.25,  13, 20,  THU2V, -1),//7000),
+  ProjectileData(THU3,  3,   300, 400, 3,     20, 30,  THU3V, -1),
 
-  ProjectileData(G_IT,  300, 400, 1,   16, 10, G1MV, -1),
-  ProjectileData(G_FT,  300, 400, 1,   16, 10, G1MV, -1),
-  ProjectileData(G_FI,  300, 400, 1,   16, 10, G1MV, -1),
+  ProjectileData(G_IT,  1,   300, 400, 1,   16, 10, G1MV, -1),
+  ProjectileData(G_FT,  1,   300, 400, 1,   16, 10, G1MV, -1),
+  ProjectileData(G_FI,  1,   300, 400, 1,   16, 10, G1MV, -1),
 
-  ProjectileData(G2,    300, 400, 3,   25, 20, G2V, -1),
+  ProjectileData(G2,    3,   300, 400, 3,   25, 20, G2V, -1),
 
-  ProjectileData(G_IT2, 300, 400, 2,   20, 20, G2MV, -1),
-  ProjectileData(G_FT2, 300, 400, 2,   20, 20, G2MV, -1),
-  ProjectileData(G_FI2, 300, 400, 2,   20, 20, G2MV, -1),
+  ProjectileData(G_IT2, 2,   300, 400, 2,   20, 20, G2MV, -1),
+  ProjectileData(G_FT2, 2,   300, 400, 2,   20, 20, G2MV, -1),
+  ProjectileData(G_FI2, 2,   300, 400, 2,   20, 20, G2MV, -1),
 
-  ProjectileData(G3,    300, 400, 3,   50, 30, G3V, -1),
+  ProjectileData(G3,    3,   300, 400, 3,   50, 30, G3V, -1),
 
-  ProjectileData(B1,    100, 400, 1,   7,  5, NONEV, 5000),
-  ProjectileData(B2,    300, 400, 2,   10, 5, NONEV, 7000),
-  ProjectileData(B2,    300, 400, 3,   10, 10, NONEV, -1)
+  ProjectileData(B1,    1,   100, 400, 1,   7,  5, NONEV, 5000),
+  ProjectileData(B2,    1,   300, 400, 2,   10, 5, NONEV, 7000),
+  ProjectileData(B2,    3,   300, 400, 3,   10, 10, NONEV, -1)
 };
 
 class Projectile :

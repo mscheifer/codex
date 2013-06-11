@@ -58,21 +58,25 @@ enableMinotaur=1
 enableLightningRounds=0
 forceLightningRounds=0
 countdown=5
+players=2
 
-players=4
+playerProjSpeed=2
 movescale=.6
 airMovescale=.49
 maxJump=2
 jumpSpeed=20.17
 playerHpRegen=.0025
-playerMpRegen=.090
+playerMpRegen=.070
 playerDef=5
 playerHp=100
 playerMaxHp=100
 playerMp=100
 playerMaxMp=100
+playerStrMult=1
 playerAttackSpeed=.75
+playerChargeSpeed=1
 
+minotaurProjSpeed=1
 minotaurmovescale=.6
 minotaurairMovescale=.55
 minotaurmaxJump=2
@@ -84,7 +88,9 @@ minotaurHp=100
 minotaurMaxHp=100
 minotaurMp=100
 minotaurMaxMp=100
+minotaurAttackSpeed=1
 minoStrMult=1
+minotaurChargeSpeed=1
 
 // Projectile
 projectileRange=300
