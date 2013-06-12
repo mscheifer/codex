@@ -153,7 +153,7 @@ void gx::particleDrawerImpl::entityClass::update(displaySet const& ds) {
   colors.clear();
   colors.reserve(particles.size() * 4 * 4); //could move this call to only run for maxParticles at beginning
   for(auto itr = this->particles.begin(); itr != this->particles.end();) {
-    vector3f acceleration(0,0,randGenf(0.000001f, 0.00001f));
+    vector3f acceleration(0,0,randGenf(0.000005f, 0.00005f));
     acceleration += vector3f(-itr->velocity.x * randGenf(0.00001f,0.0001f),
                              -itr->velocity.y * randGenf(0.00001f,0.0001f),0);
     itr->velocity += acceleration;
