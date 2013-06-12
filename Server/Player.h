@@ -36,6 +36,8 @@ public:
   BUFF ptype;
   v3_t attackedDir;
   bool aimAssistOk;
+  bool deathText;
+  std::string killer;
   
   int player_id;
   std::string name;

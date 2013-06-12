@@ -104,6 +104,7 @@ void Player::init(v3_t pos, int assigned_id, Map * m)
   inactiveBuffs.clear();
   current_weapon_selection = 1;
   chargedProjectile = nullptr;
+  deathText = false;
 
   m->addToQtree(this);
 }
@@ -185,6 +186,7 @@ bool Player::damageBy(Projectile *deadly)
     die();
     //This is a hack
     map->kills[deadly->getOwner()->player_id]++;
+    killer = deadly->getOwner()->name;
   }
 
   std::vector<BUFF> debuffs = ProjInfo[deadly->getMagicType()].debuff;
@@ -275,6 +277,7 @@ void Player::clearEvents(){
   collectPowerUp = false;
   attackedDir = v3_t(0,0,0);
   aimAssistOk = false;
+  deathText = false;
 }
 
 void Player::die()
@@ -282,6 +285,7 @@ void Player::die()
   map->removeFromQtree(this);
   render = false;
   dead = true;
+  deathText = true;
 }
 
 void Player::respawn(v3_t pos)
@@ -579,7 +583,7 @@ bool Player::aimAssist(){
       if( coll.e->getType() == PROJECTILE ){
         Projectile * proj = static_cast<Projectile*>(coll.e);
         //same team and upgradeable
-        if( (!friendlyCombine || proj->sameTeam(chargedProjectile)) && 
+        if( proj->getCharging() && (!friendlyCombine || proj->sameTeam(chargedProjectile)) && 
           proj->getMagicType() != 
           Projectile::combine(chargedProjectile->getMagicType() , proj->getMagicType())){
           return true;
@@ -841,6 +845,8 @@ void Player::serialize(sf::Packet& packet) const {
     packet << upgraded;
     attackedDir.serialize(packet);
     packet << aimAssistOk;
+    packet << deathText;
+    packet << killer;
   }
 
   void Player::deserialize(sf::Packet& packet) {
@@ -915,6 +921,8 @@ void Player::serialize(sf::Packet& packet) const {
     packet >> upgraded;
     attackedDir.deserialize(packet);
     packet >> aimAssistOk;
+    packet >> deathText;
+    packet >> killer;
   }
 
   std::string Player::toString(){

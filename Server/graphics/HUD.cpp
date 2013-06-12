@@ -107,6 +107,10 @@ gx::HUD::HUD(void):health(100), maxHealth(100), HLossPercentage(0),
   collectedPU.setCharacterSize(24);
   collectedPU.setColor(sf::Color::White);
   collectedPU.setPosition(10, 10+5+5+badGuyTexture.getSize().y+30);
+  deathText.setFont(font);
+  deathText.setCharacterSize(36);
+  deathText.setColor(sf::Color::White);
+  deathText.setPosition(10, 10+5+5+badGuyTexture.getSize().y+30+30);
   //minimap
   //miniMapTexture.loadFromFile("graphics/Images/minimap.png");
   miniMapProx = aimerTextures[1]->getSize().x/2;//miniMapTexture.getSize().x/2; //this should be the radius of the minimap
@@ -215,6 +219,9 @@ void gx::HUD::draw(sf::RenderWindow & window) {
   if (buffClock.getElapsedTime().asSeconds() <1.5) {
     collectedPU.setString(std::string("Blessed with ") + powerUpNames[ptype]);
     window.draw(collectedPU);
+  }
+  if (deathTextClock.getElapsedTime().asSeconds() < 1.5){
+    window.draw(deathText);
   }
   std::string healthS(std::to_string(static_cast<long long>(health)) + 
     std::string("/") +std::to_string(static_cast<long long>(maxHealth)));
@@ -461,6 +468,13 @@ void gx::HUD::updateHUD(int id, const std::vector<Player>& players) {
   }
 
   aimAssistOk = player.aimAssistOk;
+
+  for( auto playerP = players.begin(); playerP != players.end(); playerP++){
+    if(playerP->deathText){
+      deathText.setString(playerP->killer + " has slain " + playerP->name);
+      deathTextClock.restart();
+    }
+  }
 }
 
 void gx::HUD::buffHelper(std::string & path) {

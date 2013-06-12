@@ -148,6 +148,7 @@ public:
   void setRange(length_t r);
   void setOwner(Player *);
   void setCharing( bool c ){ charging = c; }
+  bool getCharging() const {return charging;}
   MAGIC_POWER getMagicType() const { return magicType; }
   void setMagicType( MAGIC_POWER m, bool melee, bool charge); //TODO this is not the best way
   Player* getOwner(){return owner;}

@@ -102,7 +102,9 @@ private :
   sf::Clock buffClock;
   sf::Clock hitClock;
   sf::Clock minoHUDClock;
+  sf::Clock deathTextClock;
   sf::Text collectedPU;
+  sf::Text deathText;
   sf::Texture deathTexture;
   sf::Sprite deathScreen;
   void buffHelper(std::string & path);

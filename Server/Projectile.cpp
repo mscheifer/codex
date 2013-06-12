@@ -159,7 +159,6 @@ void Projectile::fire(v3_t v, float strengthMultiplier) {
   velocity = v * ProjInfo[magicType].speed;
   setRange(ProjInfo[magicType].range); //this also sets travel distance left
   strength = ProjInfo[magicType].strength * strengthMultiplier;
-  std::cout << toString();
   fired = true;
   charging = false;
 }
