@@ -64,13 +64,13 @@ const std::vector<BUFF> NONEV(NONEarr,NONEarr+1);
 const ProjectileData ProjInfo[] = { //TODO fix all these numbers
   //             type,  lvl, rng, spd size    str mp buff chrgTime
   ProjectileData(FIR1,  1,   300, 400, 1.5,   10, 10, NONEV, 5000),
-  ProjectileData(FIR2,  2,   300, 400, 2.25,  13, 20,  FIR2V, -1),//7000),
+  ProjectileData(FIR2,  2,   300, 400, 2.25,  13, 20,  FIR2V, 15000),//-1),//7000),
   ProjectileData(FIR3,  3,   300, 400, 3,     20, 30,  FIR3V, -1),
   ProjectileData(ICE1,  1,   300, 400, 1.5,   10, 10, NONEV, 5000),
-  ProjectileData(ICE2,  2,   300, 400, 2.25,  13, 20,  ICE2V, -1),//7000),
+  ProjectileData(ICE2,  2,   300, 400, 2.25,  13, 20,  ICE2V, 15000),//-1),//7000),
   ProjectileData(ICE3,  3,   300, 400, 3,     20, 30,  ICE3V, -1),
   ProjectileData(THU1,  1,   300, 400, 1.5,   10, 10, NONEV, 5000),
-  ProjectileData(THU2,  2,   300, 400, 2.25,  13, 20,  THU2V, -1),//7000),
+  ProjectileData(THU2,  2,   300, 400, 2.25,  13, 20,  THU2V, 15000),//-1),//7000),
   ProjectileData(THU3,  3,   300, 400, 3,     20, 30,  THU3V, -1),
 
   ProjectileData(G_IT,  1,   300, 400, 1,   16, 10, G1MV, -1),
@@ -86,7 +86,7 @@ const ProjectileData ProjInfo[] = { //TODO fix all these numbers
   ProjectileData(G3,    3,   300, 400, 3,   50, 30, G3V, -1),
 
   ProjectileData(B1,    1,   100, 400, 1,   7,  5, NONEV, 5000),
-  ProjectileData(B2,    1,   300, 400, 2,   10, 5, NONEV, 7000),
+  ProjectileData(B2,    1,   300, 400, 2,   10, 5, NONEV, 15000),//7000),
   ProjectileData(B2,    3,   300, 400, 3,   10, 10, NONEV, -1)
 };
 

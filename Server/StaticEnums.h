@@ -61,13 +61,13 @@ enum MAGIC_POWER {
 }; 
 
 const std::string spellNames[] = {
-  "Fire1", "Fire2", "Fire3",
-  "Ice1", "Ice2", "Ice3",
-  "Thunder1", "Thunder2", "Thunder3",
-  "Forbidden1", "Gravity1", "Gravity1",
-  "GravityFull2",
-  "Gravity2", "Gravity2", "Gravity2",
-  "Gravity3",
+  "Ember", "Blaze", "Inferno",
+  "Frost", "Icicle", "Blizzard",
+  "Spark", "Bolt", "Storm",
+  "Forbidden(IT)", "Forbidden(FT)", "Forbidden(FI)",
+  "Chaos",
+  "Forgotten(IT)", "Forgotten(FT)", "Forgotten(FI)",
+  "Obliterate",
   "QBasic", "MSDOS", "Windows"
 };
 
@@ -165,9 +165,9 @@ const BuffData BuffInfo[] = {
   BuffData(CHARGECD,    6,  1, 45000, false, 0,    false, 0,     false, 0,    false, 0,    false, 0,    true, 0.5,    false, 0,    false),
   BuffData(DEFENSEBOOST,14, 1, 45000, false, 0,    false, 0,     false, 0,    false, 0,    false, 0,    false, 0,     true, 1.15f, false),
 
-  BuffData(FIR1DEBUFF,  7,  1, 10000, false, 0,    false, 0,     true, -1.25f,false, 0,    false, 0,    false, 0,     false, 0,    false),
-  BuffData(FIR2DEBUFF,  7,  2, 5000,  false, 0,    false, 0,     true, -3.f,  false, 0,    false, 0,    false, 0,     false, 0,    false),
-  BuffData(FIR3DEBUFF,  7,  3, 8500,  false, 0,    false, 0,     true, -5.f,  false, 0,    false, 0,    false, 0,     false, 0,    false),
+  BuffData(FIR1DEBUFF,  7,  1, 10000, false, 0,    false, 0,     true, -1.25f,false, 0,    false, 0,    false, 0,    false, 0,    false),
+  BuffData(FIR2DEBUFF,  7,  2, 5000,  false, 0,    false, 0,     true, -18.5f,false, 0,    false, 0,    true, 2.5f,  false, 0,    false),
+  BuffData(FIR3DEBUFF,  7,  3, 8000, false, 0,    false, 0,      true, -25.f, false, 0,    false, 0,    true, 4.f,   false, 0,    false),
   
   BuffData(ICESTUN,     13, 1, 1500,  true, 0,     false, 0,     false, 0,   false, 0,    false, 0,    false, 0,     false, 0,     false),
   BuffData(ICESTUN2,    13, 2, 4000,  true, 0,     false, 0,     false, 0,   false, 0,    false, 0,    false, 0,     false, 0,     false),
@@ -179,15 +179,15 @@ const BuffData BuffInfo[] = {
   BuffData(THUSTUN2,    9,  2, 3000,  true, 0,     false, 0,     false, 0,   false, 0,    false, 0,    false, 0,     false, 0,     false),
   BuffData(THU1DEBUFF,  10, 1, 10000, false, 0,    false,-1.25f, false, 0,   false, 0,    false, 0,    false, 0,     false, 0,     false),
   BuffData(THU2DEBUFF,  10, 2, 3000,  false, 0,    false, -2,    false, 0,   false, 0,    false, 0,    false, 0,     false, 0,     true),
-  BuffData(THU3DEBUFF,  10, 3, 5000,  false, 0,    false, -3,    false, 0,   false, 0,    false, 0,    false,  0,    false, 0,     true),
+  BuffData(THU3DEBUFF,  10, 3, 5000,  false, 0,    false, -3,    false, 0,   false, 0,    false, 0,    false, 0,    false, 0,     true),
 
   //                           time  |  move       |mpRegen      | hpRegen | str           | atkCD      |  chargeCD  
   BuffData(G1MDEBUFF,   11, 1, 7000,  false, 0,    false, 0,     false, 0,   true, .95f,  false, 0,    false, 0,     false, 0,     false),
   //G2 strong \/
-  BuffData(G2DEBUFF,    11, 2, 15000, true, 0.55f, true, -2,     true, -1,   true, .90f,  false, 0,    false, 0,     false, 0,     false),
+  BuffData(G2DEBUFF,    11, 2, 10000, true, 0.55f, true, -1,     true, -3,   true, .90f,  false, 0,    true, 1.5f,   false, 0,     false),
   BuffData(G2MDEBUFF,   11, 1, 10000, true, 0.55f, true, -1.25f, true, -1,   true, .95f,  false, 0,    false, 0,     false, 0,     false),
   
-  BuffData(G3DEBUFF1,   12, 1, 7000,  true, 0,     false, 0,     false, 0,   false, 0,    false, 0,    false, 0,     false, 0,     false), 
-  BuffData(G3DEBUFF2,   11, 3, 15000, true, 0.45f, true, -4,     true, -4.5f,true, .85f,  false, 0,    true, 1.25,   true, 0,      false)
+  BuffData(G3DEBUFF1,   12, 1, 3000,  true, 0,     false, 0,     false, 0,   false, 0,    false, 0,    false, 0,     false, 0,     true), 
+  BuffData(G3DEBUFF2,   11, 3, 10000, true, 0.45f, true, -2.f,   true, -8.5f,true, .85f,  false, 0,    true, 4.f,    true, 0,      false)
   //BuffData(STOPSHOT,    15, 1, 15000,  true, 0.45f, true, -4,     true, -4.5f, true, .85f,  false, 0,    true, 1.25,   true, 0)
 };

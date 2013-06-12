@@ -156,7 +156,7 @@ void Map::initPowerUpsLightning(){
   WeaponFire * w;
   for(int i = 0; i < 30; i++){
     superPower = new PowerUp(getRespawnPosition() + v3_t(0,0,PowerUp::powerUpDepth / 2), this, 
-      static_cast<BUFF>(rand()%7+1));
+     static_cast<BUFF>(rand()%7+1));
     superPower->setRespownTime(5000);
     this->entities.push_back(superPower);
 
