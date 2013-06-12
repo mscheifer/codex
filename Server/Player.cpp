@@ -91,8 +91,25 @@ void Player::init(v3_t pos, int assigned_id, Map * m)
 	map = m;
 	weapon[0] = new WeaponFire(position, this->map, B1);
     //new WeaponFist(position, this->map); //has no bounds so it doesnt drop
-  //weapon[1] = new WeaponFist(position, this->map);
-	weapon[1] = new WeaponFire(position, this->map, THU1); //TODO make this basic
+  if(StringToNumber<int>(ConfigManager::configMap["spawnWithWeapon"]) == 0){
+    weapon[1] = new WeaponFist(position, this->map);
+  }else{
+    int num = rand() % 3;
+    MAGIC_POWER spawnMType;
+    switch(num){
+    case 0:
+      spawnMType = FIR1;
+      break;
+    case 1:
+      spawnMType = ICE1;
+      break;
+    case 2:
+    default:
+      spawnMType = THU1;
+      break;
+    }
+	  weapon[1] = new WeaponFire(position, this->map, spawnMType); //TODO make this basic
+  }
 	m->addEntity(weapon[1]);
   weapon[1]->pickUp();
   weapon[1]->setRespawnTime(60000);

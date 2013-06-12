@@ -56,7 +56,10 @@ void NetworkServer::doServer() {
   sf::IpAddress myIpAddress = sf::IpAddress::getLocalAddress();
   std::cout << "Server Ip Address: " << myIpAddress.toString() << std::endl;
   sf::Clock clock;
-  
+  if( StringToNumber<int>(ConfigManager::configMap["numMinotaur"]) > StringToNumber<int>(ConfigManager::configMap["players"]) ){
+    std::cout << "ERROR bad config" << std::endl;
+  }
+
   //sf::Clock profilerTime;
   //float clearEventsTime;
   //float receiveMessagesTime;

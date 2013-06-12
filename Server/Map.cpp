@@ -141,7 +141,7 @@ void Map::initPowerUps() {
   // FIR1, ICE1, THU1, B1
   WeaponFire * w;
   // Spawn 5 random weapon
-  for(unsigned int i = 0; i < 5; i++)
+  for(unsigned int i = 0; i < 7; i++)
   {
     w = new WeaponFire(getRespawnPosition()+v3_t(0,0,WeaponFire::weaponDepth/2),this, B1);
     w->setRandomMagic();
