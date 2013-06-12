@@ -59,6 +59,7 @@ enableLightningRounds=0
 forceLightningRounds=0
 countdown=5
 players=2
+numMinotaur=0
 
 playerProjSpeed=2
 movescale=.6
