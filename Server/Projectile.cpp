@@ -6,9 +6,9 @@ const float Projectile::meleeDepth = 5.0f; //up and down width
 const float Projectile::projWidth = 1.0f;
 const float Projectile::projHeight = 1.0f;
 const float Projectile::projDepth = 1.0f;
-const float Projectile::chargeWidth = 5.0f;
-const float Projectile::chargeHeight = 5.0f;
-const float Projectile::chargeDepth = 5.0f;
+const float Projectile::chargeWidth = 3.0f;
+const float Projectile::chargeHeight = 3.0f;
+const float Projectile::chargeDepth = 3.0f;
 
 
 Projectile::Projectile(Map* m):fired(false)
@@ -21,6 +21,7 @@ Projectile::Projectile(Map* m):fired(false)
   id = ID_Counter;
   ID_Counter++;
   boundingObjs.push_back(b);
+  lockon = nullptr;
   reset();
 }
 
@@ -29,6 +30,7 @@ void Projectile::reset(){
   charge_counter.restart();
   charging = true;
   combined = false;
+  lockon = nullptr;
 }
 
 bool Projectile::correctMovementHit( Entity* e ){
@@ -54,11 +56,20 @@ void Projectile::update(void) {
     //-1 means no upgrades
     if(chargeTime != -1 && charge_counter.getElapsedTime().asMilliseconds() > chargeTime*cdr ) {
       getOwner()->upgraded = true;
-      charge_counter.restart();
+      charge_counter.restart(); 
       setMagicType(upgrade(magicType), false, true);
     }
   } else {
-    v3_t distanceTravelled = velocity * ConfigManager::serverTickLengthSec();
+    v3_t distanceTravelled;
+    if(lockon != nullptr && lockon->live && lockon->getCharging()){
+      v3_t newDirection = lockon->position - position;
+      newDirection.normalize();
+      newDirection.scale(velocity.magnitude());
+      velocity = newDirection;
+      distanceTravelled = velocity * ConfigManager::serverTickLengthSec();
+    } else {
+      distanceTravelled = velocity * ConfigManager::serverTickLengthSec();
+    }
     distanceTravelled = correctMovement(distanceTravelled, false, position);
 
     float mag = distanceTravelled.magnitude();
@@ -154,7 +165,8 @@ void Projectile::clearEvents(){
   fired = false;
 }
 
-void Projectile::fire(v3_t v, float strengthMultiplier) {
+void Projectile::fire(v3_t v, float strengthMultiplier, Projectile* p) {
+  lockon = p;
   setMagicType(magicType,false,false);
   velocity = v * ProjInfo[magicType].speed;
   setRange(ProjInfo[magicType].range); //this also sets travel distance left
@@ -163,8 +175,8 @@ void Projectile::fire(v3_t v, float strengthMultiplier) {
   charging = false;
 }
 
-void Projectile::fireMutiple(v3_t v, float strengthMultiplier, int number) {
- 
+void Projectile::fireMutiple(v3_t v, float strengthMultiplier, int number, Projectile* p) {
+  lockon = p;
   setMagicType(magicType,false,false);
   velocity = v * ProjInfo[magicType].speed;
   setRange(ProjInfo[magicType].range); //this also sets travel distance left

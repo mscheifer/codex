@@ -67,7 +67,7 @@ const std::string spellNames[] = {
   "Forbidden(IT)", "Forbidden(FT)", "Forbidden(FI)",
   "Chaos",
   "Forgotten(IT)", "Forgotten(FT)", "Forgotten(FI)",
-  "Obliterate",
+  "White Lightning",
   "QBasic", "MSDOS", "Windows"
 };
 

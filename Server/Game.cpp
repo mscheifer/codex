@@ -124,7 +124,7 @@ void Game::prepResponse(ServerGameTimeRespond& sgtr) {
   int numMino = StringToNumber<int>(ConfigManager::configMap["numMinotaur"]);
   int numPlayers = StringToNumber<int>(ConfigManager::configMap["players"]);
 
-  if (currentPlayers.size() > 1) {
+  if (StringToNumber<int>(ConfigManager::configMap["tryEndGame"])==1) {
     if (deadMinotaur == numMino) {
       sgtr.state = CIVILIAN_WIN; 
     }

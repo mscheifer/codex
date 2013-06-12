@@ -258,8 +258,10 @@ void gx::HUD::draw(sf::RenderWindow & window) {
     window.draw(pickUp);
 
   //draw aimer
-  aimAssistSprite.setPosition(winX/2, winY/2);
-  window.draw(aimAssistSprite);
+  if(timer<=0){
+    aimAssistSprite.setPosition(winX/2, winY/2);
+    window.draw(aimAssistSprite);
+  }
   if(aimAssistOk){
     aimAssistGreenSprite.setPosition(winX/2, winY/2);
     window.draw(aimAssistGreenSprite);

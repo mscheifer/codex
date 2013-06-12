@@ -60,6 +60,7 @@ forceLightningRounds=0
 countdown=5
 players=2
 numMinotaur=0
+tryEndGame=0
 
 playerProjSpeed=2
 movescale=.6

@@ -335,7 +335,7 @@ void Player::update(){
     die();
   updateBounds();
 
-  aimAssistOk = aimAssist();
+  aimAssistOk = aimAssist().first;
 }
 
 void Player::restartJump(length_t zPosFix){
@@ -397,14 +397,14 @@ void Player::fireProjectile() {
   v3_t v = direction;
   v.normalize();
   if(minotaur) {
-    v * StringToNumber<float>(ConfigManager::configMap["minotaurProjSpeed"]) ;
-    chargedProjectile->fireMutiple(v,getStrengthMultiplier(),5);
+    v * StringToNumber<float>(ConfigManager::configMap["minotaurProjSpeed"]);
+    chargedProjectile->fireMutiple(v,getStrengthMultiplier(),5,aimAssist().second);
   } else {
-    v * StringToNumber<float>(ConfigManager::configMap["playerProjSpeed"]) ;
+    v * StringToNumber<float>(ConfigManager::configMap["playerProjSpeed"]);
     if(ProjInfo[chargedProjectile->getMagicType()].level == 3)
-      chargedProjectile->fireMutiple(v,getStrengthMultiplier(),5);
+      chargedProjectile->fireMutiple(v,getStrengthMultiplier(),5,aimAssist().second);
     else
-      chargedProjectile->fire(v,getStrengthMultiplier());
+      chargedProjectile->fire(v,getStrengthMultiplier(),aimAssist().second);
   }
     
   chargedProjectile = nullptr;
@@ -456,6 +456,8 @@ void Player::attack( ClientGameTimeAction a) {
 	  mana -= currentWeapon->getMpCost();
 	  chargedProjectile = currentWeapon->attackRange(direction, getProjectileChargePosition(), this);
     charging = true;
+    //TODO this is for bigger for charging
+    chargedProjectile->setMagicType(chargedProjectile->getMagicType(),false,true);
 	}
 	else if(a.attackMelee){
 		if( !currentWeapon->canUseWeapon(false, this)){
@@ -570,7 +572,7 @@ bool Player::collidePowerUp(const std::pair<Entity*,BoundingObj::vec3_t>& p){
   return false;
 }
 
-bool Player::aimAssist(){
+std::pair<bool,Projectile*> Player::aimAssist(){
   if(chargedProjectile){
     bool friendlyCombine = StringToNumber<float>(ConfigManager::configMap["friendlyCombineOnly"]) == 1;
     v3_t rayDir(direction.x, direction.y, direction.z);   
@@ -586,12 +588,12 @@ bool Player::aimAssist(){
         if( proj->getCharging() && (!friendlyCombine || proj->sameTeam(chargedProjectile)) && 
           proj->getMagicType() != 
           Projectile::combine(chargedProjectile->getMagicType() , proj->getMagicType())){
-          return true;
+          return std::pair<bool,Projectile*>(true,proj);
         }
       }
     }
   }
-  return false;
+  return std::pair<bool,Projectile*>(false, nullptr);
 }
 
 void Player::updateBuffs(){

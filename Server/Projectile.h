@@ -121,8 +121,8 @@ public:
   void updateBoundsSoft();
   void handleCollisions();
   void clearEvents();
-  void fire(v3_t velocity, float strengthMultiplier);
-  void fireMutiple(v3_t v, float strengthMultiplier, int number);
+  void fire(v3_t velocity, float strengthMultiplier, Projectile* p);
+  void fireMutiple(v3_t v, float strengthMultiplier, int number, Projectile* p);
   std::string toString();
   void reset();
   bool sameTeam( Projectile * p );
@@ -130,6 +130,7 @@ public:
  
 private:
   Player * owner;
+  Projectile* lockon;
   bool fired;
   bool charging;
   MAGIC_POWER magicType;

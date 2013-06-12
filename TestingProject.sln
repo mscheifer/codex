@@ -3,16 +3,40 @@ Microsoft Visual Studio Solution File, Format Version 11.00
 # Visual Studio 2010
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Server", "Server\Server.vcxproj", "{E84A6DC5-DE77-40F7-B77F-668E960F5FF2}"
 EndProject
+Project("{6141683F-8A12-4E36-9623-2EB02B2C2303}") = "Setup1", "Setup1\Setup1.isproj", "{C0D9F2A1-7D57-41C1-B050-895BDFB1A3A0}"
+	ProjectSection(ProjectDependencies) = postProject
+		{E84A6DC5-DE77-40F7-B77F-668E960F5FF2} = {E84A6DC5-DE77-40F7-B77F-668E960F5FF2}
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		CD_ROM|Win32 = CD_ROM|Win32
 		Debug|Win32 = Debug|Win32
+		DVD-5|Win32 = DVD-5|Win32
 		Release|Win32 = Release|Win32
+		SingleImage|Win32 = SingleImage|Win32
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{E84A6DC5-DE77-40F7-B77F-668E960F5FF2}.CD_ROM|Win32.ActiveCfg = Release|Win32
+		{E84A6DC5-DE77-40F7-B77F-668E960F5FF2}.CD_ROM|Win32.Build.0 = Release|Win32
 		{E84A6DC5-DE77-40F7-B77F-668E960F5FF2}.Debug|Win32.ActiveCfg = Debug|Win32
 		{E84A6DC5-DE77-40F7-B77F-668E960F5FF2}.Debug|Win32.Build.0 = Debug|Win32
+		{E84A6DC5-DE77-40F7-B77F-668E960F5FF2}.DVD-5|Win32.ActiveCfg = Debug|Win32
+		{E84A6DC5-DE77-40F7-B77F-668E960F5FF2}.DVD-5|Win32.Build.0 = Debug|Win32
 		{E84A6DC5-DE77-40F7-B77F-668E960F5FF2}.Release|Win32.ActiveCfg = Release|Win32
 		{E84A6DC5-DE77-40F7-B77F-668E960F5FF2}.Release|Win32.Build.0 = Release|Win32
+		{E84A6DC5-DE77-40F7-B77F-668E960F5FF2}.SingleImage|Win32.ActiveCfg = Release|Win32
+		{E84A6DC5-DE77-40F7-B77F-668E960F5FF2}.SingleImage|Win32.Build.0 = Release|Win32
+		{C0D9F2A1-7D57-41C1-B050-895BDFB1A3A0}.CD_ROM|Win32.ActiveCfg = CD_ROM
+		{C0D9F2A1-7D57-41C1-B050-895BDFB1A3A0}.CD_ROM|Win32.Build.0 = CD_ROM
+		{C0D9F2A1-7D57-41C1-B050-895BDFB1A3A0}.Debug|Win32.ActiveCfg = DVD-5
+		{C0D9F2A1-7D57-41C1-B050-895BDFB1A3A0}.Debug|Win32.Build.0 = DVD-5
+		{C0D9F2A1-7D57-41C1-B050-895BDFB1A3A0}.DVD-5|Win32.ActiveCfg = DVD-5
+		{C0D9F2A1-7D57-41C1-B050-895BDFB1A3A0}.DVD-5|Win32.Build.0 = DVD-5
+		{C0D9F2A1-7D57-41C1-B050-895BDFB1A3A0}.Release|Win32.ActiveCfg = SingleImage
+		{C0D9F2A1-7D57-41C1-B050-895BDFB1A3A0}.Release|Win32.Build.0 = SingleImage
+		{C0D9F2A1-7D57-41C1-B050-895BDFB1A3A0}.SingleImage|Win32.ActiveCfg = SingleImage
+		{C0D9F2A1-7D57-41C1-B050-895BDFB1A3A0}.SingleImage|Win32.Build.0 = SingleImage
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

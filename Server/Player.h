@@ -59,7 +59,7 @@ public:
   bool moveTowardDirection(move_t degree, bool jump); //handle movement input WADS jump
   void handleAction(ClientGameTimeAction a);
   void removeChargingProj();
-  bool aimAssist();
+  std::pair<bool, Projectile*> aimAssist();
   
   //getters and setters
   int getCurrentWeaponSelection() const { return current_weapon_selection; };
