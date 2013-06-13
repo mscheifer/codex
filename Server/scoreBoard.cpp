@@ -152,7 +152,7 @@ void scoreBoard::setMinotaurSprites(std::vector<int> minotaurIds)
   }
 
   for(unsigned int i = 0; i < minotaurIds.size(); i++){
-    playerSprite[i].setTexture(badGuyTexture);
+    playerSprite[minotaurIds[i]].setTexture(badGuyTexture);
   }
   //if(id == minotaurId || id >= playerScores.size())
   //  return;

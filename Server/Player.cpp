@@ -591,18 +591,18 @@ bool Player::collidePowerUp(const std::pair<Entity*,BoundingObj::vec3_t>& p){
 
 std::pair<bool,Projectile*> Player::aimAssist(){
   if(chargedProjectile){
-    bool friendlyCombine = StringToNumber<float>(ConfigManager::configMap["friendlyCombineOnly"]) == 1;
+    bool friendlyCombineOnly = StringToNumber<float>(ConfigManager::configMap["friendlyCombineOnly"]) == 1;
     v3_t rayDir(direction.x, direction.y, direction.z);   
     rayDir.normalize();
     rayDir.scale(300);
     Ray r(v4_t(position.x,position.y,position.z), rayDir);
     std::vector<RayCollision> potentialHits = Entity::detectCollision(&r);
     if( potentialHits.size() > 0 ){
-      RayCollision coll = potentialHits[0];
-      if( coll.e->getType() == PROJECTILE ){
+      RayCollision coll = potentialHits[0]; //get closest hit
+      if( coll.e->getType() == PROJECTILE ){ 
         Projectile * proj = static_cast<Projectile*>(coll.e);
         //same team and upgradeable
-        if( proj->getCharging() && (!friendlyCombine || proj->sameTeam(chargedProjectile)) && 
+        if( proj->getCharging() && (!friendlyCombineOnly || proj->sameTeam(chargedProjectile)) && 
           proj->getMagicType() != 
           Projectile::combine(chargedProjectile->getMagicType() , proj->getMagicType())){
           return std::pair<bool,Projectile*>(true,proj);

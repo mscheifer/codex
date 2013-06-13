@@ -62,8 +62,10 @@ void NetworkClient::receiveMessages() {
           dead.push_back((*playerP).dead);
           kills.push_back((*playerP).kills);
           wins.push_back((*playerP).wins);
+
           if(playerP->isMinotaur())
             minotaurIds.push_back(playerP->player_id);
+
           AudioManager::processPlayerSound(*playerP);
         }
         for(auto entP = s.walls.begin(); entP != s.walls.end(); entP++) {

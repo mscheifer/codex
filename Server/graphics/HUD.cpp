@@ -216,11 +216,11 @@ void gx::HUD::draw(sf::RenderWindow & window) {
     hitDirSprites[hitDir]->setRotation(attackedAngle);
     window.draw(*(hitDirSprites[hitDir]));
   }
-  if (buffClock.getElapsedTime().asSeconds() <1.5) {
+  if (buffClock.getElapsedTime().asSeconds() < 2) {
     collectedPU.setString(std::string("Blessed with ") + powerUpNames[ptype]);
     window.draw(collectedPU);
   }
-  if (deathTextClock.getElapsedTime().asSeconds() < 1.5){
+  if (deathTextClock.getElapsedTime().asSeconds() < 5){
     window.draw(deathText);
   }
   std::string healthS(std::to_string(static_cast<long long>(health)) + 
