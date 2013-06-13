@@ -43,7 +43,7 @@ void NetworkClient::receiveMessages() {
           this->gxClient.setWinner(s.state);
         }
         pos = this->s.players[this->id].getPosition();
-        proximity = 2;
+        proximity = StringToNumber<int>(ConfigManager::configMap["players"]);
         minotaur = this->s.players[this->id].isMinotaur();
         
         this->gxClient.clearEntities();
@@ -54,7 +54,7 @@ void NetworkClient::receiveMessages() {
             this->gxClient.addEntity(&(*playerP));
 
             v3_t dist = playerP->getPosition() - pos; //audio prox calculation
-            if(std::abs(dist.magnitude()) >= maxProx){
+            if(std::abs(dist.magnitude()) >= maxProx && !playerP->isMinotaur()){
               proximity--;
             } else if (playerP->isMinotaur()) //not far, but minotaur
               minotaur = true;
@@ -128,6 +128,10 @@ void NetworkClient::receiveMessages() {
   count = -1;
 
   if(updateMusic){
+    if(proximity > 2)
+      proximity = 2;
+    if(proximity < 0)
+      proximity = 0;
     AudioManager::updateMusic(proximity, minotaur);
   }
 }

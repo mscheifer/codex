@@ -43,6 +43,7 @@ void gx::light::clear() {
 
 void gx::light::clearStatic() {
   this->data.numLights = 0; //nothing remains
+  this->numStaticLights = 0;
   this->unif.write(uniformVars[2].first, this->data.numLights);
 }
 

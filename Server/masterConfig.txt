@@ -50,7 +50,7 @@ gravity=-40
 
 // Player configuration
 //radar needs to be done client side
-minotaurRadarOnly=0
+minotaurRadarOnly=1
 removeChargeOnHit=0
 friendlyfire=1
 friendlyCombineOnly=1
@@ -59,8 +59,8 @@ enableLightningRounds=0
 forceLightningRounds=0
 countdown=5
 players=2
-numMinotaur=0
-tryEndGame=0
+numMinotaur=1
+tryEndGame=1
 spawnWithWeapon=0
 
 playerProjSpeed=2

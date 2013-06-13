@@ -119,11 +119,11 @@ std::vector<gx::graphicsEntity> staticModels() {
   entitiesData.push_back(std::move(modelFakeTorch));
 
 
-  /*generalOffset[DRAGON1] = entitiesData.size();
+  generalOffset[DRAGON1] = entitiesData.size();
   entitiesData.push_back(std::move(modelDragon1));
 
   generalOffset[DRAGON2] = entitiesData.size();
-  entitiesData.push_back(std::move(modelDragon2));*/
+  entitiesData.push_back(std::move(modelDragon2));
 
   generalOffset[COLOUMN1] = entitiesData.size();
   entitiesData.push_back(std::move(modelcoloumn1));
