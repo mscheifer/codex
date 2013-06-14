@@ -40,11 +40,11 @@ enum Texture_Type {DEFAULT=0, GROUNDTEX=64};
 enum WeaponType{UNK=0, FIRE, ICE, THUNDER, FIST, BASIC, NONEWEAPON};
 
 const std::string WeaponNames[] = {
-  "Forbidden Art",
-  "Infernal Stone",
-  "Eye of Frost Wyrm",
-  "Shard of Mjolnir",
-  "Fist",
+  "Codex Regius",
+  "Fenix Tear",
+  "Breath of Helheim",
+  "Mjolnir",
+  "Damascus Steel",
   "QBasic"
 };
 
@@ -61,13 +61,13 @@ enum MAGIC_POWER {
 }; 
 
 const std::string spellNames[] = {
-  "Ember", "Blaze", "Inferno",
-  "Frost", "Icicle", "Blizzard",
-  "Spark", "Bolt", "Storm",
-  "Forbidden(IT)", "Forbidden(FT)", "Forbidden(FI)",
+  "Ember", "Blaze", "Seraph's Fire",
+  "Frost", "Glacier", "Hypothermia",
+  "Spark", "Bolt", "Rajin's Wrath",
+  "Anarchy(IT)", "Anarchy(FT)", "Anarchy(FI)",
   "Chaos",
-  "Forgotten(IT)", "Forgotten(FT)", "Forgotten(FI)",
-  "White Lightning",
+  "Destiny(IT)", "Destiny(FT)", "Destiny(FI)",
+  "Judgement",
   "QBasic", "MSDOS", "Windows"
 };
 
@@ -159,7 +159,7 @@ const BuffData BuffInfo[] = {
   BuffData(NONE,        0,  1, 100,   false, 0,    false, 0,     false, 0,    false, 0,    false, 0,    false, 0,     false, 0,    false),
   BuffData(MOVEBOOST,   1,  1, 45000, true, 2,     false, 0,     false, 0,    false, 0,    false, 0,    false, 0,     false, 0,    false),
   BuffData(MANABOOST,   2,  1, 45000, false, 0,    true, 2,      false, 0,    false, 0,    false, 0,    false, 0,     false, 0,    false),
-  BuffData(HEALTHBOOST, 3,  1, 45000, false, 0,    false, 0,     true, 2,     false, 0,    false, 0,    false, 0,     false, 0,    false),
+  BuffData(HEALTHBOOST, 3,  1, 45000, false, 0,    false, 0,     true, 10,    false, 0,    false, 0,    false, 0,     false, 0,    false),
   BuffData(STRBOOST,    4,  1, 45000, false, 0,    false, 0,     false, 0,    true, 2,     false, 0,    false, 0,     false, 0,    false),
   BuffData(ATTACKCD,    5,  1, 45000, false, 0,    false, 0,     false, 0,    false, 0,    true, 0.25,  false, 0,     false, 0,    false),
   BuffData(CHARGECD,    6,  1, 45000, false, 0,    false, 0,     false, 0,    false, 0,    false, 0,    true, 0.5,    false, 0,    false),

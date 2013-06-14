@@ -568,7 +568,7 @@
 		<row><td>LicenseAgreement</td><td>DlgLine</td><td>Line</td><td>48</td><td>234</td><td>326</td><td>0</td><td>1</td><td/><td/><td/><td/><td>0</td><td/><td/><td/></row>
 		<row><td>LicenseAgreement</td><td>DlgTitle</td><td>Text</td><td>13</td><td>6</td><td>292</td><td>25</td><td>65539</td><td/><td>##IDS__IsLicenseDlg_LicenseAgreement##</td><td/><td/><td>0</td><td/><td/><td/></row>
 		<row><td>LicenseAgreement</td><td>ISPrintButton</td><td>PushButton</td><td>301</td><td>188</td><td>65</td><td>17</td><td>3</td><td/><td>##IDS_PRINT_BUTTON##</td><td>Agree</td><td/><td>0</td><td/><td/><td/></row>
-		<row><td>LicenseAgreement</td><td>Memo</td><td>ScrollableText</td><td>8</td><td>55</td><td>358</td><td>130</td><td>7</td><td/><td/><td/><td/><td>0</td><td/><td>&lt;ISProductFolder&gt;\Redist\0409\Eula.rtf</td><td/></row>
+		<row><td>LicenseAgreement</td><td>Memo</td><td>ScrollableText</td><td>8</td><td>55</td><td>358</td><td>130</td><td>7</td><td/><td/><td/><td/><td>0</td><td/><td>C:\cse125\codex\doctorciao\Server\EULANord.rtf</td><td/></row>
 		<row><td>LicenseAgreement</td><td>Next</td><td>PushButton</td><td>230</td><td>243</td><td>66</td><td>17</td><td>3</td><td/><td>##IDS_NEXT##</td><td>Cancel</td><td/><td>0</td><td/><td/><td/></row>
 		<row><td>MaintenanceType</td><td>Back</td><td>PushButton</td><td>164</td><td>243</td><td>66</td><td>17</td><td>3</td><td/><td>##IDS_BACK##</td><td>Next</td><td/><td>0</td><td/><td/><td/></row>
 		<row><td>MaintenanceType</td><td>Banner</td><td>Bitmap</td><td>0</td><td>0</td><td>374</td><td>44</td><td>1</td><td/><td/><td/><td/><td>0</td><td/><td/><td>NewBinary1</td></row>
@@ -937,7 +937,7 @@
 		<row><td>DatabaseFolder</td><td>ChangeFolder</td><td>SpawnDialog</td><td>InstallChangeFolder</td><td>1</td><td>1</td></row>
 		<row><td>DatabaseFolder</td><td>ChangeFolder</td><td>[_BrowseProperty]</td><td>DATABASEDIR</td><td>1</td><td>2</td></row>
 		<row><td>DatabaseFolder</td><td>Next</td><td>NewDialog</td><td>SetupType</td><td>1</td><td>1</td></row>
-		<row><td>DestinationFolder</td><td>Back</td><td>NewDialog</td><td>InstallWelcome</td><td>NOT Installed</td><td>0</td></row>
+		<row><td>DestinationFolder</td><td>Back</td><td>NewDialog</td><td>LicenseAgreement</td><td>NOT Installed</td><td>0</td></row>
 		<row><td>DestinationFolder</td><td>Cancel</td><td>SpawnDialog</td><td>CancelSetup</td><td>1</td><td>1</td></row>
 		<row><td>DestinationFolder</td><td>ChangeFolder</td><td>SpawnDialog</td><td>InstallChangeFolder</td><td>1</td><td>1</td></row>
 		<row><td>DestinationFolder</td><td>ChangeFolder</td><td>[_BrowseProperty]</td><td>INSTALLDIR</td><td>1</td><td>2</td></row>
@@ -954,11 +954,11 @@
 		<row><td>InstallChangeFolder</td><td>Up</td><td>DirectoryListUp</td><td>0</td><td>1</td><td>0</td></row>
 		<row><td>InstallWelcome</td><td>Back</td><td>NewDialog</td><td>SplashBitmap</td><td>Display_IsBitmapDlg</td><td>0</td></row>
 		<row><td>InstallWelcome</td><td>Cancel</td><td>SpawnDialog</td><td>CancelSetup</td><td>1</td><td>0</td></row>
-		<row><td>InstallWelcome</td><td>Next</td><td>NewDialog</td><td>DestinationFolder</td><td>1</td><td>0</td></row>
-		<row><td>LicenseAgreement</td><td>Back</td><td>NewDialog</td><td>InstallWelcome</td><td>1</td><td>0</td></row>
+		<row><td>InstallWelcome</td><td>Next</td><td>NewDialog</td><td>LicenseAgreement</td><td>1</td><td>0</td></row>
+		<row><td>LicenseAgreement</td><td>Back</td><td>NewDialog</td><td>InstallWelcome</td><td>NOT Installed</td><td>0</td></row>
 		<row><td>LicenseAgreement</td><td>Cancel</td><td>SpawnDialog</td><td>CancelSetup</td><td>1</td><td>0</td></row>
 		<row><td>LicenseAgreement</td><td>ISPrintButton</td><td>DoAction</td><td>ISPrint</td><td>1</td><td>0</td></row>
-		<row><td>LicenseAgreement</td><td>Next</td><td>NewDialog</td><td>CustomerInformation</td><td>AgreeToLicense = "Yes"</td><td>0</td></row>
+		<row><td>LicenseAgreement</td><td>Next</td><td>NewDialog</td><td>DestinationFolder</td><td>AgreeToLicense = "Yes"</td><td>0</td></row>
 		<row><td>MaintenanceType</td><td>Back</td><td>NewDialog</td><td>MaintenanceWelcome</td><td>1</td><td>0</td></row>
 		<row><td>MaintenanceType</td><td>Cancel</td><td>SpawnDialog</td><td>CancelSetup</td><td>1</td><td>0</td></row>
 		<row><td>MaintenanceType</td><td>Next</td><td>NewDialog</td><td>CustomSetup</td><td>_IsMaintenance = "Change"</td><td>12</td></row>
@@ -1996,6 +1996,7 @@
 		<row><td>coloumn_03.dae</td><td>ISX_DEFAULTCOMPONENT4</td><td>COLOUM~1.DAE|Coloumn_03.DAE</td><td>0</td><td/><td/><td/><td>1</td><td>C:\cse125\codex\doctorciao\Server\models\Coloumn_03.DAE</td><td>1</td><td/></row>
 		<row><td>combine.wav</td><td>ISX_DEFAULTCOMPONENT3</td><td>combine.wav</td><td>0</td><td/><td/><td/><td>1</td><td>C:\cse125\codex\doctorciao\Server\sounds\combine.wav</td><td>1</td><td/></row>
 		<row><td>combine1.wav</td><td>ISX_DEFAULTCOMPONENT3</td><td>combine1.wav</td><td>0</td><td/><td/><td/><td>1</td><td>C:\cse125\codex\doctorciao\Server\sounds\combine1.wav</td><td>1</td><td/></row>
+		<row><td>config.txt</td><td>ISX_DEFAULTCOMPONENT5</td><td>config.txt</td><td>0</td><td/><td/><td/><td>1</td><td>C:\cse125\codex\doctorciao\Server\config.txt</td><td>1</td><td/></row>
 		<row><td>cpu.png</td><td>ISX_DEFAULTCOMPONENT4</td><td>cpu.PNG</td><td>0</td><td/><td/><td/><td>1</td><td>C:\cse125\codex\doctorciao\Server\models\cpu.PNG</td><td>1</td><td/></row>
 		<row><td>dark_debuff.png</td><td>ISX_DEFAULTCOMPONENT1</td><td>DARK_D~1.PNG|dark_debuff.png</td><td>0</td><td/><td/><td/><td>1</td><td>C:\Users\user\Desktop\graphics\Images\dark_debuff.png</td><td>1</td><td/></row>
 		<row><td>dark_icon.png</td><td>ISX_DEFAULTCOMPONENT1</td><td>DARK_I~1.PNG|dark_icon.png</td><td>0</td><td/><td/><td/><td>1</td><td>C:\Users\user\Desktop\graphics\Images\dark_icon.png</td><td>1</td><td/></row>
@@ -2091,6 +2092,7 @@
 		<row><td>powermovel.png</td><td>ISX_DEFAULTCOMPONENT1</td><td>POWERM~1.PNG|powerMoveL.png</td><td>0</td><td/><td/><td/><td>1</td><td>C:\Users\user\Desktop\graphics\Images\powerMoveL.png</td><td>1</td><td/></row>
 		<row><td>powerstr.png</td><td>ISX_DEFAULTCOMPONENT1</td><td>powerStr.png</td><td>0</td><td/><td/><td/><td>1</td><td>C:\Users\user\Desktop\graphics\Images\powerStr.png</td><td>1</td><td/></row>
 		<row><td>powerstrl.png</td><td>ISX_DEFAULTCOMPONENT1</td><td>POWERS~1.PNG|powerStrL.png</td><td>0</td><td/><td/><td/><td>1</td><td>C:\Users\user\Desktop\graphics\Images\powerStrL.png</td><td>1</td><td/></row>
+		<row><td>readme.txt</td><td>ISX_DEFAULTCOMPONENT5</td><td>README.txt</td><td>0</td><td/><td/><td/><td>1</td><td>C:\cse125\codex\doctorciao\Server\README.txt</td><td>1</td><td/></row>
 		<row><td>ready.png</td><td>ISX_DEFAULTCOMPONENT1</td><td>ready.png</td><td>0</td><td/><td/><td/><td>1</td><td>C:\Users\user\Desktop\graphics\Images\ready.png</td><td>1</td><td/></row>
 		<row><td>right.jpg3</td><td>ISX_DEFAULTCOMPONENT8</td><td>right.jpg</td><td>0</td><td/><td/><td/><td>1</td><td>C:\cse125\codex\doctorciao\Server\models\skybox_sunset\right.jpg</td><td>1</td><td/></row>
 		<row><td>scream_1.wav</td><td>ISX_DEFAULTCOMPONENT3</td><td>scream_1.wav</td><td>0</td><td/><td/><td/><td>1</td><td>C:\cse125\codex\doctorciao\Server\sounds\scream_1.wav</td><td>1</td><td/></row>
@@ -2181,6 +2183,7 @@
 		<col def="S255">Data</col>
 		<row><td>PROJECT_ASSISTANT_DEFAULT_FEATURE</td><td>AlwaysInstall</td></row>
 		<row><td>PROJECT_ASSISTANT_FEATURES</td><td>NonSelectable</td></row>
+		<row><td>Server.exe</td><td/></row>
 	</table>
 
 	<table name="ISBillBoard">
@@ -4279,9 +4282,9 @@
 		<col def="V0">Data</col>
 		<col def="S255">ISBuildSourcePath</col>
 		<col def="I2">ISIconIndex</col>
-		<row><td>ARPPRODUCTICON.exe</td><td/><td>&lt;ISProductFolder&gt;\redist\Language Independent\OS Independent\setupicon.ico</td><td>0</td></row>
-		<row><td>Server.exe1_E82A9E19757E46069ABBBB36B7F89CD3.exe</td><td/><td>&lt;ISProductFolder&gt;\redist\Language Independent\OS Independent\GenericExe.ico</td><td>0</td></row>
-		<row><td>Server.exe_0A2502639DB245E1B2DE2EAF42BBE435.exe</td><td/><td>&lt;ISProductFolder&gt;\redist\Language Independent\OS Independent\GenericExe.ico</td><td>0</td></row>
+		<row><td>ARPPRODUCTICON.exe</td><td/><td>C:\cse125\codex\doctorciao\Server\bg.ico</td><td>0</td></row>
+		<row><td>Server.exe1_07FDC91D63F248EFB51F9B9F0E62F974.exe</td><td/><td>C:\cse125\codex\doctorciao\Server\bg.ico</td><td>0</td></row>
+		<row><td>Server.exe_08CAA866D6234B2F8D2488CF8818661A.exe</td><td/><td>C:\cse125\codex\doctorciao\Server\bg.ico</td><td>0</td></row>
 	</table>
 
 	<table name="IniFile">
@@ -4952,8 +4955,8 @@ UwBpAG4AZwBsAGUASQBtAGEAZwBlAAEARQB4AHAAcgBlAHMAcwA=
 		<col def="S255">ISComments</col>
 		<col def="S255">ISShortcutName</col>
 		<col def="I4">ISAttributes</col>
-		<row><td>Server.exe</td><td>codex</td><td>##IDS_SHORTCUT_DISPLAY_NAME2##</td><td>Server.exe</td><td>AlwaysInstall</td><td/><td/><td/><td>Server.exe_0A2502639DB245E1B2DE2EAF42BBE435.exe</td><td>0</td><td>1</td><td>INSTALLDIR</td><td/><td/><td/><td/><td/><td/><td/></row>
-		<row><td>Server.exe1</td><td>DesktopFolder</td><td>##IDS_SHORTCUT_DISPLAY_NAME2##</td><td>Server.exe</td><td>AlwaysInstall</td><td/><td/><td/><td>Server.exe1_E82A9E19757E46069ABBBB36B7F89CD3.exe</td><td>0</td><td>1</td><td>INSTALLDIR</td><td/><td/><td/><td/><td/><td/><td/></row>
+		<row><td>Server.exe</td><td>codex</td><td>##IDS_SHORTCUT_DISPLAY_NAME2##</td><td>Server.exe</td><td>AlwaysInstall</td><td/><td/><td/><td>Server.exe_08CAA866D6234B2F8D2488CF8818661A.exe</td><td>0</td><td>1</td><td>INSTALLDIR</td><td/><td/><td/><td/><td/><td/><td/></row>
+		<row><td>Server.exe1</td><td>DesktopFolder</td><td>##IDS_SHORTCUT_DISPLAY_NAME2##</td><td>Server.exe</td><td>AlwaysInstall</td><td/><td/><td/><td>Server.exe1_07FDC91D63F248EFB51F9B9F0E62F974.exe</td><td>0</td><td>1</td><td>INSTALLDIR</td><td/><td/><td/><td/><td/><td/><td/></row>
 	</table>
 
 	<table name="Signature">

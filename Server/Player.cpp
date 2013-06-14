@@ -194,8 +194,8 @@ bool Player::damageBy(Projectile *deadly)
 
   //TODO remove this to allow charging while hit
   //is basic or not minotaur
-  if(charging && StringToNumber<float>(ConfigManager::configMap["removeChargeOnHit"])==1 &&
-    (!isMinotaur() || deadly->getMagicType() == B1 || deadly->getMagicType() == B2)) {
+  if(charging && (StringToNumber<float>(ConfigManager::configMap["removeChargeOnHit"])==1 ||
+    (deadly->getMagicType() == B1 || deadly->getMagicType() == B2 || deadly->getMagicType() == B3))) {
     chargedProjectile->live = false;
   }
 

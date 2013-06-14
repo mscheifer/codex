@@ -56,6 +56,7 @@ void PowerUp::update() {
     position = map->getRespawnPosition();
     map->addToQtree(this);
     render = true;
+    buffType = static_cast<BUFF>(rand()%7+1);
 	}
   //std::cout << " it's active? " << active << std::endl;
   if(active)

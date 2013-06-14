@@ -53,13 +53,13 @@ gravity=-40
 minotaurRadarOnly=1
 removeChargeOnHit=0
 friendlyfire=1
-friendlyCombineOnly=1
+friendlyCombineOnly=0
 enableMinotaur=1
-enableLightningRounds=0
+players=4
+numMinotaur=1
+enableLightningRounds=1
 forceLightningRounds=0
 countdown=5
-players=2
-numMinotaur=1
 tryEndGame=1
 spawnWithWeapon=0
 

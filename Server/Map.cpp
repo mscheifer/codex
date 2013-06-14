@@ -94,20 +94,29 @@ void Map::initStaticEntities() {
 }
 void Map::initSpawns()
 {
-  spawnPositions.push_back(v3_t(170,-45,0));
-  spawnPositions.push_back(v3_t(-125,-20,0));
-  spawnPositions.push_back(v3_t(170,45,0));
   spawnPositions.push_back(v3_t(-170,100,0));
   spawnPositions.push_back(v3_t(-170,60,0));
   spawnPositions.push_back(v3_t(-135,130,0));
+  spawnPositions.push_back(v3_t(-125,-20,0));
   spawnPositions.push_back(v3_t(-95,130,0));
   spawnPositions.push_back(v3_t(15,130,0));
   spawnPositions.push_back(v3_t(60,60,0));
+  spawnPositions.push_back(v3_t(60,-130,0));
   spawnPositions.push_back(v3_t(165,-80,0));
   spawnPositions.push_back(v3_t(165,-20,0));
   spawnPositions.push_back(v3_t(165,125,0));
   spawnPositions.push_back(v3_t(170,-170,0));
-  spawnPositions.push_back(v3_t(60,-130,0));
+  spawnPositions.push_back(v3_t(170,-45,0));
+  spawnPositions.push_back(v3_t(170,45,0));
+
+  spawnPositions.push_back(v3_t(65,-60,0));
+  spawnPositions.push_back(v3_t(36,7,0));
+  spawnPositions.push_back(v3_t(45,130,0));
+  spawnPositions.push_back(v3_t(-25,-135,0));
+  spawnPositions.push_back(v3_t(-50,-140,0));
+  spawnPositions.push_back(v3_t(-112,-35,0));
+  spawnPositions.push_back(v3_t(-175,175,0));
+  spawnPositions.push_back(v3_t(80,37,0));
 }
 void Map::initSpawnsLightning(){
   for( float y = -170; y <= 170; y=y+20){
@@ -156,7 +165,7 @@ void Map::initPowerUpsLightning(){
   WeaponFire * w;
   for(int i = 0; i < 30; i++){
     superPower = new PowerUp(getRespawnPosition() + v3_t(0,0,PowerUp::powerUpDepth / 2), this, 
-     static_cast<BUFF>(rand()%7+1));
+      static_cast<BUFF>(rand()%7+1));
     superPower->setRespownTime(5000);
     this->entities.push_back(superPower);
 
