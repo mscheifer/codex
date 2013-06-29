@@ -8,6 +8,8 @@ Project("{6141683F-8A12-4E36-9623-2EB02B2C2303}") = "Setup2", "Setup2\Setup2.isp
 		{E84A6DC5-DE77-40F7-B77F-668E960F5FF2} = {E84A6DC5-DE77-40F7-B77F-668E960F5FF2}
 	EndProjectSection
 EndProject
+Project("{6141683F-8A12-4E36-9623-2EB02B2C2303}") = "Setup1", "Setup1\Setup1.isproj", "{CF91161A-58BE-4BCF-AB99-D5549068101E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		CD_ROM|Win32 = CD_ROM|Win32
@@ -37,6 +39,16 @@ Global
 		{AAD71F6F-68AE-46E3-A5B0-51ABA1A0869F}.Release|Win32.Build.0 = SingleImage
 		{AAD71F6F-68AE-46E3-A5B0-51ABA1A0869F}.SingleImage|Win32.ActiveCfg = SingleImage
 		{AAD71F6F-68AE-46E3-A5B0-51ABA1A0869F}.SingleImage|Win32.Build.0 = SingleImage
+		{CF91161A-58BE-4BCF-AB99-D5549068101E}.CD_ROM|Win32.ActiveCfg = CD_ROM
+		{CF91161A-58BE-4BCF-AB99-D5549068101E}.CD_ROM|Win32.Build.0 = CD_ROM
+		{CF91161A-58BE-4BCF-AB99-D5549068101E}.Debug|Win32.ActiveCfg = DVD-5
+		{CF91161A-58BE-4BCF-AB99-D5549068101E}.Debug|Win32.Build.0 = DVD-5
+		{CF91161A-58BE-4BCF-AB99-D5549068101E}.DVD-5|Win32.ActiveCfg = DVD-5
+		{CF91161A-58BE-4BCF-AB99-D5549068101E}.DVD-5|Win32.Build.0 = DVD-5
+		{CF91161A-58BE-4BCF-AB99-D5549068101E}.Release|Win32.ActiveCfg = SingleImage
+		{CF91161A-58BE-4BCF-AB99-D5549068101E}.Release|Win32.Build.0 = SingleImage
+		{CF91161A-58BE-4BCF-AB99-D5549068101E}.SingleImage|Win32.ActiveCfg = SingleImage
+		{CF91161A-58BE-4BCF-AB99-D5549068101E}.SingleImage|Win32.Build.0 = SingleImage
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
