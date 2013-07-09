@@ -12,8 +12,8 @@ gameRestart=1
 soundScaling=10
 fullscreen=true
 anti-alias=8
-window-width=1920
-window-height=1080
+window-width=800
+window-height=600
 skyboxDir=skybox_sunset/
 
 //models
@@ -61,6 +61,7 @@ enableLightningRounds=1
 forceLightningRounds=0
 countdown=5
 tryEndGame=1
+deathmatch=0
 spawnWithWeapon=0
 
 playerProjSpeed=2

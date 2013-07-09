@@ -100,7 +100,8 @@ gx::vector3f gx::input::turnPlayer() {
 	}
     mouseDirection = rotateZ(-mouseDiff.x * mouseSensitivity) * 
                      rotateX(-mouseDiff.y * mouseSensitivity) * basePlayerDirection;
-    sf::Mouse::setPosition(mouseBasePosition);
+    setUpMouse();
+    //sf::Mouse::setPosition(mouseBasePosition);
   }
   return mouseDirection;
 }
@@ -127,11 +128,13 @@ int gx::input::mouseYpos() const {
 
 void gx::input::setUpMouse() {
   //somehow change this to set it to the center of the screen
-  mouseBasePosition = sf::Vector2i(600,600);
+  mouseBasePosition = sf::Vector2i(windowWidth()/2.0,windowHeight()/2.0);
   sf::Mouse::setPosition(mouseBasePosition);
 }
 
 void gx::input::handle(sf::Window& window) {
+  this->width = window.getSize().x;
+  this->height = window.getSize().y;
   this->updated = false;
   this->stopped = false;
   this->jumped  = false;

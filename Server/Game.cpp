@@ -124,13 +124,23 @@ void Game::prepResponse(ServerGameTimeRespond& sgtr) {
   int numMino = StringToNumber<int>(ConfigManager::configMap["numMinotaur"]);
   int numPlayers = StringToNumber<int>(ConfigManager::configMap["players"]);
 
-  if (StringToNumber<int>(ConfigManager::configMap["tryEndGame"])==1) {
-    if (deadMinotaur == numMino) {
-      sgtr.state = CIVILIAN_WIN; 
+  if (StringToNumber<int>(ConfigManager::configMap["tryEndGame"])==1){
+    if(StringToNumber<int>(ConfigManager::configMap["deathmatch"])==1){
+      if(numPlayers-1==deadMinotaur+deadPlayers){
+        if(numMino == deadMinotaur)
+          sgtr.state = CIVILIAN_WIN;
+        else
+          sgtr.state = MANOTAUR_WIN;
+      }
+    } else {
+      if (deadMinotaur == numMino) {
+        sgtr.state = CIVILIAN_WIN; 
+      }
+      if (deadPlayers == numPlayers-numMino) {
+        sgtr.state = MANOTAUR_WIN;
+      }
     }
-    if (deadPlayers == numPlayers-numMino) {
-      sgtr.state = MANOTAUR_WIN;
-    }
+  
     for (unsigned int i = 0; i < currentPlayers.size() ; i++ ) {
       if((!currentPlayers[i]->isMinotaur() && sgtr.state == CIVILIAN_WIN)
       || (currentPlayers[i]->isMinotaur() && sgtr.state == MANOTAUR_WIN)) {
@@ -138,7 +148,7 @@ void Game::prepResponse(ServerGameTimeRespond& sgtr) {
         currentPlayers[i]->wins++;
       }
     }
-  }
+ }
 	for( unsigned int i = 0; i < currentPlayers.size(); i++ ) {
 		 sgtr.players.push_back(*currentPlayers[i]); //add the player to the return struct
      //were not sending boxes over network, if you dont ahve this it will try to destroy the actual bb
