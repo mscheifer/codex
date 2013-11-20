@@ -33,3 +33,10 @@ skybox
 For modifying configurations it is suggested to use the config.txt and not modify masterConfig.txt.
 If you delete the config.txt the server and client will read masterConfig.txt.
 
+
+NOT BEING ABLE to modify config.txt:
+for Windows 7:
+Right click config.txt and select properties
+Click the Security tab
+Click the edit button
+And check full control for usersz

@@ -44,6 +44,8 @@ void NetworkClient::receiveMessages() {
         }
         pos = this->s.players[this->id].getPosition();
         proximity = StringToNumber<int>(ConfigManager::configMap["players"])-2;
+        if(proximity < 2)
+          proximity = 2;
         minotaur = this->s.players[this->id].isMinotaur();
         
         this->gxClient.clearEntities();
